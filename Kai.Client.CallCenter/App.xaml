@@ -1,0 +1,217 @@
+﻿<Application x:Class="Kai.Client.CallCenter.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Kai.Client.CallCenter" xmlns:sys="clr-namespace:System;assembly=netstandard"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+             StartupUri="Windows/SplashWnd.xaml"
+             ShutdownMode="OnExplicitShutdown">
+   
+    <Application.Resources>
+       
+        <!--// Color-->
+        <SolidColorBrush x:Key="AppColor_SelectedBackground" Color="#FF0066CC"/>
+
+        <SolidColorBrush x:Key="AppColor_WndBackground" Color="#bebebe"/>
+        <SolidColorBrush x:Key="AppColor_MenuBackground" Color="#606060"/>
+        <SolidColorBrush x:Key="AppColor_GrayBorder" Color="#606060"/>
+
+        <Brush x:Key="AppBrush_PinkBackground">#FFCCE5</Brush>
+        <Brush x:Key="AppBrush_DisableBackground">#B0B0B0</Brush>
+        <Brush x:Key="AppBrush_DatagridBorder">#FFFFFF</Brush>
+
+        <Brush x:Key="AppBrushLightReceipt">#FFCCE5</Brush>        
+        <Brush x:Key="AppBrushLightWait">#FAFAA0</Brush>     
+        <Brush x:Key="AppBrushLightAlloc">#ACFFEF</Brush>
+        <Brush x:Key="AppBrushLightReserve">#F0B6B6</Brush>
+        <Brush x:Key="AppBrushLightRun">#CCFF99</Brush>       
+        <Brush x:Key="AppBrushLightFinish">White</Brush>
+        <Brush x:Key="AppBrushLightCancel">#c8c8c8</Brush>        
+        <Brush x:Key="AppBrushLightTotal">#FFBEFF</Brush>
+
+        <Brush x:Key="AppBrushDarkReceipt">#FF87BE</Brush>
+        <Brush x:Key="AppBrushDarkWait">#FFDC37</Brush>
+        <Brush x:Key="AppBrushDarkAlloc">#61F3EB</Brush>
+        <Brush x:Key="AppBrushDarkReserve">#EA9A56</Brush>
+        <Brush x:Key="AppBrushDarkRun">#82EB5A</Brush>
+        <Brush x:Key="AppBrushDarkFinish">White</Brush>
+        <Brush x:Key="AppBrushDarkCancel">#aaaaaa</Brush>
+        <Brush x:Key="AppBrushDarkTotal">#FF82FF</Brush>
+
+        <!--마진-->
+        <Thickness x:Key="AppMargin0100">0,1,0,0</Thickness>
+        <Thickness x:Key="AppMargin1000">1,0,0,0</Thickness>
+        <Thickness x:Key="AppMargin-1000">-1,0,0,0</Thickness>
+        <Thickness x:Key="AppMargin0-100">0,-1,0,0</Thickness>
+        <Thickness x:Key="AppMargin-1-100">-1,-1,0,0</Thickness>
+
+        <!--폰트-->
+        <!--<sys:Double x:Key="AppFontSize_Small">12</sys:Double>-->
+        <sys:Double x:Key="AppFontSize_Normal">14</sys:Double>
+        <!--<sys:Double x:Key="AppFontSize_Big">16</sys:Double>-->
+
+        <!--높이-->
+        <sys:Double x:Key="AppItemHeight_Tiny">22</sys:Double>
+        <sys:Double x:Key="AppItemHeight_Small">24</sys:Double>
+        <sys:Double x:Key="AppItemHeight_Normal">26</sys:Double>
+        <sys:Double x:Key="AppImgBtnHeight_Big">65</sys:Double>
+        <sys:Double x:Key="AppImageHeight_Big">35</sys:Double>
+        <sys:Double x:Key="AppImageHeight_Mid">22</sys:Double>
+
+        <!--Opacity-->
+        <sys:Double x:Key="AppOpacity_Disabled">0.45</sys:Double>
+        <sys:Double x:Key="AppOpacity_Enabled">1.0</sys:Double>
+
+        <!--Toggle Button-->
+        <Style TargetType="ToggleButton" x:Key="AppToggleBtnStyle_Normal">
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalAlignment" Value="Center"/>           
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!--Button-->
+        <Style TargetType="Button" x:Key="AppButtonStyle_Normal">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>
+        
+        <!--// 트리거버튼-->
+        <Style TargetType="Button" x:Key="AppTriggerBtnStyle_Normal" BasedOn="{StaticResource AppButtonStyle_Normal}">
+            <Setter Property="Opacity" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--2State버튼-->
+        <Style x:Key="AppBtnStyle_Enabled" TargetType="Button" >
+            <Setter Property="FontFamily" Value="Italic"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <Style x:Key="AppBtnStyle_Disabled" TargetType="Button" BasedOn="{StaticResource AppBtnStyle_Enabled}">
+            <Setter Property="Opacity" Value="0.45"/>
+        </Style>
+
+        <!--Label-->
+        <Style TargetType="Label" x:Key="AppLabelStyle_Normal">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>
+
+        <!--ComboBox-->
+        <Style TargetType="ComboBox" x:Key="AppComboBoxStyle_Empty">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style TargetType="ComboBox" x:Key="AppComboBoxStyle_Normal">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+             <Setter Property="VerticalContentAlignment" Value="Center"/>      
+            <Setter Property="BorderBrush" Value="{StaticResource AppColor_GrayBorder}"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>
+
+        <!--RadioBtn-->
+        <Style x:Key="AppRadioBtnStyle_Normal" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="IsThreeState"  Value="False"/>
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>
+
+        <!--TextBox-->
+        <Style x:Key="AppTextBoxStyle_Normal" TargetType="TextBox">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>
+        
+        <!--CheckBox-->
+        <Style TargetType="CheckBox" x:Key="AppCheckBoxStyle_Normal">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>
+
+        <!--TextBlock-->
+        <Style TargetType="TextBlock" x:Key="AppTextBlockStyle_Normal">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+        </Style>
+        
+        <Style x:Key="AppDataGridTextColumnStyle_Center" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="AppDataGridTextColumnStyle_Left" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="AppDataGridTextColumnStyle_Right" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!--DataGrid-->
+        <Style x:Key="AppDatagridStyle_Normal" TargetType="DataGrid">
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="GridLinesVisibility" Value="All"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="LightGray"/>
+            <Setter Property="VerticalGridLinesBrush" Value="LightGray"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="ColumnHeaderHeight" Value="{StaticResource AppItemHeight_Normal}"/>
+            <Setter Property="RowHeight" Value="{StaticResource AppItemHeight_Tiny}"/>
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+        </Style>
+
+        <!--Datagrid.Cell-->
+        <Style x:Key="AppCellStyle_Normal" TargetType="DataGridCell">
+            <Setter Property="IsSelected" Value="False"/>
+            <Setter Property="IsEditing" Value="False"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <!--Datagrid.ColumnHeader-->
+        <Style x:Key="AppColumnHeaderStyle_Normal" TargetType="DataGridColumnHeader">
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!--Datagrid Selected Color-->
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{Binding Color, Source={StaticResource AppColor_SelectedBackground}}"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{Binding Color, Source={StaticResource AppColor_SelectedBackground}}"/>
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="White"/>
+    </Application.Resources>
+</Application>

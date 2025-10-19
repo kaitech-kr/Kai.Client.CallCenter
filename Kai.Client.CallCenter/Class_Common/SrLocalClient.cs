@@ -1,0 +1,529 @@
+﻿using System.Diagnostics;
+using System.Windows;
+using System.ComponentModel;
+using System.Windows.Threading;
+using Microsoft.AspNetCore.SignalR.Client;
+
+using Kai.Common.StdDll_Common;
+using static Kai.Common.StdDll_Common.StdDelegate;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+
+using static Kai.Client.CallCenter.Class_Common.CommonVars;
+
+namespace Kai.Client.CallCenter.Class_Common;
+#nullable disable
+public class SrLocalClient : IDisposable, INotifyPropertyChanged
+{
+    #region Dispose
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // TODO: 관리형 상태(관리형 개체)를 삭제합니다.
+            }
+
+            // TODO: 비관리형 리소스(비관리형 개체)를 해제하고 종료자를 재정의합니다.
+            // TODO: 큰 필드를 null로 설정합니다.
+            disposedValue = true;
+        }
+    }
+
+    // // TODO: 비관리형 리소스를 해제하는 코드가 'Dispose(bool disposing)'에 포함된 경우에만 종료자를 재정의합니다.
+    // ~SrLocalClient()
+    // {
+    //     // 이 코드를 변경하지 마세요. 'Dispose(bool disposing)' 메서드에 정리 코드를 입력합니다.
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+        // 이 코드를 변경하지 마세요. 'Dispose(bool disposing)' 메서드에 정리 코드를 입력합니다.
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+    #endregion
+
+    #region PropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    #endregion
+
+    #region Delegates
+    public static event ExceptionEventHandler SrLocalClient_ClosedEvent;
+    public static event VoidDelegate SrLocalClient_ConnectedEvent;
+    public static event StringDelegate SrLocalClient_Tel070_AnswerEvent;
+    #endregion
+
+    #region Variables
+    private static string s_sSrLocalHubHttp = $"{StdConst_Var.LOCAL_SR_URL}/LocalHub";
+    public HubConnection HubConn = null;
+    private const int nReconnectDelay = 20000; // 20초
+    private const int c_nReconnectDelay = 5000; // 5초
+    private bool m_bStopReconnect = false;
+    private bool IsConnected => HubConn?.State == HubConnectionState.Connected;
+    #endregion
+
+    #region Property
+    private bool _connecting = false;
+    public bool Connecting
+    {
+        get => _connecting;
+        set
+        {
+            new Thread(() => { _connecting = value; }).Start();
+        }
+    }
+
+    private bool _bConnSignslR = false;
+    public bool m_bConnSignslR
+    {
+        get => _bConnSignslR;
+        set
+        {
+            _bConnSignslR = value;
+            OnPropertyChanged(nameof(m_bConnSignslR));
+        }
+    }
+    public string m_sConnSignslR
+    {
+        get
+        {
+            if (m_bConnSignslR) return "연결";
+            else return "해제";
+        }
+    }
+    #endregion
+
+    #region Connections
+    public async Task ConnectAsync()
+    {
+        try
+        {
+            if (Connecting) return;
+            Connecting = true;
+
+            await DisconnectAsync();
+
+            Debug.WriteLine("HubConnection 생성 중...");
+            HubConn = new HubConnectionBuilder()
+                .WithUrl(s_sSrLocalHubHttp)
+                .Build();
+
+            // Basic Event
+            HubConn.Closed += OnClosedAsync;
+
+            #region Custom Event
+            // Connections
+            HubConn.On<string>(StdConst_FuncName.SrReport.ConnectedAsync, (connectedID) => SrReport_ConnectedAsync(connectedID));
+            //HubConn.On(StdConst_FuncName.SrReport_MultiConnected, () => SrReport_MultiConnected());
+
+            // Tel070
+            HubConn.On<string, string>(StdConst_FuncName.SrReport.Tel070_RingAsync, (sMyNum, sYourNum) => SrReport_Tel070_RingAsync(sMyNum, sYourNum));
+            HubConn.On<string, string>(StdConst_FuncName.SrReport.Tel070_AnswerAsync, (sMyNum, sYourNum) => SrReport_Tel070_AnswerAsync(sMyNum, sYourNum));
+            HubConn.On<string>(StdConst_FuncName.SrReport.Tel070_HangupAsync, (sMyNum) => SrReport_Tel070_HangupAsync(sMyNum));
+            #endregion
+
+            Debug.WriteLine($"연결 시도시작...");
+            // 연결될 때까지 무한 재시도
+            while (!m_bStopReconnect)
+            {
+                // MainWindow가 닫히고 있으면 재접속 중지
+                try
+                {
+                    bool shouldStop = false;
+                    await Application.Current?.Dispatcher.InvokeAsync(() =>
+                    {
+                        if (Application.Current?.MainWindow != null &&
+                            !Application.Current.MainWindow.IsLoaded)
+                        {
+                            shouldStop = true;
+                        }
+                    });
+
+                    if (shouldStop)
+                    {
+                        Debug.WriteLine("MainWindow 종료 감지, 재접속 중지");
+                        return;
+                    }
+                }
+                catch (Exception)
+                {
+                    // Dispatcher 접근 실패 시 무시하고 계속
+                }
+
+                try
+                {
+                    Debug.WriteLine("HubConn.StartAsync() 호출...");
+                    await HubConn.StartAsync();
+
+                    if (HubConn.State == HubConnectionState.Connected)
+                    {
+                        Debug.WriteLine($"SignalR 연결 성공");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"===== SignalR 연결 실패 상세정보 =====");
+                    Debug.WriteLine($"예외 타입: {ex.GetType().Name}");
+                    Debug.WriteLine($"메시지: {ex.Message}");
+                    Debug.WriteLine($"HResult: {ex.HResult}");
+                    if (ex.InnerException != null)
+                    {
+                        Debug.WriteLine($"내부 예외: {ex.InnerException.Message}");
+                    }
+                    Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+                    Debug.WriteLine($"===== {c_nReconnectDelay / 1000}초 후 재시도... =====");
+
+                    //switch (ex.HResult)
+                    //{
+                    //    case -2146233088: // 서버 없음(연결거부)
+                    //    case -2147467259:
+                    //    case -2146233079:
+                    //        // 종료시
+                    //        //if (Application.Current.MainWindow != null && !Application.Current.MainWindow.IsLoaded) return;
+                    //        //await Task.Delay(nMiliSec); // 머무 지체됨...
+                    //        continue;
+                    //    default:
+                    //        //await WriteExceptionToFileAsync("", ex.Message);
+                    //        return;
+                    //}
+                }
+
+                await Task.Delay(c_nReconnectDelay);
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrMsgBox(StdUtil.GetExceptionMessage(ex), "SrLocalClient/ConnectAsync_999");
+        }
+        finally
+        {
+            Connecting = false;
+        }
+    }
+
+    public async Task DisconnectAsync() // Active Disconnect
+    {
+        if (HubConn is not null)
+        {
+            await HubConn.StopAsync();
+            await HubConn.DisposeAsync();
+            HubConn = null;
+        }
+    }
+
+    private Task OnClosedAsync(Exception ex) // When Disconnecting
+    {
+        m_bConnSignslR = false;
+        SrLocalClient_ClosedEvent?.Invoke(this, new ExceptionEventArgs(ex));
+        return Task.CompletedTask;
+    }
+
+    private async Task SrReport_MultiConnected() // 다중접속시 - 발생하면 안됨.
+    {
+        //await DisonnectAsync();
+        MsgBox("다른 담당자가 접속하였습니다(발생하면 안됨)");
+        await Task.CompletedTask;
+    }
+    #endregion
+
+    #region Report Funcs
+    public async Task<StdResult_Error> SrReport_ConnectedAsync(string connectedID)
+    {
+        try
+        {
+            m_bConnSignslR = true;
+            s_MainWnd.TblockConnLocal.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                s_MainWnd.TblockConnLocal.Text = m_sConnSignslR;
+            }));
+            //MsgBox("SrReport_Connected"); // Test
+
+            // 로그인 이벤트 발생시킴. - MainWnd에서 받음
+            SrLocalClient_ConnectedEvent?.Invoke();
+
+            await Task.CompletedTask;
+            return null;
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Error(ex.Message, "SrLocalClient/SrReport_Connected_999");
+        }
+    }
+
+    public async Task SrReport_Tel070_RingAsync(string sMyNum, string sYourNum)
+    {
+        //ThreadMsgBox($"SrReport_070Tel_Ring: {sMyNum}, {sYourNum}"); // Test
+        await Task.Delay(1);
+    }
+
+    public async Task SrReport_Tel070_AnswerAsync(string sMyNum, string sYourNum)
+    {
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            SrLocalClient_Tel070_AnswerEvent?.Invoke(sYourNum);
+        });
+    }
+
+    public async Task SrReport_Tel070_HangupAsync(string sMyNum)
+    {
+        //ThreadMsgBox($"SrReport_Tel070_HangupAsync: {sMyNum}"); // Test
+        await Task.Delay(1);
+    }
+
+    public async Task SrReport_Tel070Info_SetLocalsAsync(List<TbTel070Info> listTel070)
+    {
+        //ThreadMsgBox($"SrReport_Tel070Info_SetLocalsAsync: {listTel070.Count}"); // Test
+        await HubConn.InvokeCoreAsync<List<TbTel070Info>>(StdConst_FuncName.SrReport.Tel070Info_SetLocalsAsync, new[] { (object)listTel070 });
+    }
+    #endregion
+
+    #region Result Funcs
+    public async Task<StdResult_Bool> SrResult_ComBroker_CloseAsync()
+    {
+        try
+        {
+            if (HubConn != null && HubConn.State == HubConnectionState.Connected)
+            {
+                return await HubConn.InvokeCoreAsync<StdResult_Bool>(StdConst_FuncName.SrResult.X86ComBroker.Close, new object[0]);
+            }
+
+            return new StdResult_Bool("HubConn이 널이거나, 연결이 안된상태 입니다.", "SrResult_ComBroker_Close_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Bool(StdUtil.GetExceptionMessage(ex), "SrLocalClient/SrResult_ComBroker_Close");
+        }
+    }
+    public StdResult_Bool SrResult_ComBroker_Close()
+    {
+        try
+        {
+            if (HubConn != null && HubConn.State == HubConnectionState.Connected)
+            {
+                var task = HubConn.InvokeCoreAsync<StdResult_Bool>(StdConst_FuncName.SrResult.X86ComBroker.Close, new object[0]);
+
+                if (!task.Wait(TimeSpan.FromSeconds(5))) // 5초 타임아웃
+                {
+                    return new StdResult_Bool("ComBroker 닫기 타임아웃", "SrResult_ComBroker_Close_Timeout");
+                }
+
+                return task.Result;
+            }
+
+            return new StdResult_Bool("HubConn이 널이거나, 연결이 안된상태 입니다.", "SrResult_ComBroker_Close_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Bool(StdUtil.GetExceptionMessage(ex), "SrLocalClient/SrResult_ComBroker_Close");
+        }
+    }
+    #endregion
+
+    //#region Connections
+    //public async Task ConnectAsync(int nMiliSec = 5000)
+    //{
+    //    try
+    //    {
+    //        if (IsConnected)
+    //        {
+    //            MsgBox("이미 접속상태 입니다.", "SrLocalClient/ConnectAsync_01");
+    //            return;
+    //        }
+
+    //        if (Connecting) return;
+    //        Connecting = true;
+
+    //        // ~초후에 연결체크
+    //        //Thread t = new Thread(() =>
+    //        //{
+    //        //    //Thread.Sleep(10000);
+    //        //    if (!IsConnected) // 연결이 안되면
+    //        //    {
+    //        //        //Connecting = false;
+    //        //        //ThreadErrMsgBox("로컬 SignalR서버와 3초내에 연결이 안되었읍니다.");
+    //        //    }
+    //        //    //else ThreadMsgBox("서버와 연결되었습니다."); // Test
+    //        //});
+    //        //t.IsBackground = true;
+    //        //t.Start();
+
+    //        await Application.Current.Dispatcher.InvokeAsync(async () =>
+    //        {
+    //            await DisonnectAsync();
+
+    //            HubConn = new HubConnectionBuilder().WithUrl(s_sSrLocalHubHttp).WithAutomaticReconnect().Build();
+
+    //            // Basic Event
+    //            HubConn.Reconnecting += OnReconnecting;
+    //            HubConn.Closed += error =>
+    //            {
+    //                SrLocalClient_ClosedEvent?.Invoke(this, new ExceptionEventArgs(error));
+    //                WarnMsgBox("Connection closed permanently");
+    //                return Task.CompletedTask;
+    //            };
+
+    //            // Custom Event
+    //            HubConn.On<string>(StdConst_FuncName.SrReport.ConnectedAsync, (connectedID) => SrReport_ConnectedAsync(connectedID));
+    //            //HubConn.On(StdConst_FuncName.SrReport_MultiConnected, () => SrReport_MultiConnected());
+    //            HubConn.On<string, string>(StdConst_FuncName.SrReport.Tel070_RingAsync, (sMyNum, sYourNum) => SrReport_Tel070_RingAsync(sMyNum, sYourNum));
+    //            HubConn.On<string, string>(StdConst_FuncName.SrReport.Tel070_AnswerAsync, (sMyNum, sYourNum) => SrReport_Tel070_AnswerAsync(sMyNum, sYourNum));
+    //            HubConn.On<string>(StdConst_FuncName.SrReport.Tel070_HangupAsync, (sMyNum) => SrReport_Tel070_HangupAsync(sMyNum));
+
+    //            while (true)
+    //            {
+    //                try
+    //                {
+    //                    await HubConn.StartAsync();
+
+    //                    // Trace Connection
+    //                    if (HubConn.State == HubConnectionState.Connected) return;
+
+    //                    await Task.Delay(nMiliSec);
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    switch (ex.HResult)
+    //                    {
+    //                        case -2146233088: // 서버 없음(연결거부)
+    //                        case -2147467259:
+    //                        case -2146233079:
+    //                            // 종료시
+    //                            //if (Application.Current.MainWindow != null && !Application.Current.MainWindow.IsLoaded) return;
+    //                            await Task.Delay(nMiliSec);
+    //                            continue;
+    //                        default:
+    //                            //await WriteExceptionToFileAsync("", ex.Message);
+    //                            return;
+    //                    }
+    //                }
+    //            }
+    //        });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        MsgBox(ex.Message, "SrLocalClient/ConnectAsync_999");
+    //    }
+    //    finally
+    //    {
+    //        Connecting = false;
+    //    }
+    //}
+    //public async Task DisonnectAsync() // Active Disconnect
+    //{
+    //    if (HubConn is not null)
+    //    {
+    //        await HubConn.StopAsync();
+    //        await HubConn.DisposeAsync();
+    //        HubConn = null;
+    //    }
+    //}
+    //private Task OnReconnecting(Exception ex) // When Disconnecting - 자동 재접속    
+    //{
+    //    m_bConnSignslR = false;
+    //    SrLocalClient_ClosedEvent?.Invoke(this, new ExceptionEventArgs(ex));
+    //    //MsgBox($"TEST: SignalR OnReconnecting in SrLocalClient: {m_bConnSignslR}"); // Test
+
+    //    return Task.CompletedTask;
+    //}
+    //#endregion
+
+    #region Report Funcs
+    //public async Task<StdResult_Error> SrReport_ConnectedAsync(string connectedID)
+    //{
+    //    try
+    //    {
+    //        m_bConnSignslR = true;
+    //        s_MainWnd.TblockConnLocal.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+    //        {
+    //            s_MainWnd.TblockConnLocal.Text = m_sConnSignslR;
+    //        }));
+    //        //MsgBox("SrReport_Connected"); // Test
+
+    //        // 로그인 이벤트 발생시킴. - MainWnd에서 받음   
+    //        SrLocalClient_ConnectedEvent?.Invoke();
+
+    //        await Task.CompletedTask;
+    //        return null;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return new StdResult_Error(ex.Message, "SrLocalClient/SrReport_Connected_999");
+    //    }
+    //}
+
+    //public async Task SrReport_Tel070_RingAsync(string sMyNum, string sYourNum)
+    //{
+    //    //ThreadMsgBox($"SrReport_070Tel_Ring: {sMyNum}, {sYourNum}"); // Test
+    //    await Task.Delay(1);
+    //}
+
+    //public async Task SrReport_Tel070_AnswerAsync(string sMyNum, string sYourNum)
+    //{
+    //    await Application.Current.Dispatcher.InvokeAsync(() =>
+    //    {
+    //        SrLocalClient_Tel070_AnswerEvent?.Invoke(sYourNum);
+    //    });
+    //}
+
+    //public async Task SrReport_Tel070_HangupAsync(string sMyNum)
+    //{
+    //    //ThreadMsgBox($"SrReport_Tel070_HangupAsync: {sMyNum}"); // Test
+    //    await Task.Delay(1);
+    //}
+
+    //public async Task Tel070_StartUse(string sYourNum) // 전화 수신시
+    //{
+    //    // 고객검색
+    //    DbResult_CustMain result = await s_SrGClient.SrResult_CustMain_Select_ByTelNum(sYourNum);
+    //    //FrmForm.ThreadMsgBox($"Tel070_StartUse: {result}, {sYourNum}"); // Test
+    //    if (result == null)
+    //    {
+    //        FrmForm.ThreadMsgErrBox("고객정보를 가져오는데 실패(result=null)하였읍니다.");
+    //        return;
+    //    }
+    //    else if (!result.bSuccess)
+    //    {
+    //        FrmForm.ThreadMsgErrBox("고객정보를 가져오는데 실패(!result.bSuccess)하였읍니다.");
+    //        return;
+    //    }
+    //    else 
+    //    {
+    //        if (!result.bResult || result.listTb == null || result.listTb.Count == 0) // 데이터 없는 경우
+    //        {
+
+    //        }
+    //        else if (result.listTb.Count == 1) // 데이터 1개인 경우
+    //        {
+
+    //        }
+    //        else // 데이터 2개 이상인 경우
+    //        {
+
+    //        }
+    //    }
+
+    //    // 오더접수창을 띄운다.
+    //    s_MainWnd.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+    //    {
+    //        if (s_MainWnd.Order_StateTab != null) // 오더접수 페이지가 있을때만 실행
+    //        {
+    //            Order_EditWnd wnd = new Order_EditWnd();
+    //            wnd.Show();
+    //        }
+    //    }));
+
+    //    await Task.CompletedTask;
+    //}
+    #endregion
+}
+#nullable restore

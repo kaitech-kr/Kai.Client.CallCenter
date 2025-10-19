@@ -1,0 +1,250 @@
+﻿<Window x:Class="Kai.Client.CallCenter.Windows.MainWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
+        mc:Ignorable="d"  
+        xmlns:sys="clr-namespace:System;assembly=netstandard"    
+        xmlns:Class_Common="clr-namespace:Kai.Client.CallCenter.Class_Common"    
+        Title="KAI Tech" Height="450" Width="800" MinHeight="800" MinWidth="1400" WindowState="Normal"                
+        Background="{StaticResource AppColor_WndBackground}" 
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded" 
+        Closing="Window_Closing" SizeChanged="Window_SizeChanged">
+
+    <Window.Resources>
+        <!--// Separator-->
+        <Style x:Key="ColumnSeparatorStyle">
+            <Setter Property="ItemsControl.Width" Value="5"/>
+            <Setter Property="ItemsControl.BorderThickness" Value="1"/>
+            <Setter Property="ItemsControl.BorderBrush" Value="White"/>
+        </Style>
+        <Style x:Key="RowSeparatorStyle">
+            <Setter Property="ItemsControl.Height" Value="1"/>
+            <Setter Property="ItemsControl.Background" Value="Gray"/>
+        </Style>
+
+        <!--// Menu-->
+        <Style x:Key="MainMenuStyle">
+            <Setter Property="ItemsControl.FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="ItemsControl.Foreground" Value="White"/>
+        </Style>
+        <Style x:Key="SubMenuStyle">
+            <Setter Property="ItemsControl.FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="ItemsControl.Foreground" Value="Black"/>
+        </Style>
+        <Style x:Key="BarMenuStyle">
+            <Setter Property="ItemsControl.FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="ItemsControl.Foreground" Value="Black"/>
+            <Setter Property="ItemsControl.Background" Value="DarkGray"/>
+            <Setter Property="ItemsControl.BorderBrush" Value="Black"/>
+        </Style>
+
+        <!--// ViewModel-->
+        <Class_Common:SrGlobalClient x:Key="SrGlobalClient" />
+        <Class_Common:SrLocalClient x:Key="SrLocalClient" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Name="MainMenuRow" Height="30"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <!--#region 메인메뉴 -->
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black"
+                Background="{StaticResource AppColor_MenuBackground}">
+            <Menu Style="{StaticResource MainMenuStyle}" VerticalAlignment="Center" 
+                  Background="Transparent">
+
+                <!--#region 기본정보 -->
+                <MenuItem Header="기본정보">
+                    <!--사용자관리-->
+                    <MenuItem Header="사용자관리" x:Name="Menu_BasicInfo_UserMng" Style="{StaticResource SubMenuStyle}"
+                              Click="Menu_BasicInfo_UserMng_Click">
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Human001.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <!--Separator-->
+                    <Separator Style="{StaticResource RowSeparatorStyle}"/>
+
+                    <!--인터넷전화관리-->
+                    <MenuItem Header="인터넷전화관리" x:Name="Menu_BasicInfo_InetTelMng" Style="{StaticResource SubMenuStyle}" >
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Telephone002.png"/>
+                        </MenuItem.Icon>
+
+                        <MenuItem Header="대표전화관리" x:Name="Menu_InetTelMng_MainTelMng" Style="{StaticResource SubMenuStyle}"
+                                  Click="Menu_InetTelMng_MainTelMng_Click">
+                            <MenuItem.Icon>
+                                <Image Source="\Resources\Images\Telephone002.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <MenuItem Header="로컬전화관리" x:Name="Menu_InetTelMng_LocalTelMng" Style="{StaticResource SubMenuStyle}"
+                                  Click="Menu_InetTelMng_LocalTelMng_Click">
+                            <MenuItem.Icon>
+                                <Image Source="\Resources\Images\Telephone002.png"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+                </MenuItem>
+                <!--#endregion 기본정보-->
+
+                <!--Separator-->
+                <Separator Style="{StaticResource ColumnSeparatorStyle}"/>
+
+                <!--#region 설정 -->
+                <MenuItem Header="설정">
+                    <MenuItem Header="제어앱 설정" x:Name="Menu_Config_CtrlApp" Style="{StaticResource SubMenuStyle}"
+                              Click="Menu_Config_CtrlApp_Click">
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Customer001.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <!--#endregion 설정-->
+                
+                <!--Separator-->
+                <Separator Style="{StaticResource ColumnSeparatorStyle}"/>
+
+                <!--#region 고객관리 -->
+                <MenuItem Header="고객관리">
+                    <!--고객등록-->
+                    <MenuItem Header="고객등록" x:Name="MenuCustomerMng_CustMainRegist" Style="{StaticResource SubMenuStyle}"
+                              Click="MenuCustomerMng_CustMainRegist_Click">
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Customer001.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <!--거래처등록-->
+                    <MenuItem Header="거래처등록" x:Name="Menu_CompMng_Regist" Style="{StaticResource SubMenuStyle}"
+                              Click="Menu_CompMng_Regist_Click">
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Company001.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <!--#endregion 고객관리-->
+                
+                <!--Separator-->
+                <Separator Style="{StaticResource ColumnSeparatorStyle}"/>
+
+                <!--#region 오더관리 -->
+                <MenuItem Header="오더관리">
+                    <!--접수상황-->
+                    <MenuItem Header="접수상황" x:Name="MenuOrderMng_ReceiptStatus" Style="{StaticResource SubMenuStyle}"
+                              Click="MenuOrderMng_ReceiptStatus_Click">
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Pencil001.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <!--오더처리내역-->
+                    <MenuItem Header="오더처리내역" x:Name="Menu_Order_Process" Style="{StaticResource SubMenuStyle}"
+                              Click="Menu_Order_Process_Click">
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Pencil002.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <!--기사관제-->
+                    <MenuItem Header="기사관제" x:Name="Menu_Order_MapDriver" Style="{StaticResource SubMenuStyle}"
+                              Click="Menu_Order_MapDriver_Click">
+                        <MenuItem.Icon>
+                            <Image Source="\Resources\Images\Car001.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <!--#endregion 오더관리-->
+            </Menu>
+        </Border>
+        <!--#endregion 메인메뉴-->
+
+        <!--#region 바메뉴 -->
+        <Border Grid.Row="1" BorderThickness="1" Background="Black">
+            <Menu Style="{StaticResource BarMenuStyle}" VerticalAlignment="Center">
+                <!--접수상황-->
+                <MenuItem Header="접수상황" 
+                          Click="MenuOrderMng_ReceiptStatus_Click">
+                    <MenuItem.Icon>
+                        <Image Source="\Resources\Images\Receipt001.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator Style="{StaticResource ColumnSeparatorStyle}"/>
+
+                <!--고객등록-->
+                <MenuItem Header="고객등록" 
+                          Click="MenuCustomerMng_CustMainRegist_Click">
+                    <MenuItem.Icon>
+                        <Image Source="\Resources\Images\Pencil002.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <!--가상화면-->
+                <MenuItem Header="가상화면" 
+                          Click="Menu_VirtualMonitor_Click">
+                    <MenuItem.Icon>
+                        <Image Source="\Resources\Images\Monitor001.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+                <Separator Style="{StaticResource ColumnSeparatorStyle}"/>
+
+                <!--테스트-->
+                <MenuItem Header="임시테스트" 
+                          Click="Menu_TmpTest_Click">
+                    <MenuItem.Icon>
+                        <Image Source="\Resources\Images\Test001.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </Menu>
+        </Border>
+        <!--#endregion 바메뉴-->
+
+        <!--#region 페이지 탭콘트롤 -->
+        <TabControl x:Name="MainTabCtrl" Grid.Row="2">
+            <!--<ListBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" 
+                     x:Name="LBoxTmp"/>-->
+        </TabControl>
+        <!--#endregion 페이지 탭콘트롤-->
+
+        <!--#region 메인윈도 알림바 -->
+        <Border Grid.Row="3" BorderThickness="1" Background="LightGray">
+            <StackPanel Orientation="Horizontal">
+                <Label x:Name="LblConnGlobal"
+                       Content="글로벌서버: " HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock x:Name="TblockConnGlobal"
+                           DataContext="{StaticResource SrGlobalClient}"
+                           Text="{Binding SrGlobalClient.m_sLoginSignslR}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <!--<Separator Style="{StaticResource ColumnSeparatorStyle}"/>-->
+
+                <Label x:Name="LblConnLocal"
+                       Content="로컬서버: " HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Margin="50,0,0,0"/>
+                <TextBlock x:Name="TblockConnLocal"
+                           DataContext="{StaticResource SrLocalClient}"
+                           Text="{Binding SrLocalClient.m_sConnSignslR}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                <!-- 모드 표시 -->
+                <Label x:Name="LblAppMode"
+                       Content="모드: " HorizontalAlignment="Left" VerticalAlignment="Center"
+                       Margin="50,0,0,0"/>
+                <TextBlock x:Name="TblockAppMode"
+                           Text="Sub"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="Bold"/>
+            </StackPanel>
+        </Border>
+        <!--#endregion 메인윈도 알림바-->
+    </Grid>
+</Window>

@@ -1,0 +1,246 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>MainIcon.ico</ApplicationIcon>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Tmp\**" />
+    <EmbeddedResource Remove="Tmp\**" />
+    <None Remove="Tmp\**" />
+    <Page Remove="Tmp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Networks\NwInsungs.cs" />
+    <Compile Remove="Networks\NwInsungs\IsCommon_FileInfo.cs" />
+    <Compile Remove="Networks\NwInsungs\NwInsung01.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\Add_File001.png" />
+    <None Remove="Resources\Images\Add_File002.png" />
+    <None Remove="Resources\Images\Add_File003.png" />
+    <None Remove="Resources\Images\Allocate002.png" />
+    <None Remove="Resources\Images\Allocate003.png" />
+    <None Remove="Resources\Images\Arrow_Down001.png" />
+    <None Remove="Resources\Images\Arrow_Down002.png" />
+    <None Remove="Resources\Images\Arrow_Down005.png" />
+    <None Remove="Resources\Images\Arrow_Down006.png" />
+    <None Remove="Resources\Images\Book001.png" />
+    <None Remove="Resources\Images\Callcenter001.png" />
+    <None Remove="Resources\Images\Cancel001.png" />
+    <None Remove="Resources\Images\Cancel002.png" />
+    <None Remove="Resources\Images\Car001.png" />
+    <None Remove="Resources\Images\Card001.png" />
+    <None Remove="Resources\Images\Card002.png" />
+    <None Remove="Resources\Images\Card003.png" />
+    <None Remove="Resources\Images\Clear001.png" />
+    <None Remove="Resources\Images\Close001.png" />
+    <None Remove="Resources\Images\Company001.png" />
+    <None Remove="Resources\Images\Copy001.png" />
+    <None Remove="Resources\Images\Customer001.png" />
+    <None Remove="Resources\Images\Cut001.png" />
+    <None Remove="Resources\Images\Delete003.png" />
+    <None Remove="Resources\Images\Delivery001.jpg" />
+    <None Remove="Resources\Images\Driver001.png" />
+    <None Remove="Resources\Images\Driver002.png" />
+    <None Remove="Resources\Images\Driver003.png" />
+    <None Remove="Resources\Images\Eraser001.png" />
+    <None Remove="Resources\Images\Eraser002.png" />
+    <None Remove="Resources\Images\Excel001.png" />
+    <None Remove="Resources\Images\Exclamation004.png" />
+    <None Remove="Resources\Images\Finish001.png" />
+    <None Remove="Resources\Images\Flag002.png" />
+    <None Remove="Resources\Images\Goal001.png" />
+    <None Remove="Resources\Images\Goal002.png" />
+    <None Remove="Resources\Images\Goal003.png" />
+    <None Remove="Resources\Images\Graph001.png" />
+    <None Remove="Resources\Images\Graph002.png" />
+    <None Remove="Resources\Images\Human001.png" />
+    <None Remove="Resources\Images\Korea.png" />
+    <None Remove="Resources\Images\Mileage001.jpg" />
+    <None Remove="Resources\Images\Minus008.png" />
+    <None Remove="Resources\Images\Money001.png" />
+    <None Remove="Resources\Images\Monitor001.png" />
+    <None Remove="Resources\Images\NewPaper001.png" />
+    <None Remove="Resources\Images\Pda001.png" />
+    <None Remove="Resources\Images\Pencil001.png" />
+    <None Remove="Resources\Images\Pencil002.png" />
+    <None Remove="Resources\Images\Play001.png" />
+    <None Remove="Resources\Images\Play002.png" />
+    <None Remove="Resources\Images\Play003.png" />
+    <None Remove="Resources\Images\Play004.png" />
+    <None Remove="Resources\Images\Play005.png" />
+    <None Remove="Resources\Images\Play006.png" />
+    <None Remove="Resources\Images\Play007.png" />
+    <None Remove="Resources\Images\Plus001.png" />
+    <None Remove="Resources\Images\Position001.png" />
+    <None Remove="Resources\Images\Position002.png" />
+    <None Remove="Resources\Images\Position004.png" />
+    <None Remove="Resources\Images\Printer001.png" />
+    <None Remove="Resources\Images\Question001.png" />
+    <None Remove="Resources\Images\Receipt001.png" />
+    <None Remove="Resources\Images\Rotation001.png" />
+    <None Remove="Resources\Images\Save003.png" />
+    <None Remove="Resources\Images\Save005.png" />
+    <None Remove="Resources\Images\Save006.png" />
+    <None Remove="Resources\Images\Search002.png" />
+    <None Remove="Resources\Images\Share001.png" />
+    <None Remove="Resources\Images\Tel003.png" />
+    <None Remove="Resources\Images\Tel005.png" />
+    <None Remove="Resources\Images\Tel006.png" />
+    <None Remove="Resources\Images\Tel007.png" />
+    <None Remove="Resources\Images\Telephone002.png" />
+    <None Remove="Resources\Images\Telephone003.png" />
+    <None Remove="Resources\Images\Telescope001.png" />
+    <None Remove="Resources\Images\Test001.png" />
+    <None Remove="Resources\Images\Thief001.png" />
+    <None Remove="Resources\Images\Wait001.png" />
+    <None Remove="Resources\Images\Wait002.png" />
+    <None Remove="Resources\Images\Wait003.png" />
+    <None Remove="Spin.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="MainIcon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.7.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="3.8.2" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="pythonnet" Version="3.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl.csproj" />
+    <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.FrmDll_WpfCtrl\Kai.Common.FrmDll_WpfCtrl\Kai.Common.FrmDll_WpfCtrl.csproj" />
+    <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.NetDll_WpfCtrl\Kai.Common.NetDll_WpfCtrl\Kai.Common.NetDll_WpfCtrl.csproj" />
+    <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.StdDll_Common\Kai.Common.StdDll_Common\Kai.Common.StdDll_Common.csproj" />
+    <ProjectReference Include="..\..\..\Kai.Server\Kai.Server.Main\Kai.Server.Main\Kai.Server.Main.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\Add_File001.png" />
+    <Resource Include="Resources\Images\Add_File002.png" />
+    <Resource Include="Resources\Images\Add_File003.png" />
+    <Resource Include="Resources\Images\Allocate002.png" />
+    <Resource Include="Resources\Images\Allocate003.png" />
+    <Resource Include="Resources\Images\Arrow_Down001.png" />
+    <Resource Include="Resources\Images\Arrow_Down002.png" />
+    <Resource Include="Resources\Images\Arrow_Down005.png" />
+    <Resource Include="Resources\Images\Arrow_Down006.png" />
+    <Resource Include="Resources\Images\Book001.png" />
+    <Resource Include="Resources\Images\Callcenter001.png" />
+    <Resource Include="Resources\Images\Cancel001.png" />
+    <Resource Include="Resources\Images\Cancel002.png" />
+    <Resource Include="Resources\Images\Car001.png" />
+    <Resource Include="Resources\Images\Card001.png" />
+    <Resource Include="Resources\Images\Card002.png" />
+    <Resource Include="Resources\Images\Card003.png" />
+    <Resource Include="Resources\Images\Clear001.png" />
+    <Resource Include="Resources\Images\Close001.png" />
+    <Resource Include="Resources\Images\Company001.png" />
+    <Resource Include="Resources\Images\Copy001.png" />
+    <Resource Include="Resources\Images\Customer001.png" />
+    <Resource Include="Resources\Images\Cut001.png" />
+    <Resource Include="Resources\Images\Delete003.png" />
+    <Resource Include="Resources\Images\Delivery001.jpg" />
+    <Resource Include="Resources\Images\Driver001.png" />
+    <Resource Include="Resources\Images\Driver002.png" />
+    <Resource Include="Resources\Images\Driver003.png" />
+    <Resource Include="Resources\Images\Eraser001.png" />
+    <Resource Include="Resources\Images\Eraser002.png" />
+    <Resource Include="Resources\Images\Excel001.png" />
+    <Resource Include="Resources\Images\Exclamation004.png" />
+    <Resource Include="Resources\Images\Finish001.png" />
+    <Resource Include="Resources\Images\Flag002.png" />
+    <Resource Include="Resources\Images\Goal001.png" />
+    <Resource Include="Resources\Images\Goal002.png" />
+    <Resource Include="Resources\Images\Goal003.png" />
+    <Resource Include="Resources\Images\Graph001.png" />
+    <Resource Include="Resources\Images\Graph002.png" />
+    <Resource Include="Resources\Images\Human001.png" />
+    <Resource Include="Resources\Images\Korea.png" />
+    <Resource Include="Resources\Images\Mileage001.jpg" />
+    <Resource Include="Resources\Images\Minus008.png" />
+    <Resource Include="Resources\Images\Money001.png" />
+    <Resource Include="Resources\Images\Monitor001.png" />
+    <Resource Include="Resources\Images\NewPaper001.png" />
+    <Resource Include="Resources\Images\Pda001.png" />
+    <Resource Include="Resources\Images\Pencil001.png" />
+    <Resource Include="Resources\Images\Pencil002.png" />
+    <Resource Include="Resources\Images\Play001.png" />
+    <Resource Include="Resources\Images\Play002.png" />
+    <Resource Include="Resources\Images\Play003.png" />
+    <Resource Include="Resources\Images\Play004.png" />
+    <Resource Include="Resources\Images\Play005.png" />
+    <Resource Include="Resources\Images\Play006.png" />
+    <Resource Include="Resources\Images\Play007.png" />
+    <Resource Include="Resources\Images\Plus001.png" />
+    <Resource Include="Resources\Images\Position001.png" />
+    <Resource Include="Resources\Images\Position002.png" />
+    <Resource Include="Resources\Images\Position004.png" />
+    <Resource Include="Resources\Images\Printer001.png" />
+    <Resource Include="Resources\Images\Question001.png" />
+    <Resource Include="Resources\Images\Receipt001.png" />
+    <Resource Include="Resources\Images\Rotation001.png" />
+    <Resource Include="Resources\Images\Save003.png" />
+    <Resource Include="Resources\Images\Save005.png" />
+    <Resource Include="Resources\Images\Save006.png" />
+    <Resource Include="Resources\Images\Search002.png" />
+    <Resource Include="Resources\Images\Share001.png" />
+    <Resource Include="Resources\Images\Tel003.png" />
+    <Resource Include="Resources\Images\Tel005.png" />
+    <Resource Include="Resources\Images\Tel006.png" />
+    <Resource Include="Resources\Images\Tel007.png" />
+    <Resource Include="Resources\Images\Telephone002.png" />
+    <Resource Include="Resources\Images\Telephone003.png" />
+    <Resource Include="Resources\Images\Telescope001.png" />
+    <Resource Include="Resources\Images\Test001.png" />
+    <Resource Include="Resources\Images\Thief001.png" />
+    <Resource Include="Resources\Images\Wait001.png" />
+    <Resource Include="Resources\Images\Wait002.png" />
+    <Resource Include="Resources\Images\Wait003.png" />
+    <Resource Include="Resources\Images\Spin.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Class_Sub\" />
+	  <Folder Include="Networks\NwCargo24s\" />
+	  <Folder Include="Networks\NwInsungs\" />
+	  <Folder Include="Networks\NwOnecalls\" />
+	</ItemGroup>
+
+</Project>
