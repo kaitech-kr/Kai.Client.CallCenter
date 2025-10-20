@@ -1,4 +1,5 @@
 ﻿using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Class_Common;
 using Kai.Client.CallCenter.MVVM.ViewModels;
 using Kai.Client.CallCenter.MVVM.ViewServices;
 //using Kai.Client.CallCenter.Networks.NwInsungs;
@@ -37,193 +38,156 @@ public partial class Order_StatusPage : Page
     {
         InitializeComponent();
 
-        // TmpHide
-        //// DataGrid의 ItemsSource를 설정
-        //DGridOrder.ItemsSource = VsOrder_StatusPage.oc_VmOrdersWith;
-        //DGridTel.ItemsSource = VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070;
+        // DataGrid의 ItemsSource를 설정
+        DGridOrder.ItemsSource = VsOrder_StatusPage.oc_VmOrdersWith;
+        DGridTel.ItemsSource = VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070;
 
-        //// Order Seq Watch Timer
-        //MinuteTimer = new DispatcherTimer();
-        //MinuteTimer.Interval = TimeSpan.FromMinutes(1);  // ~분마다 실행
-        //MinuteTimer.Tick += MinuteTimer_Tick;
-        //MinuteTimer.Start();
+        // Order Seq Watch Timer
+        MinuteTimer = new DispatcherTimer();
+        MinuteTimer.Interval = TimeSpan.FromMinutes(1);  // ~분마다 실행
+        MinuteTimer.Tick += MinuteTimer_Tick;
+        MinuteTimer.Start();
 
-        //// SignalR - Local Client
-        //SrLocalClient.SrLocalClient_Tel070_AnswerEvent += SrLocalClient_Tel070_AnswerEvent;
+        // SignalR - Local Client
+        SrLocalClient.SrLocalClient_Tel070_AnswerEvent += SrLocalClient_Tel070_AnswerEvent;
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //try
-        //{
-        //    s_Order_StatusPage = this;
+        try
+        {
+            s_Order_StatusPage = this;
 
-        //    // 첫윈도 생성시 늦으므로 미리 만든다 - 보류
-        //    //Order_ReceiptWnd wnd = new Order_ReceiptWnd();
+            // 첫윈도 생성시 늦으므로 미리 만든다 - 보류
+            //Order_ReceiptWnd wnd = new Order_ReceiptWnd();
 
-        //    // Load TelRings
-        //    await VsOrder_StatusPage.Tel070_LoadDataAsync();
+            // Load TelRings
+            StdResult_Error resultErr = await VsOrder_StatusPage.Tel070_LoadDataAsync();
+            if (resultErr != null)
+            {
+                ErrMsgBox(resultErr.sErr, resultErr.sErrNPos);
+            }
 
-        //    // 전체버튼 클릭       
-        //    await Dispatcher.InvokeAsync(() => // Dispatcher를 사용해 UI가 완전히 그려진 이후 실행
-        //    {
-        //        TogBtnTotal.IsChecked = true;
-        //    }, DispatcherPriority.Background);  // 또는 DispatcherPriority.Loaded
-        //}
-        //finally
-        //{
-        //    // Load TodayOrder
-        //    BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
-        //    BtnOrderSearch_Click(null, null); // 조회버튼 클릭
+            // 전체버튼 클릭
+            await Dispatcher.InvokeAsync(() => // Dispatcher를 사용해 UI가 완전히 그려진 이후 실행
+            {
+                TogBtnTotal.IsChecked = true;
+            }, DispatcherPriority.Background);  // 또는 DispatcherPriority.Loaded
+        }
+        finally
+        {
+            // Load TodayOrder
+            BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
+            BtnOrderSearch_Click(null, null); // 조회버튼 클릭
 
-        //    NetLoadingWnd.HideLoading();
-        //}
+            NetLoadingWnd.HideLoading();
+        }
     }
 
     private void Page_Unloaded(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //s_Order_StatusPage = null;
-        //MinuteTimer.Stop();
+        s_Order_StatusPage = null;
+        MinuteTimer.Stop();
     }
 
-    //private async void MinuteTimer_Tick(object sender, EventArgs e) // 동기화
-    //{
-    //    StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
-
-    //    if (result.nResult < 0) // Error
-    //    {
-    //        ErrMsgBox(result.sErr);
-    //        return;
-    //    }
-
-    //    TBlkMsgSmall.Text = $"[{DateTime.Now}] SendingSeq: This={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}";
-
-    //    if (VsOrder_StatusPage.s_nLastSeq == 0) return; // 비교할 필요 없는 상태.
-    //    if (VsOrder_StatusPage.s_nLastSeq != result.nResult)
-    //    {
-    //        ErrMsgBox("코드 보강(VsOrder_StatusPage.s_nLastSeq != result.nResult): 다시 Select해야함.");
-    //    }
-    //}
-    private async void MinuteTimer_Tick(object sender, EventArgs e) // 동기화
+    /// <summary>
+    /// 1분마다 서버 SendingSeq와 로컬 LastSeq 동기화 체크
+    /// </summary>
+    private async void MinuteTimer_Tick(object sender, EventArgs e)
     {
-        // TmpHide
-        //StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
+        StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
 
-        //if (result.nResult < 0) // Error
-        //{
-        //    ErrMsgBox(result.sErr);
-        //    return;
-        //}
+        if (result.nResult < 0) // Error
+        {
+            ErrMsgBox(result.sErr);
+            return;
+        }
 
-        //TBlkMsgSmall.Text = $"[{DateTime.Now}] SendingSeq: This={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}";
+        TBlkMsgSmall.Text = $"[{DateTime.Now}] SendingSeq: This={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}";
 
-        //if (VsOrder_StatusPage.s_nLastSeq != result.nResult)
-        //{
-        //    VsOrder_StatusPage.s_nLastSeq = result.nResult;
-        //    Debug.WriteLine($"보강 해야함: Local SeqNo={VsOrder_StatusPage.s_nLastSeq}, DbSeqNo={result.nResult}");
-        //}
+        if (VsOrder_StatusPage.s_nLastSeq != result.nResult)
+        {
+            VsOrder_StatusPage.s_nLastSeq = result.nResult;
+            Debug.WriteLine($"[Order_StatusPage] SendingSeq 불일치 감지 - Local={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}");
+            // TODO: 필요시 데이터 재조회 로직 추가
+        }
     }
     #endregion
 
     #region 주요버튼 Events
-    //신규버튼
-    private async void BtnOrderNew_Click(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// 신규 주문 등록 버튼
+    /// - 자동배차 실행 중이면 일시정지 후 창 표시, 완료 후 재개
+    /// </summary>
+    private void BtnOrderNew_Click(object sender, RoutedEventArgs e)
     {
-        //// 일시정지 상태가 아니면
-        //if (!CtrlOtherApps.ctrlCancelToken.IsPaused && CtrlOtherApps.ctrlCancelToken.Token.IsCancellationRequested)
-        //{
-        //    // Close NetMsgWnd
-        //    await CtrlOtherApps.ctrlCancelToken.PauseAsync(); // Pause AutoAlloc
+        // 자동배차 실행 중이면 일시정지
+        bool bNeedResume = false;
+        var externalAppCtrl = s_MainWnd?.m_MasterManager?.ExternalAppController;
 
-        //    Order_ReceiptWnd wnd = new Order_ReceiptWnd();
-        //    SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        if (externalAppCtrl?.IsAutoAllocRunning == true)
+        {
+            externalAppCtrl.PauseAutoAlloc();
+            bNeedResume = true;
+        }
 
-        //    CtrlOtherApps.ctrlCancelToken.Resume(); // Resume AutoAlloc
-        //}
-        //else
-        //{
-        //    Order_ReceiptWnd wnd = new Order_ReceiptWnd();
-        //    SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
-        //}
+        // 신규 주문 등록 창 표시
+        Order_ReceiptWnd wnd = new Order_ReceiptWnd();
+        SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+
+        // 자동배차 재개
+        if (bNeedResume)
+        {
+            externalAppCtrl.ResumeAutoAlloc();
+        }
     }
 
     // 조회버튼
+    /// <summary>
+    /// 주문 검색 버튼 클릭
+    /// </summary>
     public async void BtnOrderSearch_Click(object sender, RoutedEventArgs e)
     {
+        // 1. 날짜 유효성 체크
         if (DatePickerStart.SelectedDate == null || DatePickerEnd.SelectedDate == null)
         {
-            ErrMsgBox("검색할 날짜가 없읍니다.");
+            ErrMsgBox("검색할 날짜가 없습니다.");
             return;
         }
 
         DateTime dtStart = (DateTime)DatePickerStart.SelectedDate;
         DateTime dtEnd = (DateTime)DatePickerEnd.SelectedDate;
 
-        //// 오늘 오더
-        //if (dtStart.Date == DateTime.Today && dtEnd.Date == DateTime.Today)
-        //{
-        //    if (BtnOrderSearch.Opacity != (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled"))
-        //    {
-        //        MessageBoxResult resultMsg = Wnd.MessageBox.Show("조회할 필요가 없는데도 조회 하시겠읍니까?", "조회확인", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        //        if (resultMsg != MessageBoxResult.Yes) return;
-        //    }
+        // 2. 오늘 주문 검색
+        if (dtStart.Date == DateTime.Today && dtEnd.Date == DateTime.Today)
+        {
+            // 2-1. 중복 검색 확인 (이미 검색했으면)
+            bool isFirstSearch = BtnOrderSearch.Opacity == (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
+            if (!isFirstSearch)
+            {
+                MessageBoxResult resultMsg = Wnd.MessageBox.Show(
+                    "조회할 필요가 없는데도 조회 하시겠습니까?",
+                    "조회확인",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+                if (resultMsg != MessageBoxResult.Yes) return;
+            }
 
-        //    PostgResult_TbOrderList result = await s_SrGClient.SrResult_Order_SelectRowsAsync_Today_CenterCode();
-        //    if (result.listTb == null) return;
+            // 2-2. 오늘 주문 검색
+            bool success = await SearchTodayOrdersAsync();
+            if (!success) return;
 
-        //    VsOrder_StatusPage.s_listTbOrderToday = result.listTb;
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘전용 리스트에서 상태에 따라 로드한다
-
-        //    if (BtnOrderSearch.Opacity == (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled")) // 처음 한번만...
-        //    {
-        //        BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Disabled");
-        //        Order_StatusPage.MakeExistedAutoAlloc();
-
-        //        //Thread t = new Thread(async () => // Test
-        //        //{
-        //        //    for (; ; )
-        //        //    {
-        //        //        Thread.Sleep(30000);
-        //        //        Debug.WriteLine("-------------------------------------- Test ----------------------------------------");
-
-        //        //        foreach (var tb in VsOrder_StatusPage.s_listTbOrderToday)
-        //        //        {
-        //        //            if (tb.OrderState == "접수")
-        //        //            {
-        //        //                await s_SrGClient.SrResult_OnlyOrderState_UpdateRowAsync_Today(tb, "대기");
-        //        //            }
-        //        //            if (tb.OrderState == "대기")
-        //        //            {
-        //        //                await s_SrGClient.SrResult_OnlyOrderState_UpdateRowAsync_Today(tb, "취소");
-        //        //            }
-        //        //            else if (tb.OrderState == "취소")
-        //        //            {
-        //        //                await s_SrGClient.SrResult_OnlyOrderState_UpdateRowAsync_Today(tb, "접수");
-        //        //            }
-
-        //        //            //Thread.Sleep(1000);
-        //        //        }
-        //        //    }
-        //        //});
-        //        //t.IsBackground = true;
-        //        //t.Start();
-
-        //        // 자동배차
-        //        if (s_bAutoAlloc) _ = Task.Run(() => CtrlOtherApps.Instance.AutoAllocLoopAsync());
-        //        //MsgBox($"NewCount: {VsOrder_StatusPage.s_listTbOrderToday.Count}"); // Test
-        //    }
-        //}
-        //else // 복합 오더
-        //{
-        //    PostgResult_TbOrderList result =
-        //        await s_SrGClient.SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(dtStart.Date, dtEnd.Date, FilterBtnStatus);
-        //    VsOrder_StatusPage.s_listTbOrderMixed = result.listTb;
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderMixed);  // 범위지정 리스트에서 모두로드한다
-
-        //    //MsgBox($"Count: {VsOrder_StatusPage.s_listTbOrderMixed.Count}"); // Test
-        //}
+            // 2-3. 첫 검색이면 초기화 작업 (자동배차 시작 등)
+            if (isFirstSearch)
+            {
+                InitializeAfterFirstSearch();
+            }
+        }
+        // 3. 범위 주문 검색
+        else
+        {
+            await SearchRangeOrdersAsync(dtStart, dtEnd);
+        }
     }
     #endregion
 
@@ -436,17 +400,26 @@ public partial class Order_StatusPage : Page
 
         //Debug.WriteLine($"VsOrder_StatusPage.s_listTbOrderToday: {VsOrder_StatusPage.s_listTbOrderToday.Count}, {BtnOrderSearch.Opacity}, {DatePickerStart.SelectedDate}, {DatePickerEnd.SelectedDate}"); // Test
     }
+    /// <summary>
+    /// 시작 날짜 선택 해제 시 - 오늘이 아니면 "직접입력"으로 변경
+    /// </summary>
     private void DatePickerStart_LostFocus(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //if (DatePickerStart.SelectedDate != DateTime.Today)
-        //    SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+        if (DatePickerStart.SelectedDate.HasValue && DatePickerStart.SelectedDate.Value.Date != DateTime.Today)
+        {
+            SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+        }
     }
+
+    /// <summary>
+    /// 종료 날짜 선택 해제 시 - 오늘이 아니면 "직접입력"으로 변경
+    /// </summary>
     private void DatePickerEnd_LostFocus(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //if (DatePickerEnd.SelectedDate != DateTime.Today)
-        //    SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+        if (DatePickerEnd.SelectedDate.HasValue && DatePickerEnd.SelectedDate.Value.Date != DateTime.Today)
+        {
+            SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+        }
     }
 
     private async void CmbBoxDateSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -536,68 +509,116 @@ public partial class Order_StatusPage : Page
     }
 
     // MouseLeftButtonUp
-    private void DGridTelMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    /// <summary>
+    /// 070 전화 목록 클릭 시 - 해당 전화번호로 새 주문 접수
+    /// </summary>
+    private async void DGridTelMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        // TmpHide
-        //// 현재 선택된 행 가져오기
-        //if (DGridTel.SelectedItem == null) return;
+        // 선택된 항목 확인
+        if (DGridTel.SelectedItem == null) return;
 
-        //var selectedRow = (DataGridRow)DGridTel.ItemContainerGenerator.ContainerFromItem(DGridTel.SelectedItem);
-        //if (selectedRow == null) return;
+        var selectedRow = (DataGridRow)DGridTel.ItemContainerGenerator.ContainerFromItem(DGridTel.SelectedItem);
+        if (selectedRow == null) return;
 
-        //// 현재 마우스 위치
-        //Point mousePos = e.GetPosition(selectedRow);
+        // 클릭이 Row 영역 내에서 발생했는지 확인
+        Point mousePos = e.GetPosition(selectedRow);
+        Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
 
-        //// 선택된 Row의 렌더링 크기 확인
-        //Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
+        if (!bounds.Contains(mousePos)) return;
 
-        //if (bounds.Contains(mousePos)) // 더블클릭이 SelectedRow 안에서 발생한 경우
-        //{
-        //    if (DGridTel.SelectedItem is VmOrder_StatusPage_Tel070 selectedTelRing)
-        //    {
-        //        Order_ReceiptWnd wnd = new Order_ReceiptWnd(StdConvert.MakePhoneNumberToDigit(selectedTelRing.YourTelNum));
-        //        SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
-        //    }
-        //}
+        // 선택된 전화 수신 정보 가져오기
+        if (DGridTel.SelectedItem is not VmOrder_StatusPage_Tel070 selectedTelRing) return;
+
+        // 전화번호로 새 주문 접수 창 열기
+        string phoneNumber = StdConvert.MakePhoneNumberToDigit(selectedTelRing.YourTelNum);
+        await OpenNewOrderWindowAsync(phoneNumber);
     }
 
     // DoubleClick
+    /// <summary>
+    /// 주문 목록 더블클릭 시 - 주문 상세 창 열기
+    /// </summary>
     private async void DGridOrderMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        //// 현재 선택된 행 가져오기
-        //if (DGridOrder.SelectedItem == null) return;
+        // 선택된 항목 확인
+        if (DGridOrder.SelectedItem == null) return;
 
-        //var selectedRow = (DataGridRow)DGridOrder.ItemContainerGenerator.ContainerFromItem(DGridOrder.SelectedItem);
-        //if (selectedRow == null) return;
+        var selectedRow = (DataGridRow)DGridOrder.ItemContainerGenerator.ContainerFromItem(DGridOrder.SelectedItem);
+        if (selectedRow == null) return;
 
-        //// 현재 마우스 위치
-        //Point mousePos = e.GetPosition(selectedRow);
+        // 더블클릭이 Row 영역 내에서 발생했는지 확인
+        Point mousePos = e.GetPosition(selectedRow);
+        Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
 
-        //// 선택된 Row의 렌더링 크기 확인
-        //Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
+        if (!bounds.Contains(mousePos)) return;
 
-        //if (bounds.Contains(mousePos)) // 더블클릭이 SelectedRow 안에서 발생한 경우
-        //{
-        //    if (DGridOrder.SelectedItem is VmOrder_StatusPage_Order selectedOrder)
-        //    {
-        //        // 일시정지 상태가 아니면
-        //        if (!CtrlOtherApps.ctrlCancelToken.IsPaused && CtrlOtherApps.ctrlCancelToken.Token.IsCancellationRequested)
-        //        {
-        //            // Close NetMsgWnd
-        //            await CtrlOtherApps.ctrlCancelToken.PauseAsync(); // Pause AutoAlloc
+        // 선택된 주문 가져오기
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
 
-        //            Order_ReceiptWnd wnd = new Order_ReceiptWnd(selectedOrder.tbOrder);
-        //            SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        // 주문 상세 창 열기
+        await OpenOrderDetailWindowAsync(selectedOrder.tbOrder);
+    }
 
-        //            CtrlOtherApps.ctrlCancelToken.Resume(); // Resume AutoAlloc
-        //        }
-        //        else
-        //        {
-        //            Order_ReceiptWnd wnd = new Order_ReceiptWnd(selectedOrder.tbOrder);
-        //            SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
-        //        }
-        //    }
-        //}
+    /// <summary>
+    /// 주문 상세 창 열기 (자동배차 일시정지 처리 포함)
+    /// </summary>
+    private async Task OpenOrderDetailWindowAsync(TbOrder order)
+    {
+        var externalAppController = s_MainWnd?.m_MasterManager?.ExternalAppController;
+        bool shouldPauseAutoAlloc = externalAppController != null && externalAppController.IsAutoAllocRunning;
+
+        try
+        {
+            // 자동배차 실행 중이면 일시정지
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.PauseAutoAlloc();
+                await Task.Delay(100); // 일시정지 처리 대기
+            }
+
+            // 주문 상세 창 열기
+            Order_ReceiptWnd wnd = new Order_ReceiptWnd(order);
+            SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        }
+        finally
+        {
+            // 자동배차 재개
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.ResumeAutoAlloc();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 새 주문 접수 창 열기 (전화번호 지정, 자동배차 일시정지 처리 포함)
+    /// </summary>
+    private async Task OpenNewOrderWindowAsync(string phoneNumber)
+    {
+        var externalAppController = s_MainWnd?.m_MasterManager?.ExternalAppController;
+        bool shouldPauseAutoAlloc = externalAppController != null && externalAppController.IsAutoAllocRunning;
+
+        try
+        {
+            // 자동배차 실행 중이면 일시정지
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.PauseAutoAlloc();
+                await Task.Delay(100); // 일시정지 처리 대기
+            }
+
+            // 전화번호로 새 주문 접수 창 열기
+            Order_ReceiptWnd wnd = new Order_ReceiptWnd(phoneNumber);
+            SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        }
+        finally
+        {
+            // 자동배차 재개
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.ResumeAutoAlloc();
+            }
+        }
     }
 
     // RightButtonDown
@@ -653,118 +674,120 @@ public partial class Order_StatusPage : Page
     #endregion
 
     #region Order ContextMenu Events
-    // 상태변경 - 접수상태로
-    private async void OrderContext_ToReceiptState_Click(object sender, RoutedEventArgs e) 
+    /// <summary>
+    /// 상태변경 - 접수상태로
+    /// </summary>
+    private async void OrderContext_ToReceiptState_Click(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //if (DGridOrder.SelectedItem is VmOrder_StatusPage_Order selectedOrder)
-        //{
-        //    TbOrder tb = selectedOrder.tbOrder;
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
 
-        //    switch (tb.OrderState)
-        //    {
-        //        case "접수": return;
+        TbOrder tb = selectedOrder.tbOrder;
 
-        //        case "취소":
-        //        case "대기": await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "접수"); break; // 접수상태로
+        switch (tb.OrderState)
+        {
+            case "접수":
+                return; // 이미 접수 상태
 
-        //        default:
-        //            WarnMsgBox($"코딩해야하는 Case: {tb.OrderState}", "OrderContext_ToReceiptState_Click_01");
-        //            break;
-        //    }
-        //}
+            case "취소":
+            case "대기":
+                await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "접수");
+                break;
+
+            default:
+                WarnMsgBox($"코딩해야하는 Case: {tb.OrderState}", "OrderContext_ToReceiptState_Click");
+                break;
+        }
     }
-    // 상태변경 - 대기상태로
+
+    /// <summary>
+    /// 상태변경 - 대기상태로
+    /// </summary>
     private async void OrderContext_ToWaitState_Click(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //if (DGridOrder.SelectedItem is VmOrder_StatusPage_Order selectedOrder)
-        //{
-        //    TbOrder tb = selectedOrder.tbOrder;
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
 
-        //    switch (tb.OrderState)
-        //    {
-        //        case "대기": return;
+        TbOrder tb = selectedOrder.tbOrder;
 
-        //        case "취소":
-        //        case "접수": await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "대기"); break; // 접수상태로
+        switch (tb.OrderState)
+        {
+            case "대기":
+                return; // 이미 대기 상태
 
-        //        default:
-        //            WarnMsgBox($"코딩해야하는 Case: {tb.OrderState}", "OrderContext_ToWaitState_Click_01");
-        //            break;
-        //    }
-        //}
+            case "취소":
+            case "접수":
+                await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "대기");
+                break;
+
+            default:
+                WarnMsgBox($"코딩해야하는 Case: {tb.OrderState}", "OrderContext_ToWaitState_Click");
+                break;
+        }
     }
-    // 상태변경 - 취소상태로
+
+    /// <summary>
+    /// 상태변경 - 취소상태로
+    /// </summary>
     private async void OrderContext_ToCancelState_Click(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //if (DGridOrder.SelectedItem is VmOrder_StatusPage_Order selectedOrder)
-        //{
-        //    TbOrder tb = selectedOrder.tbOrder;
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
 
-        //    switch (tb.OrderState)
-        //    {
-        //        case "취소": return;
+        TbOrder tb = selectedOrder.tbOrder;
 
-        //        case "접수":
-        //        case "배차":
-        //        case "대기":
-        //        case "운행":
-        //        case "완료": await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "취소"); break; // 접수상태로
+        switch (tb.OrderState)
+        {
+            case "취소":
+                return; // 이미 취소 상태
 
-        //        default:
-        //            WarnMsgBox($"코딩해야하는 Case: {tb.OrderState}", "OrderContext_ToCancelState_Click_01");
-        //            break;
-        //    }
-        //}
+            case "접수":
+            case "배차":
+            case "대기":
+            case "운행":
+            case "완료":
+                await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "취소");
+                break;
+
+            default:
+                WarnMsgBox($"코딩해야하는 Case: {tb.OrderState}", "OrderContext_ToCancelState_Click");
+                break;
+        }
     }
 
-    // 콜복사 - 접수로
+    /// <summary>
+    /// 콜복사 - 접수 상태로 새로운 주문 생성
+    /// </summary>
     private async void OrderContext_CopyToReceipt_Click(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //await Application.Current.Dispatcher.InvokeAsync(async () =>
-        //{
-        //    if (DGridOrder.SelectedItem is VmOrder_StatusPage_Order selectedOrder)
-        //    {
-        //        TbOrder tb = selectedOrder.tbOrder;
-        //        TbOrder tbNew = NetUtil.DeepCopyFrom(tb);
-        //        tbNew.KeyCode = 0;
-        //        tbNew.OrderState = "접수";
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
 
-        //        StdResult_Long resultLong = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
-        //        if (resultLong.lResult <= 0)
-        //            MessageBox.Show($"접수 콜복사 실패: {resultLong.sErr}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
-        //    }
-        //});
+        TbOrder tb = selectedOrder.tbOrder;
+        TbOrder tbNew = NetUtil.DeepCopyFrom(tb);
+        tbNew.KeyCode = 0; // 새 주문이므로 KeyCode 초기화
+        tbNew.OrderState = "접수";
+
+        StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
+        if (result.lResult <= 0)
+        {
+            ErrMsgBox($"접수 콜복사 실패\n{result.sErrNPos}", "OrderContext_CopyToReceipt_Click");
+        }
     }
 
-    // 콜복사 - 대기로
-    private void OrderContext_CopyToWait_Click(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// 콜복사 - 대기 상태로 새로운 주문 생성
+    /// </summary>
+    private async void OrderContext_CopyToWait_Click(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //if (DGridOrder.SelectedItem is VmOrder_StatusPage_Order selectedOrder)
-        //{
-        //    TbOrder tb = selectedOrder.tbOrder;
-        //    TbOrder tbNew = NetUtil.DeepCopyFrom(tb);
-        //    tbNew.KeyCode = 0;
-        //    tbNew.OrderState = "대기";
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
 
-        //    // 메뉴 먼저 닫히게 하고, 작업은 백그라운드에서 처리
-        //    Task.Run(async () =>
-        //    {
-        //        var resultLong = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
+        TbOrder tb = selectedOrder.tbOrder;
+        TbOrder tbNew = NetUtil.DeepCopyFrom(tb);
+        tbNew.KeyCode = 0; // 새 주문이므로 KeyCode 초기화
+        tbNew.OrderState = "대기";
 
-        //        if (resultLong.lResult <= 0)
-        //        {
-        //            Application.Current.Dispatcher.Invoke(() =>
-        //            {
-        //                MessageBox.Show($"대기 콜복사 실패: {resultLong.sErr}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
-        //            });
-        //        }
-        //    });
-        //}
+        StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
+        if (result.lResult <= 0)
+        {
+            ErrMsgBox($"대기 콜복사 실패\n{result.sErrNPos}", "OrderContext_CopyToWait_Click");
+        }
     }
 
     #endregion
@@ -786,11 +809,15 @@ public partial class Order_StatusPage : Page
     }
 
     #region 자작 이벤트
-    public void SrLocalClient_Tel070_AnswerEvent(string telNo)
+    /// <summary>
+    /// 070 전화 응답 이벤트 핸들러 - 전화번호로 새 주문 접수 창 자동 열기
+    /// </summary>
+    public async void SrLocalClient_Tel070_AnswerEvent(string telNo)
     {
-        // TmpHide
-        //Order_ReceiptWnd wnd = new Order_ReceiptWnd(telNo);
-        //SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        if (string.IsNullOrWhiteSpace(telNo)) return;
+
+        string phoneNumber = StdConvert.MakePhoneNumberToDigit(telNo);
+        await OpenNewOrderWindowAsync(phoneNumber);
     }
     #endregion
 
@@ -865,11 +892,36 @@ public partial class Order_StatusPage : Page
     #endregion  From Cargo24 끝
 
     #region 임시 이벤트
+    /// <summary>
+    /// 선택된 주문을 취소 상태로 변경
+    /// </summary>
     private async void BtnOrderCancel_Click(object sender, RoutedEventArgs e)
     {
-        // TmpHide
-        //StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
-        //MsgBox($"SrResult_Order_SelectSendingSeqOnly: {result}");
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder)
+        {
+            WarnMsgBox("취소할 주문을 선택해주세요.", "BtnOrderCancel_Click");
+            return;
+        }
+
+        TbOrder tb = selectedOrder.tbOrder;
+
+        // 이미 취소 상태인 경우
+        if (tb.OrderState == "취소")
+        {
+            ErrMsgBox("이미 취소된 주문입니다.", "BtnOrderCancel_Click");
+            return;
+        }
+
+        // 취소 가능한 상태 확인
+        if (tb.OrderState != "접수" && tb.OrderState != "배차" &&
+            tb.OrderState != "대기" && tb.OrderState != "운행" && tb.OrderState != "완료")
+        {
+            ErrMsgBox($"취소할 수 없는 상태입니다: {tb.OrderState}", "BtnOrderCancel_Click");
+            return;
+        }
+
+        // 주문 취소 처리
+        await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "취소");
     }
 
     private void BtnOrderDriver_Click(object sender, RoutedEventArgs e)
@@ -1051,19 +1103,122 @@ public partial class Order_StatusPage : Page
         }
     }
 
-    //private static void MakeExistedAutoAlloc()
-    //{
-    //    foreach (TbOrder tb in VsOrder_StatusPage.s_listTbOrderToday)
-    //    {
-    //        //AddAutoAlloc(PostgService_Common_OrderState.None, tb);
-    //        AutoAllocCtrl.AppendToList_WithExisted(tb);
-    //    }
-    //}
+    /// <summary>
+    /// 기존 주문을 자동배차 대상으로 등록
+    /// </summary>
+    private static void MakeExistedAutoAlloc()
+    {
+        if (VsOrder_StatusPage.s_listTbOrderToday == null || VsOrder_StatusPage.s_listTbOrderToday.Count == 0)
+        {
+            Debug.WriteLine("[MakeExistedAutoAlloc] 로드할 기존 주문이 없습니다.");
+            return;
+        }
+
+        // ExternalAppController에 기존 주문 목록 전달
+        if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+        {
+            s_MainWnd.m_MasterManager.ExternalAppController.LoadExistingOrders(VsOrder_StatusPage.s_listTbOrderToday);
+        }
+        else
+        {
+            Debug.WriteLine("[MakeExistedAutoAlloc] ExternalAppController가 초기화되지 않았습니다.");
+        }
+    }
     #endregion
 
     #region 2차 Funcs
+    /// <summary>
+    /// 오늘 주문 검색 및 로드
+    /// </summary>
+    private async Task<bool> SearchTodayOrdersAsync()
+    {
+        PostgResult_TbOrderList result = await s_SrGClient.SrResult_Order_SelectRowsAsync_Today_CenterCode();
+        if (!string.IsNullOrEmpty(result.sErr))
+        {
+            ErrMsgBox($"오늘 주문 조회 실패: {result.sErr}", "Order_StatusPage/SearchTodayOrdersAsync");
+            return false;
+        }
+
+        if (result.listTb == null) return false;
+
+        VsOrder_StatusPage.s_listTbOrderToday = result.listTb;
+        await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);
+
+        return true;
+    }
+
+    /// <summary>
+    /// 범위 주문 검색 및 로드
+    /// </summary>
+    private async Task<bool> SearchRangeOrdersAsync(DateTime dtStart, DateTime dtEnd)
+    {
+        PostgResult_TbOrderList result =
+            await s_SrGClient.SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(dtStart.Date, dtEnd.Date, FilterBtnStatus);
+
+        if (!string.IsNullOrEmpty(result.sErr))
+        {
+            ErrMsgBox($"범위 주문 조회 실패: {result.sErr}", "Order_StatusPage/SearchRangeOrdersAsync");
+            return false;
+        }
+
+        VsOrder_StatusPage.s_listTbOrderMixed = result.listTb;
+        await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderMixed);
+
+        return true;
+    }
+
+    /// <summary>
+    /// 첫 검색 후 초기화 작업 (자동배차 시작 등)
+    /// </summary>
+    private void InitializeAfterFirstSearch()
+    {
+        // 버튼 비활성화 (중복 검색 방지)
+        BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Disabled");
+
+        // 기존 주문 자동배차 리스트 생성
+        MakeExistedAutoAlloc();
+
+        // 자동배차 시작 (Master 모드이고 설정이 켜져 있으면)
+        if (s_bAutoAlloc && s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+        {
+            s_MainWnd.m_MasterManager.ExternalAppController.StartAutoAlloc();
+        }
+    }
     #endregion
 
+    #region Helper Methods
+    /// <summary>
+    /// ComboBox의 선택된 인덱스를 스레드 안전하게 가져옵니다
+    /// </summary>
+    public static int GetComboBoxSelectedIndex(ComboBox comboBox)
+    {
+        return Wnd.Application.Current.Dispatcher.Invoke(() => comboBox.SelectedIndex);
+    }
 
+    /// <summary>
+    /// ComboBox에서 Content로 항목을 찾아 선택합니다
+    /// </summary>
+    /// <param name="comboBox">ComboBox 컨트롤</param>
+    /// <param name="content">찾을 Content 문자열</param>
+    /// <returns>설정된 인덱스 (-1이면 찾지 못함)</returns>
+    private static int SetComboBoxItemByContent(ComboBox comboBox, string content)
+    {
+        return Wnd.Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (comboBox == null || content == null) return -1;
+
+            for (int i = 0; i < comboBox.Items.Count; i++)
+            {
+                if (comboBox.Items[i] is ComboBoxItem item && item.Content?.ToString() == content)
+                {
+                    comboBox.SelectedIndex = i;
+                    return i;
+                }
+            }
+
+            return -1;
+        });
+    }
+    #endregion
 }
 #nullable enable

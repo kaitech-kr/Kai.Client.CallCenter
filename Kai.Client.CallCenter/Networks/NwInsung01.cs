@@ -6,6 +6,7 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 
 using Kai.Client.CallCenter.Class_Common;
+using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Networks.NwInsungs;
 using static Kai.Client.CallCenter.Class_Common.CommonVars;
 
@@ -174,6 +175,38 @@ public class NwInsung01 : IExternalApp
         catch (Exception ex)
         {
             Debug.WriteLine($"[NwInsung01] Shutdown 실패: {ex.Message}");
+        }
+    }
+
+    public async Task<StdResult_Status> AutoAllocAsync(long lAllocCount, CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine($"[NwInsung01] AutoAllocAsync 시작 - Count={lAllocCount}");
+
+            // 첫 진입 시 MsgBox 표시
+            if (lAllocCount == 1)
+            {
+                System.Windows.MessageBox.Show(
+                    $"[인성1] 자동배차에 진입했습니다.\nCount={lAllocCount}",
+                    "자동배차 진입",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Information);
+            }
+
+            // TODO: 실제 자동배차 로직 구현
+            // (Stub for now - will implement after build test)
+
+            Debug.WriteLine($"[NwInsung01] AutoAllocAsync 완료 - Count={lAllocCount}");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            return new StdResult_Status(StdResult.Skip, "작업 취소됨", "NwInsung01/AutoAllocAsync_Cancel");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, ex.Message, "NwInsung01/AutoAllocAsync_999");
         }
     }
     #endregion

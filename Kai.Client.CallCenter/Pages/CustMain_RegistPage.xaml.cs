@@ -44,7 +44,6 @@ public partial class CustMain_RegistPage : Page
     public CustMain_RegistPage()
     {
         InitializeComponent();
-        bool isUsing = m_bUsing.Value; // 경고 없애기 위해 사족.
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)

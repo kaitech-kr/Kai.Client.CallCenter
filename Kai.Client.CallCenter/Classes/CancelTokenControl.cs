@@ -1,113 +1,75 @@
-﻿//using System.Diagnostics;
+﻿using System.Diagnostics;
 
-//namespace Kai.Client.CallCenter.Classes;
-//#nullable disable
-//public class CancelTokenControl
-//{
-//    private readonly ManualResetEventSlim _pauseEvent = new(true);
-//    private TaskCompletionSource<bool> _pauseEnteredTcs;
+namespace Kai.Client.CallCenter.Classes;
 
-//    private volatile bool _isPaused = false;
-//    private Task _loopTask;
+#nullable disable
+/// <summary>
+/// 취소/일시정지 제어를 위한 토큰 컨트롤러
+/// - UI 의존성 제거: 상위 레이어에서 UI 처리
+/// - 단순화: 핵심 기능만 제공 (Pause/Resume/Cancel/Wait)
+/// - 명확한 책임: 토큰 상태 관리만 담당
+/// </summary>
+public class CancelTokenControl
+{
+    private readonly ManualResetEventSlim _pauseEvent = new(true);
+    private volatile bool _isPaused = false;
 
-//    public CancellationTokenSource TokenSource { get; } = new();
-//    public CancellationToken Token => TokenSource.Token;
+    public CancellationTokenSource TokenSource { get; } = new();
+    public CancellationToken Token => TokenSource.Token;
 
-//    public bool IsPaused => _isPaused;
+    public bool IsPaused => _isPaused;
 
-//    public void AttachLoopTask(Task loopTask)
-//    {
-//        _loopTask = loopTask;
-//    }
+    /// <summary>
+    /// 일시정지 (동기)
+    /// </summary>
+    public void Pause()
+    {
+        if (_isPaused) return;
 
-//    public async Task PauseAsync()
-//    {
-//        if (_isPaused) return;
+        Debug.WriteLine("[CancelTokenControl] Pause 호출됨");
+        _isPaused = true;
+        _pauseEvent.Reset();
+    }
 
-//        _isPaused = true;
-//        _pauseEvent.Reset();
-//        _pauseEnteredTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+    /// <summary>
+    /// 재개 (동기)
+    /// </summary>
+    public void Resume()
+    {
+        if (!_isPaused) return;
 
-//        Debug.WriteLine("[ExecutionControl] Pausing...");
-//        LocalFuncs.ShowExtMsgWndSimple(LocalVars.s_MainWnd, "자동배차를 정지중 입니다.");
+        Debug.WriteLine("[CancelTokenControl] Resume 호출됨");
 
-//        try
-//        {
-//            // 루프에서 Pause에 진입하면 TrySetResult 호출 → 여기서 풀림
-//            await _pauseEnteredTcs.Task.WaitAsync(Token);
+        _isPaused = false;   // 플래그 해제
+        _pauseEvent.Set();   // 대기 중인 루프 깨움
+    }
 
-//            Debug.WriteLine("[ExecutionControl] Paused");
+    /// <summary>
+    /// 일시정지/취소 상태 대기 (async)
+    /// - Pause 상태면 Resume 될 때까지 대기
+    /// - Cancel 상태면 OperationCanceledException 발생
+    /// </summary>
+    public async Task WaitIfPausedOrCancelledAsync()
+    {
+        while (_isPaused)
+        {
+            Token.ThrowIfCancellationRequested();
+            await Task.Run(() => _pauseEvent.Wait(200, Token));
+        }
 
-//            // UI 닫기
+        Token.ThrowIfCancellationRequested();
+    }
 
-//        }
-//        catch (OperationCanceledException)
-//        {
-//            Debug.WriteLine("[ExecutionControl] PauseAsync 취소됨");
-//        }
-//        finally
-//        {
-//            LocalFuncs.CloseExtMsgWndSimple();
-//        }
-//    }
-
-//    public void Resume()
-//    {
-//        if (!_isPaused) return;
-
-//        Debug.WriteLine("[ExecutionControl] Resume 호출됨");
-
-//        _isPaused = false;   // 플래그 해제
-//        _pauseEvent.Set();   // 대기 중인 루프 깨움
-//    }
-
-//    public async Task WaitIfPausedOrCancelledAsync()
-//    {
-//        bool signaled = false;
-
-//        while (_isPaused)
-//        {
-//            Token.ThrowIfCancellationRequested();
-
-//            if (!signaled)
-//            {
-//                // Pause 진입 시점 알림
-//                _pauseEnteredTcs?.TrySetResult(true);
-//                signaled = true;
-//            }
-
-//            await Task.Run(() => _pauseEvent.Wait(200, Token));
-//        }
-
-//        Token.ThrowIfCancellationRequested();
-//    }
-
-//    public void Cancel()
-//    {
-//        if (!TokenSource.IsCancellationRequested)
-//            TokenSource.Cancel();
-//    }
-
-//    /// ✅ StopAsync: Cancel + 루프 종료 대기
-//    public async Task StopAsync()
-//    {
-//        if (_loopTask == null)
-//        {
-//            Debug.WriteLine("[ExecutionControl] 작업이 Attach되지 않았습니다.");
-//            return;
-//        }
-
-//        Cancel(); // 취소 요청
-
-//        try
-//        {
-//            await _loopTask; // 루프가 종료되기를 기다림
-//            Debug.WriteLine("[ExecutionControl] 루프 종료됨");
-//        }
-//        catch (OperationCanceledException)
-//        {
-//            Debug.WriteLine("[ExecutionControl] 루프 작업이 취소됨");
-//        }
-//    }
-//}
-//#nullable enable
+    /// <summary>
+    /// 취소 요청
+    /// </summary>
+    public void Cancel()
+    {
+        if (!TokenSource.IsCancellationRequested)
+        {
+            Debug.WriteLine("[CancelTokenControl] Cancel 호출됨");
+            TokenSource.Cancel();
+        }
+    }
+}
+#nullable enable

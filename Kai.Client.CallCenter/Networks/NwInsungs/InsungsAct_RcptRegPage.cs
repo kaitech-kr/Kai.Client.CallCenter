@@ -7,6 +7,7 @@ using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 
 using Kai.Client.CallCenter.Class_Common;
+using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Windows;
 
@@ -1808,6 +1809,137 @@ public class InsungsAct_RcptRegPage
                 "InsungsAct_RcptRegPage/AdjustColumnWidth_999");
         }
     }
+    #endregion
+
+    #region 자동배차 Helper 함수들 (간단)
+    /// <summary>
+    /// Datagrid 로딩 완료 대기 (Pan 상태 변화 감지)
+    /// </summary>
+    /// <param name="hWndDG">Datagrid 윈도우 핸들</param>
+    /// <param name="Elpase">최대 대기 시간 (밀리초, 기본 500ms)</param>
+    /// <returns>성공: Success, 시간 초과: Fail, Pan 없음: Skip</returns>
+    private async Task<StdResult_Status> WaitPanLoadedAsync(IntPtr hWndDG, int Elpase = 500)
+    {
+        IntPtr hWndFind = IntPtr.Zero;
+
+        // 1. Pan이 나타날 때까지 대기 (최대 100ms)
+        for (int i = 0; i < 100; i++)
+        {
+            hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, m_FileInfo.접수등록Page_DG오더_ptChkRelPanL);
+            if (hWndFind != hWndDG) break;  // Pan이 나타남
+            await Task.Delay(1);
+        }
+
+        if (hWndFind == hWndDG)  // Pan이 안 나타남 (이미 로딩 완료)
+            return new StdResult_Status(StdResult.Skip);
+
+        // 2. Pan이 사라질 때까지 대기 (로딩 완료)
+        for (int i = 0; i < Elpase; i++)
+        {
+            hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, m_FileInfo.접수등록Page_DG오더_ptChkRelPanL);
+            if (hWndFind == hWndDG) break;  // Pan이 사라짐 (로딩 완료)
+            await Task.Delay(100);
+        }
+
+        if (hWndFind != hWndDG)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] WaitPanLoadedAsync 시간 초과");
+            return CommonFuncs_StdResult.ErrMsgResult_Status(StdResult.Fail,
+                "Datagrid 로딩 대기 시간 초과",
+                $"{m_Context.AppName}/RcptRegPage/WaitPanLoadedAsync_01");
+        }
+
+        return new StdResult_Status(StdResult.Success);
+    }
+
+    // TODO: Simulation_Mouse 메서드 구현 후 주석 해제
+    ///// <summary>
+    ///// 조회 버튼 클릭 후 총계 읽기
+    ///// </summary>
+    ///// <param name="ctrl">취소 토큰 컨트롤</param>
+    ///// <returns>총계 문자열 (실패 시 빈 문자열 또는 null)</returns>
+    //public async Task<StdResult_String> Click조회버튼Async(CancelTokenControl ctrl)
+    //{
+    //    try
+    //    {
+    //        string str = "";
+    //        StdResult_Status resultSts = null;
+
+    //        // 조회 버튼 클릭 후 총계 읽기 반복 시도
+    //        for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
+    //        {
+    //            await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //            // 1. 조회 버튼 클릭
+    //            Simulation_Mouse.SafeMousePost_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
+
+    //            // 2. Datagrid 로딩 대기
+    //            resultSts = await WaitPanLoadedAsync(m_RcptPage.DG오더_hWnd);
+    //            if (resultSts.Result == StdResult.Fail) continue;
+
+    //            // 3. 총계 읽기
+    //            str = Std32Window.GetWindowCaption(m_RcptPage.CallCount_hWnd총계);
+    //            if (!string.IsNullOrEmpty(str))
+    //            {
+    //                Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 조회 버튼 클릭 완료, 총계: {str}");
+    //                break;
+    //            }
+
+    //            await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+    //        }
+
+    //        return new StdResult_String(str);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return new StdResult_String(StdUtil.GetExceptionMessage(ex),
+    //            $"{m_Context.AppName}/RcptRegPage/Click조회버튼Async_999");
+    //    }
+    //}
+
+    ///// <summary>
+    ///// Empty Row 클릭 (선택 해제용)
+    ///// </summary>
+    ///// <param name="ctrl">취소 토큰 컨트롤</param>
+    ///// <returns>클릭 성공 여부</returns>
+    //public async Task<bool> ClickEmptyRowAsync(CancelTokenControl ctrl)
+    //{
+    //    bool bClicked = false;
+
+    //    try
+    //    {
+    //        // Empty Row는 [0, 1] 셀 (첫 번째 컬럼, 두 번째 행)
+    //        Draw.Point ptRel = StdUtil.GetDrawPoint(m_RcptPage.DG오더_RelChildRects[0, 1], 3, 3);
+
+    //        for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
+    //        {
+    //            await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //            // 밝기 변화 감지로 클릭 확인
+    //            bClicked = await Simulation_Mouse
+    //                .SafeMousePost_ClickLeft_ptRel_WaitBrightChange(
+    //                    m_RcptPage.DG오더_hWnd,
+    //                    ptRel,
+    //                    ptRel,
+    //                    m_RcptPage.DG오더_nBackgroundBright);
+
+    //            if (bClicked)
+    //            {
+    //                Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] Empty Row 클릭 완료");
+    //                break;
+    //            }
+
+    //            await Task.Delay(100, ctrl.Token);
+    //        }
+
+    //        return bClicked;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] ClickEmptyRowAsync 예외: {ex.Message}");
+    //        return false;
+    //    }
+    //}
     #endregion
 }
 #nullable enable

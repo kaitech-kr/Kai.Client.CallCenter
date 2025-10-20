@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows.Threading;
@@ -7,11 +8,14 @@ using Microsoft.AspNetCore.SignalR.Client; // Nuget: Microsoft.AspNetCore.Signal
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetUtils;
+using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using static Kai.Common.FrmDll_WpfCtrl.FrmSystemDisplays;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 using static Kai.Common.StdDll_Common.StdDelegate;
 using static Kai.Common.StdDll_Common.StdWin32.StdCommon32;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Networks;
@@ -143,11 +147,11 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             //HubConn.On(StdConst_FuncName.SrReport_MultiConnected, () => SrReport_MultiConnected());
 
             // Tel070
-            //HubConn.On<TbTelMainRing, int>(StdConst_FuncName.SrReport.TelMainRingAsync, (tb, count) => SrReport_TelMainRingAsync(tb, count));
+            HubConn.On<TbTelMainRing, int>(StdConst_FuncName.SrReport.TelMainRingAsync, (tb, count) => SrReport_TelMainRingAsync(tb, count));
 
             // Order
-            //HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_InsertedRowAsync_Today, (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
-            //HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_UpdatedRowAsync_Today, (tb, seq) => SrReport_Order_UpdatedRowAsync_Today(tb, seq));
+            HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_InsertedRowAsync_Today, (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
+            HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_UpdatedRowAsync_Today, (tb, seq) => SrReport_Order_UpdatedRowAsync_Today(tb, seq));
             #endregion
 
             Debug.WriteLine($"연결 시도 시작...");
@@ -321,106 +325,144 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     //    }
     //}
 
-    //public async Task SrReport_TelMainRingAsync(TbTelMainRing tbRing, int nRowsCount)
-    //{
-    //    if (tbRing == null) return;
+    /// <summary>
+    /// 070 전화 수신 시그널 처리
+    /// </summary>
+    /// <param name="tbRing">수신된 전화 정보</param>
+    /// <param name="nRowsCount">서버의 전체 행 개수</param>
+    public async Task SrReport_TelMainRingAsync(TbTelMainRing tbRing, int nRowsCount)
+    {
+        if (tbRing == null) return;
 
-    //    if (nRowsCount != (VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070.Count + 1))
-    //    {
-    //        await Application.Current.Dispatcher.InvokeAsync(async () =>
-    //        {
-    //            await VsOrder_StatusPage.Tel070_LoadDataAsync();
-    //        });
-    //    }
-    //    else
-    //    {
-    //        await Application.Current.Dispatcher.InvokeAsync(() =>
-    //        {
-    //            //VsOrder_StatusPage.Tel070_AppendData(tbRing);
-    //        });
-    //    }
-    //}
+        // 행 개수가 맞지 않으면 전체 재로드
+        if (nRowsCount != (VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070.Count + 1))
+        {
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await VsOrder_StatusPage.Tel070_LoadDataAsync();
+            });
+        }
+        // 행 개수가 정확하면 추가만 수행
+        else
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                VsOrder_StatusPage.Tel070_AppendData(tbRing);
+            });
+        }
+    }
 
-    //public async Task SrReport_Order_InsertedRowAsync_Today(TbOrder tbOrder, int nSeq)
-    //{
-    //    if (tbOrder == null) return;
+    /// <summary>
+    /// 오늘 날짜 주문 삽입 시그널 처리
+    /// </summary>
+    /// <param name="tbOrder">삽입된 주문</param>
+    /// <param name="nSeq">시퀀스 번호</param>
+    public async Task SrReport_Order_InsertedRowAsync_Today(TbOrder tbOrder, int nSeq)
+    {
+        if (tbOrder == null) return;
 
-    //    if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
-    //    {
-    //        if (s_Order_StatusPage != null)
-    //        {
-    //            await Application.Current.Dispatcher.InvokeAsync(() =>
-    //            {
-    //                s_Order_StatusPage.BtnOrderSearch_Click(null, null);
-    //            });
-    //        }
-    //    }
-    //    else
-    //    {
-    //        if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
+        // 시퀀스가 맞지 않으면 전체 재조회
+        if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
+        {
+            if (s_Order_StatusPage != null)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    s_Order_StatusPage.BtnOrderSearch_Click(null, null);
+                });
+            }
+        }
+        // 시퀀스가 정상이면 리스트에 추가
+        else
+        {
+            if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
 
-    //        VsOrder_StatusPage.s_listTbOrderToday.Insert(0, tbOrder);
+            // 리스트 맨 앞에 추가
+            VsOrder_StatusPage.s_listTbOrderToday.Insert(0, tbOrder);
 
-    //        //AutoAllocCtrl.AppendToList_NotExisted(PostgService_Common_OrderState.Created, tbOrder);
+            // 자동배차 시스템에 새 주문 등록
+            if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+            {
+                s_MainWnd.m_MasterManager.ExternalAppController.AddNewOrder(tbOrder);
+            }
 
-    //        if (s_Order_StatusPage == null) return;
+            if (s_Order_StatusPage == null) return;
 
-    //        int index = GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
-    //        if (index == 0) await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
-    //    }
+            // 오늘 날짜 선택 시에만 UI 업데이트
+            int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
+            if (index == 0)
+            {
+                await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
+            }
+        }
 
-    //    VsOrder_StatusPage.s_nLastSeq = nSeq;
-    //}
+        VsOrder_StatusPage.s_nLastSeq = nSeq;
+    }
 
-    //public async Task SrReport_Order_UpdatedRowAsync_Today(TbOrder tbNewOrder, int nSeq)
-    //{
-    //    if (tbNewOrder == null) return;
+    /// <summary>
+    /// 오늘 날짜 주문 업데이트 시그널 처리
+    /// </summary>
+    /// <param name="tbNewOrder">업데이트된 주문</param>
+    /// <param name="nSeq">시퀀스 번호</param>
+    public async Task SrReport_Order_UpdatedRowAsync_Today(TbOrder tbNewOrder, int nSeq)
+    {
+        if (tbNewOrder == null) return;
 
-    //    TbOrder tbOldOrder = VsOrder_StatusPage.s_listTbOrderToday.FirstOrDefault(o => o.KeyCode == tbNewOrder.KeyCode);
-    //    if (tbOldOrder == null)
-    //    {
-    //        ErrMsgBox($"오더를 찾을 수 없습니다: {tbNewOrder.KeyCode}", "SrGlobalClient/SrReport_Order_UpdatedRow_Today_01");
-    //        return;
-    //    }
+        TbOrder tbOldOrder = VsOrder_StatusPage.s_listTbOrderToday.FirstOrDefault(o => o.KeyCode == tbNewOrder.KeyCode);
+        if (tbOldOrder == null)
+        {
+            ErrMsgBox($"오더를 찾을 수 없습니다: {tbNewOrder.KeyCode}", "SrGlobalClient/SrReport_Order_UpdatedRow_Today_01");
+            return;
+        }
 
-    //    PostgService_Common_OrderState changedFlag = PostgService_TbOrder.CompareTable(tbNewOrder, tbOldOrder);
-    //    if (changedFlag == PostgService_Common_OrderState.Empty) changedFlag = PostgService_Common_OrderState.Updated_AnyWay;
+        PostgService_Common_OrderState changedFlag = PostgService_TbOrder.CompareTable(tbNewOrder, tbOldOrder);
+        if (changedFlag == PostgService_Common_OrderState.Empty) changedFlag = PostgService_Common_OrderState.Updated_AnyWay;
 
-    //    if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
-    //    {
-    //        if (s_Order_StatusPage != null)
-    //        {
-    //            await Application.Current.Dispatcher.InvokeAsync(() =>
-    //            {
-    //                s_Order_StatusPage.BtnOrderSearch_Click(null, null);
-    //            });
-    //        }
-    //    }
-    //    else
-    //    {
-    //        TbOrder tbBackup = NetUtil.DeepCopyFrom(tbOldOrder);
-    //        NetUtil.DeepCopyTo(tbNewOrder, tbOldOrder);
+        // 시퀀스가 맞지 않으면 전체 재조회
+        if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
+        {
+            if (s_Order_StatusPage != null)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    s_Order_StatusPage.BtnOrderSearch_Click(null, null);
+                });
+            }
+        }
+        // 시퀀스가 정상이면 주문 업데이트
+        else
+        {
+            TbOrder tbBackup = NetUtil.DeepCopyFrom(tbOldOrder);
+            NetUtil.DeepCopyTo(tbNewOrder, tbOldOrder);
 
-    //        if (s_Order_StatusPage != null)
-    //        {
-    //            int index = GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
-    //            if (index == 0) await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
-    //        }
+            if (s_Order_StatusPage != null)
+            {
+                int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
+                if (index == 0)
+                {
+                    await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
+                }
+            }
 
-    //        int nFind = m_ListIgnoreSeqno.IndexOf(nSeq);
-    //        if (nFind < 0)
-    //        {
-    //            //AutoAllocCtrl.EditList_UpdateOrAdd(changedFlag, tbNewOrder, tbBackup, nSeq);
-    //        }
-    //        else
-    //        {
-    //            m_ListIgnoreSeqno.RemoveAt(nFind);
-    //            Debug.WriteLine($"무시리스트에서 삭제: Seqno={nSeq}, OrderNum={tbNewOrder.KeyCode}");
-    //        }
-    //    }
+            // 무시 리스트 확인
+            int nFind = m_ListIgnoreSeqno.IndexOf(nSeq);
+            if (nFind < 0)
+            {
+                // 자동배차 시스템에 주문 업데이트 알림
+                if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+                {
+                    s_MainWnd.m_MasterManager.ExternalAppController.UpdateOrder(changedFlag, tbNewOrder, tbBackup, nSeq);
+                }
+            }
+            else
+            {
+                m_ListIgnoreSeqno.RemoveAt(nFind);
+                Debug.WriteLine($"무시리스트에서 삭제: Seqno={nSeq}, OrderNum={tbNewOrder.KeyCode}");
+            }
+        }
 
-    //    VsOrder_StatusPage.s_nLastSeq = nSeq;
-    //}
+        VsOrder_StatusPage.s_nLastSeq = nSeq;
+    }
     #endregion
 
     #region SrResult - Tel070
@@ -535,18 +577,21 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     //#endregion End SrResult - Company
 
     //#region SrResult - TbCustMain
-    //// Insert
-    //public async Task<StdResult_Long> SrResult_CustMain_InsertRowAsync(TbCustMain tb)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.CustMain_InsertRowAsync, new[] { tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_Insert_999");
-    //    }
-    //}
+    // Insert
+    /// <summary>
+    /// 고객 정보 신규 저장
+    /// </summary>
+    public async Task<StdResult_Long> SrResult_CustMain_InsertRowAsync(TbCustMain tb)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.CustMain_InsertRowAsync, new[] { tb });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_InsertRowAsync");
+        }
+    }
     //public async Task<StdResult_Long> SrResult_CustMain_InsertRowAsync_ByCopy(TbCustMain tb)
     //{
     //    try
@@ -646,18 +691,21 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     //    }
     //}
 
-    //// Update
-    //public async Task<StdResult_Int> SrResult_CustMain_UpdateRowAsync(TbCustMain tb)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Int>(StdConst_FuncName.SrResult.CallCenter.CustMain_UpdateRowAsync, new[] { tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_Update_999");
-    //    }
-    //}
+    // Update
+    /// <summary>
+    /// 고객 정보 수정 저장
+    /// </summary>
+    public async Task<StdResult_Int> SrResult_CustMain_UpdateRowAsync(TbCustMain tb)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Int>(StdConst_FuncName.SrResult.CallCenter.CustMain_UpdateRowAsync, new[] { tb });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_UpdateRowAsync");
+        }
+    }
 
     //// Delete
     //public async Task<StdResult_Bool> SrResult_CustMain_DeleteRowAsync_CenterCode_KeyCode(long keyCode)
@@ -714,20 +762,23 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
 
     //#endregion
 
-    //#region SrResult - TbCustMainWith
-    //public async Task<PostgResult_AllWith> SrResult_CustMainWith_Cust_Center_Comp_SelectRowAsync_CenterCode_KeyCode(long lKeyCode)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<PostgResult_AllWith>(
-    //            StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowAsync_CenterCode_KeyCode, 
-    //            new[] { (object)s_CenterCharge.CenterCode, (object)lKeyCode });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_AllWith(null, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_SelectRowAsync_KeyCode_999");
-    //    }
-    //}
+    #region SrResult - TbCustMainWith
+    /// <summary>
+    /// 고객 정보 단건 조회 (고객, 센터, 회사 정보 포함)
+    /// </summary>
+    public async Task<PostgResult_AllWith> SrResult_CustMainWith_Cust_Center_Comp_SelectRowAsync_CenterCode_KeyCode(long lKeyCode)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<PostgResult_AllWith>(
+                StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowAsync_CenterCode_KeyCode,
+                new[] { (object)s_CenterCharge.CenterCode, (object)lKeyCode });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_AllWith(null, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMainWith_Cust_Center_Comp_SelectRowAsync_CenterCode_KeyCode");
+        }
+    }
 
     //public async Task<PostgResult_AllWithList> SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using(bool? bUsing)
     //{
@@ -758,120 +809,162 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     //            StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMainWithForPage_SelectRows_ByMultiple_999");
     //    }
     //}
-    //public async Task<PostgResult_AllWithList> SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash(string sSlash, bool? bUsing)
-    //{
-    //    try
-    //    {
-    //        // 숫자로만 이루어진 경우 - 전화번호 검색
-    //        bool isNumberOnly = sSlash.All(char.IsDigit);
-    //        if (isNumberOnly)
-    //        {
-    //            //MsgBox("전화번호 검색");
-    //            // 전화번호 검색
-    //            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(StdConst_FuncName.SrResult.CallCenter.
-    //                CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeTelNo_Using, new[] { (object)s_CenterCharge.CenterCode, sSlash, (object)bUsing });
-    //        }
-    //        else // 숫자로만 이루어지지 않았으면
-    //        {
-    //            int idx = sSlash.IndexOf('/');
-    //            if (idx >= 0) // /가 포함된 경우
-    //            {
-    //                string strCustName = sSlash.Substring(0, idx);
-    //                string strDeptOrCharge = sSlash.Substring(idx + 1);
+    /// <summary>
+    /// 고객 검색 (전화번호 / 상호 / 상호+담당 통합 검색)
+    /// </summary>
+    /// <param name="sSlash">검색어 (숫자만=전화번호, "상호/담당"=상호+담당, 나머지=상호)</param>
+    /// <param name="bUsing">사용 여부 필터 (null=전체, true=사용, false=미사용)</param>
+    /// <returns>검색 결과 리스트</returns>
+    public async Task<PostgResult_AllWithList> SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash(string sSlash, bool? bUsing)
+    {
+        try
+        {
+            // 1. 전화번호 검색 (숫자만 입력된 경우)
+            if (sSlash.All(char.IsDigit))
+            {
+                return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                    StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeTelNo_Using,
+                    new[] { (object)s_CenterCharge.CenterCode, sSlash, (object)bUsing });
+            }
 
-    //                if (!string.IsNullOrEmpty(strCustName) && !string.IsNullOrEmpty(strDeptOrCharge))
-    //                {
-    //                    // 상호, 담당/부서 검색
-    //                    return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(StdConst_FuncName.SrResult.CallCenter.
-    //                        CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeCustName_LikeDeptOrCharge_Using,
-    //                        new[] { (object)s_CenterCharge.CenterCode, strCustName, strDeptOrCharge, (object)bUsing });
-    //                }
-    //                else
-    //                {
-    //                    if (!string.IsNullOrEmpty(strDeptOrCharge))
-    //                    {
-    //                        // 담당/부서 검색
-    //                        return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(StdConst_FuncName.SrResult.CallCenter.
-    //                            CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeDeptOrCharge_Using,
-    //                            new[] { (object)s_CenterCharge.CenterCode, strDeptOrCharge, (object)bUsing });
-    //                    }
-    //                    else
-    //                    {
-    //                        // 상호검색
-    //                        return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(StdConst_FuncName.SrResult.CallCenter.
-    //                            CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeCustName_Using,
-    //                            new[] { (object)s_CenterCharge.CenterCode, strCustName, (object)bUsing });
-    //                    }
-    //                }
-    //            }
-    //            else // /가 없는 경우
-    //            {
-    //                // 상호검색
-    //                return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(StdConst_FuncName.SrResult.CallCenter.
-    //                    CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeCustName_Using,
-    //                    new[] { (object)s_CenterCharge.CenterCode, sSlash, (object)bUsing });
-    //            }
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_AllWithList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMainWithForWnd_SelectRows_BySlash_999");
-    //    }
-    //}
-    //#endregion End SrResult - TbCustMainWith
+            // 2. 슬래시(/) 포함 여부 확인
+            int slashIndex = sSlash.IndexOf('/');
+            if (slashIndex < 0)
+            {
+                // 2-1. 슬래시 없음 → 상호만 검색
+                return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                    StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeCustName_Using,
+                    new[] { (object)s_CenterCharge.CenterCode, sSlash, (object)bUsing });
+            }
+
+            // 3. 슬래시 있음 → 상호/담당 분리
+            string custName = sSlash.Substring(0, slashIndex);
+            string deptOrCharge = sSlash.Substring(slashIndex + 1);
+
+            // 3-1. 상호 + 담당/부서 모두 입력된 경우
+            if (!string.IsNullOrEmpty(custName) && !string.IsNullOrEmpty(deptOrCharge))
+            {
+                return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                    StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeCustName_LikeDeptOrCharge_Using,
+                    new[] { (object)s_CenterCharge.CenterCode, custName, deptOrCharge, (object)bUsing });
+            }
+
+            // 3-2. 담당/부서만 입력된 경우 (예: "/홍길동")
+            if (!string.IsNullOrEmpty(deptOrCharge))
+            {
+                return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                    StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeDeptOrCharge_Using,
+                    new[] { (object)s_CenterCharge.CenterCode, deptOrCharge, (object)bUsing });
+            }
+
+            // 3-3. 상호만 입력된 경우 (예: "상호/")
+            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeCustName_Using,
+                new[] { (object)s_CenterCharge.CenterCode, custName, (object)bUsing });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_AllWithList(
+                StdUtil.GetExceptionMessage(ex),
+                "SrGlobalClient/SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash_999");
+        }
+    }
+    #endregion End SrResult - TbCustMainWith
 
     //#region SrResult - Order
     //// Insert
-    //public async Task<StdResult_Long> SrResult_Order_InsertRowAsync_Today(TbOrder tb)
-    //{
-    //RETRY:;
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.Order_InsertRowAsync_Today, new[] { tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        if (m_bLoginSignslR)
-    //            return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_InsertRow_999_1");
-    //        else 
-    //        {
-    //            await Task.Delay(100); // 변수 변경을 위해 잠시 대기
+    /// <summary>
+    /// 주문 정보 Insert (오늘 날짜 기준, 재접속 로직 포함)
+    /// </summary>
+    /// <param name="tb">주문 정보</param>
+    /// <returns>생성된 KeyCode (실패 시 0)</returns>
+    public async Task<StdResult_Long> SrResult_Order_InsertRowAsync_Today(TbOrder tb)
+    {
+        const int MAX_RETRY_COUNT = 60; // 최대 60회 (30초)
+        bool showedLoading = false;
 
-    //            if (m_bReConnection)
-    //            {
-    //                NetLoadingWnd.ShowLoading(s_MainWnd, "서버와 접속해재되어\n 재접속중 입니다..."); // 로딩창 표시
+        try
+        {
+            while (true)
+            {
+                try
+                {
+                    // 주문 Insert 시도
+                    return await HubConn.InvokeCoreAsync<StdResult_Long>(
+                        StdConst_FuncName.SrResult.CallCenter.Order_InsertRowAsync_Today,
+                        new[] { tb });
+                }
+                catch (Exception ex)
+                {
+                    // 1. 로그인 상태이면 즉시 에러 반환 (서버 에러)
+                    if (m_bLoginSignalR)
+                    {
+                        return new StdResult_Long(0,
+                            StdUtil.GetExceptionMessage(ex),
+                            "SrGlobalClient/SrResult_Order_InsertRowAsync_Today_Logged");
+                    }
 
-    //                for (int i = 0; ; i++) // 재시도
-    //                {
-    //                    await Task.Delay(500);
-    //                    if (m_bLoginSignslR) goto RETRY; // 로그인 성공시 다시 시도
-    //                }
-    //            }
-    //            else
-    //            {
-    //                return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_InsertRow_999_2");
-    //            }
-    //        }
-    //    }
-    //    finally
-    //    {
-    //        NetLoadingWnd.HideLoading(); // 로딩창 숨김
-    //    }
-    //}
+                    // 2. 재접속 중지 상태면 에러 반환
+                    if (m_bStopReconnect)
+                    {
+                        return new StdResult_Long(0,
+                            StdUtil.GetExceptionMessage(ex),
+                            "SrGlobalClient/SrResult_Order_InsertRowAsync_Today_StopReconn");
+                    }
+
+                    // 3. 재접속 대기 (로딩창 표시)
+                    if (!showedLoading)
+                    {
+                        NetLoadingWnd.ShowLoading(s_MainWnd, "서버와 접속 해제되어\n재접속 중입니다...");
+                        showedLoading = true;
+                    }
+
+                    await Task.Delay(100); // 변수 변경 대기
+
+                    // 4. 재접속 대기 루프 (최대 30초)
+                    for (int i = 0; i < MAX_RETRY_COUNT; i++)
+                    {
+                        await Task.Delay(500);
+
+                        if (m_bLoginSignalR)
+                        {
+                            // 재접속 성공 → 다시 시도
+                            break;
+                        }
+
+                        if (i >= MAX_RETRY_COUNT - 1)
+                        {
+                            // 재접속 실패 (타임아웃)
+                            return new StdResult_Long(0,
+                                "재접속 실패 (타임아웃)",
+                                "SrGlobalClient/SrResult_Order_InsertRowAsync_Today_Timeout");
+                        }
+                    }
+                }
+            }
+        }
+        finally
+        {
+            if (showedLoading)
+            {
+                NetLoadingWnd.HideLoading();
+            }
+        }
+    }
 
     //// Select
-    //public async Task<PostgResult_TbOrderList> SrResult_Order_SelectRowsAsync_Today_CenterCode()
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<PostgResult_TbOrderList>(
-    //            StdConst_FuncName.SrResult.CallCenter.Order_SelectRowsAsync_Today_CenterCode, new[] { (object)s_CenterCharge.CenterCode });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_TbOrderList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_SelectRows_All_999");
-    //    }
-    //}
+    public async Task<PostgResult_TbOrderList> SrResult_Order_SelectRowsAsync_Today_CenterCode()
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<PostgResult_TbOrderList>(
+                StdConst_FuncName.SrResult.CallCenter.Order_SelectRowsAsync_Today_CenterCode, new[] { (object)s_CenterCharge.CenterCode });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_TbOrderList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_SelectRows_All_999");
+        }
+    }
     ////public async Task<PostgResult_TbOrder> SrResult_Order_SelectRow_TodayByExternOrder(long lExternOrderKey, string sNetwork)
     ////{
     ////    try
@@ -884,22 +977,22 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     ////        return new PostgResult_TbOrder(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_SelectRow_ByExternOrder_999");
     ////    }
     ////}
-    //public async Task<PostgResult_TbOrderList> SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(
-    //    DateTime dtStart, DateTime dtEnd, StdEnum_OrderStatus enumStatus)
-    //{
-    //    try
-    //    {
-    //        if (enumStatus == StdEnum_OrderStatus.None) return new PostgResult_TbOrderList();
+    public async Task<PostgResult_TbOrderList> SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(
+        DateTime dtStart, DateTime dtEnd, StdEnum_OrderStatus enumStatus)
+    {
+        try
+        {
+            if (enumStatus == StdEnum_OrderStatus.None) return new PostgResult_TbOrderList();
 
-    //        return await HubConn.InvokeCoreAsync<PostgResult_TbOrderList>(
-    //            StdConst_FuncName.SrResult.CallCenter.Order_SelectRowsAsync_CenterCode_Range_OrderStatus, 
-    //            new[] { (object)s_CenterCharge.CenterCode, (object)dtStart, (object)dtEnd, (object)enumStatus });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_TbOrderList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus_999");
-    //    }
-    //}
+            return await HubConn.InvokeCoreAsync<PostgResult_TbOrderList>(
+                StdConst_FuncName.SrResult.CallCenter.Order_SelectRowsAsync_CenterCode_Range_OrderStatus, 
+                new[] { (object)s_CenterCharge.CenterCode, (object)dtStart, (object)dtEnd, (object)enumStatus });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_TbOrderList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus_999");
+        }
+    }
 
     //// Select
     //public async Task<StdResult_Bool> SrResult_Order_SelectBool_CenterCode_Today_OrderSeq(string sOrderSeq)
@@ -914,77 +1007,113 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     //        return new StdResult_Bool(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_FindRow_ByExternOrder_999");
     //    }
     //}
-    //public async Task<StdResult_Int> SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode()
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Int>(
-    //            StdConst_FuncName.SrResult.CallCenter.Order_SelectSendingSeqOnlyAsync_CenterCode, new[] { (object)s_CenterCharge.CenterCode });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode");
-    //    }
-    //}
+    /// <summary>
+    /// 서버에서 현재 SendingSeq 조회 (센터 코드 기준)
+    /// </summary>
+    /// <returns>성공: SendingSeq, 실패: -1</returns>
+    public async Task<StdResult_Int> SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode()
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Int>(
+                StdConst_FuncName.SrResult.CallCenter.Order_SelectSendingSeqOnlyAsync_CenterCode,
+                new[] { (object)s_CenterCharge.CenterCode });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Int(-1,
+                StdUtil.GetExceptionMessage(ex),
+                "SrGlobalClient/Order_SelectSendingSeqOnly");
+        }
+    }
 
     //// Update 
-    //public async Task<StdResult_Int> SrResult_Order_UpdateRowAsync_Today(TbOrder tb)
-    //{
-    //RETRY:;
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Int>(
-    //            StdConst_FuncName.SrResult.CallCenter.Order_UpdateRowAsync_Today, new[] { tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        if (m_bLoginSignslR)
-    //            return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_UpdateRow_999_1");
-    //        else
-    //        {
-    //            await Task.Delay(100); // 변수 변경을 위해 잠시 대기
+    /// <summary>
+    /// 오늘 날짜 주문 업데이트
+    /// </summary>
+    public async Task<StdResult_Int> SrResult_Order_UpdateRowAsync_Today(TbOrder tb)
+    {
+        const int MAX_RETRY_COUNT = 60;
+        bool showedLoading = false;
 
-    //            if (m_bReConnection)
-    //            {
-    //                NetLoadingWnd.ShowLoading(s_MainWnd, "서버와 접속해재되어\n 재접속중 입니다..."); // 로딩창 표시
+        try
+        {
+            while (true)
+            {
+                try
+                {
+                    return await HubConn.InvokeCoreAsync<StdResult_Int>(
+                        StdConst_FuncName.SrResult.CallCenter.Order_UpdateRowAsync_Today,
+                        new[] { tb });
+                }
+                catch (Exception ex)
+                {
+                    if (m_bLoginSignalR)
+                    {
+                        return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex),
+                            "SrGlobalClient/SrResult_Order_UpdateRowAsync_Today_Logged");
+                    }
 
-    //                for (int i = 0; ; i++) // 재시도
-    //                {
-    //                    await Task.Delay(500);
-    //                    if (m_bLoginSignslR) goto RETRY; // 로그인 성공시 다시 시도
-    //                }
-    //            }
-    //            else
-    //            {
-    //                return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_UpdateRow_999_2");
-    //            }
-    //        }
-    //    }
-    //    finally
-    //    {
-    //        NetLoadingWnd.HideLoading(); // 로딩창 숨김
-    //    }
-    //}
+                    if (m_bStopReconnect)
+                    {
+                        return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex),
+                            "SrGlobalClient/SrResult_Order_UpdateRowAsync_Today_StopReconn");
+                    }
 
-    //public async Task<StdResult_Int> SrResult_OnlyOrderState_UpdateRowAsync_Today(TbOrder tbOld, string orderState)
-    //{
-    //    TbOrder tbNew = NetUtil.DeepCopyFrom(tbOld);
-    //    tbNew.OrderState = orderState;
+                    if (!showedLoading)
+                    {
+                        NetLoadingWnd.ShowLoading(s_MainWnd, "서버와 접속 해제되어\n재접속 중입니다...");
+                        showedLoading = true;
+                    }
 
-    //    return await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(tbNew);
-    //}
+                    await Task.Delay(100);
 
-    //public async Task SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(TbOrder tbOld, string orderState)
-    //{
-    //    TbOrder tbNew = NetUtil.DeepCopyFrom(tbOld);
-    //    tbNew.OrderState = orderState;
+                    for (int i = 0; i < MAX_RETRY_COUNT; i++)
+                    {
+                        await Task.Delay(500);
+                        if (m_bLoginSignalR) break;
 
-    //    StdResult_Int resultint = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(tbNew);
-    //    //MsgBox($"{resultint.nResult}"); // Test
+                        if (i >= MAX_RETRY_COUNT - 1)
+                        {
+                            return new StdResult_Int(-1, "재접속 실패 (타임아웃)",
+                                "SrGlobalClient/SrResult_Order_UpdateRowAsync_Today_Timeout");
+                        }
+                    }
+                }
+            }
+        }
+        finally
+        {
+            if (showedLoading) NetLoadingWnd.HideLoading();
+        }
+    }
 
-    //    if (resultint.nResult <= 0)
-    //        ErrMsgBox($"오더상태 변경실패: {tbOld.OrderState} -> {tbNew.OrderState}", "SrGlobalClient/SrResult_OrderState_UpdateRowAsync_Today_01");
-    //}
+    /// <summary>
+    /// 주문 상태만 변경하여 업데이트 (결과 반환)
+    /// </summary>
+    public async Task<StdResult_Int> SrResult_OnlyOrderState_UpdateRowAsync_Today(TbOrder tbOld, string orderState)
+    {
+        TbOrder tbNew = NetUtil.DeepCopyFrom(tbOld);
+        tbNew.OrderState = orderState;
+        tbNew.Updater = s_CenterCharge.Id;
+        tbNew.UpdateDate = DateTime.Now.ToString(StdConst_Var.DTFORMAT_EXCEPT_SEC);
+
+        return await SrResult_Order_UpdateRowAsync_Today(tbNew);
+    }
+
+    /// <summary>
+    /// 주문 상태만 변경하여 업데이트 (에러 시 메시지 박스 표시)
+    /// </summary>
+    public async Task SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(TbOrder tbOld, string orderState)
+    {
+        StdResult_Int result = await SrResult_OnlyOrderState_UpdateRowAsync_Today(tbOld, orderState);
+
+        if (result.nResult <= 0)
+        {
+            ErrMsgBox($"주문 상태 변경 실패: {tbOld.OrderState} → {orderState}\n{result.sErrNPos}",
+                "SrGlobalClient/SrMsgBox_OnlyOrderState_UpdateRowAsync_Today");
+        }
+    }
 
     ////public async Task SrMsgBox_OnlyExtSeqNo_UpdateRowAsync_Today(TbOrder tbOld, string appName, string seqNo)
     ////{

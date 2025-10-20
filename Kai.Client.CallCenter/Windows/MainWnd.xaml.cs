@@ -35,15 +35,17 @@ namespace Kai.Client.CallCenter.Windows;
 #nullable disable
 public partial class MainWnd : Window
 {
+    #region variables
+    // Local
     private bool _isShuttingDown = false; // 중복 close 방지
 
-    #region AllPages
+    // AllPages
     public TabItem Customer_CustRegistTab = null;
     public TabItem Company_CompRegistTab = null;
     public TabItem Order_StatusTab = null;
-    #endregion
 
-    #region AllWindows
+
+    //AllWindows
     public Config_CtrlAppWnd m_ConfigRegistryWnd = null; // 설정 - Ctrl OtherApp
     //public Config_TelMainWnd m_ConfigTelMainWnd = null;  // 인터넷전화관리 - 대표전화
     public VirtualMonitorWnd m_WndForVirtualMonitor = null; // 가상모니터 를 보기위한 윈도

@@ -46,6 +46,11 @@ public class MasterModeManager : IDisposable
     #region Variables
     private VirtualMonitorWnd m_VirtualMonitorWnd = null;
     private ExternalAppController m_ExternalAppController = null;
+
+    /// <summary>
+    /// ExternalAppController 접근 (읽기 전용)
+    /// </summary>
+    public ExternalAppController ExternalAppController => m_ExternalAppController;
     #endregion
 
     #region 생성자

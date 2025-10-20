@@ -6,6 +6,7 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 
 using Kai.Client.CallCenter.Class_Common;
+using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Networks.NwInsungs;
 using static Kai.Client.CallCenter.Class_Common.CommonVars;
 
@@ -174,6 +175,28 @@ public class NwInsung02 : IExternalApp
         catch (Exception ex)
         {
             Debug.WriteLine($"[NwInsung02] Shutdown 실패: {ex.Message}");
+        }
+    }
+
+    public async Task<StdResult_Status> AutoAllocAsync(long lAllocCount, CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine($"[NwInsung02] AutoAllocAsync 시작 - Count={lAllocCount}");
+
+            // TODO: 실제 자동배차 로직 구현
+            // (Stub for now - will implement after build test)
+
+            Debug.WriteLine($"[NwInsung02] AutoAllocAsync 완료 - Count={lAllocCount}");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            return new StdResult_Status(StdResult.Skip, "작업 취소됨", "NwInsung02/AutoAllocAsync_Cancel");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, ex.Message, "NwInsung02/AutoAllocAsync_999");
         }
     }
     #endregion
