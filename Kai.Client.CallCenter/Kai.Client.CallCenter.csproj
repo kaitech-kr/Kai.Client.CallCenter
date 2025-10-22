@@ -12,9 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Class_Sub\**" />
     <Compile Remove="Tmp\**" />
+    <EmbeddedResource Remove="Class_Sub\**" />
     <EmbeddedResource Remove="Tmp\**" />
+    <None Remove="Class_Sub\**" />
     <None Remove="Tmp\**" />
+    <Page Remove="Class_Sub\**" />
     <Page Remove="Tmp\**" />
   </ItemGroup>
 
@@ -237,7 +241,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Class_Sub\" />
+	  <Folder Include="Classes\Class_Sub\" />
 	  <Folder Include="Networks\NwCargo24s\" />
 	  <Folder Include="Networks\NwInsungs\" />
 	  <Folder Include="Networks\NwOnecalls\" />

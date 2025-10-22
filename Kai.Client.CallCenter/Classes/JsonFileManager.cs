@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text.Json;
 
-namespace Kai.Client.CallCenter.Class_Common;
+namespace Kai.Client.CallCenter.Classes;
 #nullable disable
 public class JsonFileManager
 {

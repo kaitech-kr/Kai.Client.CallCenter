@@ -5,10 +5,9 @@ using System.Diagnostics;
 using Kai.Common.StdDll_Common;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 
-using Kai.Client.CallCenter.Class_Common;
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Networks.NwInsungs;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable

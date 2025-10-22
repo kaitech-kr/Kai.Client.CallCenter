@@ -10,7 +10,7 @@ using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Services;
 using Kai.Common.StdDll_Common;
 

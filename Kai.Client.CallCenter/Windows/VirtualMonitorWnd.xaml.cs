@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Threading;
 
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable

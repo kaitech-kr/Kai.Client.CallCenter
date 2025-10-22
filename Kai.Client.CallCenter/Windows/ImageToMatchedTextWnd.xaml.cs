@@ -16,7 +16,7 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Services;
 
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable

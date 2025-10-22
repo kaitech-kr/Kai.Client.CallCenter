@@ -3,7 +3,7 @@ using Draw = System.Drawing;
 
 using Kai.Common.StdDll_Common;
 
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Pythons;
 #nullable disable

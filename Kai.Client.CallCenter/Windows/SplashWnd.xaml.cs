@@ -1,10 +1,8 @@
-﻿using Kai.Client.CallCenter.Class_Common;
-using Kai.Client.CallCenter.Classes;
 using Kai.Common.StdDll_Common;
 using System.Windows;
 using System.Windows.Input;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
-using static Kai.Client.CallCenter.Class_Common.SrGlobalClient;
+using static Kai.Client.CallCenter.Classes.CommonVars;
+using static Kai.Client.CallCenter.Classes.SrGlobalClient;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using static Kai.Common.StdDll_Common.StdDelegate;
 

@@ -2,7 +2,7 @@
 
 using Kai.Common.StdDll_Common;
 using Kai.Client.CallCenter.Networks;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Windows;
 public partial class Config_CtrlAppWnd : Window

@@ -21,13 +21,13 @@ using static Kai.Common.StdDll_Common.StdDelegate;
 using static Kai.Common.StdDll_Common.StdWin32.StdCommon32;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
 
-using Kai.Client.CallCenter.Class_Common;
-using Kai.Client.CallCenter.Class_Master;
+using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Classes.Class_Master;
 //using Kai.Client.CallCenter.Networks.NwInsungs;
 using Kai.Client.CallCenter.Pythons;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
-using static Kai.Client.CallCenter.Class_Common.SrGlobalClient;
-using static Kai.Client.CallCenter.Class_Common.SrLocalClient;
+using static Kai.Client.CallCenter.Classes.CommonVars;
+using static Kai.Client.CallCenter.Classes.SrGlobalClient;
+using static Kai.Client.CallCenter.Classes.SrLocalClient;
 using static Kai.Client.CallCenter.Pythons.Py309Common;
 using Kai.Common.NetDll_WpfCtrl.NetMsgs;
 

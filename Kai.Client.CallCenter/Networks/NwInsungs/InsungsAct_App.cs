@@ -5,8 +5,8 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 
-using Kai.Client.CallCenter.Class_Common;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using Kai.Client.CallCenter.Classes;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks.NwInsungs;
 #nullable disable

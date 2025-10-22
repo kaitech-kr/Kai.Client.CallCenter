@@ -1,4 +1,3 @@
-﻿using Kai.Client.CallCenter.Classes;
 using Kai.Common.StdDll_Common;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;

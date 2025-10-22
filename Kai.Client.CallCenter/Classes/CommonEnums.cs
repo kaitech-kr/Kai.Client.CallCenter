@@ -1,4 +1,4 @@
-﻿namespace Kai.Client.CallCenter.Class_Common;
+﻿namespace Kai.Client.CallCenter.Classes;
 #nullable disable
 public enum KaiEnum_AppMode
 {

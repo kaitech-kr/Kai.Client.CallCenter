@@ -2,7 +2,7 @@ using System.IO;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable

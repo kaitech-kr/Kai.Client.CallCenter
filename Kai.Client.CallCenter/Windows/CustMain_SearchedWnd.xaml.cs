@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -11,7 +12,7 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 using Kai.Client.CallCenter.MVVM.ViewModels;
 using Kai.Client.CallCenter.MVVM.ViewServices;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable
@@ -95,55 +96,78 @@ public partial class CustMain_SearchedWnd : Window
         }
     }
 
-    // MouseRightButtonDown
+    /// <summary>
+    /// DataGrid 우클릭 - 컨텍스트 메뉴 표시 (삭제 기능)
+    /// </summary>
     private void DGridCustMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        // TmpHide
-        //// 클릭한 Row 찾기
-        //DependencyObject dep = (DependencyObject)e.OriginalSource;
-        //while (dep != null && !(dep is DataGridRow))
-        //{
-        //    dep = VisualTreeHelper.GetParent(dep);
-        //}
+        // 클릭한 Row 찾기
+        DependencyObject dep = (DependencyObject)e.OriginalSource;
+        while (dep != null && !(dep is DataGridRow))
+        {
+            dep = VisualTreeHelper.GetParent(dep);
+        }
 
-        //if (dep is DataGridRow row)
-        //{
-        //    row.IsSelected = true;
-        //    row.Focus();
+        if (dep is DataGridRow row)
+        {
+            row.IsSelected = true;
+            row.Focus();
 
-        //    // Row에 바인딩된 ViewModel 가져오기
-        //    if (row.DataContext is VmCustMain_SearchedWnd selectedItem)
-        //    {
-        //        SelectedVM = selectedItem; // 필드/프로퍼티에 저장
-        //    }
+            // Row에 바인딩된 ViewModel 가져오기
+            if (row.DataContext is VmCustMain_SearchedWnd selectedItem)
+            {
+                SelectedVM = selectedItem; // 필드/프로퍼티에 저장
+            }
 
-        //    // ContextMenu 생성
-        //    ContextMenu menu = new ContextMenu();
+            // ContextMenu 생성
+            ContextMenu menu = new ContextMenu();
 
-        //    MenuItem itemDelete = new MenuItem();
-        //    itemDelete.Header = "삭제";
-        //    itemDelete.Click += async (s, args) =>
-        //    {
-        //        MessageBoxResult resultDlg = MessageBox.Show($"삭제확인: {SelectedVM.CustName}", "삭제확인", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-        //        if (resultDlg != MessageBoxResult.OK) return;
+            MenuItem itemDelete = new MenuItem();
+            itemDelete.Header = "삭제";
+            itemDelete.Click += async (s, args) =>
+            {
+                if (SelectedVM == null)
+                {
+                    Debug.WriteLine("[CustMain_SearchedWnd] 우클릭 삭제: SelectedVM이 null입니다");
+                    return;
+                }
 
-        //        StdResult_Long resultLong = await s_SrGClient.SrResult_CustMain_MoveToDeletedAsync(SelectedVM.tbCustMain);
-        //        if (resultLong.lResult <= 0)
-        //        {
-        //            ErrMsgBox($"고객정보 이동실패: {resultLong.sErr}");
-        //            return;
-        //        }
+                MessageBoxResult resultDlg = MessageBox.Show(
+                    $"삭제 확인: {SelectedVM.CustName}",
+                    "삭제 확인",
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Warning);
 
-        //        int nResult = m_ListTbAllWith.RemoveAll(x => x.custMain.KeyCode == resultLong.lResult);
-        //        VsCustMain_SearchedWnd.LoadData(this, m_ListTbAllWith, (bool)ChkBoxWithNoUsing.IsChecked, TBlkCount);
+                if (resultDlg != MessageBoxResult.OK)
+                {
+                    Debug.WriteLine($"[CustMain_SearchedWnd] 삭제 취소: {SelectedVM.CustName}");
+                    return;
+                }
 
-        //        if (nResult > 0) MsgBox("삭제 하였읍니다.");
-        //    };
-        //    menu.Items.Add(itemDelete);
+                Debug.WriteLine($"[CustMain_SearchedWnd] 고객 삭제 요청: KeyCode={SelectedVM.tbCustMain.KeyCode}, CustName={SelectedVM.CustName}");
 
-        //    // 현재 클릭 위치에 ContextMenu 표시
-        //    menu.IsOpen = true;
-        //}
+                StdResult_Long resultLong = await s_SrGClient.SrResult_CustMain_MoveToDeletedAsync(SelectedVM.tbCustMain);
+                if (resultLong.lResult <= 0)
+                {
+                    ErrMsgBox($"고객 정보 이동 실패\n{resultLong.sErrNPos}", "DGridCustMouseRightButtonDown");
+                    Debug.WriteLine($"[CustMain_SearchedWnd] 삭제 실패: sErrNPos={resultLong.sErrNPos}");
+                    return;
+                }
+
+                int nResult = m_ListTbAllWith.RemoveAll(x => x.custMain.KeyCode == resultLong.lResult);
+                VsCustMain_SearchedWnd.LoadData(this, m_ListTbAllWith, (bool)ChkBoxWithNoUsing.IsChecked, TBlkCount);
+
+                if (nResult > 0)
+                {
+                    MsgBox("삭제하였습니다.");
+                    Debug.WriteLine($"[CustMain_SearchedWnd] 고객 삭제 완료: KeyCode={resultLong.lResult}, 제거된 항목 수={nResult}");
+                }
+            };
+            menu.Items.Add(itemDelete);
+
+            // 현재 클릭 위치에 ContextMenu 표시
+            menu.IsOpen = true;
+        }
     }
 
     #endregion

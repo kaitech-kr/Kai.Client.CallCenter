@@ -15,11 +15,10 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Results;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Services;
 
-using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Windows;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
-using static Kai.Client.CallCenter.Class_Common.CommonFuncs_OfrResult;
-using static Kai.Client.CallCenter.Class_Common.CommonFuncs_StdResult;
+using static Kai.Client.CallCenter.Classes.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonFuncs_OfrResult;
+using static Kai.Client.CallCenter.Classes.CommonFuncs_StdResult;
 
 namespace Kai.Client.CallCenter.OfrWorks;
 #nullable disable

@@ -1,5 +1,6 @@
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Text.Json;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 using Kai.Client.CallCenter.Networks;
 using Kai.Client.CallCenter.OfrWorks;
 
-namespace Kai.Client.CallCenter.Class_Common;
+namespace Kai.Client.CallCenter.Classes;
 #nullable disable
 public class CommonFuncs : CommonVars
 {
@@ -124,6 +125,109 @@ public class CommonFuncs : CommonVars
             return mode.GetString() ?? "Sub";
 
         return "Sub";
+    }
+    #endregion
+
+    #region WPF Controls
+    /// <summary>
+    /// ComboBox에서 선택된 항목의 텍스트 가져오기
+    /// </summary>
+    /// <param name="comboBox">대상 ComboBox</param>
+    /// <returns>선택된 항목의 텍스트, 없으면 빈 문자열</returns>
+    public static string GetSelectedComboBoxContent(ComboBox comboBox)
+    {
+        return Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (comboBox == null)
+            {
+                Debug.WriteLine("[CommonFuncs] GetSelectedComboBoxContent: comboBox가 null입니다");
+                return "";
+            }
+
+            if (comboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                return selectedItem.Content?.ToString() ?? "";
+            }
+
+            return "";
+        });
+    }
+
+    /// <summary>
+    /// ComboBox에서 특정 텍스트를 가진 항목의 인덱스 찾기
+    /// </summary>
+    /// <param name="comboBox">대상 ComboBox</param>
+    /// <param name="targetValue">찾을 텍스트</param>
+    /// <returns>항목의 인덱스, 찾지 못하면 -1</returns>
+    public static int GetComboBoxItemIndex(ComboBox comboBox, string targetValue)
+    {
+        return Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (comboBox == null || targetValue == null)
+                return -1;
+
+            for (int i = 0; i < comboBox.Items.Count; i++)
+            {
+                object item = comboBox.Items[i];
+
+                string value = item switch
+                {
+                    ComboBoxItem cbi => cbi.Content?.ToString(),
+                    string str => str,
+                    _ => item?.ToString()
+                };
+
+                if (value == targetValue)
+                    return i;
+            }
+
+            return -1;
+        });
+    }
+
+    /// <summary>
+    /// ComboBox에서 특정 텍스트를 가진 항목을 선택
+    /// </summary>
+    /// <param name="comboBox">대상 ComboBox</param>
+    /// <param name="content">선택할 항목의 텍스트</param>
+    /// <returns>설정된 인덱스, 찾지 못하면 -1</returns>
+    public static int SetComboBoxItemByContent(ComboBox comboBox, string content)
+    {
+        return Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (comboBox == null || content == null)
+                return -1;
+
+            int index = GetComboBoxItemIndex(comboBox, content);
+            if (index >= 0)
+            {
+                comboBox.SelectedIndex = index;
+            }
+
+            return index;
+        });
+    }
+
+    /// <summary>
+    /// Button의 Opacity를 설정하여 활성화/비활성화 표시
+    /// </summary>
+    /// <param name="btn">대상 Button</param>
+    /// <param name="bEnable">true면 활성화, false면 비활성화</param>
+    public static void SetButtonOpacity(Button btn, bool bEnable)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (btn == null)
+            {
+                Debug.WriteLine("[CommonFuncs] SetButtonOpacity: btn이 null입니다");
+                return;
+            }
+
+            if (bEnable)
+                btn.Opacity = (double)Application.Current.FindResource("AppOpacity_Enabled");
+            else
+                btn.Opacity = (double)Application.Current.FindResource("AppOpacity_Disabled");
+        });
     }
     #endregion
 

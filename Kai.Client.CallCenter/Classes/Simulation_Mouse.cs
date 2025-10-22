@@ -3,7 +3,7 @@ using Draw = System.Drawing;
 
 using Kai.Common.StdDll_Common.StdWin32;
 
-namespace Kai.Client.CallCenter.Class_Common;
+namespace Kai.Client.CallCenter.Classes;
 
 /// <summary>
 /// 마우스 시뮬레이션 헬퍼 클래스 (외부 입력 차단 포함)

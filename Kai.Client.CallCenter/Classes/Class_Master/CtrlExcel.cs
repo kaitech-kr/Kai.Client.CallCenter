@@ -4,8 +4,8 @@ using ExcelDataReader; // Nuget: ExcelDataReader, ExcelDataReader.DataSet(여기
 using Kai.Common.StdDll_Common;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 
-using Kai.Client.CallCenter.Class_Common;
-namespace Kai.Client.CallCenter.Class_Master;
+using Kai.Client.CallCenter.Classes;
+namespace Kai.Client.CallCenter.Classes.Class_Master;
 #nullable disable
 public class CtrlExcel : IDisposable
 {

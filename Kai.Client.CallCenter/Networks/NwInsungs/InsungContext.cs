@@ -1,5 +1,5 @@
 using Kai.Common.StdDll_Common;
-using Kai.Client.CallCenter.Class_Common;
+using Kai.Client.CallCenter.Classes;
 
 namespace Kai.Client.CallCenter.Networks.NwInsungs;
 

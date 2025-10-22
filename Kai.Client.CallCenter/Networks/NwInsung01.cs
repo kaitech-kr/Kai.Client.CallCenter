@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 
 using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 
-using Kai.Client.CallCenter.Class_Common;
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Networks.NwInsungs;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable
@@ -182,30 +182,86 @@ public class NwInsung01 : IExternalApp
     {
         try
         {
-            Debug.WriteLine($"[NwInsung01] AutoAllocAsync 시작 - Count={lAllocCount}");
+            Debug.WriteLine($"\n-----------------[NwInsung01] AutoAllocAsync 시작 - Count={lAllocCount}--------------------------");
 
-            // 첫 진입 시 MsgBox 표시
-            if (lAllocCount == 1)
-            {
-                System.Windows.MessageBox.Show(
-                    $"[인성1] 자동배차에 진입했습니다.\nCount={lAllocCount}",
-                    "자동배차 진입",
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Information);
-            }
+            #region 1. 사전작업
+            // TopMost 설정 - 인성1 메인 창을 최상위로
+            await Std32Window.SetWindowTopMostAndReleaseAsync(m_Context.MemInfo.Main.TopWnd_hWnd, c_nWaitShort);
+            Debug.WriteLine($"[NwInsung01] TopMost 설정 완료");
+            #endregion
 
-            // TODO: 실제 자동배차 로직 구현
-            // (Stub for now - will implement after build test)
+            #region 2. Local Variables 초기화
+            // TODO: 리스트 초기화
+            // - listOrg: AutoAllocCtrl.listForInsung01
+            // - listCreated: 신규 오더 (Created, Existed_NonSeqno)
+            // - listEtcGroup: 기존 오더 (Updated, NotChanged 등)
+
+            // 임시: 할일 없음 반환
+            Debug.WriteLine($"[NwInsung01] 자동배차 할일 없음 (구현 예정): lAllocCount={lAllocCount}");
+            return new StdResult_Status(StdResult.Success);
+            #endregion
+
+            #region 3. Check Datagrid
+            // TODO: Datagrid 윈도우 존재 확인
+            // for (int i = 0; i < c_nRepeatShort; i++)
+            // {
+            //     await ctrl.WaitIfPausedOrCancelledAsync();
+            //     if (Datagrid 존재) break;
+            //     await Task.Delay(100, ctrl.Token);
+            // }
+            #endregion
+
+            #region 4. Created Order 처리 (신규)
+            // TODO: CheckIsOrderAsync_AssumeKaiNewOrder 호출
+            // for (int i = listCreated.Count; i > 0; i--)
+            // {
+            //     resultAuto = await m_RcptRegPage.CheckIsOrderAsync_AssumeKaiNewOrder(listCreated[index], ctrl);
+            //     switch (resultAuto.Result)
+            //     {
+            //         case Error: return Fail;
+            //         case Done_NoDelete: listOrg에 추가, listCreated에서 제거;
+            //     }
+            // }
+            #endregion
+
+            #region 5. Updated, NotChanged Order 처리 (기존)
+            // TODO: 5-1. 조회버튼 클릭 + 총계 확인
+            // resultStr = await m_RcptRegPage.Click조회버튼Async(ctrl);
+            // bClicked = await m_RcptRegPage.ClickEmptyRowAsync(ctrl);
+
+            // TODO: 5-2. 오더 총갯수/페이지 산정
+            // nThisTotCount = StdConvert.StringToInt(sThisTotCount, -1);
+            // nTotPage 계산
+
+            // TODO: 5-3. Kai갯수만큼 작업
+            // for (int no = listEtcGroup.Count; no > 0; no--)
+            // {
+            //     resultDg = await m_RcptRegPage.FindDatagridPageNIndex(...);
+            //
+            //     StateFlag별 처리:
+            //     - NotChanged → CheckIsOrderAsync_KaiSameInsungIfChanged
+            //     - Change_ToCancel_DoDelete → Command_ChaneTo취소AndDoDelete
+            //     - Existed_WithSeqno → CheckIsOrderAsync_AssumeKaiUpdated
+            //     - Updated_Assume → CheckIsOrderAsync_AssumeKaiUpdated
+            //
+            //     결과 처리:
+            //     - Done_DoDelete → listOrg Flag Empty, listEtcGroup에서 제거
+            //     - Done_NoDelete → listOrg에 NotChanged 추가, listEtcGroup에서 제거
+            //     - Done_NeedRefresh → ClickEmptyRowAsync
+            // }
+            #endregion
 
             Debug.WriteLine($"[NwInsung01] AutoAllocAsync 완료 - Count={lAllocCount}");
             return new StdResult_Status(StdResult.Success);
         }
         catch (OperationCanceledException)
         {
+            Debug.WriteLine("[NwInsung01] AutoAllocAsync 취소됨");
             return new StdResult_Status(StdResult.Skip, "작업 취소됨", "NwInsung01/AutoAllocAsync_Cancel");
         }
         catch (Exception ex)
         {
+            Debug.WriteLine($"[NwInsung01] AutoAllocAsync 예외: {ex.Message}");
             return new StdResult_Status(StdResult.Fail, ex.Message, "NwInsung01/AutoAllocAsync_999");
         }
     }

@@ -5,8 +5,7 @@ using Kai.Common.StdDll_Common;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 
-using Kai.Client.CallCenter.Classes;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 using System.Diagnostics;
 using Kai.Common.FrmDll_FormCtrl;
 

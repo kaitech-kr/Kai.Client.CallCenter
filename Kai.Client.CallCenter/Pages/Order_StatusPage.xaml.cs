@@ -1,5 +1,4 @@
-﻿using Kai.Client.CallCenter.Classes;
-using Kai.Client.CallCenter.Class_Common;
+using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.MVVM.ViewModels;
 using Kai.Client.CallCenter.MVVM.ViewServices;
 //using Kai.Client.CallCenter.Networks.NwInsungs;
@@ -18,7 +17,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 using Wnd = System.Windows;
 
@@ -407,7 +406,7 @@ public partial class Order_StatusPage : Page
     {
         if (DatePickerStart.SelectedDate.HasValue && DatePickerStart.SelectedDate.Value.Date != DateTime.Today)
         {
-            SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+            CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
         }
     }
 
@@ -418,7 +417,7 @@ public partial class Order_StatusPage : Page
     {
         if (DatePickerEnd.SelectedDate.HasValue && DatePickerEnd.SelectedDate.Value.Date != DateTime.Today)
         {
-            SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+            CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
         }
     }
 
@@ -1195,30 +1194,7 @@ public partial class Order_StatusPage : Page
         return Wnd.Application.Current.Dispatcher.Invoke(() => comboBox.SelectedIndex);
     }
 
-    /// <summary>
-    /// ComboBox에서 Content로 항목을 찾아 선택합니다
-    /// </summary>
-    /// <param name="comboBox">ComboBox 컨트롤</param>
-    /// <param name="content">찾을 Content 문자열</param>
-    /// <returns>설정된 인덱스 (-1이면 찾지 못함)</returns>
-    private static int SetComboBoxItemByContent(ComboBox comboBox, string content)
-    {
-        return Wnd.Application.Current.Dispatcher.Invoke(() =>
-        {
-            if (comboBox == null || content == null) return -1;
-
-            for (int i = 0; i < comboBox.Items.Count; i++)
-            {
-                if (comboBox.Items[i] is ComboBoxItem item && item.Content?.ToString() == content)
-                {
-                    comboBox.SelectedIndex = i;
-                    return i;
-                }
-            }
-
-            return -1;
-        });
-    }
+    // ComboBox 헬퍼 메서드는 CommonFuncs로 이동됨
     #endregion
 }
 #nullable enable

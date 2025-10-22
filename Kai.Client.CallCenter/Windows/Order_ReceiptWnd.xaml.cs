@@ -12,8 +12,8 @@ using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
 
-using Kai.Client.CallCenter.Classes;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonFuncs;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using System.Diagnostics;
 
@@ -613,11 +613,13 @@ public partial class Order_ReceiptWnd : Window
     #endregion
 
     #region EtcEvents
+    /// <summary>
+    /// TextBox 숫자 입력 제한 - PreviewTextInput 이벤트
+    /// </summary>
     private void TBoxOnlyNum_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
-        // TmpHide
-        //// 정규식: 숫자만 허용
-        //e.Handled = s_RegexOnlyNum.IsMatch(e.Text);  // true면 입력 차단
+        // 정규식: 숫자가 아닌 문자가 있으면 입력 차단
+        e.Handled = s_RegexOnlyNum.IsMatch(e.Text);
     }
 
     private void TBoxOnlyNum_Pasting(object sender, DataObjectPastingEventArgs e)
@@ -1771,58 +1773,7 @@ public partial class Order_ReceiptWnd : Window
     }
     #endregion
 
-    #region ComboBox Helper - ComboBox 헬퍼 메서드
-    /// <summary>
-    /// ComboBox에서 특정 내용의 아이템 인덱스 찾기
-    /// </summary>
-    private int GetComboBoxItemIndex(ComboBox comboBox, string targetValue)
-    {
-        if (comboBox == null || targetValue == null)
-            return -1;
-
-        for (int i = 0; i < comboBox.Items.Count; i++)
-        {
-            object item = comboBox.Items[i];
-
-            string value = item switch
-            {
-                ComboBoxItem cbi => cbi.Content?.ToString(),
-                string str => str,
-                _ => item?.ToString()
-            };
-
-            if (value == targetValue)
-                return i;
-        }
-
-        return -1;
-    }
-
-    /// <summary>
-    /// ComboBox에서 선택된 아이템의 Content 가져오기
-    /// </summary>
-    private string GetSelectedComboBoxContent(ComboBox comboBox)
-    {
-        if (comboBox.SelectedItem is ComboBoxItem selectedItem)
-        {
-            return selectedItem.Content?.ToString();
-        }
-
-        return "";
-    }
-
-    /// <summary>
-    /// ComboBox에서 특정 내용의 아이템 선택하기
-    /// </summary>
-    private void SetComboBoxItemByContent(ComboBox comboBox, string content)
-    {
-        int index = GetComboBoxItemIndex(comboBox, content);
-        if (index >= 0)
-        {
-            comboBox.SelectedIndex = index;
-        }
-    }
-    #endregion
+    // ComboBox 헬퍼 메서드는 CommonFuncs로 이동됨
 }
 #nullable enable
 

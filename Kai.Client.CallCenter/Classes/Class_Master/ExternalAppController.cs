@@ -3,10 +3,9 @@ using Kai.Common.StdDll_Common;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 using Kai.Client.CallCenter.Networks;
-using Kai.Client.CallCenter.Class_Common;
 using Kai.Client.CallCenter.Classes;
 
-namespace Kai.Client.CallCenter.Class_Master;
+namespace Kai.Client.CallCenter.Classes.Class_Master;
 
 #nullable disable
 /// <summary>

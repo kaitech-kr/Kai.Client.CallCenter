@@ -10,7 +10,7 @@ using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 
 using Kai.Client.CallCenter.Pages;
 using Kai.Client.CallCenter.MVVM.ViewModels;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.MVVM.ViewServices;
 #nullable disable

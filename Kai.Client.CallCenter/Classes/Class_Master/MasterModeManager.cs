@@ -4,10 +4,10 @@ using Kai.Common.FrmDll_WpfCtrl;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 using static Kai.Common.FrmDll_WpfCtrl.FrmSystemDisplays;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 using Kai.Client.CallCenter.Windows;
 
-namespace Kai.Client.CallCenter.Class_Master;
+namespace Kai.Client.CallCenter.Classes.Class_Master;
 #nullable disable
 public class MasterModeManager : IDisposable
 {

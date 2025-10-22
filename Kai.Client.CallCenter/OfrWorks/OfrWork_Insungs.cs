@@ -5,12 +5,11 @@ using Wnd = System.Windows;
 using Kai.Common.StdDll_Common;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 
-using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Windows;
 using Kai.Client.CallCenter.Networks;
 //using Kai.Client.CallCenter.Networks.NwInsungs;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
-using static Kai.Client.CallCenter.Class_Common.CommonFuncs_StdResult;
+using static Kai.Client.CallCenter.Classes.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonFuncs_StdResult;
 
 namespace Kai.Client.CallCenter.OfrWorks;
 #nullable disable

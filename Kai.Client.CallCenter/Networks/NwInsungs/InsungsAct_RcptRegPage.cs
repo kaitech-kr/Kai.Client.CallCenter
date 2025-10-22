@@ -6,7 +6,6 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 
-using Kai.Client.CallCenter.Class_Common;
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Windows;
@@ -1940,6 +1939,149 @@ public class InsungsAct_RcptRegPage
     //        return false;
     //    }
     //}
+    #endregion
+
+    #region 테스트: Selection 유무에 따른 OFR 비교
+    /// <summary>
+    /// 테스트: Selection 있는 상태 vs 없는 상태 OFR 비교
+    /// 목적: EmptyRow 클릭 없이도 OFR이 정상 작동하는지 확인
+    /// </summary>
+    public async Task<StdResult_String> Test_CompareOFR_WithAndWithoutSelectionAsync()
+    {
+        try
+        {
+            Debug.WriteLine("[Test_CompareOFR] ===== 테스트 시작 =====");
+
+            // 1. 현재 상태 그대로 캡처 (Selection 있을 수 있음)
+            Debug.WriteLine("[Test_CompareOFR] 1. 현재 상태 캡처 (Selection 있을 수 있음)");
+            Draw.Bitmap bmpWithSelection = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd);
+            if (bmpWithSelection == null)
+            {
+                return new StdResult_String("캡처 실패 (Selection 있는 상태)", "Test_CompareOFR/01");
+            }
+
+            // 2. 현재 상태에서 밝기 측정
+            Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
+            if (rects == null || rects.GetLength(1) < 3)
+            {
+                return new StdResult_String("RelChildRects 없음", "Test_CompareOFR/02");
+            }
+
+            // 첫 번째 데이터 행의 밝기 측정 (y=2, 헤더는 0,1)
+            int x = rects[0, 2].Left + 5;
+            int y = rects[0, 2].Top + 6;
+            int brightness_WithSel = OfrService.GetBrightness_PerPixel(bmpWithSelection, x, y);
+
+            Debug.WriteLine($"[Test_CompareOFR] 2. Selection 있는 상태 밝기: {brightness_WithSel}");
+            Debug.WriteLine($"[Test_CompareOFR]    배경 밝기 기준: {m_RcptPage.DG오더_nBackgroundBright}");
+
+            // 3. 첫 번째 행 클릭 (Selection 이동)
+            Debug.WriteLine("[Test_CompareOFR] 3. 첫 번째 행 클릭 (Selection 이동)");
+            Draw.Point ptFirstRow = StdUtil.GetDrawPoint(rects[0, 2], 3, 3);
+            await Simulation_Mouse.SafeMouseEvent_ClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptFirstRow, true, 100);
+            await Task.Delay(200);
+
+            // 4. 첫 번째 행 선택 상태에서 캡처
+            Debug.WriteLine("[Test_CompareOFR] 4. 첫 번째 행 선택 상태 캡처");
+            Draw.Bitmap bmpFirstRowSel = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd);
+            if (bmpFirstRowSel == null)
+            {
+                return new StdResult_String("캡처 실패 (첫 행 선택)", "Test_CompareOFR/03");
+            }
+
+            int brightness_FirstRowSel = OfrService.GetBrightness_PerPixel(bmpFirstRowSel, x, y);
+            Debug.WriteLine($"[Test_CompareOFR]    첫 행 선택 밝기: {brightness_FirstRowSel}");
+
+            // 5. 두 번째 행의 밝기 비교 (선택되지 않은 행)
+            int x2 = rects[0, 3].Left + 5;
+            int y2 = rects[0, 3].Top + 6;
+            int brightness_SecondRow = OfrService.GetBrightness_PerPixel(bmpFirstRowSel, x2, y2);
+            Debug.WriteLine($"[Test_CompareOFR]    두 번째 행 밝기 (선택 안됨): {brightness_SecondRow}");
+
+            // 6. 결과 분석
+            string result = $"===== OFR Selection 테스트 결과 =====\n";
+            result += $"배경 밝기 기준: {m_RcptPage.DG오더_nBackgroundBright}\n";
+            result += $"현재 상태 밝기: {brightness_WithSel}\n";
+            result += $"첫 행 선택 밝기: {brightness_FirstRowSel}\n";
+            result += $"두 번째 행 밝기: {brightness_SecondRow}\n";
+            result += $"\n";
+            result += $"선택된 행 vs 배경: {Math.Abs(brightness_FirstRowSel - m_RcptPage.DG오더_nBackgroundBright)}\n";
+            result += $"선택 안된 행 vs 배경: {Math.Abs(brightness_SecondRow - m_RcptPage.DG오더_nBackgroundBright)}\n";
+            result += $"\n";
+
+            // 7. 결론
+            int threshold = 10; // 밝기 차이 임계값
+            bool isFirstRowSelected = Math.Abs(brightness_FirstRowSel - m_RcptPage.DG오더_nBackgroundBright) > threshold;
+            bool isSecondRowNormal = Math.Abs(brightness_SecondRow - m_RcptPage.DG오더_nBackgroundBright) < threshold;
+
+            if (isFirstRowSelected && isSecondRowNormal)
+            {
+                result += "✅ 결론: 선택된 행만 밝기가 다릅니다.\n";
+                result += "   → OFR 시 선택되지 않은 행들은 정상 인식 가능!\n";
+                result += "   → EmptyRow 클릭 불필요 (첫 행 선택으로 대체 가능)\n";
+            }
+            else if (!isFirstRowSelected && !isSecondRowNormal)
+            {
+                result += "⚠️ 경고: 선택 여부와 무관하게 밝기 차이가 없습니다.\n";
+                result += "   → 추가 테스트 필요\n";
+            }
+            else
+            {
+                result += "❌ 문제: 예상과 다른 밝기 패턴입니다.\n";
+                result += "   → 수동 확인 필요\n";
+            }
+
+            Debug.WriteLine($"[Test_CompareOFR] {result}");
+            Debug.WriteLine("[Test_CompareOFR] ===== 테스트 종료 =====");
+
+            // Bitmap 해제
+            bmpWithSelection?.Dispose();
+            bmpFirstRowSel?.Dispose();
+
+            return new StdResult_String(result);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[Test_CompareOFR] 예외 발생: {ex.Message}");
+            return new StdResult_String(ex.Message, "Test_CompareOFR/999");
+        }
+    }
+    #endregion
+
+    #region PostMessage 기반 클릭 (BlockInput 없음)
+    /// <summary>
+    /// 첫 번째 행 클릭 (PostMessage 기반, BlockInput 없음)
+    /// 목적: EmptyRow 클릭 대체, Selection을 첫 행으로 이동
+    /// </summary>
+    private async Task ClickFirstRowAsync_PostMessage(CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine("[ClickFirstRowAsync_PostMessage] 첫 번째 행 클릭 시작");
+
+            // 첫 번째 데이터 행 위치 계산 (y=2, 헤더는 0,1)
+            Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
+            if (rects == null || rects.GetLength(1) < 3)
+            {
+                throw new Exception("RelChildRects 없음 또는 데이터 행 부족");
+            }
+
+            Draw.Point ptFirstRow = StdUtil.GetDrawPoint(rects[0, 2], 3, 3);
+
+            // PostMessage 기반 클릭 (BlockInput 없음!)
+            await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptFirstRow);
+
+            // 클릭 완료 대기
+            await Task.Delay(100, ctrl.Token);
+
+            Debug.WriteLine("[ClickFirstRowAsync_PostMessage] 첫 번째 행 클릭 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ClickFirstRowAsync_PostMessage] 예외: {ex.Message}");
+            throw;
+        }
+    }
     #endregion
 }
 #nullable enable

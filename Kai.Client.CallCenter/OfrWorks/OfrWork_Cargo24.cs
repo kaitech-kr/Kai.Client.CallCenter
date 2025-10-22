@@ -18,7 +18,7 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Services;
 using Kai.Client.CallCenter.Windows;
 //using Kai.Client.CallCenter.Networks.NwInsungs;
 //using Kai.Client.CallCenter.Networks.NwCargo24s;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 using Kai.Common.StdDll_Common.StdWin32;
 
 namespace Kai.Client.CallCenter.OfrWorks;

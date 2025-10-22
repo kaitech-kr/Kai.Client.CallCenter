@@ -17,16 +17,15 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
-using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Networks;
 using Kai.Client.CallCenter.Pages;
 using Kai.Client.CallCenter.Pythons;
 //using Kai.Client.CallCenter.Networks.NwInsungs;
 using Kai.Client.CallCenter.MVVM.ViewServices;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Client.CallCenter.Pythons.Py309Common;
 
-namespace Kai.Client.CallCenter.Class_Common;
+namespace Kai.Client.CallCenter.Classes;
 #nullable disable
 public class SrGlobalClient : IDisposable, INotifyPropertyChanged
 {
@@ -493,88 +492,104 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     }
     #endregion End SrResult - Tel070
 
-    //#region SrResult - Company
-    //// Insert
-    //public async Task<StdResult_Long> SrResult_Company_InsertRowAsync(TbCompany tb)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.Company_InsertRowAsync, new[] { tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_InsertRowAsync_999");
-    //    }
-    //}
+    #region SrResult - Company
+    /// <summary>
+    /// 거래처 등록 - 새 거래처 정보를 서버에 등록
+    /// </summary>
+    public async Task<StdResult_Long> SrResult_Company_InsertRowAsync(TbCompany tb)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.Company_InsertRowAsync, new[] { tb });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_InsertRowAsync");
+        }
+    }
 
-    //// Select
-    //public async Task<StdResult_Int> SrResult_Company_SelectCountAsync_CenterCode()
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Int>(
-    //            StdConst_FuncName.SrResult.CallCenter.Company_SelectCountAsync_CenterCode, new[] { (object)s_CenterCharge.CenterCode });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_SelectCount_999");
-    //    }
-    //}
-    //public async Task<PostgResult_TbCompanyList> SrResult_Company_SelectRowsAsync_CenterCode()
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<PostgResult_TbCompanyList>(
-    //            StdConst_FuncName.SrResult.CallCenter.Company_SelectRowsAsync_CenterCode, new[] { (object)s_CenterCharge.CenterCode });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_TbCompanyList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_SelectRowsAsync_CenterCode_999");
-    //    }
-    //}
-    //public async Task<PostgResult_TbCompanyList> SrResult_Company_SelectRowsAsync_CenterCode_CompName_TradType_Using(
-    //    string sCompName, string sTradeType, bool? bUsing)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<PostgResult_TbCompanyList>(
-    //            StdConst_FuncName.SrResult.CallCenter.Company_SelectRowsAsync_CenterCode_CompName_TradType_Using, 
-    //            new[] { (object)s_CenterCharge.CenterCode, sCompName, sTradeType, (object)bUsing });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_TbCompanyList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_SelectRowsAsync_CenterCode_999");
-    //    }
-    //}
+    /// <summary>
+    /// 거래처 개수 조회 - 센터별 거래처 총 개수 조회
+    /// </summary>
+    public async Task<StdResult_Int> SrResult_Company_SelectCountAsync_CenterCode()
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Int>(
+                StdConst_FuncName.SrResult.CallCenter.Company_SelectCountAsync_CenterCode, new[] { (object)s_CenterCharge.CenterCode });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_SelectCountAsync_CenterCode");
+        }
+    }
 
-    //// Update
-    //public async Task<StdResult_Int> SrResult_Company_UpdateRowAsync(TbCompany tb)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Int>(
-    //            StdConst_FuncName.SrResult.CallCenter.Company_UpdateRowAsync, new[] { (object)tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_UpdateRowAsync_999");
-    //    }
-    //}
+    /// <summary>
+    /// 거래처 목록 조회 - 센터별 전체 거래처 목록 조회
+    /// </summary>
+    public async Task<PostgResult_TbCompanyList> SrResult_Company_SelectRowsAsync_CenterCode()
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<PostgResult_TbCompanyList>(
+                StdConst_FuncName.SrResult.CallCenter.Company_SelectRowsAsync_CenterCode, new[] { (object)s_CenterCharge.CenterCode });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_TbCompanyList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_SelectRowsAsync_CenterCode");
+        }
+    }
 
-    //// Delete
-    //public async Task<StdResult_Bool> SrResult_Company_DeleteRowAsync_KeyCode(long keyCode)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Bool>(
-    //            StdConst_FuncName.SrResult.CallCenter.Company_DeleteRowAsync_KeyCode, new[] { (object)keyCode });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Bool(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_DeleteRowAsync_KeyCode_999");
-    //    }
-    //}
-    //#endregion End SrResult - Company
+    /// <summary>
+    /// 거래처 목록 조회 - 다중 조건 검색 (거래처명, 거래 유형, 사용 여부)
+    /// </summary>
+    public async Task<PostgResult_TbCompanyList> SrResult_Company_SelectRowsAsync_CenterCode_CompName_TradType_Using(
+        string sCompName, string sTradeType, bool? bUsing)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<PostgResult_TbCompanyList>(
+                StdConst_FuncName.SrResult.CallCenter.Company_SelectRowsAsync_CenterCode_CompName_TradType_Using,
+                new[] { (object)s_CenterCharge.CenterCode, sCompName, sTradeType, (object)bUsing });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_TbCompanyList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_SelectRowsAsync_CenterCode_CompName_TradType_Using");
+        }
+    }
+
+    /// <summary>
+    /// 거래처 수정 - 기존 거래처 정보 업데이트
+    /// </summary>
+    public async Task<StdResult_Int> SrResult_Company_UpdateRowAsync(TbCompany tb)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Int>(
+                StdConst_FuncName.SrResult.CallCenter.Company_UpdateRowAsync, new[] { (object)tb });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_UpdateRowAsync");
+        }
+    }
+
+    /// <summary>
+    /// 거래처 삭제 - KeyCode로 거래처 삭제
+    /// </summary>
+    public async Task<StdResult_Bool> SrResult_Company_DeleteRowAsync_KeyCode(long keyCode)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Bool>(
+                StdConst_FuncName.SrResult.CallCenter.Company_DeleteRowAsync_KeyCode, new[] { (object)keyCode });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Bool(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_Company_DeleteRowAsync_KeyCode");
+        }
+    }
+    #endregion End SrResult - Company
 
     //#region SrResult - TbCustMain
     // Insert
@@ -678,18 +693,24 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     //        return new PostgResult_TbCustMainList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_SelectRows_BefCompName_999");
     //    }
     //}
-    //public async Task<PostgResult_TbCustMainList> SrResult_CustMain_SelectRowsAsync_CenterCode_CompCode(long lCompCode)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<PostgResult_TbCustMainList>(
-    //            StdConst_FuncName.SrResult.CallCenter.CustMain_SelectRowsAsync_CenterCode_CompCode, new[] { (object)s_CenterCharge.CenterCode, (object)lCompCode });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_TbCustMainList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_SelectRowsAsync_CenterCode_CompCode_999");
-    //    }
-    //}
+    /// <summary>
+    /// 고객 목록 조회 - 특정 거래처에 속한 고객 목록 조회
+    /// </summary>
+    /// <param name="lCompCode">거래처 KeyCode</param>
+    public async Task<PostgResult_TbCustMainList> SrResult_CustMain_SelectRowsAsync_CenterCode_CompCode(long lCompCode)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<PostgResult_TbCustMainList>(
+                StdConst_FuncName.SrResult.CallCenter.CustMain_SelectRowsAsync_CenterCode_CompCode,
+                new[] { (object)s_CenterCharge.CenterCode, (object)lCompCode });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_TbCustMainList(StdUtil.GetExceptionMessage(ex),
+                "SrGlobalClient/SrResult_CustMain_SelectRowsAsync_CenterCode_CompCode");
+        }
+    }
 
     // Update
     /// <summary>
@@ -721,18 +742,21 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     //    }
     //}
 
-    //// Etc
-    //public async Task<StdResult_Long> SrResult_CustMain_MoveToDeletedAsync(TbCustMain tb)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.CustMain_MoveToDeletedAsync, new[] { tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_MoveToDeletedAsync_999");
-    //    }
-    //}
+    /// <summary>
+    /// 고객 정보를 삭제 테이블로 이동
+    /// </summary>
+    /// <param name="tb">이동할 고객 정보</param>
+    public async Task<StdResult_Long> SrResult_CustMain_MoveToDeletedAsync(TbCustMain tb)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.CustMain_MoveToDeletedAsync, new[] { tb });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_MoveToDeletedAsync");
+        }
+    }
 
     //#endregion End SrResult - TbCustMain
 
@@ -780,35 +804,53 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         }
     }
 
-    //public async Task<PostgResult_AllWithList> SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using(bool? bUsing)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
-    //            StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_Using, 
-    //            new[] { (object)s_CenterCharge.CenterCode, (object)bUsing });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_AllWithList(
-    //            StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMainWithForPage_SelectRows_ByUsing_999");
-    //    }
-    //}
-    //public async Task<PostgResult_AllWithList> SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11(
-    //    bool? bUsing, string sCustName, string sDeptName, string sChargeName, string sTelNo, string sDongDetail, string sInetID, string sCompName)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
-    //            StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_CustNameWith11,
-    //            new[] { (object)s_CenterCharge.CenterCode, (object)bUsing, sCustName, sDeptName, sChargeName, sTelNo, sDongDetail, sInetID, sCompName });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new PostgResult_AllWithList(
-    //            StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMainWithForPage_SelectRows_ByMultiple_999");
-    //    }
-    //}
+    /// <summary>
+    /// 고객 정보 목록 조회 - 사용 여부별 전체 조회 (고객, 센터, 회사 정보 포함)
+    /// </summary>
+    /// <param name="bUsing">사용 여부 (null: 전체, true: 사용, false: 미사용)</param>
+    public async Task<PostgResult_AllWithList> SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using(bool? bUsing)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_Using,
+                new[] { (object)s_CenterCharge.CenterCode, (object)bUsing });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_AllWithList(
+                StdUtil.GetExceptionMessage(ex),
+                "SrGlobalClient/SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using");
+        }
+    }
+
+    /// <summary>
+    /// 고객 정보 목록 조회 - 다중 조건 검색 (고객, 센터, 회사 정보 포함)
+    /// </summary>
+    /// <param name="bUsing">사용 여부</param>
+    /// <param name="sCustName">고객명</param>
+    /// <param name="sDeptName">부서명</param>
+    /// <param name="sChargeName">담당자명</param>
+    /// <param name="sTelNo">전화번호</param>
+    /// <param name="sDongDetail">위치(동/상세주소)</param>
+    /// <param name="sInetID">인터넷 ID</param>
+    /// <param name="sCompName">회사명</param>
+    public async Task<PostgResult_AllWithList> SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11(
+        bool? bUsing, string sCustName, string sDeptName, string sChargeName, string sTelNo, string sDongDetail, string sInetID, string sCompName)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                StdConst_FuncName.SrResult.CallCenter.CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_CustNameWith11,
+                new[] { (object)s_CenterCharge.CenterCode, (object)bUsing, sCustName, sDeptName, sChargeName, sTelNo, sDongDetail, sInetID, sCompName });
+        }
+        catch (Exception ex)
+        {
+            return new PostgResult_AllWithList(
+                StdUtil.GetExceptionMessage(ex),
+                "SrGlobalClient/SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11");
+        }
+    }
     /// <summary>
     /// 고객 검색 (전화번호 / 상호 / 상호+담당 통합 검색)
     /// </summary>

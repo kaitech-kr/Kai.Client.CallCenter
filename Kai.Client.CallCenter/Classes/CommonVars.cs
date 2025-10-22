@@ -9,7 +9,7 @@ using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using static Kai.Common.StdDll_Common.StdDelegate;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 
-namespace Kai.Client.CallCenter.Class_Common;
+namespace Kai.Client.CallCenter.Classes;
 #nullable disable
 public class CommonVars
 {

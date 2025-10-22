@@ -11,10 +11,10 @@ using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
 
-using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.MVVM.ViewModels;
 using Kai.Client.CallCenter.MVVM.ViewServices;
-using static Kai.Client.CallCenter.Class_Common.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonVars;
+using static Kai.Client.CallCenter.Classes.CommonFuncs;
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable
@@ -254,12 +254,12 @@ public partial class CustMain_RegEditWnd : Window
     {
         if (!string.IsNullOrEmpty(TBoxCustName.Text) && !string.IsNullOrEmpty(TBoxTelNo1.Text) && !string.IsNullOrEmpty(TBoxDongBasic.Text))
         {
-            BtnSave.Opacity = (double)Application.Current.FindResource("AppOpacity_Enabled");
+            SetButtonOpacity(BtnSave, true);
             return true;
         }
         else
         {
-            BtnSave.Opacity = (double)Application.Current.FindResource("AppOpacity_Disabled");
+            SetButtonOpacity(BtnSave, false);
             return false;
         }
     }
