@@ -200,11 +200,15 @@ public class NwInsung01 : IExternalApp
             #endregion
 
             #region 2. Local Variables 초기화
-            List<AutoAlloc> listOrg = ExternalAppController.listForInsung01;
+            // 컨트롤러에서 주문 리스트 가져오기
+            List<AutoAlloc> listFromController = ExternalAppController.listForInsung01;
 
-            // 작업잔량 파악 리스트
-            var listInsung = new List<AutoAlloc>(listOrg);
-            listOrg.Clear();
+            // 작업잔량 파악 리스트 (원본 복사)
+            var listInsung = new List<AutoAlloc>(listFromController);
+            listFromController.Clear(); // 원본 클리어 (처리 완료 후 다시 채울 예정)
+
+            // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
+            var listProcessed = new List<AutoAlloc>();
 
             var listCreated = listInsung
                 .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
@@ -259,7 +263,11 @@ public class NwInsung01 : IExternalApp
                     break;
                 }
 
-                await Task.Delay(c_nWaitNormal, ctrl.Token);
+                // 마지막 시도가 아닐 때만 대기 (불필요한 지연 방지)
+                if (i < c_nRepeatShort - 1)
+                {
+                    await Task.Delay(c_nWaitNormal, ctrl.Token);
+                }
             }
 
             if (!bDatagridExists)
@@ -307,6 +315,14 @@ public class NwInsung01 : IExternalApp
             //     - Done_NoDelete → listOrg에 NotChanged 추가, listEtcGroup에서 제거
             //     - Done_NeedRefresh → ClickEmptyRowAsync
             // }
+            #endregion
+
+            #region 6. 처리 완료된 항목을 컨트롤러에 다시 추가
+            if (listProcessed.Count > 0)
+            {
+                listFromController.AddRange(listProcessed);
+                Debug.WriteLine($"[{APP_NAME}] 처리 완료된 항목 {listProcessed.Count}개를 컨트롤러에 추가");
+            }
             #endregion
 
             Debug.WriteLine($"[NwInsung01] AutoAllocAsync 완료 - Count={lAllocCount}");
