@@ -37,6 +37,12 @@ public class ExternalAppController : IDisposable
     #endregion
 
     #region Variables
+    // 정적 변수 - 자동배차 주문 리스트 (Master 모드 전용)
+    public static List<AutoAlloc> listForInsung01 = new List<AutoAlloc>();
+    public static List<AutoAlloc> listForInsung02 = new List<AutoAlloc>();
+    // public static List<AutoAlloc> listForCargo24 = new List<AutoAlloc>();
+    // public static List<AutoAlloc> listForOnecall = new List<AutoAlloc>();
+
     // 개별 참조 (필요시 직접 접근용)
     public NwInsung01 Insung01 { get; private set; }
     public NwInsung02 Insung02 { get; private set; }

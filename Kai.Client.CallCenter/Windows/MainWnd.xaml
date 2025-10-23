@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
         mc:Ignorable="d"  
         xmlns:sys="clr-namespace:System;assembly=netstandard"    
-        xmlns:Class_Common="clr-namespace:Kai.Client.CallCenter.Class_Common"    
-        Title="KAI Tech" Height="450" Width="800" MinHeight="800" MinWidth="1400" WindowState="Normal"                
-        Background="{StaticResource AppColor_WndBackground}" 
-        Loaded="Window_Loaded" Unloaded="Window_Unloaded" 
+        xmlns:Classes="clr-namespace:Kai.Client.CallCenter.Classes"
+        Title="KAI Tech" Height="450" Width="800" MinHeight="800" MinWidth="1400" WindowState="Normal"
+        Background="{StaticResource AppColor_WndBackground}"
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded"
         Closing="Window_Closing" SizeChanged="Window_SizeChanged">
 
     <Window.Resources>
@@ -41,8 +41,8 @@
         </Style>
 
         <!--// ViewModel-->
-        <Class_Common:SrGlobalClient x:Key="SrGlobalClient" />
-        <Class_Common:SrLocalClient x:Key="SrLocalClient" />
+        <Classes:SrGlobalClient x:Key="SrGlobalClient" />
+        <Classes:SrLocalClient x:Key="SrLocalClient" />
     </Window.Resources>
 
     <Grid>
@@ -222,7 +222,7 @@
                        Content="글로벌서버: " HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBlock x:Name="TblockConnGlobal"
                            DataContext="{StaticResource SrGlobalClient}"
-                           Text="{Binding SrGlobalClient.m_sLoginSignslR}"
+                           Text="{Binding m_sLoginSignalR}"
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                 <!--<Separator Style="{StaticResource ColumnSeparatorStyle}"/>-->
@@ -232,7 +232,7 @@
                        Margin="50,0,0,0"/>
                 <TextBlock x:Name="TblockConnLocal"
                            DataContext="{StaticResource SrLocalClient}"
-                           Text="{Binding SrLocalClient.m_sConnSignslR}"
+                           Text="{Binding m_sConnSignalR}"
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                 <!-- 모드 표시 -->

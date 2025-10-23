@@ -1,6 +1,7 @@
 using Kai.Common.StdDll_Common;
 using System.Windows;
 using System.Windows.Input;
+using Kai.Client.CallCenter.Classes;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Client.CallCenter.Classes.SrGlobalClient;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
@@ -10,7 +11,6 @@ namespace Kai.Client.CallCenter.Windows;
 public partial class SplashWnd : Window
 {
     #region Variables
-    private int m_nRetryCount = 0;
     #endregion
 
     #region Basic
@@ -19,7 +19,7 @@ public partial class SplashWnd : Window
         InitializeComponent();
 
         SrGlobalClient.SrGlobalClient_LoginEvent += OnSignalRLogin;
-        //SrGlobalClient.SrGlobalClient_ClosedEvent += OnSignalRClosed;
+        SrGlobalClient.SrGlobalClient_RetryEvent += OnSignalRClosed;
     }
 
     private void Splash_Loaded(object sender, RoutedEventArgs e)
@@ -61,16 +61,18 @@ public partial class SplashWnd : Window
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         SrGlobalClient_LoginEvent -= OnSignalRLogin;
-        SrGlobalClient_ClosedEvent -= OnSignalRClosed;
+        SrGlobalClient_RetryEvent -= OnSignalRClosed;
     }
     #endregion
 
     #region Status Update
-    private void UpdateStatus(string message)
+    public void UpdateStatus(string message)
     {
+        if (Application.Current?.Dispatcher == null) return;
+
         Application.Current.Dispatcher.BeginInvoke(() =>
         {
-            TBlockStatus.Text = message;
+            TBlockStatus2.Text = message;
         });
     }
     #endregion
@@ -80,16 +82,13 @@ public partial class SplashWnd : Window
     {
         await Application.Current.Dispatcher.BeginInvoke(() =>
         {
-            SrGlobalClient_LoginEvent -= OnSignalRLogin;
-
             if (!e.bValue)
             {
-                UpdateStatus($"로그인 실패: {StdUtil.GetExceptionMessage(e.e)}");
-                MsgBox($"SignalR 로그인 실패: {StdUtil.GetExceptionMessage(e.e)}");
-                this.Close();
+                UpdateStatus($"로그인 재시도 중... ({SrGlobalClient.s_nLoginRetryCount}번째)");
                 return;
             }
 
+            SrGlobalClient_LoginEvent -= OnSignalRLogin;
             UpdateStatus("로그인 성공! 메인 화면 여는 중...");
 
             MainWnd wnd = new MainWnd();
@@ -99,10 +98,9 @@ public partial class SplashWnd : Window
         });
     }
 
-    public void OnSignalRClosed(object sender, ExceptionEventArgs e)
+    public void OnSignalRClosed(object sender, IntEventArgs e)
     {
-        m_nRetryCount++;
-        UpdateStatus($"서버 연결 끊김. 재시도 중... ({m_nRetryCount}번째)");
+        UpdateStatus($"서버 연결 재시도 중... ({e.nValue}번째)");
     }
     #endregion
 

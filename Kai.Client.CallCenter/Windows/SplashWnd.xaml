@@ -32,7 +32,7 @@
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Margin="0,0,300,30" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <TextBlock x:Name="TBlockStatus" Text="서버 연결 시도 중..."
+            <TextBlock x:Name="TBlockStatus2" Text="서버 연결 시도 중..."
                        FontSize="14" Foreground="Blue" HorizontalAlignment="Center" Margin="0,0,0,5"/>
             <ProgressBar IsIndeterminate="True" Width="400" Height="10"/>
         </StackPanel>

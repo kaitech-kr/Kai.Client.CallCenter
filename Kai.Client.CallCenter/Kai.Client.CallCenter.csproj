@@ -240,6 +240,33 @@
 		</None>
 	</ItemGroup>
 
+	<!-- MustCopy 폴더에서 모든 필수 파일/폴더 복사 (Debug/Release 공통) -->
+	<ItemGroup>
+		<!-- 폴더들 -->
+		<Content Include="..\MustCopy\Data\**\*" Link="Data\%(RecursiveDir)%(Filename)%(Extension)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="..\MustCopy\Python\**\*" Link="Python\%(RecursiveDir)%(Filename)%(Extension)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="..\MustCopy\usbmmidd_v2\**\*" Link="usbmmidd_v2\%(RecursiveDir)%(Filename)%(Extension)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<!-- DLL 및 EXE 파일들 -->
+		<Content Include="..\MustCopy\Kai.Common.CppDll_Common.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Kai.Common.CppDll_Common.dll</Link>
+		</Content>
+
+		<Content Include="..\MustCopy\Kai.Client.X86ComBroker.exe">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Link>Kai.Client.X86ComBroker.exe</Link>
+		</Content>
+	</ItemGroup>
+
 	<ItemGroup>
 	  <Folder Include="Classes\Class_Sub\" />
 	  <Folder Include="Networks\NwCargo24s\" />

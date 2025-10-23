@@ -70,6 +70,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
 
     #region Delegates
     public static event ExceptionEventHandler SrGlobalClient_ClosedEvent;
+    public static event IntEventHandler SrGlobalClient_RetryEvent;
     public static event BoolEventHandler SrGlobalClient_LoginEvent;
     #endregion
 
@@ -104,6 +105,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     }
 
     public List<int> m_ListIgnoreSeqno = new List<int>();
+    public static int s_nLoginRetryCount = 0; // 로그인 재시도 횟수
     #endregion
 
     #region Property
@@ -155,6 +157,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
 
             Debug.WriteLine($"연결 시도 시작...");
             // 연결될 때까지 무한 재시도
+            int retryCount = 0;
             while (!m_bStopReconnect)
             {
                 // MainWindow가 닫히고 있으면 재접속 중지
@@ -194,6 +197,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                 }
                 catch (Exception ex)
                 {
+                    retryCount++;
                     Debug.WriteLine($"===== SignalR 연결 실패 상세정보 =====");
                     Debug.WriteLine($"예외 타입: {ex.GetType().Name}");
                     Debug.WriteLine($"메시지: {ex.Message}");
@@ -203,7 +207,10 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                         Debug.WriteLine($"내부 예외: {ex.InnerException.Message}");
                     }
                     Debug.WriteLine($"StackTrace: {ex.StackTrace}");
-                    Debug.WriteLine($"===== {c_nReconnectDelay / 1000}초 후 재시도... =====");
+                    Debug.WriteLine($"===== {c_nReconnectDelay / 1000}초 후 재시도... ({retryCount}번째) =====");
+
+                    // 재시도 이벤트 발생 (재시도 횟수 전달)
+                    SrGlobalClient_RetryEvent?.Invoke(this, new Common.StdDll_Common.StdDelegate.IntEventArgs(retryCount));
 
                     //switch (ex.HResult)
                     //{
@@ -253,7 +260,8 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         m_bLoginSignalR = false;
         SrGlobalClient_ClosedEvent?.Invoke(this, new Common.StdDll_Common.StdDelegate.ExceptionEventArgs(ex));
 
-        Debug.WriteLine($"SignalR 연결 끊김: {ex.Message}, 자동 재접속 시작...");
+        Debug.WriteLine($"SignalR 연결 끊김: {ex.Message}, {c_nReconnectDelay / 1000}초 후 재접속 시작...");
+        await Task.Delay(c_nReconnectDelay); // 5초 대기
         await ConnectAsync();
     }
     #endregion
@@ -262,20 +270,26 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     public async Task SrReport_ConnectedAsync(string connectedID)
     {
         if (m_bLoginSignalR) return;
+
+        Debug.WriteLine($"***** SrReport_ConnectedAsync 시작: connectedID={connectedID} *****");
+
         BoolEventArgs boolEventArgs = new BoolEventArgs(true);
 
         try
         {
             if (HubConn == null)
             {
+                Debug.WriteLine("***** 로그인 실패: HubConn is null *****");
                 boolEventArgs.bValue = false;
                 boolEventArgs.e = new Exception("HubConn is null");
                 return;
             }
 
+            Debug.WriteLine($"***** 로그인 요청 시작: ID={s_sKaiLogId} *****");
             // 로그인 - 콜센터 담당자 정보 얻기
             PostgResult_AllWith result = await HubConn
                 .InvokeCoreAsync<PostgResult_AllWith>(StdConst_FuncName.SrResult.CallCenter.LoginAsync, new[] { s_sKaiLogId, s_sKaiLogPw });
+            Debug.WriteLine($"***** 로그인 요청 완료 *****");
 
             if (!string.IsNullOrEmpty(result.sErr))
             {
@@ -303,12 +317,26 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         }
         catch (Exception ex)
         {
+            Debug.WriteLine($"***** 로그인 예외 발생: {ex.GetType().Name} - {ex.Message} *****");
+            Debug.WriteLine($"***** StackTrace: {ex.StackTrace} *****");
 
             boolEventArgs.bValue = false;
             boolEventArgs.e = ex;
         }
         finally
         {
+            // 로그인 실패시 재시도 횟수 증가
+            if (!boolEventArgs.bValue)
+            {
+                s_nLoginRetryCount++;
+                Debug.WriteLine($"***** 로그인 실패! 재시도 횟수: {s_nLoginRetryCount}번째 *****");
+            }
+            else
+            {
+                s_nLoginRetryCount = 0; // 성공시 초기화
+                Debug.WriteLine($"***** 로그인 성공! 재시도 횟수 초기화 *****");
+            }
+
             Debug.WriteLine($"boolEventArgs={boolEventArgs}");
             SrGlobalClient_LoginEvent?.Invoke(this, boolEventArgs);
         }

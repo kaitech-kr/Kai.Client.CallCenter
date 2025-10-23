@@ -7,7 +7,9 @@ using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 
 using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.Networks.NwInsungs;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
@@ -36,6 +38,13 @@ public class NwInsung01 : IExternalApp
     /// Context 읽기 전용 접근
     /// </summary>
     public InsungContext Context => m_Context;
+    #endregion
+
+    #region AutoAlloc Variables
+    /// <summary>
+    /// 자동배차 할일 없음 카운터 (60회마다 조회버튼 클릭)
+    /// </summary>
+    private long m_lRestCount = 0;
     #endregion
 
     #region Dispose
@@ -191,24 +200,73 @@ public class NwInsung01 : IExternalApp
             #endregion
 
             #region 2. Local Variables 초기화
-            // TODO: 리스트 초기화
-            // - listOrg: AutoAllocCtrl.listForInsung01
-            // - listCreated: 신규 오더 (Created, Existed_NonSeqno)
-            // - listEtcGroup: 기존 오더 (Updated, NotChanged 등)
+            List<AutoAlloc> listOrg = ExternalAppController.listForInsung01;
 
-            // 임시: 할일 없음 반환
-            Debug.WriteLine($"[NwInsung01] 자동배차 할일 없음 (구현 예정): lAllocCount={lAllocCount}");
-            return new StdResult_Status(StdResult.Success);
+            // 작업잔량 파악 리스트
+            var listInsung = new List<AutoAlloc>(listOrg);
+            listOrg.Clear();
+
+            var listCreated = listInsung
+                .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
+                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno))
+                .OrderByDescending(item => item.NewOrder.Insung1) // Insung1 KeyCode 역순 정렬 (큰 값 우선)
+                .Select(item => item.Clone())
+                .ToList();
+
+            var listEtcGroup = listInsung
+                .Where(item => !(item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
+                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno)))
+                .OrderByDescending(item => item.NewOrder.Insung1) // Insung1 KeyCode 역순 정렬 (큰 값 우선)
+                .Select(item => item.Clone())
+                .ToList();
+
+            // 할일 갯수 체크
+            int tot = listCreated.Count + listEtcGroup.Count;
+
+            if (tot == 0)
+            {
+                m_lRestCount += 1;
+                if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
+                {
+                    // TODO: Helper 함수 구현 필요 (세션 3에서 설계됨)
+                    // await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
+                    await Task.Delay(c_nWaitLong, ctrl.Token);
+                }
+
+                Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 없음: lAllocCount={lAllocCount}");
+                return new StdResult_Status(StdResult.Success); // 할일 없으면 돌아간다
+            }
+            else
+            {
+                m_lRestCount = 0;
+                Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 있음: lAllocCount={lAllocCount}, tot={tot}, listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
+            }
             #endregion
 
             #region 3. Check Datagrid
-            // TODO: Datagrid 윈도우 존재 확인
-            // for (int i = 0; i < c_nRepeatShort; i++)
-            // {
-            //     await ctrl.WaitIfPausedOrCancelledAsync();
-            //     if (Datagrid 존재) break;
-            //     await Task.Delay(100, ctrl.Token);
-            // }
+            // Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
+            bool bDatagridExists = false;
+            for (int i = 0; i < c_nRepeatShort; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                // Datagrid 핸들이 유효하고 윈도우가 존재하는지 확인
+                if (m_Context.MemInfo.RcptPage.DG오더_hWnd != IntPtr.Zero &&
+                    Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
+                {
+                    bDatagridExists = true;
+                    Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
+                    break;
+                }
+
+                await Task.Delay(c_nWaitNormal, ctrl.Token);
+            }
+
+            if (!bDatagridExists)
+            {
+                Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우를 찾을 수 없음");
+                return new StdResult_Status(StdResult.Fail, "Datagrid 윈도우를 찾을 수 없습니다.", "NwInsung01/AutoAllocAsync_03");
+            }
             #endregion
 
             #region 4. Created Order 처리 (신규)
