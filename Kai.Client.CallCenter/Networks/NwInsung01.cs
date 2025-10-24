@@ -307,16 +307,56 @@ public class NwInsung01 : IExternalApp
             #endregion
 
             #region 4. Created Order 처리 (신규)
-            // TODO: CheckIsOrderAsync_AssumeKaiNewOrder 호출
-            // for (int i = listCreated.Count; i > 0; i--)
-            // {
-            //     resultAuto = await m_RcptRegPage.CheckIsOrderAsync_AssumeKaiNewOrder(listCreated[index], ctrl);
-            //     switch (resultAuto.Result)
-            //     {
-            //         case Error: return Fail;
-            //         case Done_NoDelete: listOrg에 추가, listCreated에서 제거;
-            //     }
-            // }
+            if (listCreated.Count > 0)
+            {
+                Debug.WriteLine($"[{APP_NAME}] Region 4: 신규 주문 처리 시작 (총 {listCreated.Count}건)");
+
+                // 역순으로 처리 (삭제를 위해)
+                for (int i = listCreated.Count; i > 0; i--)
+                {
+                    await ctrl.WaitIfPausedOrCancelledAsync();
+
+                    int index = i - 1;
+                    if (index < 0) break;
+
+                    AutoAlloc item = listCreated[index];
+                    Debug.WriteLine($"[{APP_NAME}]   [{i}/{listCreated.Count}] 신규 주문 처리: " +
+                                  $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
+
+                    // 신규 주문 등록 시도
+                    RegistResult registResult = await m_RcptRegPage.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
+
+                    if (registResult.Success)
+                    {
+                        // 성공: listOrg에 추가, listCreated에서 제거
+                        Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
+
+                        // NotChanged 상태로 listOrg에 추가
+                        AutoAlloc itemCopy = new AutoAlloc(item.NewOrder, item.KeyCode);
+                        itemCopy.StateFlag = PostgService_Common_OrderState.NotChanged;
+
+                        // listOrg에 같은 KeyCode가 없으면 추가
+                        if (!listOrg.Any(x => x.KeyCode == itemCopy.KeyCode))
+                        {
+                            listOrg.Add(itemCopy);
+                        }
+
+                        // listCreated에서 제거
+                        listCreated.RemoveAt(index);
+                    }
+                    else
+                    {
+                        // 실패: 에러 로그 출력하고 계속 진행 (다음 사이클에서 재시도)
+                        Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (재시도 예정): " +
+                                      $"{item.KeyCode} - {registResult.ErrorMessage}");
+
+                        // TODO: 실패 횟수 카운트 후 일정 횟수 이상 실패 시 처리
+                        // 현재는 큐에 남겨두어 다음 사이클에서 재시도
+                    }
+                }
+
+                Debug.WriteLine($"[{APP_NAME}] Region 4 완료: 성공={listOrg.Count}건, 실패/재시도={listCreated.Count}건");
+            }
             #endregion
 
             #region 5. Updated, NotChanged Order 처리 (기존)

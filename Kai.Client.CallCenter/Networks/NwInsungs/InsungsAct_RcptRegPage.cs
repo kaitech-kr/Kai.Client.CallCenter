@@ -2083,5 +2083,396 @@ public class InsungsAct_RcptRegPage
         }
     }
     #endregion
+
+    #region Region 4 Helper Methods - Result Classes
+    /// <summary>
+    /// 팝업창 열기 결과
+    /// </summary>
+    private class PopupResult
+    {
+        public bool Success { get; }
+        public IntPtr hWndPopup { get; }
+        public string ErrorMessage { get; }
+
+        public PopupResult(bool success, IntPtr hWnd, string error = "")
+        {
+            Success = success;
+            hWndPopup = hWnd;
+            ErrorMessage = error;
+        }
+    }
+
+    /// <summary>
+    /// 주문 등록 결과
+    /// </summary>
+    private class RegistResult
+    {
+        public bool Success { get; }
+        public string ErrorMessage { get; }
+
+        public static RegistResult SuccessResult() => new RegistResult(true, "");
+        public static RegistResult ErrorResult(string msg) => new RegistResult(false, msg);
+
+        private RegistResult(bool success, string error)
+        {
+            Success = success;
+            ErrorMessage = error;
+        }
+    }
+
+    /// <summary>
+    /// 고객 입력 결과
+    /// </summary>
+    private class CustomerResult
+    {
+        public bool Success { get; }
+        public string ErrorMessage { get; }
+
+        public static CustomerResult SuccessResult() => new CustomerResult(true, "");
+        public static CustomerResult ErrorResult(string msg) => new CustomerResult(false, msg);
+
+        private CustomerResult(bool success, string error)
+        {
+            Success = success;
+            ErrorMessage = error;
+        }
+    }
+
+    /// <summary>
+    /// 고객 검색 결과 타입
+    /// </summary>
+    private enum AutoAlloc_CustSearch
+    {
+        Null = 0,   // 검색 실패
+        None = 1,   // 검색 결과 없음 (신규 고객)
+        One = 2,    // 검색 결과 1개 (정상)
+        Multi = 3   // 검색 결과 복수 (수동 처리 필요)
+    }
+
+    /// <summary>
+    /// 고객 검색 타입 결과
+    /// </summary>
+    private class AutoAlloc_SearchTypeResult
+    {
+        public AutoAlloc_CustSearch resultTye { get; }
+        public IntPtr hWndResult { get; }
+
+        public AutoAlloc_SearchTypeResult(AutoAlloc_CustSearch resultTye, IntPtr hWndResult)
+        {
+            this.resultTye = resultTye;
+            this.hWndResult = hWndResult;
+        }
+    }
+    #endregion
+
+    #region Region 4 Helper Methods - Input Methods
+    /// <summary>
+    /// 텍스트 입력 (재시도 포함)
+    /// </summary>
+    private async Task<bool> InputTextAsync(IntPtr hWnd, string text)
+    {
+        const int MAX_RETRY = 3;
+        const int WAIT_MS = 100;
+
+        for (int i = 0; i < MAX_RETRY; i++)
+        {
+            await OfrWork_Common.WriteEditBox_ToHndleAsync(hWnd, text);
+
+            string current = Std32Window.GetWindowCaption(hWnd);
+            if (current == text)
+                return true;
+
+            await Task.Delay(WAIT_MS);
+        }
+
+        Debug.WriteLine($"[{m_Context.AppName}] 텍스트 입력 실패: 원하는={text}, 현재={Std32Window.GetWindowCaption(hWnd)}");
+        return false;
+    }
+
+    /// <summary>
+    /// 전화번호 입력 (Enter 키 포함, 재시도)
+    /// </summary>
+    private async Task<bool> InputPhoneAsync(IntPtr hWnd, string phoneNo)
+    {
+        const int MAX_RETRY = 3;
+        const int WAIT_MS = 100;
+
+        for (int i = 0; i < MAX_RETRY; i++)
+        {
+            // 전화번호 입력
+            Std32Window.SetWindowCaption(hWnd, phoneNo);
+            await Task.Delay(WAIT_MS);
+
+            // Enter 키 전송
+            await Std32Key_Msg.KeyPostAsync_MouseClickNDown(hWnd, StdCommon32.VK_RETURN);
+            await Task.Delay(WAIT_MS);
+
+            string current = StdConvert.MakePhoneNumberToDigit(
+                Std32Window.GetWindowCaption(hWnd));
+
+            if (current == phoneNo)
+                return true;
+
+            await Task.Delay(WAIT_MS);
+        }
+
+        Debug.WriteLine($"[{m_Context.AppName}] 전화번호 입력 실패: 원하는={phoneNo}, 현재={StdConvert.MakePhoneNumberToDigit(Std32Window.GetWindowCaption(hWnd))}");
+        return false;
+    }
+
+    /// <summary>
+    /// 고객명 입력 (검색 포함)
+    /// </summary>
+    private async Task<CustomerResult> InputCustomerAsync(
+        IntPtr hWndName, IntPtr hWndDong,
+        string custName, string chargeName, string region)
+    {
+        // 고객명 입력
+        string searchText = NwCommon.GetInsungTextForSearch(custName, chargeName);
+        bool inputOk = await InputTextAsync(hWndName, searchText);
+
+        if (!inputOk)
+            return CustomerResult.ErrorResult($"{region} 고객명 입력 실패");
+
+        // 검색 결과 확인
+        var searchResult = await GetCustSearchTypeAsync(hWndName, hWndDong);
+
+        switch (searchResult.resultTye)
+        {
+            case AutoAlloc_CustSearch.One:
+                // 1개 검색 → 성공
+                Debug.WriteLine($"[{m_Context.AppName}] {region} 고객 검색 성공: {custName}");
+                return CustomerResult.SuccessResult();
+
+            case AutoAlloc_CustSearch.Multi:
+                // 여러 개 → 수동 처리 필요
+                Debug.WriteLine($"[{m_Context.AppName}] {region} 고객 복수 검색됨: {custName} (수동 처리 필요)");
+                return CustomerResult.ErrorResult($"{region} 고객 복수 검색됨 (수동 처리 필요)");
+
+            case AutoAlloc_CustSearch.None:
+                // 없음 → 고객 등록 필요
+                Debug.WriteLine($"[{m_Context.AppName}] {region} 고객 없음: {custName} (등록 필요)");
+                return CustomerResult.ErrorResult($"{region} 고객 없음 (등록 필요)");
+
+            default:
+                return CustomerResult.ErrorResult($"{region} 고객 검색 실패");
+        }
+    }
+
+    /// <summary>
+    /// 고객 검색 결과 타입 확인
+    /// - 검색 결과가 1개인지, 복수인지, 없는지 확인
+    /// </summary>
+    private async Task<AutoAlloc_SearchTypeResult> GetCustSearchTypeAsync(IntPtr hWnd고객명, IntPtr hWnd동명)
+    {
+        IntPtr hWndTmp = IntPtr.Zero;
+        string sTmp = "";
+
+        // EnterKey 전송
+        Std32Key_Msg.KeyPost_Down(hWnd고객명, StdCommon32.VK_RETURN);
+
+        // 검색 결과 확인 (최대 50번, 1.5초)
+        for (int j = 0; j < 50; j++)
+        {
+            await Task.Delay(30);
+
+            // 1개 검색됨 - 동명에 텍스트가 들어옴
+            sTmp = Std32Window.GetWindowCaption(hWnd동명);
+            if (!string.IsNullOrEmpty(sTmp))
+            {
+                return new AutoAlloc_SearchTypeResult(AutoAlloc_CustSearch.One, IntPtr.Zero);
+            }
+
+            // 신규 고객 - 고객등록창이 뜸
+            hWndTmp = Std32Window.FindMainWindow(m_Context.SplashInfo.TopWnd_uProcessId, null,
+                m_Context.FileInfo.고객등록Wnd_TopWnd_sWndName);
+            if (hWndTmp != IntPtr.Zero)
+            {
+                return new AutoAlloc_SearchTypeResult(AutoAlloc_CustSearch.None, hWndTmp);
+            }
+
+            // 복수 고객 - 고객검색창이 뜸
+            hWndTmp = Std32Window.FindMainWindow(m_Context.SplashInfo.TopWnd_uProcessId, null,
+                m_Context.FileInfo.고객검색Wnd_TopWnd_sWndName);
+            if (hWndTmp != IntPtr.Zero)
+            {
+                // 고객검색창이 완전히 로딩될 때까지 대기
+                for (int k = 0; k < 30; k++)
+                {
+                    await Task.Delay(30);
+                    if (Std32Window.IsWindowEnabled(hWndTmp))
+                        break;
+                }
+                return new AutoAlloc_SearchTypeResult(AutoAlloc_CustSearch.Multi, hWndTmp);
+            }
+        }
+
+        // 검색 실패
+        Debug.WriteLine($"[{m_Context.AppName}] GetCustSearchTypeAsync 실패: 타임아웃");
+        return new AutoAlloc_SearchTypeResult(AutoAlloc_CustSearch.Null, IntPtr.Zero);
+    }
+    #endregion
+
+    #region Region 4 Main Methods - New Order Processing
+    /// <summary>
+    /// 신규 주문 팝업창 열기
+    /// - 신규 버튼 클릭
+    /// - 팝업창 대기 및 검증
+    /// </summary>
+    public async Task<PopupResult> OpenNewOrderPopupAsync(CancelTokenControl ctrl)
+    {
+        const int MAX_RETRY = 3;
+        const int MAX_WAIT_LOOP = 100;
+        const int WAIT_MS = 50;
+
+        IntPtr hWndPopup = IntPtr.Zero;
+
+        try
+        {
+            // 신규 버튼 클릭 시도 (최대 3번)
+            for (int retry = 0; retry < MAX_RETRY; retry++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                // 신규 버튼 클릭
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd신규);
+                Debug.WriteLine($"[{m_Context.AppName}] 신규버튼 클릭 완료 (시도 {retry + 1}/{MAX_RETRY})");
+
+                // 팝업창 대기 (100번 * 50ms = 5초)
+                bool bFound = false;
+                for (int k = 0; k < MAX_WAIT_LOOP; k++)
+                {
+                    await Task.Delay(WAIT_MS);
+
+                    // 팝업창 찾기
+                    hWndPopup = Std32Window.FindMainWindow_NotTransparent(
+                        m_Context.SplashInfo.TopWnd_uProcessId,
+                        m_Context.FileInfo.접수등록Wnd_TopWnd_sWndName_Reg);
+
+                    if (hWndPopup == IntPtr.Zero) continue;
+
+                    // 닫기 버튼 검증
+                    IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(
+                        hWndPopup, m_Context.FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
+
+                    if (hWndClose == IntPtr.Zero) continue;
+
+                    string closeText = Std32Window.GetWindowCaption(hWndClose);
+                    if (closeText.StartsWith(m_Context.FileInfo.접수등록Wnd_버튼그룹_sWndName닫기))
+                    {
+                        bFound = true;
+                        Debug.WriteLine($"[{m_Context.AppName}] 신규주문 팝업창 열림: {hWndPopup:X}");
+                        break;
+                    }
+                }
+
+                if (bFound)
+                {
+                    await Task.Delay(100); // 팝업창 안정화 대기
+                    return new PopupResult(true, hWndPopup);
+                }
+
+                // 재시도 전 대기
+                await Task.Delay(100);
+            }
+
+            // 모든 재시도 실패
+            return new PopupResult(false, IntPtr.Zero, "신규 버튼 클릭 후 팝업창이 열리지 않음");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] OpenNewOrderPopupAsync 예외: {ex.Message}");
+            return new PopupResult(false, IntPtr.Zero, $"팝업창 열기 예외: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 신규 주문 정보를 팝업창에 입력
+    /// - 의뢰자, 출발지, 도착지 정보 입력
+    /// - 저장 버튼 클릭
+    /// </summary>
+    public async Task<RegistResult> RegistOrderToPopupAsync(
+        AutoAlloc item,
+        IntPtr hWndPopup,
+        CancelTokenControl ctrl)
+    {
+        try
+        {
+            TbOrder order = item.NewOrder;
+
+            // TODO: RcptWnd_New 클래스로 팝업창 핸들 초기화
+            // TODO: 의뢰자 정보 입력 (고객명, 전화1, 전화2, 부서, 담당)
+            // TODO: 출발지 정보 입력 (고객명, 동명, 전화, 주소, 위치, 적요)
+            // TODO: 도착지 정보 입력 (고객명, 동명, 전화, 주소, 위치, 적요)
+            // TODO: 기타 정보 입력 (요금, 지급, 차량종류, 오더메모 등)
+            // TODO: 저장 버튼 클릭
+
+            Debug.WriteLine($"[{m_Context.AppName}] TODO: RegistOrderToPopupAsync 구현 필요");
+            Debug.WriteLine($"[{m_Context.AppName}]   주문번호: {order.KeyCode}");
+            Debug.WriteLine($"[{m_Context.AppName}]   의뢰자: {order.CallCustName}/{order.CallChargeName}");
+            Debug.WriteLine($"[{m_Context.AppName}]   출발지: {order.StartCustName} ({order.StartDongBasic})");
+            Debug.WriteLine($"[{m_Context.AppName}]   도착지: {order.DestCustName}");
+
+            // 임시: 일단 성공으로 리턴 (실제 구현 전까지)
+            return RegistResult.ErrorResult("RegistOrderToPopupAsync 미구현 - TODO");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] RegistOrderToPopupAsync 예외: {ex.Message}");
+            return RegistResult.ErrorResult($"주문 입력 예외: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 신규 주문 처리 (Kai 주문이 인성에 없다고 가정)
+    /// - 팝업창 열기
+    /// - 주문 정보 입력
+    /// </summary>
+    public async Task<RegistResult> CheckIsOrderAsync_AssumeKaiNewOrder(
+        AutoAlloc item,
+        CancelTokenControl ctrl)
+    {
+        try
+        {
+            string orderState = item.NewOrder.OrderState;
+
+            // 주문 상태 검증
+            if (orderState != "접수" && orderState != "취소" && orderState != "대기")
+            {
+                return RegistResult.ErrorResult(
+                    $"처리할 수 없는 주문 상태: {orderState} (접수/취소/대기만 가능)");
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] 신규 주문 처리 시작: KeyCode={item.KeyCode}, " +
+                          $"상태={orderState}, 고객={item.NewOrder.CallCustName}");
+
+            // 1. 팝업창 열기
+            PopupResult popupResult = await OpenNewOrderPopupAsync(ctrl);
+            if (!popupResult.Success)
+            {
+                return RegistResult.ErrorResult(
+                    $"팝업창 열기 실패: {popupResult.ErrorMessage}");
+            }
+
+            // 2. 주문 정보 입력
+            RegistResult registResult = await RegistOrderToPopupAsync(
+                item, popupResult.hWndPopup, ctrl);
+
+            if (!registResult.Success)
+            {
+                // 실패 시 팝업창 닫기 시도
+                // TODO: 팝업창 닫기 구현
+                Debug.WriteLine($"[{m_Context.AppName}] 주문 입력 실패: {registResult.ErrorMessage}");
+            }
+
+            return registResult;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] CheckIsOrderAsync_AssumeKaiNewOrder 예외: {ex.Message}");
+            return RegistResult.ErrorResult($"신규 주문 처리 예외: {ex.Message}");
+        }
+    }
+    #endregion
 }
 #nullable enable

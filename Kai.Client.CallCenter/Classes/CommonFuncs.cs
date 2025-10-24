@@ -21,6 +21,14 @@ public class CommonFuncs : CommonVars
     #region Basics
     public static void Init()
     {
+        // 콘솔 출력 인코딩 설정 (한글 깨짐 방지)
+        try
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.InputEncoding = System.Text.Encoding.UTF8;
+        }
+        catch { /* 인코딩 설정 실패해도 무시 */ }
+
         try
         {
             s_sKaiLogId = JsonFileManager.GetValue("Kaitech_LoginInfo:Kaitech_sId");
@@ -39,25 +47,25 @@ public class CommonFuncs : CommonVars
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[CommonFuncs] Init ����: {ex.Message}");
+            Debug.WriteLine($"[CommonFuncs] Init 오류: {ex.Message}");
             Debug.WriteLine($"[CommonFuncs] StackTrace: {ex.StackTrace}");
         }
     }
 
     private static void LoadExternalAppsConfig()
     {
-        Debug.WriteLine("[CommonFuncs] LoadExternalAppsConfig ����");
+        Debug.WriteLine("[CommonFuncs] LoadExternalAppsConfig 실행");
 
-        // Insung01 ���� �ε�
+        // Insung01 설정 로드
         string sUse = JsonFileManager.GetValue("ExternalApps:Insung01:Use");
-        Debug.WriteLine($"[CommonFuncs] sUse ����: '{sUse}'");
+        Debug.WriteLine($"[CommonFuncs] sUse 확인: '{sUse}'");
 
         NwInsung01.s_Use = StdConvert.StringToBool(sUse);
         NwInsung01.s_Id = JsonFileManager.GetValue("ExternalApps:Insung01:Id");
         NwInsung01.s_Pw = JsonFileManager.GetValue("ExternalApps:Insung01:Pw");
         NwInsung01.s_AppPath = JsonFileManager.GetValue("ExternalApps:Insung01:AppPath");
 
-        Debug.WriteLine($"[CommonFuncs] Insung01 ���� �ε�: Use={NwInsung01.s_Use}, Id={NwInsung01.s_Id}, AppPath={NwInsung01.s_AppPath} -----------------------");
+        Debug.WriteLine($"[CommonFuncs] Insung01 설정 로드: Use={NwInsung01.s_Use}, Id={NwInsung01.s_Id}, AppPath={NwInsung01.s_AppPath} -----------------------");
 
         // Insung02 설정 로드
         string sUse02 = JsonFileManager.GetValue("ExternalApps:Insung02:Use");
@@ -75,7 +83,7 @@ public class CommonFuncs : CommonVars
 
     private static bool InitListChars()
     {
-        // ������ �����ϴ��� Ȯ��
+        // 파일이 존재하는지 확인
         if (!File.Exists(s_sHanPath))
         {
             MessageBox.Show("File not found: " + s_sHanPath);

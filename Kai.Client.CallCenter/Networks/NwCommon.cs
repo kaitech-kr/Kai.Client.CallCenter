@@ -67,6 +67,20 @@ public class NwCommon
     }
 
     /// <summary>
+    /// 인성 앱용 고객명 검색 텍스트 생성
+    /// - "고객명/담당자명" 형식으로 반환
+    /// </summary>
+    public static string GetInsungTextForSearch(string custName, string etcName)
+    {
+        if (string.IsNullOrEmpty(custName)) return custName;
+
+        int index = custName.IndexOf('/');
+        if (index >= 0) custName = custName.Substring(0, index);
+
+        return custName + "/" + etcName;
+    }
+
+    /// <summary>
     /// 스플래시 윈도우 닫기
     /// </summary>
     public static bool CloseSplash(string sClassName, string sWndName)
