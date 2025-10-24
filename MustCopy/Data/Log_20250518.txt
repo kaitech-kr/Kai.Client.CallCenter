@@ -1,0 +1,11 @@
+2025-05-18 10:59:41: Result: Fail
+[sPos]: NwIsAct_ReceiptPage/SetDG오더AbsRectsAsync_01
+[sErr]: ColumnText[0] 문자인식 실패
+2025-05-18 12:30:14: Result: Fail
+[sPos]: NwIsAct_ReceiptPage/SetDG오더AbsRectsAsync_01
+[sErr]: ColumnText[0] 문자인식 실패
+2025-05-18 13:21:15: Result: Fail
+[sPos]: NwIsAct_ReceiptPage/InitAsync_18
+2025-05-18 14:30:35: Result: Fail
+[sPos]: NwIsAct_ReceiptPage/SetDG오더AbsRectsAsync_01
+[sErr]: SetDG오더AbsRectsAsync

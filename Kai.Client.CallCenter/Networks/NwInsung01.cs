@@ -200,12 +200,13 @@ public class NwInsung01 : IExternalApp
             #endregion
 
             #region 2. Local Variables 초기화
-            // 컨트롤러에서 주문 리스트 가져오기
-            List<AutoAlloc> listFromController = ExternalAppController.listForInsung01;
+            // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)
+            List<AutoAlloc> listFromController = ExternalAppController.QueueManager.DequeueAllToList(StdConst_Network.INSUNG1);
+            Debug.WriteLine($"[{APP_NAME}] 큐에서 가져온 주문 개수: {listFromController.Count}");
 
             // 작업잔량 파악 리스트 (원본 복사)
             var listInsung = new List<AutoAlloc>(listFromController);
-            listFromController.Clear(); // 원본 클리어 (처리 완료 후 다시 채울 예정)
+            // 큐에서 이미 꺼냈으므로 Clear 불필요
 
             // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
             var listProcessed = new List<AutoAlloc>();
@@ -223,6 +224,34 @@ public class NwInsung01 : IExternalApp
                 .OrderByDescending(item => item.NewOrder.Insung1) // Insung1 KeyCode 역순 정렬 (큰 값 우선)
                 .Select(item => item.Clone())
                 .ToList();
+
+            // ===== 상세 로깅: listCreated 내용 출력 =====
+            Debug.WriteLine($"[{APP_NAME}] ===== listCreated (신규접수용) 상세 정보 =====");
+            Debug.WriteLine($"[{APP_NAME}] listCreated 개수: {listCreated.Count}");
+            for (int i = 0; i < listCreated.Count; i++)
+            {
+                var item = listCreated[i];
+                Debug.WriteLine($"[{APP_NAME}]   [{i}] KeyCode={item.KeyCode}, " +
+                              $"StateFlag={item.StateFlag}, " +
+                              $"SeqNo={item.NewOrder.Insung1 ?? "(없음)"}, " +
+                              $"CarType={item.NewOrder.CarType}, " +
+                              $"CallCustFrom={item.NewOrder.CallCustFrom}, " +
+                              $"출발={item.NewOrder.StartDongBasic}");
+            }
+            Debug.WriteLine($"[{APP_NAME}] ==========================================");
+
+            // ===== 상세 로깅: listEtcGroup 내용 출력 =====
+            Debug.WriteLine($"[{APP_NAME}] ===== listEtcGroup (기존주문관리용) 상세 정보 =====");
+            Debug.WriteLine($"[{APP_NAME}] listEtcGroup 개수: {listEtcGroup.Count}");
+            for (int i = 0; i < listEtcGroup.Count; i++)
+            {
+                var item = listEtcGroup[i];
+                Debug.WriteLine($"[{APP_NAME}]   [{i}] KeyCode={item.KeyCode}, " +
+                              $"StateFlag={item.StateFlag}, " +
+                              $"SeqNo={item.NewOrder.Insung1 ?? "(없음)"}, " +
+                              $"CarType={item.NewOrder.CarType}");
+            }
+            Debug.WriteLine($"[{APP_NAME}] ==========================================");
 
             // 할일 갯수 체크
             int tot = listCreated.Count + listEtcGroup.Count;
@@ -317,11 +346,14 @@ public class NwInsung01 : IExternalApp
             // }
             #endregion
 
-            #region 6. 처리 완료된 항목을 컨트롤러에 다시 추가
+            #region 6. 처리 완료된 항목을 큐에 재적재
             if (listProcessed.Count > 0)
             {
-                listFromController.AddRange(listProcessed);
-                Debug.WriteLine($"[{APP_NAME}] 처리 완료된 항목 {listProcessed.Count}개를 컨트롤러에 추가");
+                foreach (var item in listProcessed)
+                {
+                    ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1);
+                }
+                Debug.WriteLine($"[{APP_NAME}] 처리 완료된 항목 {listProcessed.Count}개를 큐에 재적재");
             }
             #endregion
 

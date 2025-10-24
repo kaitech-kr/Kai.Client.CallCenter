@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using Kai.Common.StdDll_Common;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
@@ -63,6 +64,11 @@ public class ExternalAppController : IDisposable
     private Task m_TaskAutoAlloc = null;
 
     /// <summary>
+    /// 자동배차 큐 관리자 (Phase 1: Queue 기반) - Static으로 관리
+    /// </summary>
+    public static AutoAllocQueueManager QueueManager { get; private set; } = new AutoAllocQueueManager();
+
+    /// <summary>
     /// 자동배차 실행 중 여부
     /// </summary>
     public bool IsAutoAllocRunning => m_TaskAutoAlloc != null && !m_TaskAutoAlloc.IsCompleted;
@@ -72,6 +78,7 @@ public class ExternalAppController : IDisposable
     public ExternalAppController()
     {
         Debug.WriteLine("[ExternalAppController] 생성자 호출");
+        // QueueManager는 static으로 자동 초기화됨
     }
     #endregion
 
@@ -145,6 +152,7 @@ public class ExternalAppController : IDisposable
 
     /// <summary>
     /// 기존 주문 목록 로드 (자동배차 대상으로 등록)
+    /// 4개 외부앱별로 분류하여 큐에 적재
     /// </summary>
     /// <param name="orders">기존 주문 목록</param>
     public void LoadExistingOrders(List<TbOrder> orders)
@@ -155,15 +163,111 @@ public class ExternalAppController : IDisposable
             return;
         }
 
-        Debug.WriteLine($"[ExternalAppController] 기존 주문 {orders.Count}개 로드");
+        Debug.WriteLine($"[ExternalAppController] 기존 주문 {orders.Count}개 로드 시작");
 
-        // TODO: 필요 시 각 앱별로 주문을 분류하여 내부 리스트에 추가
-        // 예: Insung01, Insung02, Cargo24, Onecall 등에 맞는 주문 분류
-        // 현재는 로깅만 수행하고, 자동배차 루프에서 처리
+        // 각 주문을 4개 외부앱별로 분류
+        foreach (var order in orders)
+        {
+            ClassifyAndEnqueueOrder(order, isNewOrder: false);
+        }
+
+        // 큐 상태 출력
+        QueueManager.PrintQueueStatus();
+    }
+
+    /// <summary>
+    /// 주문을 4개 외부앱별로 분류하여 큐에 적재
+    /// 참조: 주문_분류_로직_확정.md
+    /// </summary>
+    /// <param name="order">분류할 주문</param>
+    /// <param name="isNewOrder">신규 주문 여부 (true=Created, false=Existed)</param>
+    private void ClassifyAndEnqueueOrder(TbOrder order, bool isNewOrder)
+    {
+        // Step 1: 차량 타입 판단 (절대 기준)
+        bool isMotorcycle = order.CarType == "오토";
+        bool isSmallTruck = order.CarType == "트럭" &&
+                            (order.CarWeight == "1t" || order.CarWeight == "1.4t");
+        bool isLargeTruck = order.CarType == "트럭" &&
+                            order.CarWeight != "1t" &&
+                            order.CarWeight != "1.4t";
+
+        Debug.WriteLine($"[분류] KeyCode={order.KeyCode}, CarType={order.CarType}, " +
+                        $"CarWeight={order.CarWeight}, 오토={isMotorcycle}, " +
+                        $"소형={isSmallTruck}, 대형={isLargeTruck}");
+
+        // Step 2: 외부앱별 분배
+        // 오토바이 또는 1.4톤 이하 트럭 → 인성1, 인성2
+        if (isMotorcycle || isSmallTruck)
+        {
+            // 인성1: 인성2 신용업체 무조건 제외 (현금/신용 무관)
+            // 이유: 결제 방법이 도중에 변경되어도 회계 일관성 유지
+            if (order.CallCustFrom != StdConst_Network.INSUNG2)
+            {
+                EnqueueToApp(order, StdConst_Network.INSUNG1, isNewOrder);
+            }
+
+            // 인성2: 인성1 신용업체 무조건 제외 (현금/신용 무관)
+            if (order.CallCustFrom != StdConst_Network.INSUNG1)
+            {
+                EnqueueToApp(order, StdConst_Network.INSUNG2, isNewOrder);
+            }
+        }
+
+        // 1.4톤 이하 또는 초과 트럭 → 화물24시, 원콜
+        if (isSmallTruck || isLargeTruck)
+        {
+            EnqueueToApp(order, StdConst_Network.CARGO24, isNewOrder);
+            EnqueueToApp(order, StdConst_Network.ONECALL, isNewOrder);
+        }
+    }
+
+    /// <summary>
+    /// 주문을 특정 앱의 큐에 추가
+    /// </summary>
+    private void EnqueueToApp(TbOrder order, string networkName, bool isNewOrder)
+    {
+        // SeqNo 확인
+        string seqNo = GetSeqNoByNetwork(order, networkName);
+        bool hasSeqNo = !string.IsNullOrEmpty(seqNo);
+
+        // StateFlag 결정
+        PostgService_Common_OrderState stateFlag;
+        if (isNewOrder)
+        {
+            stateFlag = PostgService_Common_OrderState.Created;
+        }
+        else
+        {
+            stateFlag = hasSeqNo
+                ? PostgService_Common_OrderState.Existed_WithSeqno
+                : PostgService_Common_OrderState.Existed_NonSeqno;
+        }
+
+        // AutoAlloc 생성 및 큐에 추가
+        var autoAlloc = new AutoAlloc(stateFlag, order);
+        QueueManager.Enqueue(autoAlloc, networkName);
+
+        Debug.WriteLine($"  → {networkName} 큐 추가: SeqNo={seqNo ?? "(없음)"}, Flag={stateFlag}");
+    }
+
+    /// <summary>
+    /// 네트워크별 SeqNo 필드 가져오기
+    /// </summary>
+    private string GetSeqNoByNetwork(TbOrder order, string networkName)
+    {
+        return networkName switch
+        {
+            StdConst_Network.INSUNG1 => order.Insung1,
+            StdConst_Network.INSUNG2 => order.Insung2,
+            StdConst_Network.CARGO24 => order.Cargo24,
+            StdConst_Network.ONECALL => order.Onecall,
+            _ => null
+        };
     }
 
     /// <summary>
     /// 새로 생성된 주문 추가 (자동배차 대상으로 등록)
+    /// SignalR OnOrderCreated에서 호출
     /// </summary>
     /// <param name="order">새로 생성된 주문</param>
     public void AddNewOrder(TbOrder order)
@@ -176,13 +280,16 @@ public class ExternalAppController : IDisposable
 
         Debug.WriteLine($"[ExternalAppController] 새 주문 추가: KeyCode={order.KeyCode}");
 
-        // TODO: 필요 시 각 앱별로 주문을 분류하여 내부 리스트에 추가
-        // 예: 주문 상태나 기타 조건에 따라 Insung01, Insung02 등에 할당
-        // 현재는 로깅만 수행하고, 자동배차 루프에서 처리
+        // 4개 외부앱별로 분류하여 큐에 적재 (Created 상태)
+        ClassifyAndEnqueueOrder(order, isNewOrder: true);
+
+        // 큐 상태 출력
+        QueueManager.PrintQueueStatus();
     }
 
     /// <summary>
     /// 주문 업데이트 알림 (자동배차 시스템에 변경 사항 전달)
+    /// SignalR OnOrderUpdated에서 호출
     /// </summary>
     /// <param name="changedFlag">변경 플래그</param>
     /// <param name="newOrder">새로운 주문 정보</param>
@@ -196,11 +303,39 @@ public class ExternalAppController : IDisposable
             return;
         }
 
-        Debug.WriteLine($"[ExternalAppController] 주문 업데이트: KeyCode={newOrder.KeyCode}, ChangedFlag={changedFlag}");
+        Debug.WriteLine($"[ExternalAppController] ===== 주문 업데이트 =====");
+        Debug.WriteLine($"  KeyCode: {newOrder.KeyCode}");
+        Debug.WriteLine($"  ChangedFlag: {changedFlag}");
+        Debug.WriteLine($"  SeqNo: {seqNo}");
 
-        // TODO: 필요 시 각 앱별로 주문 업데이트 처리
-        // 예: 주문 상태가 변경되었을 때 자동배차 리스트에서 제거/추가
-        // 현재는 로깅만 수행하고, 자동배차 루프에서 처리
+        // 변경 내용 상세 로깅
+        if (oldOrder != null)
+        {
+            if (oldOrder.StartDongBasic != newOrder.StartDongBasic)
+                Debug.WriteLine($"  출발지 변경: {oldOrder.StartDongBasic} → {newOrder.StartDongBasic}");
+
+            // TbOrder에 EndDongBasic 속성이 없음 - TODO: 실제 속성명 확인 필요
+            // if (oldOrder.EndDongBasic != newOrder.EndDongBasic)
+            //     Debug.WriteLine($"  도착지 변경: {oldOrder.EndDongBasic} → {newOrder.EndDongBasic}");
+
+            if (oldOrder.FeeBasic != newOrder.FeeBasic)
+                Debug.WriteLine($"  요금 변경: {oldOrder.FeeBasic} → {newOrder.FeeBasic}");
+
+            // TbOrder에 Status 또는 StatusFlag 속성이 없음 - TODO: 실제 속성명 확인 필요
+            // if (oldOrder.StatusFlag != newOrder.StatusFlag)
+            //     Debug.WriteLine($"  상태 변경: {oldOrder.StatusFlag} → {newOrder.StatusFlag}");
+
+            if (oldOrder.CallCustFrom != newOrder.CallCustFrom)
+                Debug.WriteLine($"  접수처 변경: {oldOrder.CallCustFrom} → {newOrder.CallCustFrom}");
+        }
+
+        Debug.WriteLine($"[ExternalAppController] =========================================");
+
+        // 참조 공유로 인해 s_listTbOrderToday의 TbOrder 객체가 업데이트되면
+        // 큐의 AutoAlloc.NewOrder도 같은 객체를 참조하므로 자동으로 반영됨!
+        //
+        // 다음 AutoAllocAsync() 루프에서 최신 데이터 사용됨
+        // (할일 많으면 거의 즉시, 없으면 최대 5초 내)
     }
 
     #region 자동배차 제어

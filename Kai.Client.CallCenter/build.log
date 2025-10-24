@@ -1,0 +1,17 @@
+D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Kai.Client.CallCenter.csproj : warning NU1701: 프로젝트 대상 프레임워크 'net8.0-windows7.0' 대신 '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1'을(를) 사용하여 패키지 'Extended.Wpf.Toolkit 3.8.2'을(를) 복원했습니다. 이 패키지는 프로젝트와 완벽하게 호환되지 않을 수 있습니다.
+  Kai.Common.StdDll_Common -> D:\CodeWork\WithVs2022\KaiWork\Kai.Common\Kai.Common.StdDll_Common\Kai.Common.StdDll_Common\bin\Debug\netstandard2.0\Kai.Common.StdDll_Common.dll
+  Kai.Common.FrmDll_WpfCtrl -> D:\CodeWork\WithVs2022\KaiWork\Kai.Common\Kai.Common.FrmDll_WpfCtrl\Kai.Common.FrmDll_WpfCtrl\bin\Debug\Kai.Common.FrmDll_WpfCtrl.dll
+  Kai.Common.FrmDll_FormCtrl -> D:\CodeWork\WithVs2022\KaiWork\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\bin\Debug\Kai.Common.FrmDll_FormCtrl.dll
+  Kai.Common.NetDll_WpfCtrl -> D:\CodeWork\WithVs2022\KaiWork\Kai.Common\Kai.Common.NetDll_WpfCtrl\Kai.Common.NetDll_WpfCtrl\bin\Debug\net8.0-windows\Kai.Common.NetDll_WpfCtrl.dll
+  Kai.Server.Main -> D:\CodeWork\WithVs2022\KaiWork\Kai.Server\Kai.Server.Main\Kai.Server.Main\bin\Debug\net8.0-windows\Kai.Server.Main.dll
+  Kai.Client.CallCenter -> D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Client.CallCenter.dll
+
+빌드했습니다.
+
+D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Kai.Client.CallCenter.csproj : warning NU1701: 프로젝트 대상 프레임워크 'net8.0-windows7.0' 대신 '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1'을(를) 사용하여 패키지 'Extended.Wpf.Toolkit 3.8.2'을(를) 복원했습니다. 이 패키지는 프로젝트와 완벽하게 호환되지 않을 수 있습니다.
+    경고 1개
+    오류 0개
+
+경과 시간: 00:00:02.71
+
+워크로드 업데이트를 사용할 수 있습니다. 자세한 내용을 보려면 `dotnet workload list`을 실행하세요.

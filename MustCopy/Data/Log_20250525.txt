@@ -1,0 +1,3 @@
+2025-05-25 09:59:57: Result: Fail
+[sPos]: NwIsAct_ReceiptPage/WaitPanLoadedAsync_01
+[sErr]: 대기시간 초과

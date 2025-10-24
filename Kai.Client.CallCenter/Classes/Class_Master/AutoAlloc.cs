@@ -72,6 +72,18 @@ public class AutoAlloc
     }
 
     /// <summary>
+    /// 기존 주문 로드용 생성자 (앱 시작 시 DB에서 로드)
+    /// </summary>
+    /// <param name="stateFlag">상태 플래그 (Existed_NonSeqno 또는 Existed_WithSeqno)</param>
+    /// <param name="newOrder">로드된 주문 정보</param>
+    public AutoAlloc(PostgService_Common_OrderState stateFlag, TbOrder newOrder)
+    {
+        StateFlag = stateFlag;
+        NewOrder = newOrder;
+        OldOrder = null;
+    }
+
+    /// <summary>
     /// 복사 생성자 (Clone용)
     /// </summary>
     private AutoAlloc(AutoAlloc source)

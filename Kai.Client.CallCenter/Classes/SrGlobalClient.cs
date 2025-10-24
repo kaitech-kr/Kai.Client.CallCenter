@@ -285,11 +285,40 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                 return;
             }
 
+            // ⭐ 연결 상태 확인 추가
+            if (HubConn.State != HubConnectionState.Connected)
+            {
+                Debug.WriteLine($"***** 로그인 실패: HubConn 상태 = {HubConn.State} (Connected가 아님) *****");
+                boolEventArgs.bValue = false;
+                boolEventArgs.e = new Exception($"SignalR 연결 상태가 올바르지 않음: {HubConn.State}");
+                return;
+            }
+
+            Debug.WriteLine($"***** HubConn 연결 상태 확인 완료: {HubConn.State} *****");
             Debug.WriteLine($"***** 로그인 요청 시작: ID={s_sKaiLogId} *****");
+
             // 로그인 - 콜센터 담당자 정보 얻기
-            PostgResult_AllWith result = await HubConn
-                .InvokeCoreAsync<PostgResult_AllWith>(StdConst_FuncName.SrResult.CallCenter.LoginAsync, new[] { s_sKaiLogId, s_sKaiLogPw });
-            Debug.WriteLine($"***** 로그인 요청 완료 *****");
+            PostgResult_AllWith result;
+            try
+            {
+                result = await HubConn
+                    .InvokeCoreAsync<PostgResult_AllWith>(StdConst_FuncName.SrResult.CallCenter.LoginAsync, new[] { s_sKaiLogId, s_sKaiLogPw });
+                Debug.WriteLine($"***** 로그인 요청 완료 *****");
+            }
+            catch (TaskCanceledException)
+            {
+                Debug.WriteLine($"***** 로그인 실패: 서버 응답 타임아웃 (TaskCanceledException) *****");
+                boolEventArgs.bValue = false;
+                boolEventArgs.e = new Exception("서버 응답 타임아웃 - 재연결이 필요합니다.");
+                return;
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine($"***** 로그인 실패: 작업 취소됨 (OperationCanceledException) *****");
+                boolEventArgs.bValue = false;
+                boolEventArgs.e = new Exception("로그인 작업이 취소되었습니다 - 재연결이 필요합니다.");
+                return;
+            }
 
             if (!string.IsNullOrEmpty(result.sErr))
             {
