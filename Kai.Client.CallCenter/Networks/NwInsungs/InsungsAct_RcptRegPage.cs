@@ -11,6 +11,8 @@ using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Windows;
 
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+
 namespace Kai.Client.CallCenter.Networks.NwInsungs;
 #nullable disable
 
@@ -2285,7 +2287,7 @@ public class InsungsAct_RcptRegPage
             }
 
             // 신규 고객 - 고객등록창이 뜸
-            hWndTmp = Std32Window.FindMainWindow(m_Context.SplashInfo.TopWnd_uProcessId, null,
+            hWndTmp = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, null,
                 m_Context.FileInfo.고객등록Wnd_TopWnd_sWndName);
             if (hWndTmp != IntPtr.Zero)
             {
@@ -2293,7 +2295,7 @@ public class InsungsAct_RcptRegPage
             }
 
             // 복수 고객 - 고객검색창이 뜸
-            hWndTmp = Std32Window.FindMainWindow(m_Context.SplashInfo.TopWnd_uProcessId, null,
+            hWndTmp = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, null,
                 m_Context.FileInfo.고객검색Wnd_TopWnd_sWndName);
             if (hWndTmp != IntPtr.Zero)
             {
@@ -2347,7 +2349,7 @@ public class InsungsAct_RcptRegPage
 
                     // 팝업창 찾기
                     hWndPopup = Std32Window.FindMainWindow_NotTransparent(
-                        m_Context.SplashInfo.TopWnd_uProcessId,
+                        m_Context.MemInfo.Splash.TopWnd_uProcessId,
                         m_Context.FileInfo.접수등록Wnd_TopWnd_sWndName_Reg);
 
                     if (hWndPopup == IntPtr.Zero) continue;
