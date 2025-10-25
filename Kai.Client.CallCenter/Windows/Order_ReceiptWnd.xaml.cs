@@ -852,6 +852,7 @@ public partial class Order_ReceiptWnd : Window
         // 3. 의뢰자 전용 필드
         Caller_TBoxRemarks.Text = tbOrderOrg.CallRemarks;
         TBoxOrderRemarks.Text = tbOrderOrg.OrderRemarks;
+        TBoxOrderMemo.Text = tbOrderOrg.OrderMemo; // 오더메모 로드 추가
         TBlkCallCustMemoExt.Text = tbOrderOrg.OrderMemoExt;
         CallCustFrom = tbOrderOrg.CallCustFrom;
         CallCompCode = tbOrderOrg.CallCompCode;

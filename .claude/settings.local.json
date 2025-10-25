@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/CodeWork/WithVs2022/KaiWork/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -662,38 +662,54 @@ public class OfrWork_Common
     //        "tb 널 입니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByAvgBrightnessAsync_03", bmpOrg, s_sLogDir, false);
     //}
 
-    //public static async Task<OfrResult_TbText> OfrImage_DrawRelSpareRect_ByDualBrightnessAsync(Bitmap bmpOrg, Draw.Rectangle rcRelSpare)
-    //{
-    //    //Get Basic Hex Info
-    //    Draw.Rectangle rcForeground = StdUtil.s_rcDrawEmpty;
-    //    byte byteMaxBrightness = 0;
-    //    for (int i = 0; i < c_nRepeatShort; i++)
-    //    {
-    //        byteMaxBrightness = OfrService.GetMaxBrightness_FromColorBitmapRectFast(bmpOrg, rcRelSpare);
-    //        byteMaxBrightness -= 1; // 밝기 조정(약간 어둡게)
-    //        rcForeground = OfrService.GetForeGroundDrawRectangle_FromColorBitmapRectFast(bmpOrg, rcRelSpare, byteMaxBrightness, 0);
-    //        if (rcForeground != StdUtil.s_rcDrawEmpty) break;
+    /// <summary>
+    /// Bitmap의 특정 영역에서 Dual Brightness로 이미지(CheckBox 등) 인식
+    /// </summary>
+    /// <param name="bmpOrg">원본 Bitmap</param>
+    /// <param name="rcRelSpare">인식할 상대 영역</param>
+    /// <returns>OfrResult_TbText - DB에서 찾은 결과 또는 분석 정보</returns>
+    public static async Task<OfrResult_TbText> OfrImage_DrawRelSpareRect_ByDualBrightnessAsync(Draw.Bitmap bmpOrg, Draw.Rectangle rcRelSpare)
+    {
+        // 1. 지정 영역에서 전경 영역 찾기 (최대 밝기 기반)
+        Draw.Rectangle rcForeground = StdUtil.s_rcDrawEmpty;
+        byte byteMaxBrightness = 0;
 
-    //        await Task.Delay(c_nWaitNormal);
-    //    }
+        for (int i = 0; i < c_nRepeatShort; i++)
+        {
+            byteMaxBrightness = OfrService.GetMaxBrightness_FromColorBitmapRectFast(bmpOrg, rcRelSpare);
+            Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step1: MaxBrightness={byteMaxBrightness}, rcRelSpare={rcRelSpare}");
+            byteMaxBrightness -= 1; // 밝기 조정(약간 어둡게)
+            rcForeground = OfrService.GetForeGroundDrawRectangle_FromColorBitmapRectFast(bmpOrg, rcRelSpare, byteMaxBrightness, 0);
+            Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step1: rcForeground={rcForeground}");
+            if (rcForeground != StdUtil.s_rcDrawEmpty) break;
 
-    //    if (rcForeground == StdUtil.s_rcDrawEmpty) return LocalCommon_OfrResult
-    //        .ErrMsgResult_TbText(null, null, "rcForeground이 비어있습니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync1_01");
+            await Task.Delay(c_nWaitNormal);
+        }
 
-    //    Draw.Bitmap bmoExact = OfrService.GetBitmapInBitmapFast(bmpOrg, rcForeground);
+        if (rcForeground == StdUtil.s_rcDrawEmpty)
+            return ErrMsgResult_TbText(
+                null, null, "전경 영역을 찾을 수 없습니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync_01");
 
-    //    byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmoExact);
-    //    OfrModel_BmpTextAnalysis info = OfrService.GetOfrModel_TextAnalysis_InExactBitmapFast(bmoExact, byteAvgBrightness); // 평균 밝기로 구한다.
-    //    //MsgBox($"info={info.nWidth}, {info.nHeight}, {info.sHexArray}"); // Test
+        // 2. 정확한 영역 추출
+        Draw.Bitmap bmpExact = OfrService.GetBitmapInBitmapFast(bmpOrg, rcForeground);
 
-    //    if (info.trueRate != 0 && info.trueRate != 1) // 정보가 있을것 같으면
-    //    {
-    //        PgResult_TbText resultTb = await PgService_TbText.SelectRowByBasicAsync(info.nWidth, info.nHeight, info.sHexArray);
-    //        if (resultTb.tbText != null) return new OfrResult_TbText(resultTb.tbText, info);
-    //    }
+        // 3. 평균 밝기 기반으로 이미지 분석
+        byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpExact);
+        OfrModel_BitmapAnalysis info = OfrService.GetBitmapAnalysisFast(bmpExact, byteAvgBrightness);
+        Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step2: AvgBrightness={byteAvgBrightness}, Size={info.nWidth}x{info.nHeight}, trueRate={info.trueRate}");
 
-    //    return new OfrResult_TbText(info, "tb 널 입니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync1_03");
-    //}
+        // 4. DB 검색 (정보가 있을 것 같으면)
+        if (info.trueRate != 0 && info.trueRate != 1)
+        {
+            PgResult_TbText resultTb = await PgService_TbText.SelectRowByBasicAsync(info.nWidth, info.nHeight, info.sHexArray);
+            Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step3: DB 검색 결과={resultTb.tbText?.Text ?? "null"}");
+            if (resultTb.tbText != null) return new OfrResult_TbText(resultTb.tbText, info);
+        }
+
+        // 5. DB에 없음 - 분석 정보는 반환
+        Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step4: DB에 없음 (trueRate={info.trueRate})");
+        return new OfrResult_TbText(info, null, "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync_02");
+    }
 
     //public static async Task<OfrResult_TbText> Tmp_OfrImage_DrawRelSpareRect_ByDualBrightnessAsync(Bitmap bmpOrg, Draw.Rectangle rcRelSpare)
     //{
@@ -739,35 +755,43 @@ public class OfrWork_Common
     //        "tb 널 입니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync_03", bmpOrg, s_sLogDir, false);
     //}
 
-    //public static async Task<OfrResult_TbText> OfrImage_InSparedBitmapt_ByDualBrightnessAsync(Bitmap bmpOrg)
-    //{
-    //    //Get Basic Hex Info
-    //    Draw.Rectangle rcForeground = StdUtil.s_rcDrawEmpty;
-    //    byte byteMaxBrightness = 0;
-    //    for (int i = 0; i < c_nRepeatShort; i++)
-    //    {
-    //        byteMaxBrightness = OfrService.GetMaxBrightness_FromColorBitmapFast(bmpOrg);
-    //        byteMaxBrightness -= 1; // 밝기 조정(약간 어둡게)
-    //        rcForeground = OfrService.GetForeGroundDrawRectangle_FromColorBitmapFast(bmpOrg, byteMaxBrightness, 0);
-    //        if (rcForeground != StdUtil.s_rcDrawEmpty) break;
-    //    }
+    /// <summary>
+    /// Bitmap 전체에서 Dual Brightness로 이미지(CheckBox 등) 인식
+    /// </summary>
+    /// <param name="bmpOrg">원본 Bitmap (전체)</param>
+    /// <returns>OfrResult_TbText - DB에서 찾은 결과 또는 null</returns>
+    public static async Task<OfrResult_TbText> OfrImage_InSparedBitmapt_ByDualBrightnessAsync(Draw.Bitmap bmpOrg)
+    {
+        // 1. 전경 영역 찾기 (최대 밝기 기반)
+        Draw.Rectangle rcForeground = StdUtil.s_rcDrawEmpty;
+        byte byteMaxBrightness = 0;
 
-    //    if (rcForeground == StdUtil.s_rcDrawEmpty) return LocalCommon_OfrResult
-    //            .ErrMsgResult_TbText(null, null, "rcForeground이 비어있습니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync2_01");
-    //    //MsgBox($"Bitmap={bmpOrg.Width}, {bmpOrg.Height}, rcForeground={rcForeground}"); // Test
+        for (int i = 0; i < c_nRepeatShort; i++)
+        {
+            byteMaxBrightness = OfrService.GetMaxBrightness_FromColorBitmapFast(bmpOrg);
+            byteMaxBrightness -= 1; // 밝기 조정(약간 어둡게)
+            rcForeground = OfrService.GetForeGroundDrawRectangle_FromColorBitmapFast(bmpOrg, byteMaxBrightness, 0);
+            if (rcForeground != StdUtil.s_rcDrawEmpty) break;
+        }
 
-    //    byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapRectFast(bmpOrg, rcForeground);
-    //    OfrModel_BmpTextAnalysis modelText = OfrService.GetOfrModel_TextAnalysis_RectInBitmapFast(bmpOrg, rcForeground, byteAvgBrightness); // 평균 밝기로 구한다.
+        if (rcForeground == StdUtil.s_rcDrawEmpty)
+            return ErrMsgResult_TbText(
+                null, null, "전경 영역을 찾을 수 없습니다", "OfrWork_Common/OfrImage_InSparedBitmapt_ByDualBrightnessAsync_01");
 
-    //    if (modelText.trueRate != 0 && modelText.trueRate != 1) // 정보가 있을것 같으면
-    //    {
-    //        PgResult_TbText resultTb = await PgService_TbText.SelectRowByBasicAsync(modelText.nWidth, modelText.nHeight, modelText.sHexArray);
-    //        //MsgBox($"{info.nWidth}, {info.nHeight}, {info.sHexArray}"); // Test
-    //        if (resultTb.tbText != null) return new OfrResult_TbText(resultTb.tbText, modelText);
-    //    }
+        // 2. 평균 밝기 기반으로 이미지 분석
+        byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapRectFast(bmpOrg, rcForeground);
+        OfrModel_BitmapAnalysis modelText = OfrService.GetBitmapAnalysisFast(bmpOrg, rcForeground, byteAvgBrightness);
 
-    //    return new OfrResult_TbText(null, "tb 널 입니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync02_03");
-    //}
+        // 3. DB 검색 (정보가 있을 것 같으면)
+        if (modelText.trueRate != 0 && modelText.trueRate != 1)
+        {
+            PgResult_TbText resultTb = await PgService_TbText.SelectRowByBasicAsync(modelText.nWidth, modelText.nHeight, modelText.sHexArray);
+            if (resultTb.tbText != null) return new OfrResult_TbText(resultTb.tbText, modelText);
+        }
+
+        // 4. DB에 없음 - 분석 정보는 반환
+        return new OfrResult_TbText(modelText, null, "OfrWork_Common/OfrImage_InSparedBitmapt_ByDualBrightnessAsync_02");
+    }
 
     // TbCharSet
     /// <summary>
@@ -1677,6 +1701,66 @@ public class OfrWork_Common
 
         return new StdResult_String(Std32Window.GetWindowCaption(hWndChild));
     }
+
+    #region CheckBox 상태 변경
+    /// <summary>
+    /// CheckBox 클릭 및 상태 변경 (범용)
+    /// - 현재 상태 확인
+    /// - 원하는 상태가 아니면 클릭
+    /// - 상태 변경 확인 (재시도 포함)
+    /// </summary>
+    /// <param name="hWndTop">상위 Window Handle</param>
+    /// <param name="rcRelM">CheckBox 영역 (상대 좌표)</param>
+    /// <param name="bCheck">원하는 상태 (true=Checked, false=Unchecked)</param>
+    /// <param name="checkBoxName">CheckBox 이름 (에러 메시지용)</param>
+    /// <returns>성공 시 null, 실패 시 StdResult_Error</returns>
+    public static async Task<StdResult_Error> SetCheckBox_StatusAsync(
+        IntPtr hWndTop,
+        Draw.Rectangle rcRelM,
+        bool bCheck,
+        string checkBoxName = "CheckBox")
+    {
+        try
+        {
+            IntPtr hWnd = IntPtr.Zero;
+            Draw.Point ptRelM = StdUtil.GetCenterDrawPoint(rcRelM);
+
+            // 1. 현재 상태 읽기
+            StdResult_NulBool resultChkBox = await OfrWork_Insungs.OfrImgReChkValue_RectInHWndAsync(hWndTop, rcRelM);
+            if (resultChkBox.bResult == null)
+                return ErrMsgResult_Error(
+                    $"{checkBoxName} 인식 실패", "OfrWork_Common/SetCheckBox_StatusAsync_01");
+
+            // 2. 이미 원하는 상태면 성공
+            if (resultChkBox.bResult == bCheck) return null;
+
+            // 3. 클릭 루프
+            for (int j = 0; j < c_nRepeatShort; j++)
+            {
+                await Task.Delay(100);
+
+                hWnd = Std32Window.GetWndHandle_FromRelDrawPt(hWndTop, ptRelM);
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(hWnd);
+
+                resultChkBox = await OfrWork_Insungs.OfrImgUntilChkValue_RectInHWndAsync(hWndTop, bCheck, rcRelM);
+
+                if (resultChkBox.bResult == true) break;
+            }
+
+            // 4. 최종 확인
+            if (resultChkBox.bResult == true) return null;
+
+            return ErrMsgResult_Error(
+                $"{checkBoxName} 상태 변경 실패 (원하는 상태: {(bCheck ? "Checked" : "Unchecked")})",
+                "OfrWork_Common/SetCheckBox_StatusAsync_04");
+        }
+        catch (Exception ex)
+        {
+            return ErrMsgResult_Error(
+                StdUtil.GetExceptionMessage(ex), "OfrWork_Common/SetCheckBox_StatusAsync_999");
+        }
+    }
+    #endregion
     #endregion
 }
 #nullable enable

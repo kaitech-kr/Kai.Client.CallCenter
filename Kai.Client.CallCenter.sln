@@ -25,6 +25,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목(CallCanter
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kai.Common.FrmDll_FormCtrl", "..\..\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl.csproj", "{EE2FC8AB-3639-4181-A164-0352D30EE9DB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{2A3A057F-5D22-31FD-628C-DF5EF75AEF1E}"
+	ProjectSection(SolutionItems) = preProject
+		Backup\Classes_Old\AutoAllocCtrl.cs = Backup\Classes_Old\AutoAllocCtrl.cs
+		Backup\Networks\NwInsungs\InsungsAct_ReceiptPage.cs = Backup\Networks\NwInsungs\InsungsAct_ReceiptPage.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -465,6 +465,112 @@ public class InsungsInfo_Mem
     //    public IntPtr hWndBtnExcel;    // 버튼 - 엑셀저장
     //    public IntPtr hWndBtnClose;    // 버튼 - 닫기
     //}
+
+    /// <summary>
+    /// 접수등록 팝업창 (신규) - 최소 버전
+    /// </summary>
+    public class RcptWnd_New
+    {
+        public IntPtr TopWnd_hWnd;
+
+        // 의뢰자
+        public IntPtr 의뢰자_hWnd고객명;
+        public IntPtr 의뢰자_hWnd동명;
+        public IntPtr 의뢰자_hWnd전화1;
+        public IntPtr 의뢰자_hWnd전화2;
+        public IntPtr 의뢰자_hWnd부서;
+        public IntPtr 의뢰자_hWnd담당;
+
+        // 출발지
+        public IntPtr 출발지_hWnd고객명;
+        public IntPtr 출발지_hWnd동명;
+        public IntPtr 출발지_hWnd전화1;
+        public IntPtr 출발지_hWnd전화2;
+        public IntPtr 출발지_hWnd부서;
+        public IntPtr 출발지_hWnd담당;
+        public IntPtr 출발지_hWnd위치;
+
+        // 도착지
+        public IntPtr 도착지_hWnd고객명;
+        public IntPtr 도착지_hWnd동명;
+        public IntPtr 도착지_hWnd전화1;
+        public IntPtr 도착지_hWnd전화2;
+        public IntPtr 도착지_hWnd부서;
+        public IntPtr 도착지_hWnd담당;
+        public IntPtr 도착지_hWnd위치;
+
+        // 우측상단 - 기타 정보
+        public IntPtr 우측상단_hWnd적요;
+        // TODO: RadioButton 그룹은 OFR로 구현 필요
+        // public IntPtr[] 우측상단_btns요금종류;
+        // public IntPtr[] 우측상단_btns차량종류;
+        // public IntPtr[] 우측상단_btns배송종류;
+
+        // 요금 그룹 (Rectangle → Handle)
+        public IntPtr 요금그룹_hWnd기본요금;
+        public IntPtr 요금그룹_hWnd추가금액;
+        public IntPtr 요금그룹_hWnd할인금액;
+        public IntPtr 요금그룹_hWnd탁송료;
+
+        // 오더메모
+        public IntPtr hWnd오더메모;
+
+        // 버튼
+        public IntPtr Btn_hWnd접수저장;
+        public IntPtr Btn_hWnd닫기;
+
+        public RcptWnd_New(IntPtr hWnd, InsungsInfo_File fInfo)
+        {
+            TopWnd_hWnd = hWnd;
+            SetWndHandles(fInfo);
+        }
+
+        public void SetWndHandles(InsungsInfo_File fInfo)
+        {
+            // 의뢰자
+            의뢰자_hWnd고객명 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel고객명);
+            의뢰자_hWnd동명 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel동명);
+            의뢰자_hWnd전화1 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel전화1);
+            의뢰자_hWnd전화2 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel전화2);
+            의뢰자_hWnd부서 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel부서);
+            의뢰자_hWnd담당 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel담당);
+
+            // 출발지
+            출발지_hWnd고객명 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_출발지_ptChkRel고객명);
+            출발지_hWnd동명 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_출발지_ptChkRel동명);
+            출발지_hWnd전화1 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_출발지_ptChkRel전화1);
+            출발지_hWnd전화2 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_출발지_ptChkRel전화2);
+            출발지_hWnd부서 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_출발지_ptChkRel부서);
+            출발지_hWnd담당 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_출발지_ptChkRel담당);
+            출발지_hWnd위치 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_출발지_ptChkRel위치);
+
+            // 도착지
+            도착지_hWnd고객명 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_도착지_ptChkRel고객명);
+            도착지_hWnd동명 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_도착지_ptChkRel동명);
+            도착지_hWnd전화1 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_도착지_ptChkRel전화1);
+            도착지_hWnd전화2 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_도착지_ptChkRel전화2);
+            도착지_hWnd부서 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_도착지_ptChkRel부서);
+            도착지_hWnd담당 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_도착지_ptChkRel담당);
+            도착지_hWnd위치 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_도착지_ptChkRel위치);
+
+            // 우측상단 - 기타 정보
+            우측상단_hWnd적요 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_우측상단_ptChkRel적요);
+
+            // 요금 그룹 (Rectangle 기준으로 찾기)
+            요금그룹_hWnd기본요금 = Std32Window.GetWndHandle_FromRelDrawRect(TopWnd_hWnd, fInfo.접수등록Wnd_요금그룹_rcChkRel기본요금);
+            요금그룹_hWnd추가금액 = Std32Window.GetWndHandle_FromRelDrawRect(TopWnd_hWnd, fInfo.접수등록Wnd_요금그룹_rcChkRel추가금액);
+            요금그룹_hWnd할인금액 = Std32Window.GetWndHandle_FromRelDrawRect(TopWnd_hWnd, fInfo.접수등록Wnd_요금그룹_rcChkRel할인금액);
+            요금그룹_hWnd탁송료 = Std32Window.GetWndHandle_FromRelDrawRect(TopWnd_hWnd, fInfo.접수등록Wnd_요금그룹_rcChkRel탁송료);
+
+            // 오더메모
+            hWnd오더메모 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_ptChkRel오더메모);
+
+            // 버튼
+            Btn_hWnd접수저장 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_ptChkRel접수저장);
+            Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
+        }
+    }
+
     #endregion Pages 끝
 }
 #nullable restore
