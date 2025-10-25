@@ -7,6 +7,7 @@ using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 
 using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Windows;
 
@@ -2088,7 +2089,7 @@ public class InsungsAct_RcptRegPage
     /// <summary>
     /// 팝업창 열기 결과
     /// </summary>
-    private class PopupResult
+    public class PopupResult
     {
         public bool Success { get; }
         public IntPtr hWndPopup { get; }
@@ -2105,7 +2106,7 @@ public class InsungsAct_RcptRegPage
     /// <summary>
     /// 주문 등록 결과
     /// </summary>
-    private class RegistResult
+    public class RegistResult
     {
         public bool Success { get; }
         public string ErrorMessage { get; }
@@ -2123,7 +2124,7 @@ public class InsungsAct_RcptRegPage
     /// <summary>
     /// 고객 입력 결과
     /// </summary>
-    private class CustomerResult
+    public class CustomerResult
     {
         public bool Success { get; }
         public string ErrorMessage { get; }

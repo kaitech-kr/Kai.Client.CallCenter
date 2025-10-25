@@ -324,38 +324,34 @@ public class NwInsung01 : IExternalApp
                                   $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
 
                     // 신규 주문 등록 시도
-                    RegistResult registResult = await m_RcptRegPage.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
+                    InsungsAct_RcptRegPage.RegistResult registResult = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
 
                     if (registResult.Success)
                     {
-                        // 성공: listOrg에 추가, listCreated에서 제거
+                        // 성공: listProcessed에 추가, listCreated에서 제거
                         Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
 
-                        // NotChanged 상태로 listOrg에 추가
-                        AutoAlloc itemCopy = new AutoAlloc(item.NewOrder, item.KeyCode);
-                        itemCopy.StateFlag = PostgService_Common_OrderState.NotChanged;
+                        // NotChanged 상태로 변경
+                        item.StateFlag = PostgService_Common_OrderState.NotChanged;
 
-                        // listOrg에 같은 KeyCode가 없으면 추가
-                        if (!listOrg.Any(x => x.KeyCode == itemCopy.KeyCode))
-                        {
-                            listOrg.Add(itemCopy);
-                        }
+                        // listProcessed에 추가 (나중에 큐에 재적재됨)
+                        listProcessed.Add(item);
 
                         // listCreated에서 제거
                         listCreated.RemoveAt(index);
                     }
                     else
                     {
-                        // 실패: 에러 로그 출력하고 계속 진행 (다음 사이클에서 재시도)
+                        // 실패: 에러 로그 출력, listCreated에 남김 (다음 사이클에서 재시도)
                         Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (재시도 예정): " +
                                       $"{item.KeyCode} - {registResult.ErrorMessage}");
 
                         // TODO: 실패 횟수 카운트 후 일정 횟수 이상 실패 시 처리
-                        // 현재는 큐에 남겨두어 다음 사이클에서 재시도
+                        // 현재는 listCreated에 남아있어 다음에 큐에 재적재됨
                     }
                 }
 
-                Debug.WriteLine($"[{APP_NAME}] Region 4 완료: 성공={listOrg.Count}건, 실패/재시도={listCreated.Count}건");
+                Debug.WriteLine($"[{APP_NAME}] Region 4 완료: 성공={listProcessed.Count}건, 실패/재시도={listCreated.Count}건");
             }
             #endregion
 
