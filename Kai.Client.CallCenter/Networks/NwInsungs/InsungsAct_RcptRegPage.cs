@@ -168,6 +168,65 @@ public class InsungsAct_RcptRegPage
             errorCode, bWrite, bMsgBox);
         return (IntPtr.Zero, error);
     }
+
+    /// <summary>
+    /// CommandBtn(OFR 검증 포함) 찾기 헬퍼 메서드
+    /// </summary>
+    private async Task<(IntPtr hWnd, StdResult_Error error)> FindCommandButtonWithOfrAsync(
+        string buttonName,
+        Draw.Point checkPoint,
+        string ofrImageKey,
+        string errorCode,
+        bool bEdit,
+        bool bWrite,
+        bool bMsgBox)
+    {
+        // 1. 버튼 핸들 찾기
+        IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, checkPoint);
+        if (hWnd == IntPtr.Zero)
+        {
+            var error = CommonFuncs_StdResult.ErrMsgResult_Error(
+                $"[{m_Context.AppName}/RcptRegPage]{buttonName}버튼 찾기실패: {checkPoint}",
+                errorCode, bWrite, bMsgBox);
+            return (IntPtr.Zero, error);
+        }
+        Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}");
+
+        // 2. OFR 이미지 매칭으로 검증
+        StdResult_NulBool resultOfr = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
+            hWnd, 0, ofrImageKey, bEdit, bWrite, false);
+        if (!StdConvert.NullableBoolToBool(resultOfr.bResult))
+        {
+            Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 OFR 검증 실패 (무시): {resultOfr.sErr}");
+            // OFR 검증 실패는 경고만 출력 (실패해도 진행)
+        }
+
+        return (hWnd, null);
+    }
+
+    /// <summary>
+    /// CallCount 컨트롤 찾기 헬퍼 메서드
+    /// </summary>
+    private IntPtr FindCallCountControl(
+        string controlName,
+        Draw.Point checkPoint,
+        string errorCode,
+        bool bWrite,
+        bool bMsgBox,
+        out StdResult_Error error)
+    {
+        IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, checkPoint);
+        if (hWnd == IntPtr.Zero)
+        {
+            error = CommonFuncs_StdResult.ErrMsgResult_Error(
+                $"[{m_Context.AppName}/RcptRegPage]{controlName}CallCount 찾기실패: {checkPoint}",
+                errorCode, bWrite, bMsgBox);
+            return IntPtr.Zero;
+        }
+        Debug.WriteLine($"[InsungsAct_RcptRegPage] {controlName}CallCount 찾음: {hWnd:X}");
+        error = null;
+        return hWnd;
+    }
     #endregion
 
     #region RcptRegPage Initialize
@@ -342,124 +401,49 @@ public class InsungsAct_RcptRegPage
             Debug.WriteLine($"[InsungsAct_RcptRegPage] StatusBtn Down 상태 확인 완료");
 
             // 5. CommandBtn 찾기 및 OFR 검증 (신규, 조회, 기사)
-            // 5-1. 신규버튼
-            m_RcptPage.CmdBtn_hWnd신규 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규M
-            );
-            if (m_RcptPage.CmdBtn_hWnd신규 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]신규버튼 찾기실패: {m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_08", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 신규버튼 찾음: {m_RcptPage.CmdBtn_hWnd신규:X}");
+            var (hWnd신규, error신규) = await FindCommandButtonWithOfrAsync(
+                "신규", m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규M, "Img_신규버튼",
+                "InsungsAct_RcptRegPage/InitializeAsync_08", bEdit, bWrite, bMsgBox);
+            if (error신규 != null) return error신규;
+            m_RcptPage.CmdBtn_hWnd신규 = hWnd신규;
 
-            // OFR 이미지 매칭으로 검증
-            StdResult_NulBool resultOfrCmd신규 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                m_RcptPage.CmdBtn_hWnd신규, 0, "Img_신규버튼", bEdit, bWrite, false);
-            if (!StdConvert.NullableBoolToBool(resultOfrCmd신규.bResult))
-            {
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 신규버튼 OFR 검증 실패 (무시): {resultOfrCmd신규.sErr}");
-                // OFR 검증 실패는 경고만 출력 (실패해도 진행)
-            }
+            var (hWnd조회, error조회) = await FindCommandButtonWithOfrAsync(
+                "조회", m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회M, "Img_조회버튼",
+                "InsungsAct_RcptRegPage/InitializeAsync_09", bEdit, bWrite, bMsgBox);
+            if (error조회 != null) return error조회;
+            m_RcptPage.CmdBtn_hWnd조회 = hWnd조회;
 
-            // 5-2. 조회버튼
-            m_RcptPage.CmdBtn_hWnd조회 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회M
-            );
-            if (m_RcptPage.CmdBtn_hWnd조회 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]조회버튼 찾기실패: {m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_09", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 조회버튼 찾음: {m_RcptPage.CmdBtn_hWnd조회:X}");
-
-            // OFR 이미지 매칭으로 검증
-            StdResult_NulBool resultOfrCmd조회 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                m_RcptPage.CmdBtn_hWnd조회, 0, "Img_조회버튼", bEdit, bWrite, false);
-            if (!StdConvert.NullableBoolToBool(resultOfrCmd조회.bResult))
-            {
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 조회버튼 OFR 검증 실패 (무시): {resultOfrCmd조회.sErr}");
-                // OFR 검증 실패는 경고만 출력 (실패해도 진행)
-            }
-
-            // 5-3. 기사버튼
-            m_RcptPage.CmdBtn_hWnd기사 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CmdBtn_ptChkRel기사M
-            );
-            if (m_RcptPage.CmdBtn_hWnd기사 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]기사버튼 찾기실패: {m_FileInfo.접수등록Page_CmdBtn_ptChkRel기사M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_10", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 기사버튼 찾음: {m_RcptPage.CmdBtn_hWnd기사:X}");
-
-            // OFR 이미지 매칭으로 검증
-            StdResult_NulBool resultOfrCmd기사 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                m_RcptPage.CmdBtn_hWnd기사, 0, "Img_기사버튼", bEdit, bWrite, false);
-            if (!StdConvert.NullableBoolToBool(resultOfrCmd기사.bResult))
-            {
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 기사버튼 OFR 검증 실패 (무시): {resultOfrCmd기사.sErr}");
-                // OFR 검증 실패는 경고만 출력 (실패해도 진행)
-            }
+            var (hWnd기사, error기사) = await FindCommandButtonWithOfrAsync(
+                "기사", m_FileInfo.접수등록Page_CmdBtn_ptChkRel기사M, "Img_기사버튼",
+                "InsungsAct_RcptRegPage/InitializeAsync_10", bEdit, bWrite, bMsgBox);
+            if (error기사 != null) return error기사;
+            m_RcptPage.CmdBtn_hWnd기사 = hWnd기사;
 
             // 6. CallCount 핸들 찾기 (접수, 운행, 취소, 완료, 총계)
-            m_RcptPage.CallCount_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CallCount_ptChkRel접수M
-            );
-            if (m_RcptPage.CallCount_hWnd접수 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]접수CallCount 찾기실패: {m_FileInfo.접수등록Page_CallCount_ptChkRel접수M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_11", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수CallCount 찾음: {m_RcptPage.CallCount_hWnd접수:X}");
+            m_RcptPage.CallCount_hWnd접수 = FindCallCountControl(
+                "접수", m_FileInfo.접수등록Page_CallCount_ptChkRel접수M,
+                "InsungsAct_RcptRegPage/InitializeAsync_11", bWrite, bMsgBox, out StdResult_Error error접수Count);
+            if (error접수Count != null) return error접수Count;
 
-            m_RcptPage.CallCount_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CallCount_ptChkRel운행M
-            );
-            if (m_RcptPage.CallCount_hWnd운행 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]운행CallCount 찾기실패: {m_FileInfo.접수등록Page_CallCount_ptChkRel운행M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_12", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 운행CallCount 찾음: {m_RcptPage.CallCount_hWnd운행:X}");
+            m_RcptPage.CallCount_hWnd운행 = FindCallCountControl(
+                "운행", m_FileInfo.접수등록Page_CallCount_ptChkRel운행M,
+                "InsungsAct_RcptRegPage/InitializeAsync_12", bWrite, bMsgBox, out StdResult_Error error운행Count);
+            if (error운행Count != null) return error운행Count;
 
-            m_RcptPage.CallCount_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CallCount_ptChkRel취소M
-            );
-            if (m_RcptPage.CallCount_hWnd취소 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]취소CallCount 찾기실패: {m_FileInfo.접수등록Page_CallCount_ptChkRel취소M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_13", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 취소CallCount 찾음: {m_RcptPage.CallCount_hWnd취소:X}");
+            m_RcptPage.CallCount_hWnd취소 = FindCallCountControl(
+                "취소", m_FileInfo.접수등록Page_CallCount_ptChkRel취소M,
+                "InsungsAct_RcptRegPage/InitializeAsync_13", bWrite, bMsgBox, out StdResult_Error error취소Count);
+            if (error취소Count != null) return error취소Count;
 
-            m_RcptPage.CallCount_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CallCount_ptChkRel완료M
-            );
-            if (m_RcptPage.CallCount_hWnd완료 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]완료CallCount 찾기실패: {m_FileInfo.접수등록Page_CallCount_ptChkRel완료M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_14", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 완료CallCount 찾음: {m_RcptPage.CallCount_hWnd완료:X}");
+            m_RcptPage.CallCount_hWnd완료 = FindCallCountControl(
+                "완료", m_FileInfo.접수등록Page_CallCount_ptChkRel완료M,
+                "InsungsAct_RcptRegPage/InitializeAsync_14", bWrite, bMsgBox, out StdResult_Error error완료Count);
+            if (error완료Count != null) return error완료Count;
 
-            m_RcptPage.CallCount_hWnd총계 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_CallCount_ptChkRel총계M
-            );
-            if (m_RcptPage.CallCount_hWnd총계 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]총계CallCount 찾기실패: {m_FileInfo.접수등록Page_CallCount_ptChkRel총계M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_15", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 총계CallCount 찾음: {m_RcptPage.CallCount_hWnd총계:X}");
+            m_RcptPage.CallCount_hWnd총계 = FindCallCountControl(
+                "총계", m_FileInfo.접수등록Page_CallCount_ptChkRel총계M,
+                "InsungsAct_RcptRegPage/InitializeAsync_15", bWrite, bMsgBox, out StdResult_Error error총계Count);
+            if (error총계Count != null) return error총계Count;
 
             // 7. 오더 Datagrid 초기화
             // 7-1. Datagrid 핸들 찾기
