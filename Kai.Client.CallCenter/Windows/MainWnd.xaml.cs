@@ -394,13 +394,13 @@ public partial class MainWnd : Window
         // 고객등록  
     private void MenuCustomerMng_CustMainRegist_Click(object sender, RoutedEventArgs e)
     {
-        // Customer_CustRegistTab = AddOrFocusPageInMainTabCtrl("고객등록", "CustMain_RegistPage"); // 고객등록=임의, CustMain_RegistPage=클래스명
+         Customer_CustRegistTab = AddOrFocusPageInMainTabCtrl("고객등록", "CustMain_RegistPage"); // 고객등록=임의, CustMain_RegistPage=클래스명
     }
 
     // 거래처 등록
     private void Menu_CompMng_Regist_Click(object sender, RoutedEventArgs e)
     {
-        // Company_CompRegistTab = AddOrFocusPageInMainTabCtrl("거래처등록", "Company_RegistPage");
+         Company_CompRegistTab = AddOrFocusPageInMainTabCtrl("거래처등록", "Company_RegistPage");
     }
     #endregion End 고객관리
 

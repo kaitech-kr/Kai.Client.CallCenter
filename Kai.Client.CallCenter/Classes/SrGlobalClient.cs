@@ -136,7 +136,13 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             Debug.WriteLine("HubConnection 생성 중...");
             HubConn = new HubConnectionBuilder()
                 .WithUrl(s_sSrGlobalHubHttp)
+                .WithAutomaticReconnect() // 자동 재연결
                 .Build();
+
+            // 타임아웃 설정 (대용량 데이터 처리를 위해)
+            HubConn.ServerTimeout = TimeSpan.FromMinutes(5); // 5분 (기본값: 30초)
+            HubConn.HandshakeTimeout = TimeSpan.FromSeconds(30); // 30초 (기본값: 15초)
+            Debug.WriteLine($"HubConnection 타임아웃 설정: ServerTimeout={HubConn.ServerTimeout}, HandshakeTimeout={HubConn.HandshakeTimeout}");
 
             // Basic Event
             HubConn.Closed += OnClosedAsync;

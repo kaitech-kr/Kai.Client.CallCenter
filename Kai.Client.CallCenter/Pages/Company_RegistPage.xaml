@@ -388,14 +388,16 @@
                         <!--라벨 전화번호-->
                         <Label Content="전화번호" Style="{StaticResource BlueBorderLabelStyle}" Foreground="Red" Width="80"/>
                         <!--// 텍스트박스 전화번호-->
-                        <TextBox x:Name="TBoxWrite_TelNo" 
-                                 Style="{StaticResource NormalTextBoxStyle}" Width="200"/>
+                        <TextBox x:Name="TBoxWrite_TelNo"
+                                 Style="{StaticResource NormalTextBoxStyle}" Width="200"
+                                 PreviewTextInput="TelNo_PreviewTextInput"/>
 
                         <!--라벨 팩스번호-->
                         <Label Content="팩스번호" Style="{StaticResource BlueBorderLabelStyle}" Width="80" Margin="10,0,0,0"/>
                         <!--텍스트박스 팩스번호-->
-                        <TextBox x:Name="TBoxWrite_FaxNo" 
-                                 Style="{StaticResource NormalTextBoxStyle}" Width="160"/>
+                        <TextBox x:Name="TBoxWrite_FaxNo"
+                                 Style="{StaticResource NormalTextBoxStyle}" Width="160"
+                                 PreviewTextInput="TelNo_PreviewTextInput"/>
 
                         <!--라벨 사업자번호-->
                         <Label Content="사업자번호" Style="{StaticResource BlueBorderLabelStyle}" Width="80" Margin="10,0,0,0"/>

@@ -104,16 +104,16 @@ public class ExternalAppController : IDisposable
                 Debug.WriteLine("[ExternalAppController] Insung01 사용 안함 (s_Use=false)");
             }
 
-            if (NwInsung02.s_Use)
-            {
-                Debug.WriteLine($"[ExternalAppController] Insung02 생성: Id={NwInsung02.s_Id}");
-                Insung02 = new NwInsung02();
-                m_ListApps.Add(Insung02);
-            }
-            else
-            {
-                Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
-            }
+            //if (NwInsung02.s_Use)
+            //{
+            //    Debug.WriteLine($"[ExternalAppController] Insung02 생성: Id={NwInsung02.s_Id}");
+            //    Insung02 = new NwInsung02();
+            //    m_ListApps.Add(Insung02);
+            //}
+            //else
+            //{
+            //    Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
+            //}
 
             // if (NwCargo24.s_Use)
             // {
