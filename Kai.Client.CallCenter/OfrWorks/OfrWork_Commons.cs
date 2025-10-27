@@ -1449,6 +1449,53 @@ public class OfrWork_Common
     //    return false;
     //}
 
+    /// <summary>
+    /// 목표 이미지가 나타날 때까지 대기 (개선된 버전)
+    /// </summary>
+    /// <param name="sTargetImage">목표 이미지 이름 (예: "Img_전체버튼_Down")</param>
+    /// <param name="hWnd">대상 윈도우 핸들</param>
+    /// <param name="offset">오프셋 (GAB)</param>
+    /// <param name="bEdit">DB에 없을 시 수동 입력 다이얼로그 표시 여부</param>
+    /// <param name="checkInterval">확인 간격 (ms)</param>
+    /// <param name="maxWaitTime">최대 대기 시간 (ms)</param>
+    /// <returns>성공 시 true, 실패 시 에러 정보 포함</returns>
+    public static async Task<StdResult_NulBool> OfrWaitUntilImageAppearsAsync(
+        string sTargetImage, IntPtr hWnd, int offset, bool bEdit = false, int checkInterval = 50, int maxWaitTime = 3000)
+    {
+        int checkCount = maxWaitTime / checkInterval;
+        Draw.Bitmap bmp = null;
+        bool bLastAttempt = false;
+
+        for (int i = 0; i < checkCount; i++)
+        {
+            await Task.Delay(checkInterval);
+            bLastAttempt = (i == checkCount - 1); // 마지막 시도만 다이얼로그 표시
+
+            // 캡처
+            bmp = OfrService.CaptureScreenRect_InWndHandle(hWnd, offset);
+            if (bmp == null)
+            {
+                Debug.WriteLine($"[OfrWork_Common] 캡처 실패 ({i + 1}/{checkCount})");
+                continue;
+            }
+
+            // OFR 이미지 확인 (마지막 시도에만 bEdit 활성화)
+            OfrResult_TbText result = await OfrImage_ExactDrawRelRectAsync(bmp, bLastAttempt && bEdit, false, false);
+            if (result._sResult == sTargetImage)
+            {
+                Debug.WriteLine($"[OfrWork_Common] 목표 이미지 확인: {sTargetImage} (시도 {i + 1}/{checkCount})");
+                return new StdResult_NulBool(true);
+            }
+
+            Debug.WriteLine($"[OfrWork_Common] 이미지 대기 중: 현재={result._sResult}, 목표={sTargetImage} ({i + 1}/{checkCount})");
+        }
+
+        // 타임아웃
+        string errMsg = $"타임아웃: {sTargetImage} 이미지가 {maxWaitTime}ms 동안 나타나지 않음";
+        Debug.WriteLine($"[OfrWork_Common] {errMsg}");
+        return new StdResult_NulBool(errMsg, "OfrWork_Common/OfrWaitUntilImageAppearsAsync");
+    }
+
     // Save
     //public static async Task<StdResult_Bool> SaveObjectUnitAsync(
     //    Bitmap bmpOrg, string sText, string sReserved = "", byte MaxBrightness = 254, byte MinBrightness = 64)

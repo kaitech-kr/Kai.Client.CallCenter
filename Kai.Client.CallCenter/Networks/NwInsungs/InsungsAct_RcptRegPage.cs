@@ -313,26 +313,28 @@ public class InsungsAct_RcptRegPage
 
                 // 4-2. Up 상태 확정 - 클릭 필요
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 시도 {clickRetry + 1}/3");
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 클릭 전 대기 시작");
                 await Task.Delay(CommonVars.c_nWaitNormal); // 클릭 전 안정화 대기
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 클릭 전 대기 완료, 클릭 실행");
                 await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.StatusBtn_hWnd전체);
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 클릭 완료, 반영 대기 시작");
                 await Task.Delay(CommonVars.c_nWaitLong); // 클릭 반영 대기
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 클릭 반영 대기 완료");
 
-                // 4-3. 클릭 후 Down 상태 확인 (내부 루프)
-                bool bDownDetected = false;
-                for (int stateCheck = 0; stateCheck < CommonVars.c_nRepeatShort; stateCheck++)
+                // 4-3. 클릭 후 Down 상태 확인 (이미지 대기)
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] Down 상태 대기 시작 (최대 3초)");
+                StdResult_NulBool resultWait = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
+                    "Img_전체버튼_Down", m_RcptPage.StatusBtn_hWnd전체, HEADER_GAB,
+                    bEdit: true, checkInterval: 50, maxWaitTime: 3000);
+
+                if (StdConvert.NullableBoolToBool(resultWait.bResult))
                 {
-                    StdResult_NulBool resultOfrCheck = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                        m_RcptPage.StatusBtn_hWnd전체, HEADER_GAB, "Img_전체버튼_Down", false, false, false);
-
-                    if (StdConvert.NullableBoolToBool(resultOfrCheck.bResult))
-                    {
-                        bDownDetected = true;
-                        bClickSuccess = true;
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 확인됨 - 클릭 성공");
-                        break;
-                    }
-
-                    await Task.Delay(CommonVars.c_nWaitNormal); // 상태 변경 대기
+                    bClickSuccess = true;
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 확인됨 - 클릭 성공");
+                }
+                else
+                {
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] Down 상태 대기 타임아웃: {resultWait.sErr}");
                 }
 
                 if (bClickSuccess)
@@ -360,76 +362,62 @@ public class InsungsAct_RcptRegPage
             Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 핸들 검증 완료");
 
             // 4-5. StatusBtn Down 상태 OFR 확인 (전체버튼 클릭 후 나머지 버튼들 상태 확인)
-            // 4-5-1. 접수버튼 Down (첫 버튼) - OFR 루프로 Down 상태 대기
-            bool bFoundDown접수 = false;
-            for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
-            {
-                StdResult_NulBool resultOfrStatus접수 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                    m_RcptPage.StatusBtn_hWnd접수, HEADER_GAB, "Img_접수버튼_Down", false, false, false);
+            // 전체버튼 클릭 성공 후 100ms 딜레이
+            await Task.Delay(100);
 
-                if (StdConvert.NullableBoolToBool(resultOfrStatus접수.bResult))
-                {
-                    bFoundDown접수 = true;
-                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수버튼 Down 상태 확인 완료");
-                    break;
-                }
-                await Task.Delay(100);
-            }
-            if (!bFoundDown접수)
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수버튼 Down 상태 OFR 실패 (무시)");
-
-            // 4-5-2. 중간 버튼들 Down - 딜레이 후 OFR 바로
-            await Task.Delay(CommonVars.c_nWaitLong);
-
-            // 배차버튼 Down
-            StdResult_NulBool resultOfrStatus배차 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                m_RcptPage.StatusBtn_hWnd배차, HEADER_GAB, "Img_배차버튼_Down", false, false, false);
-            if (!StdConvert.NullableBoolToBool(resultOfrStatus배차.bResult))
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 배차버튼 Down 상태 OFR 실패 (무시)");
+            // 4-5-1. 접수버튼 Down 상태 대기
+            StdResult_NulBool resultWait접수 = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
+                "Img_접수버튼_Down", m_RcptPage.StatusBtn_hWnd접수, HEADER_GAB,
+                bEdit: true, checkInterval: 50, maxWaitTime: 3000);
+            if (StdConvert.NullableBoolToBool(resultWait접수.bResult))
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수버튼 Down 상태 확인 완료");
             else
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수버튼 Down 상태 OFR 실패: {resultWait접수.sErr}");
+
+            // 4-5-2. 배차버튼 Down 상태 대기
+            StdResult_NulBool resultWait배차 = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
+                "Img_배차버튼_Down", m_RcptPage.StatusBtn_hWnd배차, HEADER_GAB,
+                bEdit: true, checkInterval: 50, maxWaitTime: 3000);
+            if (StdConvert.NullableBoolToBool(resultWait배차.bResult))
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 배차버튼 Down 상태 확인 완료");
-
-            // 운행버튼 Down
-            StdResult_NulBool resultOfrStatus운행 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                m_RcptPage.StatusBtn_hWnd운행, HEADER_GAB, "Img_운행버튼_Down", false, false, false);
-            if (!StdConvert.NullableBoolToBool(resultOfrStatus운행.bResult))
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 운행버튼 Down 상태 OFR 실패 (무시)");
             else
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 배차버튼 Down 상태 OFR 실패: {resultWait배차.sErr}");
+
+            // 4-5-3. 운행버튼 Down 상태 대기
+            StdResult_NulBool resultWait운행 = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
+                "Img_운행버튼_Down", m_RcptPage.StatusBtn_hWnd운행, HEADER_GAB,
+                bEdit: true, checkInterval: 50, maxWaitTime: 3000);
+            if (StdConvert.NullableBoolToBool(resultWait운행.bResult))
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 운행버튼 Down 상태 확인 완료");
-
-            // 완료버튼 Down
-            StdResult_NulBool resultOfrStatus완료 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                m_RcptPage.StatusBtn_hWnd완료, HEADER_GAB, "Img_완료버튼_Down", false, false, false);
-            if (!StdConvert.NullableBoolToBool(resultOfrStatus완료.bResult))
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 완료버튼 Down 상태 OFR 실패 (무시)");
             else
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 운행버튼 Down 상태 OFR 실패: {resultWait운행.sErr}");
+
+            // 4-5-4. 완료버튼 Down 상태 대기
+            StdResult_NulBool resultWait완료 = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
+                "Img_완료버튼_Down", m_RcptPage.StatusBtn_hWnd완료, HEADER_GAB,
+                bEdit: true, checkInterval: 50, maxWaitTime: 3000);
+            if (StdConvert.NullableBoolToBool(resultWait완료.bResult))
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 완료버튼 Down 상태 확인 완료");
-
-            // 취소버튼 Down
-            StdResult_NulBool resultOfrStatus취소 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                m_RcptPage.StatusBtn_hWnd취소, HEADER_GAB, "Img_취소버튼_Down", false, false, false);
-            if (!StdConvert.NullableBoolToBool(resultOfrStatus취소.bResult))
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 취소버튼 Down 상태 OFR 실패 (무시)");
             else
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 완료버튼 Down 상태 OFR 실패: {resultWait완료.sErr}");
+
+            // 4-5-5. 취소버튼 Down 상태 대기
+            StdResult_NulBool resultWait취소 = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
+                "Img_취소버튼_Down", m_RcptPage.StatusBtn_hWnd취소, HEADER_GAB,
+                bEdit: true, checkInterval: 50, maxWaitTime: 3000);
+            if (StdConvert.NullableBoolToBool(resultWait취소.bResult))
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 취소버튼 Down 상태 확인 완료");
+            else
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 취소버튼 Down 상태 OFR 실패: {resultWait취소.sErr}");
 
-            // 4-5-3. 전체버튼 Down (마지막 버튼) - OFR 루프로 Down 상태 대기
-            bool bFoundDown전체 = false;
-            for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
-            {
-                StdResult_NulBool resultOfrStatus전체 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
-                    m_RcptPage.StatusBtn_hWnd전체, HEADER_GAB, "Img_전체버튼_Down", false, false, false);
-
-                if (StdConvert.NullableBoolToBool(resultOfrStatus전체.bResult))
-                {
-                    bFoundDown전체 = true;
-                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 확인 완료");
-                    break;
-                }
-                await Task.Delay(100);
-            }
-            if (!bFoundDown전체)
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 OFR 실패 (무시)");
+            // 4-5-6. 전체버튼 Down 상태 재확인
+            StdResult_NulBool resultWait전체 = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
+                "Img_전체버튼_Down", m_RcptPage.StatusBtn_hWnd전체, HEADER_GAB,
+                bEdit: true, checkInterval: 50, maxWaitTime: 3000);
+            if (StdConvert.NullableBoolToBool(resultWait전체.bResult))
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 재확인 완료");
+            else
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 OFR 실패: {resultWait전체.sErr}");
 
             Debug.WriteLine($"[InsungsAct_RcptRegPage] StatusBtn Down 상태 확인 완료");
 

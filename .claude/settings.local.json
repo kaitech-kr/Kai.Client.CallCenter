@@ -10,7 +10,9 @@
       "Bash(echo:*)",
       "Bash(cmd /c \"del .\\nul\")",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Read(//d/CodeWork/WithVs2022/Save/KaiWork_Backup002/Kai.Client/Kai.Client.CallCenter/Kai.Client.CallCenter/Networks/NwInsungs/**)",
+      "Read(//d/CodeWork/WithVs2022/Save/KaiWork_Backup002/**)"
     ],
     "deny": [],
     "ask": []
