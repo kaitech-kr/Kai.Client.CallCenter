@@ -299,21 +299,45 @@ public class InsungsAct_RcptRegPage
             bool bClickSuccess = false;
             for (int clickRetry = 0; clickRetry < 3; clickRetry++)
             {
-                await Task.Delay(CommonVars.c_nWaitNormal); // 클릭 전 안정화 대기
-                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.StatusBtn_hWnd전체);
-                await Task.Delay(CommonVars.c_nWaitLong); // 클릭 반영 대기 (기존 300ms → 500ms)
-
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 시도 {clickRetry + 1}/3");
-
-                // 4-1. 클릭 후 Down 상태 확인 (OFR)
-                StdResult_NulBool resultOfrCheck = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
+                // 4-1. 현재 상태 확인 (1회) - 이미 Down 상태인지 확인
+                StdResult_NulBool currentState = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
                     m_RcptPage.StatusBtn_hWnd전체, HEADER_GAB, "Img_전체버튼_Down", false, false, false);
 
-                if (StdConvert.NullableBoolToBool(resultOfrCheck.bResult))
+                if (StdConvert.NullableBoolToBool(currentState.bResult))
                 {
+                    // 이미 Down 상태 - 클릭 불필요
                     bClickSuccess = true;
-                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 성공 - Down 상태 확인됨");
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 이미 Down 상태 - 클릭 생략");
                     break;
+                }
+
+                // 4-2. Up 상태 확정 - 클릭 필요
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 시도 {clickRetry + 1}/3");
+                await Task.Delay(CommonVars.c_nWaitNormal); // 클릭 전 안정화 대기
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.StatusBtn_hWnd전체);
+                await Task.Delay(CommonVars.c_nWaitLong); // 클릭 반영 대기
+
+                // 4-3. 클릭 후 Down 상태 확인 (내부 루프)
+                bool bDownDetected = false;
+                for (int stateCheck = 0; stateCheck < CommonVars.c_nRepeatShort; stateCheck++)
+                {
+                    StdResult_NulBool resultOfrCheck = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
+                        m_RcptPage.StatusBtn_hWnd전체, HEADER_GAB, "Img_전체버튼_Down", false, false, false);
+
+                    if (StdConvert.NullableBoolToBool(resultOfrCheck.bResult))
+                    {
+                        bDownDetected = true;
+                        bClickSuccess = true;
+                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 확인됨 - 클릭 성공");
+                        break;
+                    }
+
+                    await Task.Delay(CommonVars.c_nWaitNormal); // 상태 변경 대기
+                }
+
+                if (bClickSuccess)
+                {
+                    break; // 외부 루프 종료
                 }
 
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 미확인 - 재시도");
@@ -325,7 +349,7 @@ public class InsungsAct_RcptRegPage
                 // 에러는 발생시키지 않고 경고만 출력
             }
 
-            // 4-2. 핸들 유효성 재확인
+            // 4-4. 핸들 유효성 재확인
             string textCheck = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd전체);
             if (!textCheck.Contains("전체"))
             {
@@ -335,8 +359,8 @@ public class InsungsAct_RcptRegPage
             }
             Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 핸들 검증 완료");
 
-            // 4-3. StatusBtn Down 상태 OFR 확인 (전체버튼 클릭 후 나머지 버튼들 상태 확인)
-            // 4-3-1. 접수버튼 Down (첫 버튼) - OFR 루프로 Down 상태 대기
+            // 4-5. StatusBtn Down 상태 OFR 확인 (전체버튼 클릭 후 나머지 버튼들 상태 확인)
+            // 4-5-1. 접수버튼 Down (첫 버튼) - OFR 루프로 Down 상태 대기
             bool bFoundDown접수 = false;
             for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
             {
@@ -354,7 +378,7 @@ public class InsungsAct_RcptRegPage
             if (!bFoundDown접수)
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수버튼 Down 상태 OFR 실패 (무시)");
 
-            // 4-3-2. 중간 버튼들 Down - 딜레이 후 OFR 바로
+            // 4-5-2. 중간 버튼들 Down - 딜레이 후 OFR 바로
             await Task.Delay(CommonVars.c_nWaitLong);
 
             // 배차버튼 Down
@@ -389,7 +413,7 @@ public class InsungsAct_RcptRegPage
             else
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 취소버튼 Down 상태 확인 완료");
 
-            // 4-2-3. 전체버튼 Down (마지막 버튼) - OFR 루프로 Down 상태 대기
+            // 4-5-3. 전체버튼 Down (마지막 버튼) - OFR 루프로 Down 상태 대기
             bool bFoundDown전체 = false;
             for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
             {
