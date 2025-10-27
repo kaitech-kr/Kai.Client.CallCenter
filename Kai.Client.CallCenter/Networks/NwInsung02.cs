@@ -64,90 +64,90 @@ public class NwInsung02 //: IExternalApp
     public bool IsUsed => s_Use;
     public string AppName => "Insung02";
 
-    //public async Task<StdResult_Status> InitializeAsync()
-    //{
-    //    try
-    //    {
-    //        Debug.WriteLine($"[NwInsung02] InitializeAsync 시작: Id={s_Id}");
+    public async Task<StdResult_Status> InitializeAsync()
+    {
+        try
+        {
+            Debug.WriteLine($"[NwInsung02] InitializeAsync 시작: Id={s_Id}");
 
-    //        // 1. FileInfo 파일에서 설정 로드
-    //        StdResult_Error resultErr = await ReadInfoFileAsync();
-    //        if (resultErr != null)
-    //        {
-    //            Debug.WriteLine($"[NwInsung02] FileInfo 로드 실패: {resultErr.sErrNPos}");
-    //            return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, "NwInsung02/InitializeAsync_01");
-    //        }
+            // 1. FileInfo 파일에서 설정 로드
+            StdResult_Error resultErr = await ReadInfoFileAsync();
+            if (resultErr != null)
+            {
+                Debug.WriteLine($"[NwInsung02] FileInfo 로드 실패: {resultErr.sErrNPos}");
+                return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, "NwInsung02/InitializeAsync_01");
+            }
 
-    //        //// FileInfo 로드 확인 (테스트용)
-    //        //Debug.WriteLine($"[NwInsung02] ===== FileInfo 로드 확인 =====");
-    //        //Debug.WriteLine($"  App_sPredictFolder: {m_Context.FileInfo.App_sPredictFolder}");
-    //        //Debug.WriteLine($"  App_sExeFileName: {m_Context.FileInfo.App_sExeFileName}");
-    //        //Debug.WriteLine($"  Splash_TopWnd_sWndName: {m_Context.FileInfo.Splash_TopWnd_sWndName}");
-    //        //Debug.WriteLine($"  Splash_IdWnd_ptChk: {m_Context.FileInfo.Splash_IdWnd_ptChk}");
-    //        //Debug.WriteLine($"  Main_TopWnd_sWndNameReduct: {m_Context.FileInfo.Main_TopWnd_sWndNameReduct}");
-    //        //Debug.WriteLine($"[NwInsung02] ================================");
+            //// FileInfo 로드 확인 (테스트용)
+            //Debug.WriteLine($"[NwInsung02] ===== FileInfo 로드 확인 =====");
+            //Debug.WriteLine($"  App_sPredictFolder: {m_Context.FileInfo.App_sPredictFolder}");
+            //Debug.WriteLine($"  App_sExeFileName: {m_Context.FileInfo.App_sExeFileName}");
+            //Debug.WriteLine($"  Splash_TopWnd_sWndName: {m_Context.FileInfo.Splash_TopWnd_sWndName}");
+            //Debug.WriteLine($"  Splash_IdWnd_ptChk: {m_Context.FileInfo.Splash_IdWnd_ptChk}");
+            //Debug.WriteLine($"  Main_TopWnd_sWndNameReduct: {m_Context.FileInfo.Main_TopWnd_sWndNameReduct}");
+            //Debug.WriteLine($"[NwInsung02] ================================");
 
-    //        // 2. 앱 경로 확인
-    //        if (string.IsNullOrEmpty(s_AppPath))
-    //        {
-    //            Debug.WriteLine($"[NwInsung02] AppPath가 설정되지 않았습니다.");
-    //            return new StdResult_Status(StdResult.Fail, "AppPath가 appsettings.json에 설정되지 않았습니다.", "NwInsung02/InitializeAsync_02");
-    //        }
-    //        //Debug.WriteLine($"[NwInsung02] 앱 경로: {s_AppPath}");
+            // 2. 앱 경로 확인
+            if (string.IsNullOrEmpty(s_AppPath))
+            {
+                Debug.WriteLine($"[NwInsung02] AppPath가 설정되지 않았습니다.");
+                return new StdResult_Status(StdResult.Fail, "AppPath가 appsettings.json에 설정되지 않았습니다.", "NwInsung02/InitializeAsync_02");
+            }
+            //Debug.WriteLine($"[NwInsung02] 앱 경로: {s_AppPath}");
 
-    //        // Show Loding
-    //        if (s_Screens.m_WorkingMonitor != s_Screens.m_PrimaryMonitor) // 작업 모니터가 기본 모니터면 LoadingPanel을 사용하지 않는다.
-    //            NetLoadingWnd.ShowLoading(s_MainWnd, "   인성2 초기화 작업중입니다, \n     입력작업을 하지 마세요...   ");
+            // Show Loding
+            if (s_Screens.m_WorkingMonitor != s_Screens.m_PrimaryMonitor) // 작업 모니터가 기본 모니터면 LoadingPanel을 사용하지 않는다.
+                NetLoadingWnd.ShowLoading(s_MainWnd, "   인성2 초기화 작업중입니다, \n     입력작업을 하지 마세요...   ");
 
-    //        // 3. UpdaterWork - Updater 실행 및 종료 대기
-    //        StdResult_Error resultUpdater = await m_Context.AppAct.UpdaterWorkAsync(s_AppPath);
-    //        if (resultUpdater != null)
-    //        {
-    //            Debug.WriteLine($"[NwInsung02] UpdaterWork 실패: {resultUpdater.sErrNPos}");
-    //            return new StdResult_Status(StdResult.Fail, resultUpdater.sErrNPos, "NwInsung02/InitializeAsync_03");
-    //        }
-    //        //Debug.WriteLine($"[NwInsung02] Updater 종료 완료");
+            // 3. UpdaterWork - Updater 실행 및 종료 대기
+            StdResult_Error resultUpdater = await m_Context.AppAct.UpdaterWorkAsync(s_AppPath);
+            if (resultUpdater != null)
+            {
+                Debug.WriteLine($"[NwInsung02] UpdaterWork 실패: {resultUpdater.sErrNPos}");
+                return new StdResult_Status(StdResult.Fail, resultUpdater.sErrNPos, "NwInsung02/InitializeAsync_03");
+            }
+            //Debug.WriteLine($"[NwInsung02] Updater 종료 완료");
 
-    //        // 4. SplashWork - 스플래시 창 처리 및 로그인
-    //        StdResult_Error resultSplash = await m_Context.AppAct.SplashWorkAsync();
-    //        if (resultSplash != null)
-    //        {
-    //            Debug.WriteLine($"[NwInsung02] SplashWork 실패: {resultSplash.sErrNPos}");
-    //            return new StdResult_Status(StdResult.Fail, resultSplash.sErrNPos, "NwInsung02/InitializeAsync_04");
-    //        }
-    //        //Debug.WriteLine($"[NwInsung02] 스플래시 로그인 완료");
+            // 4. SplashWork - 스플래시 창 처리 및 로그인
+            StdResult_Error resultSplash = await m_Context.AppAct.SplashWorkAsync();
+            if (resultSplash != null)
+            {
+                Debug.WriteLine($"[NwInsung02] SplashWork 실패: {resultSplash.sErrNPos}");
+                return new StdResult_Status(StdResult.Fail, resultSplash.sErrNPos, "NwInsung02/InitializeAsync_04");
+            }
+            //Debug.WriteLine($"[NwInsung02] 스플래시 로그인 완료");
 
-    //        // 5. MainWnd 초기화
-    //        StdResult_Error resultMainWnd = await m_Context.MainWndAct.InitializeAsync();
-    //        if (resultMainWnd != null)
-    //        {
-    //            Debug.WriteLine($"[NwInsung02] MainWnd 초기화 실패: {resultMainWnd.sErrNPos}");
-    //            return new StdResult_Status(StdResult.Fail, resultMainWnd.sErrNPos, "NwInsung02/InitializeAsync_05");
-    //        }
-    //        //Debug.WriteLine($"[NwInsung02] MainWnd 초기화 완료");
+            // 5. MainWnd 초기화
+            StdResult_Error resultMainWnd = await m_Context.MainWndAct.InitializeAsync();
+            if (resultMainWnd != null)
+            {
+                Debug.WriteLine($"[NwInsung02] MainWnd 초기화 실패: {resultMainWnd.sErrNPos}");
+                return new StdResult_Status(StdResult.Fail, resultMainWnd.sErrNPos, "NwInsung02/InitializeAsync_05");
+            }
+            //Debug.WriteLine($"[NwInsung02] MainWnd 초기화 완료");
 
-    //        // 6. RcptRegPage 초기화
-    //        StdResult_Error resultRcptRegPage = await m_Context.RcptRegPageAct.InitializeAsync();
-    //        if (resultRcptRegPage != null)
-    //        {
-    //            Debug.WriteLine($"[NwInsung02] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
-    //            return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung02/InitializeAsync_06");
-    //        }
-    //        Debug.WriteLine($"[NwInsung02] RcptRegPage 초기화 완료");
+            // 6. RcptRegPage 초기화
+            StdResult_Error resultRcptRegPage = await m_Context.RcptRegPageAct.InitializeAsync();
+            if (resultRcptRegPage != null)
+            {
+                Debug.WriteLine($"[NwInsung02] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
+                return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung02/InitializeAsync_06");
+            }
+            Debug.WriteLine($"[NwInsung02] RcptRegPage 초기화 완료");
 
-    //        Debug.WriteLine("[NwInsung02] InitializeAsync 완료 (FileInfo 로드까지)");
-    //        return new StdResult_Status(StdResult.Success);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Debug.WriteLine($"[NwInsung02] InitializeAsync 실패: {ex.Message}");
-    //        return new StdResult_Status(StdResult.Fail, ex.Message, "NwInsung02/InitializeAsync_99");
-    //    }
-    //    finally
-    //    {
-    //        NetLoadingWnd.HideLoading();
-    //    }
-    //}
+            Debug.WriteLine("[NwInsung02] InitializeAsync 완료");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[NwInsung02] InitializeAsync 실패: {ex.Message}");
+            return new StdResult_Status(StdResult.Fail, ex.Message, "NwInsung02/InitializeAsync_99");
+        }
+        finally
+        {
+            NetLoadingWnd.HideLoading();
+        }
+    }
 
     public void Shutdown()
     {
@@ -204,52 +204,52 @@ public class NwInsung02 //: IExternalApp
     /// <summary>
     /// FileInfo를 JSON 파일에서 읽어서 Context.FileInfo에 로드
     /// </summary>
-//     private async Task<StdResult_Error> ReadInfoFileAsync()
-//     {
-//         return await Task.Run(() =>
-//         {
-//             try
-//             {
-//                 string sFilePath = Path.Combine(s_sDataDir, INFO_FILE_NAME);
+    private async Task<StdResult_Error> ReadInfoFileAsync()
+    {
+        return await Task.Run(() =>
+        {
+            try
+            {
+                string sFilePath = Path.Combine(s_sDataDir, INFO_FILE_NAME);
 
-//                 // 파일 존재 체크
-//                 if (!File.Exists(sFilePath))
-//                 {
-//                     return new StdResult_Error(
-//                         $"[{APP_NAME}] FileInfo 파일이 없습니다: {sFilePath}",
-//                         "NwInsung02/ReadInfoFileAsync_01");
-//                 }
+                // 파일 존재 체크
+                if (!File.Exists(sFilePath))
+                {
+                    return new StdResult_Error(
+                        $"[{APP_NAME}] FileInfo 파일이 없습니다: {sFilePath}",
+                        "NwInsung02/ReadInfoFileAsync_01");
+                }
 
-//                 // 파일 읽기
-//                 string jsonContent;
-//                 using (StreamReader reader = new StreamReader(sFilePath))
-//                 {
-//                     jsonContent = reader.ReadToEnd();
-//                 }
+                // 파일 읽기
+                string jsonContent;
+                using (StreamReader reader = new StreamReader(sFilePath))
+                {
+                    jsonContent = reader.ReadToEnd();
+                }
 
-//                 // JSON 역직렬화
-//                 InsungsInfo_File fileInfo = JsonConvert.DeserializeObject<InsungsInfo_File>(jsonContent);
-//                 if (fileInfo == null)
-//                 {
-//                     return new StdResult_Error(
-//                         $"[{APP_NAME}] FileInfo 파일 역직렬화 실패: {sFilePath}",
-//                         "NwInsung02/ReadInfoFileAsync_02");
-//                 }
+                // JSON 역직렬화
+                InsungsInfo_File fileInfo = JsonConvert.DeserializeObject<InsungsInfo_File>(jsonContent);
+                if (fileInfo == null)
+                {
+                    return new StdResult_Error(
+                        $"[{APP_NAME}] FileInfo 파일 역직렬화 실패: {sFilePath}",
+                        "NwInsung02/ReadInfoFileAsync_02");
+                }
 
-//                 // Context의 FileInfo에 덮어씌우기
-//                 m_Context.FileInfo = fileInfo;
+                // Context의 FileInfo에 덮어씌우기
+                m_Context.FileInfo = fileInfo;
 
-//                 Debug.WriteLine($"[NwInsung02] FileInfo 파일 로드 완료: {sFilePath}");
-//                 return null; // 성공
-//             }
-//             catch (Exception ex)
-//             {
-//                 return new StdResult_Error(
-//                     $"[{APP_NAME}] FileInfo 파일 읽기 예외: {ex.Message}",
-//                     "NwInsung02/ReadInfoFileAsync_99");
-//             }
-//         });
-//     }
+                Debug.WriteLine($"[NwInsung02] FileInfo 파일 로드 완료: {sFilePath}");
+                return null; // 성공
+            }
+            catch (Exception ex)
+            {
+                return new StdResult_Error(
+                    $"[{APP_NAME}] FileInfo 파일 읽기 예외: {ex.Message}",
+                    "NwInsung02/ReadInfoFileAsync_99");
+            }
+        });
+    }
 
     /// <summary>
     /// Context.FileInfo를 JSON 파일로 저장 (테스트/디버깅용)
