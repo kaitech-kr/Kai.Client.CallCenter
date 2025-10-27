@@ -118,6 +118,58 @@ public class InsungsAct_RcptRegPage
     }
     #endregion
 
+    #region Helper Methods
+    /// <summary>
+    /// 상태 버튼 찾기 (텍스트 검증 포함)
+    /// </summary>
+    /// <param name="buttonName">버튼 이름 (예: "접수", "전체")</param>
+    /// <param name="checkPoint">체크 포인트 (MainWnd 기준 상대좌표)</param>
+    /// <param name="errorCode">에러 코드</param>
+    /// <param name="bWrite">에러 로그 작성 여부</param>
+    /// <param name="bMsgBox">메시지박스 표시 여부</param>
+    /// <param name="withTextValidation">텍스트 검증 여부 (true면 텍스트 확인, false면 핸들만 확인)</param>
+    /// <returns>성공 시 핸들, 실패 시 에러</returns>
+    private async Task<(IntPtr hWnd, StdResult_Error error)> FindStatusButtonAsync(
+        string buttonName,
+        Draw.Point checkPoint,
+        string errorCode,
+        bool bWrite,
+        bool bMsgBox,
+        bool withTextValidation = true)
+    {
+        for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
+        {
+            IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, checkPoint);
+
+            if (hWnd != IntPtr.Zero)
+            {
+                if (withTextValidation)
+                {
+                    string text = Std32Window.GetWindowText(hWnd);
+                    if (text.Contains(buttonName))
+                    {
+                        Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}, 텍스트: {text}");
+                        return (hWnd, null);
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}");
+                    return (hWnd, null);
+                }
+            }
+
+            await Task.Delay(CommonVars.c_nWaitNormal);
+        }
+
+        // 찾기 실패
+        var error = CommonFuncs_StdResult.ErrMsgResult_Error(
+            $"[{m_Context.AppName}/RcptRegPage]{buttonName}버튼 찾기실패: {checkPoint}",
+            errorCode, bWrite, bMsgBox);
+        return (IntPtr.Zero, error);
+    }
+    #endregion
+
     #region RcptRegPage Initialize
     /// <summary>
     /// 접수등록 페이지 초기화
@@ -157,106 +209,46 @@ public class InsungsAct_RcptRegPage
 
             // 3. StatusBtn 찾기 - 첫/마지막 버튼으로 로딩 확인
             // 3-1. 접수 버튼 찾기 (텍스트 검증으로 페이지 로딩 시작 확인)
-            for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
-            {
-                m_RcptPage.StatusBtn_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(
-                    m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel접수M
-                );
-
-                if (m_RcptPage.StatusBtn_hWnd접수 != IntPtr.Zero)
-                {
-                    string text = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd접수);
-                    if (text.Contains("접수"))
-                    {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수버튼 찾음: {m_RcptPage.StatusBtn_hWnd접수:X}, 텍스트: {text}");
-                        break;
-                    }
-                }
-
-                await Task.Delay(CommonVars.c_nWaitNormal);
-            }
-
-            if (m_RcptPage.StatusBtn_hWnd접수 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]접수버튼 찾기실패: {m_FileInfo.접수등록Page_StatusBtn_ptChkRel접수M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_02", bWrite, bMsgBox);
-            }
+            var (hWnd접수, error접수) = await FindStatusButtonAsync(
+                "접수", m_FileInfo.접수등록Page_StatusBtn_ptChkRel접수M,
+                "InsungsAct_RcptRegPage/InitializeAsync_02", bWrite, bMsgBox);
+            if (error접수 != null) return error접수;
+            m_RcptPage.StatusBtn_hWnd접수 = hWnd접수;
 
             // 3-2. 버튼 로딩 대기
             await Task.Delay(CommonVars.c_nWaitNormal);
 
             // 3-3. 전체 버튼 찾기 (텍스트 검증으로 페이지 로딩 완료 확인)
-            for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
-            {
-                m_RcptPage.StatusBtn_hWnd전체 = Std32Window.GetWndHandle_FromRelDrawPt(
-                    m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel전체M
-                );
+            var (hWnd전체, error전체) = await FindStatusButtonAsync(
+                "전체", m_FileInfo.접수등록Page_StatusBtn_ptChkRel전체M,
+                "InsungsAct_RcptRegPage/InitializeAsync_03", bWrite, bMsgBox);
+            if (error전체 != null) return error전체;
+            m_RcptPage.StatusBtn_hWnd전체 = hWnd전체;
 
-                if (m_RcptPage.StatusBtn_hWnd전체 != IntPtr.Zero)
-                {
-                    string text = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd전체);
-                    if (text.Contains("전체"))
-                    {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 찾음: {m_RcptPage.StatusBtn_hWnd전체:X}, 텍스트: {text}");
-                        break;
-                    }
-                }
+            // 3-4. 중간 StatusBtn 찾기 (페이지 로딩 완료됨, 텍스트 검증 생략)
+            var (hWnd배차, error배차) = await FindStatusButtonAsync(
+                "배차", m_FileInfo.접수등록Page_StatusBtn_ptChkRel배차M,
+                "InsungsAct_RcptRegPage/InitializeAsync_04", bWrite, bMsgBox, withTextValidation: false);
+            if (error배차 != null) return error배차;
+            m_RcptPage.StatusBtn_hWnd배차 = hWnd배차;
 
-                await Task.Delay(CommonVars.c_nWaitNormal);
-            }
+            var (hWnd운행, error운행) = await FindStatusButtonAsync(
+                "운행", m_FileInfo.접수등록Page_StatusBtn_ptChkRel운행M,
+                "InsungsAct_RcptRegPage/InitializeAsync_05", bWrite, bMsgBox, withTextValidation: false);
+            if (error운행 != null) return error운행;
+            m_RcptPage.StatusBtn_hWnd운행 = hWnd운행;
 
-            if (m_RcptPage.StatusBtn_hWnd전체 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]전체버튼 찾기실패: {m_FileInfo.접수등록Page_StatusBtn_ptChkRel전체M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_03", bWrite, bMsgBox);
-            }
+            var (hWnd완료, error완료) = await FindStatusButtonAsync(
+                "완료", m_FileInfo.접수등록Page_StatusBtn_ptChkRel완료M,
+                "InsungsAct_RcptRegPage/InitializeAsync_06", bWrite, bMsgBox, withTextValidation: false);
+            if (error완료 != null) return error완료;
+            m_RcptPage.StatusBtn_hWnd완료 = hWnd완료;
 
-            // 3-4. 중간 StatusBtn 찾기 (페이지 로딩 완료됨)
-            m_RcptPage.StatusBtn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel배차M
-            );
-            if (m_RcptPage.StatusBtn_hWnd배차 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]배차버튼 찾기실패: {m_FileInfo.접수등록Page_StatusBtn_ptChkRel배차M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_04", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 배차버튼 찾음: {m_RcptPage.StatusBtn_hWnd배차:X}");
-
-            m_RcptPage.StatusBtn_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel운행M
-            );
-            if (m_RcptPage.StatusBtn_hWnd운행 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]운행버튼 찾기실패: {m_FileInfo.접수등록Page_StatusBtn_ptChkRel운행M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_05", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 운행버튼 찾음: {m_RcptPage.StatusBtn_hWnd운행:X}");
-
-            m_RcptPage.StatusBtn_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel완료M
-            );
-            if (m_RcptPage.StatusBtn_hWnd완료 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]완료버튼 찾기실패: {m_FileInfo.접수등록Page_StatusBtn_ptChkRel완료M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_06", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 완료버튼 찾음: {m_RcptPage.StatusBtn_hWnd완료:X}");
-
-            m_RcptPage.StatusBtn_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(
-                m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel취소M
-            );
-            if (m_RcptPage.StatusBtn_hWnd취소 == IntPtr.Zero)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]취소버튼 찾기실패: {m_FileInfo.접수등록Page_StatusBtn_ptChkRel취소M}",
-                    "InsungsAct_RcptRegPage/InitializeAsync_07", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 취소버튼 찾음: {m_RcptPage.StatusBtn_hWnd취소:X}");
+            var (hWnd취소, error취소) = await FindStatusButtonAsync(
+                "취소", m_FileInfo.접수등록Page_StatusBtn_ptChkRel취소M,
+                "InsungsAct_RcptRegPage/InitializeAsync_07", bWrite, bMsgBox, withTextValidation: false);
+            if (error취소 != null) return error취소;
+            m_RcptPage.StatusBtn_hWnd취소 = hWnd취소;
 
             // TODO: 3-1. StatusBtn 이미지 매칭으로 확인 (Up 상태) - OCR 사용시 BlockInput 필요
 
