@@ -134,16 +134,16 @@ public class NwInsung01 : IExternalApp
                 Debug.WriteLine($"[NwInsung01] MainWnd 초기화 실패: {resultMainWnd.sErrNPos}");
                 return new StdResult_Status(StdResult.Fail, resultMainWnd.sErrNPos, "NwInsung01/InitializeAsync_05");
             }
-            Debug.WriteLine($"[NwInsung01] MainWnd 초기화 완료");
+            //Debug.WriteLine($"[NwInsung01] MainWnd 초기화 완료");
 
-            //// 6. RcptRegPage 초기화
-            //StdResult_Error resultRcptRegPage = await m_Context.RcptRegPageAct.InitializeAsync();
-            //if (resultRcptRegPage != null)
-            //{
-            //    Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung01/InitializeAsync_06");
-            //}
-            //Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 완료");
+            // 6. RcptRegPage 초기화
+            StdResult_Error resultRcptRegPage = await m_Context.RcptRegPageAct.InitializeAsync();
+            if (resultRcptRegPage != null)
+            {
+                Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
+                return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung01/InitializeAsync_06");
+            }
+            Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 완료");
 
             Debug.WriteLine("[NwInsung01] InitializeAsync 완료");
             return new StdResult_Status(StdResult.Success);

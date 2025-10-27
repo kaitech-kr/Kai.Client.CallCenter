@@ -8,7 +8,9 @@
       "Bash(dotnet build:*)",
       "Bash(Select-String -Pattern \"error|warning|Build succeeded|Build FAILED\" -Context 0,2)",
       "Bash(echo:*)",
-      "Bash(cmd /c \"del .\\nul\")"
+      "Bash(cmd /c \"del .\\nul\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
