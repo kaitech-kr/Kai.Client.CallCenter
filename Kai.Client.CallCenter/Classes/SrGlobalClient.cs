@@ -153,11 +153,11 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             //HubConn.On(StdConst_FuncName.SrReport_MultiConnected, () => SrReport_MultiConnected());
 
             // Tel070
-            //HubConn.On<TbTelMainRing, int>(StdConst_FuncName.SrReport.TelMainRingAsync, (tb, count) => SrReport_TelMainRingAsync(tb, count));
+            HubConn.On<TbTelMainRing, int>(StdConst_FuncName.SrReport.TelMainRingAsync, (tb, count) => SrReport_TelMainRingAsync(tb, count));
 
             // Order
-            //HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_InsertedRowAsync_Today, (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
-            //HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_UpdatedRowAsync_Today, (tb, seq) => SrReport_Order_UpdatedRowAsync_Today(tb, seq));
+            HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_InsertedRowAsync_Today, (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
+            HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_UpdatedRowAsync_Today, (tb, seq) => SrReport_Order_UpdatedRowAsync_Today(tb, seq));
             #endregion
 
             Debug.WriteLine($"연결 시도 시작...");
@@ -389,139 +389,139 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     /// </summary>
     /// <param name="tbRing">수신된 전화 정보</param>
     /// <param name="nRowsCount">서버의 전체 행 개수</param>
-    //public async Task SrReport_TelMainRingAsync(TbTelMainRing tbRing, int nRowsCount)
-    //{
-    //    if (tbRing == null) return;
+    public async Task SrReport_TelMainRingAsync(TbTelMainRing tbRing, int nRowsCount)
+    {
+        if (tbRing == null) return;
 
-    //    // 행 개수가 맞지 않으면 전체 재로드
-    //    if (nRowsCount != (VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070.Count + 1))
-    //    {
-    //        await Application.Current.Dispatcher.InvokeAsync(async () =>
-    //        {
-    //            await VsOrder_StatusPage.Tel070_LoadDataAsync();
-    //        });
-    //    }
-    //    // 행 개수가 정확하면 추가만 수행
-    //    else
-    //    {
-    //        await Application.Current.Dispatcher.InvokeAsync(() =>
-    //        {
-    //            VsOrder_StatusPage.Tel070_AppendData(tbRing);
-    //        });
-    //    }
-    //}
+        // 행 개수가 맞지 않으면 전체 재로드
+        if (nRowsCount != (VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070.Count + 1))
+        {
+            await Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                await VsOrder_StatusPage.Tel070_LoadDataAsync();
+            });
+        }
+        // 행 개수가 정확하면 추가만 수행
+        else
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                VsOrder_StatusPage.Tel070_AppendData(tbRing);
+            });
+        }
+    }
 
     /// <summary>
     /// 오늘 날짜 주문 삽입 시그널 처리
     /// </summary>
     /// <param name="tbOrder">삽입된 주문</param>
     /// <param name="nSeq">시퀀스 번호</param>
-    //public async Task SrReport_Order_InsertedRowAsync_Today(TbOrder tbOrder, int nSeq)
-    //{
-    //    if (tbOrder == null) return;
+    public async Task SrReport_Order_InsertedRowAsync_Today(TbOrder tbOrder, int nSeq)
+    {
+        if (tbOrder == null) return;
 
-    //    // 시퀀스가 맞지 않으면 전체 재조회
-    //    if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
-    //    {
-    //        if (s_Order_StatusPage != null)
-    //        {
-    //            await Application.Current.Dispatcher.InvokeAsync(() =>
-    //            {
-    //                s_Order_StatusPage.BtnOrderSearch_Click(null, null);
-    //            });
-    //        }
-    //    }
-    //    // 시퀀스가 정상이면 리스트에 추가
-    //    else
-    //    {
-    //        if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
+        // 시퀀스가 맞지 않으면 전체 재조회
+        if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
+        {
+            if (s_Order_StatusPage != null)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    s_Order_StatusPage.BtnOrderSearch_Click(null, null);
+                });
+            }
+        }
+        // 시퀀스가 정상이면 리스트에 추가
+        else
+        {
+            if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
 
-    //        // 리스트 맨 앞에 추가
-    //        VsOrder_StatusPage.s_listTbOrderToday.Insert(0, tbOrder);
+            // 리스트 맨 앞에 추가
+            VsOrder_StatusPage.s_listTbOrderToday.Insert(0, tbOrder);
 
-    //        // 자동배차 시스템에 새 주문 등록
-    //        if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
-    //        {
-    //            s_MainWnd.m_MasterManager.ExternalAppController.AddNewOrder(tbOrder);
-    //        }
+            // 자동배차 시스템에 새 주문 등록
+            if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+            {
+                s_MainWnd.m_MasterManager.ExternalAppController.AddNewOrder(tbOrder);
+            }
 
-    //        if (s_Order_StatusPage == null) return;
+            if (s_Order_StatusPage == null) return;
 
-    //        // 오늘 날짜 선택 시에만 UI 업데이트
-    //        int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
-    //        if (index == 0)
-    //        {
-    //            await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
-    //        }
-    //    }
+            // 오늘 날짜 선택 시에만 UI 업데이트
+            int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
+            if (index == 0)
+            {
+                await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
+            }
+        }
 
-    //    VsOrder_StatusPage.s_nLastSeq = nSeq;
-    //}
+        VsOrder_StatusPage.s_nLastSeq = nSeq;
+    }
 
     /// <summary>
     /// 오늘 날짜 주문 업데이트 시그널 처리
     /// </summary>
     /// <param name="tbNewOrder">업데이트된 주문</param>
     /// <param name="nSeq">시퀀스 번호</param>
-    //public async Task SrReport_Order_UpdatedRowAsync_Today(TbOrder tbNewOrder, int nSeq)
-    //{
-    //    if (tbNewOrder == null) return;
+    public async Task SrReport_Order_UpdatedRowAsync_Today(TbOrder tbNewOrder, int nSeq)
+    {
+        if (tbNewOrder == null) return;
 
-    //    TbOrder tbOldOrder = VsOrder_StatusPage.s_listTbOrderToday.FirstOrDefault(o => o.KeyCode == tbNewOrder.KeyCode);
-    //    if (tbOldOrder == null)
-    //    {
-    //        ErrMsgBox($"오더를 찾을 수 없습니다: {tbNewOrder.KeyCode}", "SrGlobalClient/SrReport_Order_UpdatedRow_Today_01");
-    //        return;
-    //    }
+        TbOrder tbOldOrder = VsOrder_StatusPage.s_listTbOrderToday.FirstOrDefault(o => o.KeyCode == tbNewOrder.KeyCode);
+        if (tbOldOrder == null)
+        {
+            ErrMsgBox($"오더를 찾을 수 없습니다: {tbNewOrder.KeyCode}", "SrGlobalClient/SrReport_Order_UpdatedRow_Today_01");
+            return;
+        }
 
-    //    PostgService_Common_OrderState changedFlag = PostgService_TbOrder.CompareTable(tbNewOrder, tbOldOrder);
-    //    if (changedFlag == PostgService_Common_OrderState.Empty) changedFlag = PostgService_Common_OrderState.Updated_AnyWay;
+        PostgService_Common_OrderState changedFlag = PostgService_TbOrder.CompareTable(tbNewOrder, tbOldOrder);
+        if (changedFlag == PostgService_Common_OrderState.Empty) changedFlag = PostgService_Common_OrderState.Updated_AnyWay;
 
-    //    // 시퀀스가 맞지 않으면 전체 재조회
-    //    if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
-    //    {
-    //        if (s_Order_StatusPage != null)
-    //        {
-    //            await Application.Current.Dispatcher.InvokeAsync(() =>
-    //            {
-    //                s_Order_StatusPage.BtnOrderSearch_Click(null, null);
-    //            });
-    //        }
-    //    }
-    //    // 시퀀스가 정상이면 주문 업데이트
-    //    else
-    //    {
-    //        TbOrder tbBackup = NetUtil.DeepCopyFrom(tbOldOrder);
-    //        NetUtil.DeepCopyTo(tbNewOrder, tbOldOrder);
+        // 시퀀스가 맞지 않으면 전체 재조회
+        if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
+        {
+            if (s_Order_StatusPage != null)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    s_Order_StatusPage.BtnOrderSearch_Click(null, null);
+                });
+            }
+        }
+        // 시퀀스가 정상이면 주문 업데이트
+        else
+        {
+            TbOrder tbBackup = NetUtil.DeepCopyFrom(tbOldOrder);
+            NetUtil.DeepCopyTo(tbNewOrder, tbOldOrder);
 
-    //        if (s_Order_StatusPage != null)
-    //        {
-    //            int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
-    //            if (index == 0)
-    //            {
-    //                await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
-    //            }
-    //        }
+            if (s_Order_StatusPage != null)
+            {
+                int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
+                if (index == 0)
+                {
+                    await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
+                }
+            }
 
-    //        // 무시 리스트 확인
-    //        int nFind = m_ListIgnoreSeqno.IndexOf(nSeq);
-    //        if (nFind < 0)
-    //        {
-    //            // 자동배차 시스템에 주문 업데이트 알림
-    //            if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
-    //            {
-    //                s_MainWnd.m_MasterManager.ExternalAppController.UpdateOrder(changedFlag, tbNewOrder, tbBackup, nSeq);
-    //            }
-    //        }
-    //        else
-    //        {
-    //            m_ListIgnoreSeqno.RemoveAt(nFind);
-    //            Debug.WriteLine($"무시리스트에서 삭제: Seqno={nSeq}, OrderNum={tbNewOrder.KeyCode}");
-    //        }
-    //    }
+            // 무시 리스트 확인
+            int nFind = m_ListIgnoreSeqno.IndexOf(nSeq);
+            if (nFind < 0)
+            {
+                // 자동배차 시스템에 주문 업데이트 알림
+                if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+                {
+                    s_MainWnd.m_MasterManager.ExternalAppController.UpdateOrder(changedFlag, tbNewOrder, tbBackup, nSeq);
+                }
+            }
+            else
+            {
+                m_ListIgnoreSeqno.RemoveAt(nFind);
+                Debug.WriteLine($"무시리스트에서 삭제: Seqno={nSeq}, OrderNum={tbNewOrder.KeyCode}");
+            }
+        }
 
-    //    VsOrder_StatusPage.s_nLastSeq = nSeq;
-    //}
+        VsOrder_StatusPage.s_nLastSeq = nSeq;
+    }
     #endregion
 
     #region SrResult - Tel070

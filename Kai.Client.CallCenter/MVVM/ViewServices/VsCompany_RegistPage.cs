@@ -23,10 +23,5 @@ public class VsCompany_RegistPage
         oc_VmCompany_RegistPage_Cust.Clear();
         foreach (var tbCustMain in list) oc_VmCompany_RegistPage_Cust.Add(new VmCompany_RegistPage_Cust(tbCustMain));
     }
-
-
-
-
-
 }
 #nullable enable

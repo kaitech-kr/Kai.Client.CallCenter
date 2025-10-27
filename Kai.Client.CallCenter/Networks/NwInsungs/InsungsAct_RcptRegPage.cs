@@ -2079,59 +2079,94 @@ public class InsungsAct_RcptRegPage
 //     }
     #endregion
 
+    #region CheckIsOrderAsync Functions
+    /// <summary>
+    /// 신규 주문 등록 확인 (Kai에만 존재, 인성에 없음)
+    /// </summary>
+    public async Task<StdResult_Status> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAlloc item, CancelTokenControl ctrl)
+    {
+        string kaiState = item.NewOrder.OrderState;
+
+        switch (kaiState)
+        {
+            case "접수":
+            case "취소":
+            case "대기":
+                // TODO: 실제 등록 로직 구현
+                await Task.CompletedTask;
+                return new StdResult_Status(StdResult.Success);
+
+            case "배차":
+            case "운행":
+            case "완료":
+            case "예약":
+                return new StdResult_Status(StdResult.Fail,
+                    $"미구현 상태: {kaiState}",
+                    "CheckIsOrderAsync_AssumeKaiNewOrder_TODO",
+                    CommonVars.s_sLogDir);
+
+            default:
+                return new StdResult_Status(StdResult.Fail,
+                    $"알 수 없는 Kai 주문 상태: {kaiState}",
+                    "CheckIsOrderAsync_AssumeKaiNewOrder_800",
+                    CommonVars.s_sLogDir);
+        }
+    }
+    #endregion
+
     #region Region 4 Helper Methods - Result Classes
     /// <summary>
     /// 팝업창 열기 결과
     /// </summary>
-    public class PopupResult
-    {
-        public bool Success { get; }
-        public IntPtr hWndPopup { get; }
-        public string ErrorMessage { get; }
+    //public class PopupResult
+    //{
+    //    public bool Success { get; }
+    //    public IntPtr hWndPopup { get; }
+    //    public string ErrorMessage { get; }
 
-        public PopupResult(bool success, IntPtr hWnd, string error = "")
-        {
-            Success = success;
-            hWndPopup = hWnd;
-            ErrorMessage = error;
-        }
-    }
+    //    public PopupResult(bool success, IntPtr hWnd, string error = "")
+    //    {
+    //        Success = success;
+    //        hWndPopup = hWnd;
+    //        ErrorMessage = error;
+    //    }
+    //}
 
     /// <summary>
     /// 주문 등록 결과
     /// </summary>
-    public class RegistResult
-    {
-        public bool Success { get; }
-        public string ErrorMessage { get; }
+    //public class RegistResult
+    //{
+    //    public bool Success { get; }
+    //    public string ErrorMessage { get; }
 
-        public static RegistResult SuccessResult() => new RegistResult(true, "");
-        public static RegistResult ErrorResult(string msg) => new RegistResult(false, msg);
+    //    public static RegistResult SuccessResult() => new RegistResult(true, "");
+    //    public static RegistResult ErrorResult(string msg) => new RegistResult(false, msg);
 
-        private RegistResult(bool success, string error)
-        {
-            Success = success;
-            ErrorMessage = error;
-        }
-    }
+    //    private RegistResult(bool success, string error)
+    //    {
+    //        Success = success;
+    //        ErrorMessage = error;
+    //    }
+    //}
 
     /// <summary>
     /// 고객 입력 결과
     /// </summary>
-    public class CustomerResult
-    {
-        public bool Success { get; }
-        public string ErrorMessage { get; }
+    //public class CustomerResult
+    //{
+    //    public bool Success { get; }
+    //    public string ErrorMessage { get; }
 
-        public static CustomerResult SuccessResult() => new CustomerResult(true, "");
-        public static CustomerResult ErrorResult(string msg) => new CustomerResult(false, msg);
+    //    public static CustomerResult SuccessResult() => new CustomerResult(true, "");
+    //    public static CustomerResult ErrorResult(string msg) => new CustomerResult(false, msg);
 
-        private CustomerResult(bool success, string error)
-        {
-            Success = success;
-            ErrorMessage = error;
-        }
-    }
+    //    private CustomerResult(bool success, string error)
+    //    {
+    //        Success = success;
+    //        ErrorMessage = error;
+    //    }
+    //}
 
     /// <summary>
     /// 고객 검색 결과 타입
@@ -2323,72 +2358,72 @@ public class InsungsAct_RcptRegPage
     /// - 신규 버튼 클릭
     /// - 팝업창 대기 및 검증
     /// </summary>
-    public async Task<PopupResult> OpenNewOrderPopupAsync(CancelTokenControl ctrl)
-    {
-        const int MAX_RETRY = 3;
-        const int MAX_WAIT_LOOP = 100;
-        const int WAIT_MS = 50;
+    //public async Task<PopupResult> OpenNewOrderPopupAsync(CancelTokenControl ctrl)
+    //{
+    //    const int MAX_RETRY = 3;
+    //    const int MAX_WAIT_LOOP = 100;
+    //    const int WAIT_MS = 50;
 
-        IntPtr hWndPopup = IntPtr.Zero;
+    //    IntPtr hWndPopup = IntPtr.Zero;
 
-        try
-        {
-            // 신규 버튼 클릭 시도 (최대 3번)
-            for (int retry = 0; retry < MAX_RETRY; retry++)
-            {
-                await ctrl.WaitIfPausedOrCancelledAsync();
+    //    try
+    //    {
+    //        // 신규 버튼 클릭 시도 (최대 3번)
+    //        for (int retry = 0; retry < MAX_RETRY; retry++)
+    //        {
+    //            await ctrl.WaitIfPausedOrCancelledAsync();
 
-                // 신규 버튼 클릭
-                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd신규);
-                Debug.WriteLine($"[{m_Context.AppName}] 신규버튼 클릭 완료 (시도 {retry + 1}/{MAX_RETRY})");
+    //            // 신규 버튼 클릭
+    //            await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd신규);
+    //            Debug.WriteLine($"[{m_Context.AppName}] 신규버튼 클릭 완료 (시도 {retry + 1}/{MAX_RETRY})");
 
-                // 팝업창 대기 (100번 * 50ms = 5초)
-                bool bFound = false;
-                for (int k = 0; k < MAX_WAIT_LOOP; k++)
-                {
-                    await Task.Delay(WAIT_MS);
+    //            // 팝업창 대기 (100번 * 50ms = 5초)
+    //            bool bFound = false;
+    //            for (int k = 0; k < MAX_WAIT_LOOP; k++)
+    //            {
+    //                await Task.Delay(WAIT_MS);
 
-                    // 팝업창 찾기
-                    hWndPopup = Std32Window.FindMainWindow_NotTransparent(
-                        m_Context.MemInfo.Splash.TopWnd_uProcessId,
-                        m_Context.FileInfo.접수등록Wnd_TopWnd_sWndName_Reg);
+    //                // 팝업창 찾기
+    //                hWndPopup = Std32Window.FindMainWindow_NotTransparent(
+    //                    m_Context.MemInfo.Splash.TopWnd_uProcessId,
+    //                    m_Context.FileInfo.접수등록Wnd_TopWnd_sWndName_Reg);
 
-                    if (hWndPopup == IntPtr.Zero) continue;
+    //                if (hWndPopup == IntPtr.Zero) continue;
 
-                    // 닫기 버튼 검증
-                    IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(
-                        hWndPopup, m_Context.FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
+    //                // 닫기 버튼 검증
+    //                IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(
+    //                    hWndPopup, m_Context.FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
 
-                    if (hWndClose == IntPtr.Zero) continue;
+    //                if (hWndClose == IntPtr.Zero) continue;
 
-                    string closeText = Std32Window.GetWindowCaption(hWndClose);
-                    if (closeText.StartsWith(m_Context.FileInfo.접수등록Wnd_버튼그룹_sWndName닫기))
-                    {
-                        bFound = true;
-                        Debug.WriteLine($"[{m_Context.AppName}] 신규주문 팝업창 열림: {hWndPopup:X}");
-                        break;
-                    }
-                }
+    //                string closeText = Std32Window.GetWindowCaption(hWndClose);
+    //                if (closeText.StartsWith(m_Context.FileInfo.접수등록Wnd_버튼그룹_sWndName닫기))
+    //                {
+    //                    bFound = true;
+    //                    Debug.WriteLine($"[{m_Context.AppName}] 신규주문 팝업창 열림: {hWndPopup:X}");
+    //                    break;
+    //                }
+    //            }
 
-                if (bFound)
-                {
-                    await Task.Delay(100); // 팝업창 안정화 대기
-                    return new PopupResult(true, hWndPopup);
-                }
+    //            if (bFound)
+    //            {
+    //                await Task.Delay(100); // 팝업창 안정화 대기
+    //                return new PopupResult(true, hWndPopup);
+    //            }
 
-                // 재시도 전 대기
-                await Task.Delay(100);
-            }
+    //            // 재시도 전 대기
+    //            await Task.Delay(100);
+    //        }
 
-            // 모든 재시도 실패
-            return new PopupResult(false, IntPtr.Zero, "신규 버튼 클릭 후 팝업창이 열리지 않음");
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[{m_Context.AppName}] OpenNewOrderPopupAsync 예외: {ex.Message}");
-            return new PopupResult(false, IntPtr.Zero, $"팝업창 열기 예외: {ex.Message}");
-        }
-    }
+    //        // 모든 재시도 실패
+    //        return new PopupResult(false, IntPtr.Zero, "신규 버튼 클릭 후 팝업창이 열리지 않음");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Debug.WriteLine($"[{m_Context.AppName}] OpenNewOrderPopupAsync 예외: {ex.Message}");
+    //        return new PopupResult(false, IntPtr.Zero, $"팝업창 열기 예외: {ex.Message}");
+    //    }
+    //}
 
     #region 공통 함수 (반복 패턴 제거)
 
@@ -2399,187 +2434,187 @@ public class InsungsAct_RcptRegPage
     /// <param name="expectedValue">입력할 값</param>
     /// <param name="fieldName">필드명 (에러 메시지용)</param>
     /// <param name="normalizeFunc">정규화 함수 (전화번호 등)</param>
-//     private async Task<RegistResult> WriteAndVerifyEditBoxAsync(
-//         IntPtr hWnd,
-//         string expectedValue,
-//         string fieldName,
-//         CancelTokenControl ctrl,
-//         Func<string, string>? normalizeFunc = null)
-//     {
-//         const int MAX_RETRY = 3;
-//         const int WAIT_MS = 200;
+    //     private async Task<RegistResult> WriteAndVerifyEditBoxAsync(
+    //         IntPtr hWnd,
+    //         string expectedValue,
+    //         string fieldName,
+    //         CancelTokenControl ctrl,
+    //         Func<string, string>? normalizeFunc = null)
+    //     {
+    //         const int MAX_RETRY = 3;
+    //         const int WAIT_MS = 200;
 
-//         for (int i = 0; i < MAX_RETRY; i++)
-//         {
-//             await ctrl.WaitIfPausedOrCancelledAsync();
+    //         for (int i = 0; i < MAX_RETRY; i++)
+    //         {
+    //             await ctrl.WaitIfPausedOrCancelledAsync();
 
-//             // 쓰기 (대기 포함 버전 사용)
-//             string writtenValue = await OfrWork_Common.WriteEditBox_ToHndleAsyncWait(hWnd, expectedValue);
+    //             // 쓰기 (대기 포함 버전 사용)
+    //             string writtenValue = await OfrWork_Common.WriteEditBox_ToHndleAsyncWait(hWnd, expectedValue);
 
-//             // 정규화 (필요시)
-//             if (normalizeFunc != null)
-//                 writtenValue = normalizeFunc(writtenValue);
+    //             // 정규화 (필요시)
+    //             if (normalizeFunc != null)
+    //                 writtenValue = normalizeFunc(writtenValue);
 
-//             // 검증
-//             if (expectedValue == writtenValue)
-//                 return RegistResult.SuccessResult();
+    //             // 검증
+    //             if (expectedValue == writtenValue)
+    //                 return RegistResult.SuccessResult();
 
-//             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 불일치 (재시도 {i + 1}/{MAX_RETRY}): " +
-//                           $"예상=\"{expectedValue}\", 실제=\"{writtenValue}\"");
+    //             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 불일치 (재시도 {i + 1}/{MAX_RETRY}): " +
+    //                           $"예상=\"{expectedValue}\", 실제=\"{writtenValue}\"");
 
-//             await Task.Delay(WAIT_MS);
-//         }
+    //             await Task.Delay(WAIT_MS);
+    //         }
 
-//         // 최종 실패
-//         string finalValue = Std32Window.GetWindowCaption(hWnd);
-//         if (normalizeFunc != null)
-//             finalValue = normalizeFunc(finalValue);
+    //         // 최종 실패
+    //         string finalValue = Std32Window.GetWindowCaption(hWnd);
+    //         if (normalizeFunc != null)
+    //             finalValue = normalizeFunc(finalValue);
 
-//         return RegistResult.ErrorResult(
-//             $"{fieldName} 입력 실패: 예상=\"{expectedValue}\", 실제=\"{finalValue}\"");
-//     }
+    //         return RegistResult.ErrorResult(
+    //             $"{fieldName} 입력 실패: 예상=\"{expectedValue}\", 실제=\"{finalValue}\"");
+    //     }
 
     /// <summary>
     /// 공통 함수 #1-2: 적요 전용 키보드 시뮬레이션 입력
     /// - 인성 앱의 적요 필드는 SetWindowText 시 앞에 공백이 삽입되는 문제가 있음
     /// - HOME + DELETE로 기존값 삭제 후 클립보드로 붙여넣기
     /// </summary>
-//     private async Task<RegistResult> WriteAndVerifyEditBox_KeyboardAsync(
-//         IntPtr hWnd,
-//         string expectedValue,
-//         string fieldName,
-//         CancelTokenControl ctrl)
-//     {
-//         await ctrl.WaitIfPausedOrCancelledAsync();
+    //     private async Task<RegistResult> WriteAndVerifyEditBox_KeyboardAsync(
+    //         IntPtr hWnd,
+    //         string expectedValue,
+    //         string fieldName,
+    //         CancelTokenControl ctrl)
+    //     {
+    //         await ctrl.WaitIfPausedOrCancelledAsync();
 
-//         // ===== 1단계: 클립보드에 값 복사 =====
-//         System.Windows.Clipboard.SetText(expectedValue);
+    //         // ===== 1단계: 클립보드에 값 복사 =====
+    //         System.Windows.Clipboard.SetText(expectedValue);
 
-//         // ===== 2단계: HOME 키로 커서를 처음으로 =====
-//         Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_HOME);
+    //         // ===== 2단계: HOME 키로 커서를 처음으로 =====
+    //         Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_HOME);
 
-//         // ===== 3단계: Shift + End로 전체 선택 =====
-//         Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_SHIFT);
-//         Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_END);
+    //         // ===== 3단계: Shift + End로 전체 선택 =====
+    //         Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_SHIFT);
+    //         Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_END);
 
-//         // ===== 4단계: Ctrl+V로 붙여넣기 =====
-//         await Simulation_Keyboard.KeyPost_CtrlV_PasteAsync(hWnd);
+    //         // ===== 4단계: Ctrl+V로 붙여넣기 =====
+    //         await Simulation_Keyboard.KeyPost_CtrlV_PasteAsync(hWnd);
 
-//         // ===== 5단계: MsgBox로 수동 확인 대기 (딜레이 대신) =====
-//         System.Windows.MessageBox.Show(
-//             $"{fieldName} 입력 완료\n\n" +
-//             $"입력값: \"{expectedValue}\"\n\n" +
-//             $"인성 앱에서 값을 확인해주세요.",
-//             "입력 확인 필요",
-//             System.Windows.MessageBoxButton.OK,
-//             System.Windows.MessageBoxImage.Information);
+    //         // ===== 5단계: MsgBox로 수동 확인 대기 (딜레이 대신) =====
+    //         System.Windows.MessageBox.Show(
+    //             $"{fieldName} 입력 완료\n\n" +
+    //             $"입력값: \"{expectedValue}\"\n\n" +
+    //             $"인성 앱에서 값을 확인해주세요.",
+    //             "입력 확인 필요",
+    //             System.Windows.MessageBoxButton.OK,
+    //             System.Windows.MessageBoxImage.Information);
 
-//         // ===== 6단계: 검증 =====
-//         string readValue = Std32Window.GetWindowCaption(hWnd);
-//         if (readValue != expectedValue)
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 키보드 입력 실패: 기대값=\"{expectedValue}\", 실제값=\"{readValue}\"");
-//             return RegistResult.ErrorResult($"{fieldName} 입력 실패 (기대: \"{expectedValue}\", 실제: \"{readValue}\")");
-//         }
+    //         // ===== 6단계: 검증 =====
+    //         string readValue = Std32Window.GetWindowCaption(hWnd);
+    //         if (readValue != expectedValue)
+    //         {
+    //             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 키보드 입력 실패: 기대값=\"{expectedValue}\", 실제값=\"{readValue}\"");
+    //             return RegistResult.ErrorResult($"{fieldName} 입력 실패 (기대: \"{expectedValue}\", 실제: \"{readValue}\")");
+    //         }
 
-//         Debug.WriteLine($"[{m_Context.AppName}]   {fieldName}: \"{expectedValue}\" (키보드 입력 성공)");
-//         return RegistResult.SuccessResult();
-//     }
+    //         Debug.WriteLine($"[{m_Context.AppName}]   {fieldName}: \"{expectedValue}\" (키보드 입력 성공)");
+    //         return RegistResult.SuccessResult();
+    //     }
 
     /// <summary>
     /// 공통 함수 #2: 고객 검색 및 선택 (의뢰자, 출발지, 도착지 공통)
     /// TODO: GetCustSearchTypeAsync, 고객검색Wnd 등 복잡한 로직 통합 필요
     /// </summary>
-//     private async Task<RegistResult> SearchAndSelectCustomerAsync(
-//         IntPtr hWnd고객명,
-//         IntPtr hWnd동명,
-//         string custName,
-//         string chargeName,
-//         string fieldName,
-//         CancelTokenControl ctrl)
-//     {
-//         // 1. 검색어 생성 (상호/담당)
-//         string searchText = NwCommon.GetInsungTextForSearch(custName, chargeName);
+    //     private async Task<RegistResult> SearchAndSelectCustomerAsync(
+    //         IntPtr hWnd고객명,
+    //         IntPtr hWnd동명,
+    //         string custName,
+    //         string chargeName,
+    //         string fieldName,
+    //         CancelTokenControl ctrl)
+    //     {
+    //         // 1. 검색어 생성 (상호/담당)
+    //         string searchText = NwCommon.GetInsungTextForSearch(custName, chargeName);
 
-//         // 2. 고객명 EditBox에 입력 (OfrWork_Common 사용 - 기존 로직과 동일)
-//         var resultBool = await OfrWork_Common.WriteEditBox_ToHndleAsync(hWnd고객명, searchText);
-//         if (resultBool == null || !resultBool.bResult)
-//             return RegistResult.ErrorResult($"{fieldName} 고객명 입력 실패");
+    //         // 2. 고객명 EditBox에 입력 (OfrWork_Common 사용 - 기존 로직과 동일)
+    //         var resultBool = await OfrWork_Common.WriteEditBox_ToHndleAsync(hWnd고객명, searchText);
+    //         if (resultBool == null || !resultBool.bResult)
+    //             return RegistResult.ErrorResult($"{fieldName} 고객명 입력 실패");
 
-//         // 3. 검색 실행 및 결과 타입 확인 (GetCustSearchTypeAsync - Enter 키 포함)
-//         var searchResult = await GetCustSearchTypeAsync(hWnd고객명, hWnd동명);
+    //         // 3. 검색 실행 및 결과 타입 확인 (GetCustSearchTypeAsync - Enter 키 포함)
+    //         var searchResult = await GetCustSearchTypeAsync(hWnd고객명, hWnd동명);
 
-//         // 4. 검색 결과 처리
-//         switch (searchResult.resultTye)
-//         {
-//             case AutoAlloc_CustSearch.One:
-//                 // 1개 검색 성공 - 그대로 진행
-//                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 검색 성공 (1개)");
-//                 return RegistResult.SuccessResult();
+    //         // 4. 검색 결과 처리
+    //         switch (searchResult.resultTye)
+    //         {
+    //             case AutoAlloc_CustSearch.One:
+    //                 // 1개 검색 성공 - 그대로 진행
+    //                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 검색 성공 (1개)");
+    //                 return RegistResult.SuccessResult();
 
-//             case AutoAlloc_CustSearch.Multi:
-//                 // TODO: 복수 고객 검색창 처리 필요
-//                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 복수 검색 결과 - TODO 처리 필요");
-//                 return RegistResult.ErrorResult($"{fieldName} 복수 검색됨 (TODO: 고객검색창 처리 필요)");
+    //             case AutoAlloc_CustSearch.Multi:
+    //                 // TODO: 복수 고객 검색창 처리 필요
+    //                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 복수 검색 결과 - TODO 처리 필요");
+    //                 return RegistResult.ErrorResult($"{fieldName} 복수 검색됨 (TODO: 고객검색창 처리 필요)");
 
-//             case AutoAlloc_CustSearch.None:
-//                 // TODO: 신규 고객 등록창 처리 필요
-//                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 신규 고객 - TODO 처리 필요");
-//                 return RegistResult.ErrorResult($"{fieldName} 신규 고객 (TODO: 고객등록창 처리 필요)");
+    //             case AutoAlloc_CustSearch.None:
+    //                 // TODO: 신규 고객 등록창 처리 필요
+    //                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 신규 고객 - TODO 처리 필요");
+    //                 return RegistResult.ErrorResult($"{fieldName} 신규 고객 (TODO: 고객등록창 처리 필요)");
 
-//             case AutoAlloc_CustSearch.Null:
-//             default:
-//                 return RegistResult.ErrorResult($"{fieldName} 검색 타임아웃");
-//         }
-//     }
+    //             case AutoAlloc_CustSearch.Null:
+    //             default:
+    //                 return RegistResult.ErrorResult($"{fieldName} 검색 타임아웃");
+    //         }
+    //     }
 
     /// <summary>
     /// 공통 함수 #3: CheckBox 설정 및 검증
     /// TODO: OFR 기반 체크박스 찾기 및 클릭 구현 필요
     /// </summary>
-//     private async Task<RegistResult> SetAndVerifyCheckBoxAsync(
-//         IntPtr hWndParent,
-//         string checkBoxName,
-//         bool shouldCheck,
-//         string fieldName,
-//         CancelTokenControl ctrl)
-//     {
-//         // TODO: OFR로 체크박스 이미지 찾아서 상태 확인 후 클릭
-//         Debug.WriteLine($"[{m_Context.AppName}] TODO: SetAndVerifyCheckBoxAsync 구현 필요 - {fieldName}");
-//         return RegistResult.SuccessResult(); // 임시
-//     }
+    //     private async Task<RegistResult> SetAndVerifyCheckBoxAsync(
+    //         IntPtr hWndParent,
+    //         string checkBoxName,
+    //         bool shouldCheck,
+    //         string fieldName,
+    //         CancelTokenControl ctrl)
+    //     {
+    //         // TODO: OFR로 체크박스 이미지 찾아서 상태 확인 후 클릭
+    //         Debug.WriteLine($"[{m_Context.AppName}] TODO: SetAndVerifyCheckBoxAsync 구현 필요 - {fieldName}");
+    //         return RegistResult.SuccessResult(); // 임시
+    //     }
 
     /// <summary>
     /// 공통 함수 #4: RadioButton 설정 및 검증
     /// TODO: OFR 기반 라디오버튼 찾기 및 클릭 구현 필요
     /// </summary>
-//     private async Task<RegistResult> SetAndVerifyRadioButtonAsync(
-//         IntPtr hWndParent,
-//         string radioGroupName,
-//         string radioValue,
-//         string fieldName,
-//         CancelTokenControl ctrl)
-//     {
-//         // TODO: OFR로 라디오버튼 그룹 찾아서 원하는 값 클릭
-//         Debug.WriteLine($"[{m_Context.AppName}] TODO: SetAndVerifyRadioButtonAsync 구현 필요 - {fieldName}={radioValue}");
-//         return RegistResult.SuccessResult(); // 임시
-//     }
+    //     private async Task<RegistResult> SetAndVerifyRadioButtonAsync(
+    //         IntPtr hWndParent,
+    //         string radioGroupName,
+    //         string radioValue,
+    //         string fieldName,
+    //         CancelTokenControl ctrl)
+    //     {
+    //         // TODO: OFR로 라디오버튼 그룹 찾아서 원하는 값 클릭
+    //         Debug.WriteLine($"[{m_Context.AppName}] TODO: SetAndVerifyRadioButtonAsync 구현 필요 - {fieldName}={radioValue}");
+    //         return RegistResult.SuccessResult(); // 임시
+    //     }
 
     /// <summary>
     /// 공통 함수 #5: ComboBox 아이템 선택
     /// TODO: OFR 기반 콤보박스 열기 및 아이템 선택 구현 필요
     /// </summary>
-//     private async Task<RegistResult> SelectComboBoxItemAsync(
-//         IntPtr hWndParent,
-//         string comboBoxName,
-//         string itemValue,
-//         string fieldName,
-//         CancelTokenControl ctrl)
-//     {
-//         // TODO: OFR로 콤보박스 찾아서 열고 아이템 클릭
-//         Debug.WriteLine($"[{m_Context.AppName}] TODO: SelectComboBoxItemAsync 구현 필요 - {fieldName}={itemValue}");
-//         return RegistResult.SuccessResult(); // 임시
-//     }
+    //     private async Task<RegistResult> SelectComboBoxItemAsync(
+    //         IntPtr hWndParent,
+    //         string comboBoxName,
+    //         string itemValue,
+    //         string fieldName,
+    //         CancelTokenControl ctrl)
+    //     {
+    //         // TODO: OFR로 콤보박스 찾아서 열고 아이템 클릭
+    //         Debug.WriteLine($"[{m_Context.AppName}] TODO: SelectComboBoxItemAsync 구현 필요 - {fieldName}={itemValue}");
+    //         return RegistResult.SuccessResult(); // 임시
+    //     }
 
     /// <summary>
     /// 공통 함수 #6: 숫자 필드 입력 및 검증 (SetWindowText 시도 → 실패 시 키보드 폴백)
@@ -2587,75 +2622,75 @@ public class InsungsAct_RcptRegPage
     /// - 2차: 실패 시 키보드 시뮬레이션 (HOME + DELETE + 숫자 입력)
     /// - Enter 키로 인성 앱의 합계 재계산 트리거
     /// </summary>
-//     private async Task<RegistResult> WriteAndVerifyNumericAsync(
-//         IntPtr hWnd,
-//         int value,
-//         string fieldName,
-//         CancelTokenControl ctrl)
-//     {
-//         await ctrl.WaitIfPausedOrCancelledAsync();
+    //     private async Task<RegistResult> WriteAndVerifyNumericAsync(
+    //         IntPtr hWnd,
+    //         int value,
+    //         string fieldName,
+    //         CancelTokenControl ctrl)
+    //     {
+    //         await ctrl.WaitIfPausedOrCancelledAsync();
 
-//         string targetValue = value.ToString();
+    //         string targetValue = value.ToString();
 
-//         // ===== 1차 시도: SetWindowText 방식 =====
-//         int nResult = Std32Window.SetWindowCaption(hWnd, targetValue);
-//         if (nResult != 1) nResult = Std32Window.SetWindowText(hWnd, targetValue);
-//         await Task.Delay(100);
+    //         // ===== 1차 시도: SetWindowText 방식 =====
+    //         int nResult = Std32Window.SetWindowCaption(hWnd, targetValue);
+    //         if (nResult != 1) nResult = Std32Window.SetWindowText(hWnd, targetValue);
+    //         await Task.Delay(100);
 
-//         // 검증
-//         string readValue = Std32Window.GetWindowCaption(hWnd);
+    //         // 검증
+    //         string readValue = Std32Window.GetWindowCaption(hWnd);
 
-//         if (readValue != targetValue)
-//         {
-//             // ===== 2차 시도: 키보드 시뮬레이션 방식 (HOME + DELETE + 키 입력) =====
-//             Debug.WriteLine($"[{m_Context.AppName}] {fieldName}: SetWindowText 실패 → 키보드 방식으로 재시도");
+    //         if (readValue != targetValue)
+    //         {
+    //             // ===== 2차 시도: 키보드 시뮬레이션 방식 (HOME + DELETE + 키 입력) =====
+    //             Debug.WriteLine($"[{m_Context.AppName}] {fieldName}: SetWindowText 실패 → 키보드 방식으로 재시도");
 
-//             // HOME 키로 커서를 처음으로 (hWnd에 직접 전송, SetFocus 불필요)
-//             Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_HOME);
-//             await Task.Delay(30);
+    //             // HOME 키로 커서를 처음으로 (hWnd에 직접 전송, SetFocus 불필요)
+    //             Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_HOME);
+    //             await Task.Delay(30);
 
-//             // DELETE 50번 (기존값 전체 삭제)
-//             for (int i = 0; i < 50; i++)
-//                 Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_DELETE);
-//             await Task.Delay(50);
+    //             // DELETE 50번 (기존값 전체 삭제)
+    //             for (int i = 0; i < 50; i++)
+    //                 Std32Key_Msg.KeyPost_Down(hWnd, StdCommon32.VK_DELETE);
+    //             await Task.Delay(50);
 
-//             // 숫자 한 글자씩 입력
-//             foreach (char ch in targetValue)
-//             {
-//                 if (char.IsDigit(ch))
-//                 {
-//                     // VkKeyScan으로 문자를 VK 코드로 변환
-//                     short vkCode = StdWin32.VkKeyScan(ch);
-//                     uint vk = (uint)(vkCode & 0xFF);
+    //             // 숫자 한 글자씩 입력
+    //             foreach (char ch in targetValue)
+    //             {
+    //                 if (char.IsDigit(ch))
+    //                 {
+    //                     // VkKeyScan으로 문자를 VK 코드로 변환
+    //                     short vkCode = StdWin32.VkKeyScan(ch);
+    //                     uint vk = (uint)(vkCode & 0xFF);
 
-//                     Std32Key_Msg.KeyPost_Down(hWnd, vk);
-//                     await Task.Delay(30);
-//                 }
-//             }
-//             await Task.Delay(50);
-//         }
-//         else
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] {fieldName}: SetWindowText 성공");
-//         }
+    //                     Std32Key_Msg.KeyPost_Down(hWnd, vk);
+    //                     await Task.Delay(30);
+    //                 }
+    //             }
+    //             await Task.Delay(50);
+    //         }
+    //         else
+    //         {
+    //             Debug.WriteLine($"[{m_Context.AppName}] {fieldName}: SetWindowText 성공");
+    //         }
 
-//         // ===== Enter 키로 합계 재계산 트리거 =====
-//         await Std32Key_Msg.KeyPostAsync_MouseClickNDown(hWnd, StdCommon32.VK_RETURN);
-//         await Task.Delay(100);
+    //         // ===== Enter 키로 합계 재계산 트리거 =====
+    //         await Std32Key_Msg.KeyPostAsync_MouseClickNDown(hWnd, StdCommon32.VK_RETURN);
+    //         await Task.Delay(100);
 
-//         // ===== 최종 검증 (원화 포맷 변환) =====
-//         readValue = Std32Window.GetWindowCaption(hWnd);
-//         int readNumeric = StdConvert.StringWonFormatToInt(readValue);
+    //         // ===== 최종 검증 (원화 포맷 변환) =====
+    //         readValue = Std32Window.GetWindowCaption(hWnd);
+    //         int readNumeric = StdConvert.StringWonFormatToInt(readValue);
 
-//         if (readNumeric != value)
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 입력 실패: 기대값={value}, 실제값={readNumeric}");
-//             return RegistResult.ErrorResult($"{fieldName} 입력 실패 (기대: {value}, 실제: {readNumeric})");
-//         }
+    //         if (readNumeric != value)
+    //         {
+    //             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 입력 실패: 기대값={value}, 실제값={readNumeric}");
+    //             return RegistResult.ErrorResult($"{fieldName} 입력 실패 (기대: {value}, 실제: {readNumeric})");
+    //         }
 
-//         Debug.WriteLine($"[{m_Context.AppName}]   {fieldName}: {value} → {readNumeric} (검증 성공)");
-//         return RegistResult.SuccessResult();
-//     }
+    //         Debug.WriteLine($"[{m_Context.AppName}]   {fieldName}: {value} → {readNumeric} (검증 성공)");
+    //         return RegistResult.SuccessResult();
+    //     }
 
     #endregion
 
@@ -2664,292 +2699,292 @@ public class InsungsAct_RcptRegPage
     /// - 의뢰자, 출발지, 도착지 정보 입력
     /// - 저장 버튼 클릭
     /// </summary>
-    //public async Task<RegistResult> RegistOrderToPopupAsync(
-    //    AutoAlloc item,
-    //    IntPtr hWndPopup,
-    //    CancelTokenControl ctrl)
+    //public async Task<RegistResult> RegistOrderToPopupAsync(AutoAlloc item, IntPtr hWndPopup, CancelTokenControl ctrl)   
     //{
     //    try
     //    {
     //        TbOrder order = item.NewOrder;
 
     //        Debug.WriteLine($"[{m_Context.AppName}] ===== 신규 주문 입력 시작 =====");
-    //        Debug.WriteLine($"[{m_Context.AppName}]   주문번호: {order.KeyCode}");
-    //        Debug.WriteLine($"[{m_Context.AppName}]   의뢰자: {order.CallCustName}/{order.CallChargeName}");
-    //        Debug.WriteLine($"[{m_Context.AppName}]   출발지: {order.StartCustName} ({order.StartDongBasic})");
-    //        Debug.WriteLine($"[{m_Context.AppName}]   도착지: {order.DestCustName}");
+    //        //Debug.WriteLine($"[{m_Context.AppName}]   주문번호: {order.KeyCode}");
+    //        //Debug.WriteLine($"[{m_Context.AppName}]   의뢰자: {order.CallCustName}/{order.CallChargeName}");
+    //        //Debug.WriteLine($"[{m_Context.AppName}]   출발지: {order.StartCustName} ({order.StartDongBasic})");
+    //        //Debug.WriteLine($"[{m_Context.AppName}]   도착지: {order.DestCustName}");
 
     //        // RcptWnd_New 클래스로 팝업창 핸들 초기화
     //        var wndRcpt = new InsungsInfo_Mem.RcptWnd_New(hWndPopup, m_Context.FileInfo);
 
-    //        // ===== 1. 의뢰자 정보 입력 =====
-    //        Debug.WriteLine($"[{m_Context.AppName}] 1. 의뢰자 정보 입력...");
-    //        var result = await SearchAndSelectCustomerAsync(
-    //            wndRcpt.의뢰자_hWnd고객명,
-    //            wndRcpt.의뢰자_hWnd동명,
-    //            order.CallCustName,
-    //            order.CallChargeName,
-    //            "의뢰자",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        #region ===== 1. 의뢰자 정보 입력 =====
+    //        //Debug.WriteLine($"[{m_Context.AppName}] 1. 의뢰자 정보 입력...");
+    //        //var result = await SearchAndSelectCustomerAsync(
+    //        //    wndRcpt.의뢰자_hWnd고객명,
+    //        //    wndRcpt.의뢰자_hWnd동명,
+    //        //    order.CallCustName,
+    //        //    order.CallChargeName,
+    //        //    "의뢰자",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 의뢰자 전화1
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.의뢰자_hWnd전화1,
-    //            order.CallTelNo ?? "",
-    //            "의뢰자_전화1",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 의뢰자 전화1
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.의뢰자_hWnd전화1,
+    //        //    order.CallTelNo ?? "",
+    //        //    "의뢰자_전화1",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 의뢰자 전화2
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.의뢰자_hWnd전화2,
-    //            order.CallTelNo2 ?? "",
-    //            "의뢰자_전화2",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 의뢰자 전화2
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.의뢰자_hWnd전화2,
+    //        //    order.CallTelNo2 ?? "",
+    //        //    "의뢰자_전화2",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 의뢰자 부서
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.의뢰자_hWnd부서,
-    //            order.CallDeptName ?? "",
-    //            "의뢰자_부서",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 의뢰자 부서
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.의뢰자_hWnd부서,
+    //        //    order.CallDeptName ?? "",
+    //        //    "의뢰자_부서",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 의뢰자 담당
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.의뢰자_hWnd담당,
-    //            order.CallChargeName ?? "",
-    //            "의뢰자_담당",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 의뢰자 담당
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.의뢰자_hWnd담당,
+    //        //    order.CallChargeName ?? "",
+    //        //    "의뢰자_담당",
+    //        //    ctrl);
+    //        //if (!result.Success) return result; 
+    //        #endregion
 
-    //        // ===== 2. 출발지 정보 입력 =====
-    //        Debug.WriteLine($"[{m_Context.AppName}] 2. 출발지 정보 입력...");
+    //        #region ===== 2. 출발지 정보 입력 =====
+    //        //Debug.WriteLine($"[{m_Context.AppName}] 2. 출발지 정보 입력...");
 
-    //        // 출발지 = 의뢰자인 경우 vs 다른 경우 분기
-    //        if (order.StartCustCodeK == order.CallCustCodeK)
-    //        {
-    //            // 출발지 = 의뢰자: Enter만 치고 동명 확인
-    //            Debug.WriteLine($"[{m_Context.AppName}]   출발지 = 의뢰자: Enter로 자동 입력");
-    //            Std32Key_Msg.KeyPost_Down(wndRcpt.출발지_hWnd고객명, StdCommon32.VK_RETURN);
-    //            await Task.Delay(100);
+    //        //// 출발지 = 의뢰자인 경우 vs 다른 경우 분기
+    //        //if (order.StartCustCodeK == order.CallCustCodeK)
+    //        //{
+    //        //    // 출발지 = 의뢰자: Enter만 치고 동명 확인
+    //        //    Debug.WriteLine($"[{m_Context.AppName}]   출발지 = 의뢰자: Enter로 자동 입력");
+    //        //    Std32Key_Msg.KeyPost_Down(wndRcpt.출발지_hWnd고객명, StdCommon32.VK_RETURN);
+    //        //    await Task.Delay(100);
 
-    //            string 동명 = Std32Window.GetWindowCaption(wndRcpt.출발지_hWnd동명);
-    //            if (string.IsNullOrEmpty(동명))
-    //            {
-    //                Debug.WriteLine($"[{m_Context.AppName}] 출발지 동명 확인 실패");
-    //                return RegistResult.ErrorResult("출발지 동명 확인 실패");
-    //            }
-    //        }
-    //        else
-    //        {
-    //            // 출발지 ≠ 의뢰자: 고객 검색
-    //            Debug.WriteLine($"[{m_Context.AppName}]   출발지 ≠ 의뢰자: 고객 검색");
-    //            result = await SearchAndSelectCustomerAsync(
-    //                wndRcpt.출발지_hWnd고객명,
-    //                wndRcpt.출발지_hWnd동명,
-    //                order.StartCustName,
-    //                order.StartChargeName,
-    //                "출발지",
-    //                ctrl);
-    //            if (!result.Success) return result;
-    //        }
+    //        //    string 동명 = Std32Window.GetWindowCaption(wndRcpt.출발지_hWnd동명);
+    //        //    if (string.IsNullOrEmpty(동명))
+    //        //    {
+    //        //        Debug.WriteLine($"[{m_Context.AppName}] 출발지 동명 확인 실패");
+    //        //        return RegistResult.ErrorResult("출발지 동명 확인 실패");
+    //        //    }
+    //        //}
+    //        //else
+    //        //{
+    //        //    // 출발지 ≠ 의뢰자: 고객 검색
+    //        //    Debug.WriteLine($"[{m_Context.AppName}]   출발지 ≠ 의뢰자: 고객 검색");
+    //        //    result = await SearchAndSelectCustomerAsync(
+    //        //        wndRcpt.출발지_hWnd고객명,
+    //        //        wndRcpt.출발지_hWnd동명,
+    //        //        order.StartCustName,
+    //        //        order.StartChargeName,
+    //        //        "출발지",
+    //        //        ctrl);
+    //        //    if (!result.Success) return result;
+    //        //}
 
-    //        // 출발지 동명
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.출발지_hWnd동명,
-    //            order.StartDongBasic ?? "",
-    //            "출발지_동명",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 출발지 동명
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.출발지_hWnd동명,
+    //        //    order.StartDongBasic ?? "",
+    //        //    "출발지_동명",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 출발지 전화1
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.출발지_hWnd전화1,
-    //            order.StartTelNo ?? "",
-    //            "출발지_전화1",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 출발지 전화1
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.출발지_hWnd전화1,
+    //        //    order.StartTelNo ?? "",
+    //        //    "출발지_전화1",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 출발지 전화2
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.출발지_hWnd전화2,
-    //            order.StartTelNo2 ?? "",
-    //            "출발지_전화2",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 출발지 전화2
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.출발지_hWnd전화2,
+    //        //    order.StartTelNo2 ?? "",
+    //        //    "출발지_전화2",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 출발지 부서
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.출발지_hWnd부서,
-    //            order.StartDeptName ?? "",
-    //            "출발지_부서",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 출발지 부서
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.출발지_hWnd부서,
+    //        //    order.StartDeptName ?? "",
+    //        //    "출발지_부서",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 출발지 담당
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.출발지_hWnd담당,
-    //            order.StartChargeName ?? "",
-    //            "출발지_담당",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 출발지 담당
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.출발지_hWnd담당,
+    //        //    order.StartChargeName ?? "",
+    //        //    "출발지_담당",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 출발지 위치
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.출발지_hWnd위치,
-    //            order.StartDetailAddr ?? "",
-    //            "출발지_위치",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 출발지 위치
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.출발지_hWnd위치,
+    //        //    order.StartDetailAddr ?? "",
+    //        //    "출발지_위치",
+    //        //    ctrl);
+    //        //if (!result.Success) return result; 
+    //        #endregion
 
-    //        // ===== 3. 도착지 정보 입력 =====
-    //        Debug.WriteLine($"[{m_Context.AppName}] 3. 도착지 정보 입력...");
+    //        #region ===== 3. 도착지 정보 입력 =====
+    //        //Debug.WriteLine($"[{m_Context.AppName}] 3. 도착지 정보 입력...");
 
-    //        // 도착지 = 의뢰자인 경우 vs 다른 경우 분기
-    //        if (order.DestCustCodeK == order.CallCustCodeK)
-    //        {
-    //            // 도착지 = 의뢰자: Enter만 치고 동명 확인
-    //            Debug.WriteLine($"[{m_Context.AppName}]   도착지 = 의뢰자: Enter로 자동 입력");
-    //            Std32Key_Msg.KeyPost_Down(wndRcpt.도착지_hWnd고객명, StdCommon32.VK_RETURN);
-    //            await Task.Delay(100);
+    //        //// 도착지 = 의뢰자인 경우 vs 다른 경우 분기
+    //        //if (order.DestCustCodeK == order.CallCustCodeK)
+    //        //{
+    //        //    // 도착지 = 의뢰자: Enter만 치고 동명 확인
+    //        //    Debug.WriteLine($"[{m_Context.AppName}]   도착지 = 의뢰자: Enter로 자동 입력");
+    //        //    Std32Key_Msg.KeyPost_Down(wndRcpt.도착지_hWnd고객명, StdCommon32.VK_RETURN);
+    //        //    await Task.Delay(100);
 
-    //            string 동명 = Std32Window.GetWindowCaption(wndRcpt.도착지_hWnd동명);
-    //            if (string.IsNullOrEmpty(동명))
-    //            {
-    //                Debug.WriteLine($"[{m_Context.AppName}] 도착지 동명 확인 실패");
-    //                return RegistResult.ErrorResult("도착지 동명 확인 실패");
-    //            }
-    //        }
-    //        else
-    //        {
-    //            // 도착지 ≠ 의뢰자: 고객 검색
-    //            Debug.WriteLine($"[{m_Context.AppName}]   도착지 ≠ 의뢰자: 고객 검색");
-    //            result = await SearchAndSelectCustomerAsync(
-    //                wndRcpt.도착지_hWnd고객명,
-    //                wndRcpt.도착지_hWnd동명,
-    //                order.DestCustName,
-    //                order.DestChargeName,
-    //                "도착지",
-    //                ctrl);
-    //            if (!result.Success) return result;
-    //        }
+    //        //    string 동명 = Std32Window.GetWindowCaption(wndRcpt.도착지_hWnd동명);
+    //        //    if (string.IsNullOrEmpty(동명))
+    //        //    {
+    //        //        Debug.WriteLine($"[{m_Context.AppName}] 도착지 동명 확인 실패");
+    //        //        return RegistResult.ErrorResult("도착지 동명 확인 실패");
+    //        //    }
+    //        //}
+    //        //else
+    //        //{
+    //        //    // 도착지 ≠ 의뢰자: 고객 검색
+    //        //    Debug.WriteLine($"[{m_Context.AppName}]   도착지 ≠ 의뢰자: 고객 검색");
+    //        //    result = await SearchAndSelectCustomerAsync(
+    //        //        wndRcpt.도착지_hWnd고객명,
+    //        //        wndRcpt.도착지_hWnd동명,
+    //        //        order.DestCustName,
+    //        //        order.DestChargeName,
+    //        //        "도착지",
+    //        //        ctrl);
+    //        //    if (!result.Success) return result;
+    //        //}
 
-    //        // 도착지 동명
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.도착지_hWnd동명,
-    //            order.DestDongBasic ?? "",
-    //            "도착지_동명",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 도착지 동명
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.도착지_hWnd동명,
+    //        //    order.DestDongBasic ?? "",
+    //        //    "도착지_동명",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 도착지 전화1
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.도착지_hWnd전화1,
-    //            order.DestTelNo ?? "",
-    //            "도착지_전화1",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 도착지 전화1
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.도착지_hWnd전화1,
+    //        //    order.DestTelNo ?? "",
+    //        //    "도착지_전화1",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 도착지 전화2
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.도착지_hWnd전화2,
-    //            order.DestTelNo2 ?? "",
-    //            "도착지_전화2",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 도착지 전화2
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.도착지_hWnd전화2,
+    //        //    order.DestTelNo2 ?? "",
+    //        //    "도착지_전화2",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 도착지 부서
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.도착지_hWnd부서,
-    //            order.DestDeptName ?? "",
-    //            "도착지_부서",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 도착지 부서
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.도착지_hWnd부서,
+    //        //    order.DestDeptName ?? "",
+    //        //    "도착지_부서",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 도착지 담당
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.도착지_hWnd담당,
-    //            order.DestChargeName ?? "",
-    //            "도착지_담당",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 도착지 담당
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.도착지_hWnd담당,
+    //        //    order.DestChargeName ?? "",
+    //        //    "도착지_담당",
+    //        //    ctrl);
+    //        //if (!result.Success) return result;
 
-    //        // 도착지 위치
-    //        result = await WriteAndVerifyEditBoxAsync(
-    //            wndRcpt.도착지_hWnd위치,
-    //            order.DestDetailAddr ?? "",
-    //            "도착지_위치",
-    //            ctrl);
-    //        if (!result.Success) return result;
+    //        //// 도착지 위치
+    //        //result = await WriteAndVerifyEditBoxAsync(
+    //        //    wndRcpt.도착지_hWnd위치,
+    //        //    order.DestDetailAddr ?? "",
+    //        //    "도착지_위치",
+    //        //    ctrl);
+    //        //if (!result.Success) return result; 
+    //        #endregion
 
-    //        // ===== 4. 기타 정보 입력 =====
-    //        Debug.WriteLine($"[{m_Context.AppName}] 4. 기타 정보 입력...");
+    //        //// ===== 4. 기타 정보 입력 =====
+    //        //Debug.WriteLine($"[{m_Context.AppName}] 4. 기타 정보 입력...");
 
-    //        // 4-1. 적요 (OrderRemarks) - 백업 코드 방식 (단순 WriteEditBox)
-    //        string sTmp적요 = Std32Window.GetWindowCaption(wndRcpt.우측상단_hWnd적요);
-    //        if ((order.OrderRemarks ?? "") != sTmp적요)
-    //        {
-    //            for (int i = 0; i < 3; i++)
-    //            {
-    //                await OfrWork_Common.WriteEditBox_ToHndleAsync(wndRcpt.우측상단_hWnd적요, order.OrderRemarks ?? "");
-    //                sTmp적요 = Std32Window.GetWindowCaption(wndRcpt.우측상단_hWnd적요);
-    //                if ((order.OrderRemarks ?? "") == sTmp적요) break;
+    //        //// 4-1. 적요 (OrderRemarks) - 백업 코드 방식 (단순 WriteEditBox)
+    //        //string sTmp적요 = Std32Window.GetWindowCaption(wndRcpt.우측상단_hWnd적요);
+    //        //if ((order.OrderRemarks ?? "") != sTmp적요)
+    //        //{
+    //        //    for (int i = 0; i < 3; i++)
+    //        //    {
+    //        //        await OfrWork_Common.WriteEditBox_ToHndleAsync(wndRcpt.우측상단_hWnd적요, order.OrderRemarks ?? "");
+    //        //        sTmp적요 = Std32Window.GetWindowCaption(wndRcpt.우측상단_hWnd적요);
+    //        //        if ((order.OrderRemarks ?? "") == sTmp적요) break;
 
-    //                await Task.Delay(200);
-    //            }
+    //        //        await Task.Delay(200);
+    //        //    }
 
-    //            if ((order.OrderRemarks ?? "") != sTmp적요)
-    //            {
-    //                Debug.WriteLine($"[{m_Context.AppName}] 적요 입력 실패: 기대=\"{order.OrderRemarks}\", 실제=\"{sTmp적요}\"");
-    //                return RegistResult.ErrorResult($"적요 입력 실패");
-    //            }
-    //        }
-    //        Debug.WriteLine($"[{m_Context.AppName}]   적요: \"{order.OrderRemarks}\"");
+    //        //    if ((order.OrderRemarks ?? "") != sTmp적요)
+    //        //    {
+    //        //        Debug.WriteLine($"[{m_Context.AppName}] 적요 입력 실패: 기대=\"{order.OrderRemarks}\", 실제=\"{sTmp적요}\"");
+    //        //        return RegistResult.ErrorResult($"적요 입력 실패");
+    //        //    }
+    //        //}
+    //        //Debug.WriteLine($"[{m_Context.AppName}]   적요: \"{order.OrderRemarks}\"");
 
-    //        // 4-2. 공유 (Share) - CheckBox
-    //        Debug.WriteLine($"[{m_Context.AppName}] 4-2. 공유 CheckBox 처리...");
+    //        //// 4-2. 공유 (Share) - CheckBox
+    //        //Debug.WriteLine($"[{m_Context.AppName}] 4-2. 공유 CheckBox 처리...");
 
-    //        // Capture window
-    //        Draw.Bitmap bmpWnd = OfrService.CaptureScreenRect_InWndHandle(wndRcpt.TopWnd_hWnd, 0);
+    //        //// Capture window
+    //        //Draw.Bitmap bmpWnd = OfrService.CaptureScreenRect_InWndHandle(wndRcpt.TopWnd_hWnd, 0);
 
-    //        // Read current state
-    //        StdResult_NulBool resultShare = await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(
-    //            bmpWnd, m_FileInfo.접수등록Wnd_우측상단_rcChkRel공유);
+    //        //// Read current state
+    //        //StdResult_NulBool resultShare = await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(
+    //        //    bmpWnd, m_FileInfo.접수등록Wnd_우측상단_rcChkRel공유);
 
-    //        if (resultShare.bResult == null)
-    //        {
-    //            bmpWnd.Dispose();
-    //            return RegistResult.ErrorResult("공유 CheckBox 인식 실패");
-    //        }
+    //        //if (resultShare.bResult == null)
+    //        //{
+    //        //    bmpWnd.Dispose();
+    //        //    return RegistResult.ErrorResult("공유 CheckBox 인식 실패");
+    //        //}
 
-    //        bool currentShare = StdConvert.NullableBoolToBool(resultShare.bResult);
+    //        //bool currentShare = StdConvert.NullableBoolToBool(resultShare.bResult);
 
-    //        // Change state if needed
-    //        if (order.Share != currentShare)
-    //        {
-    //            for (int i = 0; i < 3; i++)
-    //            {
-    //                StdResult_Error resultError = await OfrWork_Common.SetCheckBox_StatusAsync(
-    //                    wndRcpt.TopWnd_hWnd,
-    //                    m_FileInfo.접수등록Wnd_우측상단_rcChkRel공유,
-    //                    order.Share,
-    //                    "공유");
+    //        //// Change state if needed
+    //        //if (order.Share != currentShare)
+    //        //{
+    //        //    for (int i = 0; i < 3; i++)
+    //        //    {
+    //        //        StdResult_Error resultError = await OfrWork_Common.SetCheckBox_StatusAsync(
+    //        //            wndRcpt.TopWnd_hWnd,
+    //        //            m_FileInfo.접수등록Wnd_우측상단_rcChkRel공유,
+    //        //            order.Share,
+    //        //            "공유");
 
-    //                if (resultError == null) break;
-    //                if (i == 2)
-    //                {
-    //                    bmpWnd.Dispose();
-    //                    return RegistResult.ErrorResult($"공유 CheckBox 변경 실패");
-    //                }
-    //                await Task.Delay(200);
-    //            }
-    //        }
+    //        //        if (resultError == null) break;
+    //        //        if (i == 2)
+    //        //        {
+    //        //            bmpWnd.Dispose();
+    //        //            return RegistResult.ErrorResult($"공유 CheckBox 변경 실패");
+    //        //        }
+    //        //        await Task.Delay(200);
+    //        //    }
+    //        //}
 
-    //        bmpWnd.Dispose();
-    //        Debug.WriteLine($"[{m_Context.AppName}]   공유: {order.Share}");
+    //        //bmpWnd.Dispose();
+    //        //Debug.WriteLine($"[{m_Context.AppName}]   공유: {order.Share}");
 
     //        //// 4-3. 요금종류 (FeeType) - RadioButton OFR은 나중에 구현 - 필수!
     //        //Debug.WriteLine($"[{m_Context.AppName}]   요금종류: {order.FeeType} (TODO: OFR RadioButton)");
@@ -3010,16 +3045,18 @@ public class InsungsAct_RcptRegPage
     //        //if (!result.Success) return result;
     //        //Debug.WriteLine($"[{m_Context.AppName}]   오더메모: {orderMemo}");
 
-    //        // ===== 5. 입력 완료 - 메시지박스로 확인 =====
-    //        Debug.WriteLine($"[{m_Context.AppName}] ===== 모든 입력 완료 =====");
-    //        Debug.WriteLine($"[{m_Context.AppName}] 저장 버튼을 클릭하지 않고 대기합니다.");
-    //        Debug.WriteLine($"[{m_Context.AppName}] 사용자가 수동으로 확인 후 닫기 버튼으로 처리합니다.");
+    //        //// ===== 5. 입력 완료 - 메시지박스로 확인 =====
+    //        //Debug.WriteLine($"[{m_Context.AppName}] ===== 모든 입력 완료 =====");
+    //        //Debug.WriteLine($"[{m_Context.AppName}] 저장 버튼을 클릭하지 않고 대기합니다.");
+    //        //Debug.WriteLine($"[{m_Context.AppName}] 사용자가 수동으로 확인 후 닫기 버튼으로 처리합니다.");
 
-    //        // ===== 메시지박스 직전 적요 재검증 (지워지는지 확인) =====
-    //        string 적요메시지박스직전 = Std32Window.GetWindowCaption(wndRcpt.우측상단_hWnd적요);
-    //        Debug.WriteLine($"[{m_Context.AppName}] ★★★ 적요 메시지박스 직전: \"{적요메시지박스직전}\"");
+    //        //// ===== 메시지박스 직전 적요 재검증 (지워지는지 확인) =====
+    //        //string 적요메시지박스직전 = Std32Window.GetWindowCaption(wndRcpt.우측상단_hWnd적요);
+    //        //Debug.WriteLine($"[{m_Context.AppName}] ★★★ 적요 메시지박스 직전: \"{적요메시지박스직전}\"");
 
     //        // 메시지박스로 입력 완료 알림
+    //        await Task.Delay(30000);
+
     //        System.Windows.MessageBox.Show(
     //            $"모든 필드 입력이 완료되었습니다.\n\n" +
     //            $"주문번호: {order.KeyCode}\n" +
@@ -3047,9 +3084,7 @@ public class InsungsAct_RcptRegPage
     /// - 팝업창 열기
     /// - 주문 정보 입력
     /// </summary>
-    //public async Task<RegistResult> CheckIsOrderAsync_AssumeKaiNewOrder(
-    //    AutoAlloc item,
-    //    CancelTokenControl ctrl)
+    //public async Task<RegistResult> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAlloc item, CancelTokenControl ctrl)
     //{
     //    try
     //    {
@@ -3058,8 +3093,7 @@ public class InsungsAct_RcptRegPage
     //        // 주문 상태 검증
     //        if (orderState != "접수" && orderState != "취소" && orderState != "대기")
     //        {
-    //            return RegistResult.ErrorResult(
-    //                $"처리할 수 없는 주문 상태: {orderState} (접수/취소/대기만 가능)");
+    //            return RegistResult.ErrorResult($"처리할 수 없는 주문 상태: {orderState} (접수/취소/대기만 가능)");
     //        }
 
     //        Debug.WriteLine($"[{m_Context.AppName}] 신규 주문 처리 시작: KeyCode={item.KeyCode}, " +
@@ -3069,13 +3103,11 @@ public class InsungsAct_RcptRegPage
     //        PopupResult popupResult = await OpenNewOrderPopupAsync(ctrl);
     //        if (!popupResult.Success)
     //        {
-    //            return RegistResult.ErrorResult(
-    //                $"팝업창 열기 실패: {popupResult.ErrorMessage}");
+    //            return RegistResult.ErrorResult($"팝업창 열기 실패: {popupResult.ErrorMessage}");
     //        }
 
     //        // 2. 주문 정보 입력
-    //        RegistResult registResult = await RegistOrderToPopupAsync(
-    //            item, popupResult.hWndPopup, ctrl);
+    //        RegistResult registResult = await RegistOrderToPopupAsync(item, popupResult.hWndPopup, ctrl);
 
     //        if (!registResult.Success)
     //        {

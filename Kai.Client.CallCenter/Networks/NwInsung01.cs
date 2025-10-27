@@ -6,6 +6,7 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
+using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
@@ -240,119 +241,128 @@ public class NwInsung01 : IExternalApp
             }
             Debug.WriteLine($"[{APP_NAME}] ==========================================");
 
-            //// ===== 상세 로깅: listEtcGroup 내용 출력 =====
-            //Debug.WriteLine($"[{APP_NAME}] ===== listEtcGroup (기존주문관리용) 상세 정보 =====");
-            //Debug.WriteLine($"[{APP_NAME}] listEtcGroup 개수: {listEtcGroup.Count}");
-            //for (int i = 0; i < listEtcGroup.Count; i++)
-            //{
-            //    var item = listEtcGroup[i];
-            //    Debug.WriteLine($"[{APP_NAME}]   [{i}] KeyCode={item.KeyCode}, " +
-            //                  $"StateFlag={item.StateFlag}, " +
-            //                  $"SeqNo={item.NewOrder.Insung1 ?? "(없음)"}, " +
-            //                  $"CarType={item.NewOrder.CarType}");
-            //}
-            //Debug.WriteLine($"[{APP_NAME}] ==========================================");
+            // ===== 상세 로깅: listEtcGroup 내용 출력 =====
+            Debug.WriteLine($"[{APP_NAME}] ===== listEtcGroup (기존주문관리용) 상세 정보 =====");
+            Debug.WriteLine($"[{APP_NAME}] listEtcGroup 개수: {listEtcGroup.Count}");
+            for (int i = 0; i < listEtcGroup.Count; i++)
+            {
+                var item = listEtcGroup[i];
+                Debug.WriteLine($"[{APP_NAME}]   [{i}] KeyCode={item.KeyCode}, " +
+                              $"StateFlag={item.StateFlag}, " +
+                              $"SeqNo={item.NewOrder.Insung1 ?? "(없음)"}, " +
+                              $"CarType={item.NewOrder.CarType}");
+            }
+            Debug.WriteLine($"[{APP_NAME}] ==========================================");
 
-            //// 할일 갯수 체크
-            //int tot = listCreated.Count + listEtcGroup.Count;
+            // 할일 갯수 체크
+            int tot = listCreated.Count + listEtcGroup.Count;
 
-            //if (tot == 0)
-            //{
-            //    m_lRestCount += 1;
-            //    if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
-            //    {
-            //        // TODO: Helper 함수 구현 필요 (세션 3에서 설계됨)
-            //        // await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
-            //        await Task.Delay(c_nWaitLong, ctrl.Token);
-            //    }
+            if (tot == 0)
+            {
+                m_lRestCount += 1;
+                if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
+                {
+                    // TODO: Helper 함수 구현 필요 (세션 3에서 설계됨)
+                    // await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
+                    await Task.Delay(c_nWaitLong, ctrl.Token);
+                }
 
-            //    Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 없음: lAllocCount={lAllocCount}");
-            //    return new StdResult_Status(StdResult.Success); // 할일 없으면 돌아간다
-            //}
-            //else
-            //{
-            //    m_lRestCount = 0;
-            //    Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 있음: lAllocCount={lAllocCount}, tot={tot}, listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
-            //}
+                Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 없음: lAllocCount={lAllocCount}");
+                return new StdResult_Status(StdResult.Success); // 할일 없으면 돌아간다
+            }
+            else
+            {
+                m_lRestCount = 0;
+                Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 있음: lAllocCount={lAllocCount}, tot={tot}, listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
+            }
             #endregion
 
             #region 3. Check Datagrid
-            //// Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
-            //bool bDatagridExists = false;
-            //for (int i = 0; i < c_nRepeatShort; i++)
-            //{
-            //    await ctrl.WaitIfPausedOrCancelledAsync();
+            // Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
+            bool bDatagridExists = false;
+            for (int i = 0; i < c_nRepeatShort; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
 
-            //    // Datagrid 핸들이 유효하고 윈도우가 존재하는지 확인
-            //    if (m_Context.MemInfo.RcptPage.DG오더_hWnd != IntPtr.Zero &&
-            //        Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
-            //    {
-            //        bDatagridExists = true;
-            //        Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
-            //        break;
-            //    }
+                // Datagrid 핸들이 유효하고 윈도우가 존재하는지 확인
+                if (m_Context.MemInfo.RcptPage.DG오더_hWnd != IntPtr.Zero &&
+                    Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
+                {
+                    bDatagridExists = true;
+                    Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
+                    break;
+                }
 
-            //    // 마지막 시도가 아닐 때만 대기 (불필요한 지연 방지)
-            //    if (i < c_nRepeatShort - 1)
-            //    {
-            //        await Task.Delay(c_nWaitNormal, ctrl.Token);
-            //    }
-            //}
+                // 마지막 시도가 아닐 때만 대기 (불필요한 지연 방지)
+                if (i < c_nRepeatShort - 1)
+                {
+                    await Task.Delay(c_nWaitNormal, ctrl.Token);
+                }
+            }
 
-            //if (!bDatagridExists)
-            //{
-            //    Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우를 찾을 수 없음");
-            //    return new StdResult_Status(StdResult.Fail, "Datagrid 윈도우를 찾을 수 없습니다.", "NwInsung01/AutoAllocAsync_03");
-            //}
+            if (!bDatagridExists)
+            {
+                Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우를 찾을 수 없음");
+                return new StdResult_Status(StdResult.Fail, "Datagrid 윈도우를 찾을 수 없습니다.", "NwInsung01/AutoAllocAsync_03");
+            }
             #endregion
 
             #region 4. Created Order 처리 (신규)
-            //if (listCreated.Count > 0)
-            //{
-            //    Debug.WriteLine($"[{APP_NAME}] Region 4: 신규 주문 처리 시작 (총 {listCreated.Count}건)");
+            if (listCreated.Count > 0)
+            {
+                Debug.WriteLine($"[{APP_NAME}] Region 4: 신규 주문 처리 시작 (총 {listCreated.Count}건)");
 
-            //    // 역순으로 처리 (삭제를 위해)
-            //    for (int i = listCreated.Count; i > 0; i--)
-            //    {
-            //        await ctrl.WaitIfPausedOrCancelledAsync();
+                // 역순으로 처리 (삭제를 위해)
+                for (int i = listCreated.Count; i > 0; i--)
+                {
+                    await ctrl.WaitIfPausedOrCancelledAsync();
 
-            //        int index = i - 1;
-            //        if (index < 0) break;
+                    int index = i - 1;
+                    if (index < 0) break;
 
-            //        AutoAlloc item = listCreated[index];
-            //        Debug.WriteLine($"[{APP_NAME}]   [{i}/{listCreated.Count}] 신규 주문 처리: " +
-            //                      $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
+                    AutoAlloc item = listCreated[index];
+                    Debug.WriteLine($"[{APP_NAME}]   [{i}/{listCreated.Count}] 신규 주문 처리: " +
+                                  $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
 
-            //        // 신규 주문 등록 시도
-            //        InsungsAct_RcptRegPage.RegistResult registResult = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
+                    // 신규 주문 등록 시도
+                    StdResult_Status resultState = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
 
-            //        if (registResult.Success)
-            //        {
-            //            // 성공: listProcessed에 추가, listCreated에서 제거
-            //            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
+                    switch (resultState.Result)
+                    {
+                        case StdResult.Success:
+                            // 성공: 큐에 재적재 (다음 사이클에 관리 대상으로 분류됨)
+                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
 
-            //            // NotChanged 상태로 변경
-            //            item.StateFlag = PostgService_Common_OrderState.NotChanged;
+                            // NotChanged 상태로 변경
+                            item.StateFlag = PostgService_Common_OrderState.NotChanged;
 
-            //            // listProcessed에 추가 (나중에 큐에 재적재됨)
-            //            listProcessed.Add(item);
+                            // 큐에 재적재 (다음 사이클에 listEtcGroup으로 분류)
+                            ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1);
+                            break;
 
-            //            // listCreated에서 제거
-            //            listCreated.RemoveAt(index);
-            //        }
-            //        else
-            //        {
-            //            // 실패: 에러 로그 출력, listCreated에 남김 (다음 사이클에서 재시도)
-            //            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (재시도 예정): " +
-            //                          $"{item.KeyCode} - {registResult.ErrorMessage}");
+                        case StdResult.Fail:
+                            // 신규 등록 실패는 치명적 에러 → 앱 종료
+                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (치명적): {item.KeyCode} - {resultState.sErr}");
 
-            //            // TODO: 실패 횟수 카운트 후 일정 횟수 이상 실패 시 처리
-            //            // 현재는 listCreated에 남아있어 다음에 큐에 재적재됨
-            //        }
-            //    }
+                            ErrMsgBox(
+                                $"신규 주문 등록 실패 (앱 종료)\n주문: {item.KeyCode}\n\n{resultState.sErr}",
+                                resultState.sPos);
 
-            //    Debug.WriteLine($"[{APP_NAME}] Region 4 완료: 성공={listProcessed.Count}건, 실패/재시도={listCreated.Count}건");
-            //}
+                            Environment.Exit(1);
+                            break;
+
+                        default:
+                            // 예상 못한 결과 → 앱 종료
+                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 예상 못한 결과: {resultState.Result}");
+                            Environment.Exit(1);
+                            break;
+                    }
+                }
+
+                // Region 4 완료: listCreated 일괄 정리
+                Debug.WriteLine($"[{APP_NAME}] Region 4 완료");
+                listCreated.Clear();
+            }
             #endregion
 
             #region 5. Updated, NotChanged Order 처리 (기존)

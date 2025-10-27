@@ -408,7 +408,7 @@ public partial class MainWnd : Window
     // 접수상황
     private void MenuOrderMng_ReceiptStatus_Click(object sender, RoutedEventArgs e)
     {
-        // Order_StatusTab = AddOrFocusPageInMainTabCtrl("오더상황", "Order_StatusPage");
+        Order_StatusTab = AddOrFocusPageInMainTabCtrl("오더상황", "Order_StatusPage");
     }
     #endregion
     #endregion
@@ -417,9 +417,9 @@ public partial class MainWnd : Window
     // 가상 모니터
     public void Menu_VirtualMonitor_Click(object sender, RoutedEventArgs e)
     {
-        // m_WndForVirtualMonitor = new VirtualMonitorWnd();
-        // m_WndForVirtualMonitor.ShowDialog();
-        // m_WndForVirtualMonitor = null; // Clear reference
+        m_WndForVirtualMonitor = new VirtualMonitorWnd();
+        m_WndForVirtualMonitor.ShowDialog();
+        m_WndForVirtualMonitor = null; // Clear reference
     }
 
     // 테스트 메뉴
@@ -435,10 +435,10 @@ public partial class MainWnd : Window
     #region TabControl Events
     private void CloseAnyTabButton_Click(object sender, RoutedEventArgs e)
     {
-        // if (sender is Button button && button.Parent is StackPanel panel && panel.Parent is TabItem tab)
-        // {
-        // MainTabCtrl.Items.Remove(tab);
-        // }
+        if (sender is Button button && button.Parent is StackPanel panel && panel.Parent is TabItem tab)
+        {
+            MainTabCtrl.Items.Remove(tab);
+        }
     }
     #endregion
 
@@ -488,27 +488,27 @@ public partial class MainWnd : Window
         }
         #endregion
     }
-    public void OnSrLocalClient_Closed(object sender, StdDelegate.ExceptionEventArgs e)
+    public async void OnSrLocalClient_Closed(object sender, StdDelegate.ExceptionEventArgs e)
     {
-        // try
-        // {
-        // if (Application.Current == null) return;
-        // if (Application.Current.Dispatcher == null) return;
+        try
+        {
+            if (Application.Current == null) return;
+            if (Application.Current.Dispatcher == null) return;
 
-        // _ = Application.Current.Dispatcher.BeginInvoke(() =>
-        // {
-        // if (s_MainWnd == null || !s_MainWnd.IsLoaded) return;
+            _ = Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                if (s_MainWnd == null || !s_MainWnd.IsLoaded) return;
 
-        // if (TblockConnLocal != null && s_SrLClient != null)
-        // {
-        // TblockConnLocal.Text = s_SrLClient.m_sConnSignslR;
-        // }
-        // });
-        // }
-        // finally
-        // {
-            //await Task.Delay(1); // 잠시 대기
-        // }
+                if (TblockConnLocal != null && s_SrLClient != null)
+                {
+                    TblockConnLocal.Text = s_SrLClient.m_sConnSignslR;
+                }
+            });
+        }
+        finally
+        {
+            await Task.Delay(1); // 잠시 대기
+        }
     }
     #endregion
 
@@ -539,19 +539,19 @@ public partial class MainWnd : Window
     // Closed - Only By Self - Reserved
     public async void OnSrGlobalClient_Closed(object sender, StdDelegate.ExceptionEventArgs e)
     {
-        // if (Application.Current == null || Application.Current.Dispatcher == null) return;
+        if (Application.Current == null || Application.Current.Dispatcher == null) return;
 
-        // try
-        // {
-        // await Application.Current.Dispatcher.InvokeAsync(() =>
-        // {
-        // if (TblockConnGlobal != null && s_SrGClient != null)
-        // TblockConnGlobal.Text = s_SrGClient.m_sLoginSignalR; // 수동으로 써준다 - 몇개 안되서.
-        // });
-        // }
-        // catch
-        // {
-        // }
+        try
+        {
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                if (TblockConnGlobal != null && s_SrGClient != null)
+                    TblockConnGlobal.Text = s_SrGClient.m_sLoginSignalR; // 수동으로 써준다 - 몇개 안되서.
+            });
+        }
+        catch
+        {
+        }
     }
     #endregion
 
