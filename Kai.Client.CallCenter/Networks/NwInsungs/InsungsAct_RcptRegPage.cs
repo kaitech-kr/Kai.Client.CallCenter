@@ -130,12 +130,7 @@ public class InsungsAct_RcptRegPage
     /// <param name="withTextValidation">텍스트 검증 여부 (true면 텍스트 확인, false면 핸들만 확인)</param>
     /// <returns>성공 시 핸들, 실패 시 에러</returns>
     private async Task<(IntPtr hWnd, StdResult_Error error)> FindStatusButtonAsync(
-        string buttonName,
-        Draw.Point checkPoint,
-        string errorCode,
-        bool bWrite,
-        bool bMsgBox,
-        bool withTextValidation = true)
+        string buttonName, Draw.Point checkPoint, string errorCode, bool bWrite, bool bMsgBox, bool withTextValidation = true)
     {
         for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
         {
@@ -173,13 +168,7 @@ public class InsungsAct_RcptRegPage
     /// CommandBtn(OFR 검증 포함) 찾기 헬퍼 메서드
     /// </summary>
     private async Task<(IntPtr hWnd, StdResult_Error error)> FindCommandButtonWithOfrAsync(
-        string buttonName,
-        Draw.Point checkPoint,
-        string ofrImageKey,
-        string errorCode,
-        bool bEdit,
-        bool bWrite,
-        bool bMsgBox)
+        string buttonName, Draw.Point checkPoint, string ofrImageKey, string errorCode, bool bEdit, bool bWrite, bool bMsgBox)
     {
         // 1. 버튼 핸들 찾기
         IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, checkPoint);
@@ -208,12 +197,7 @@ public class InsungsAct_RcptRegPage
     /// CallCount 컨트롤 찾기 헬퍼 메서드
     /// </summary>
     private IntPtr FindCallCountControl(
-        string controlName,
-        Draw.Point checkPoint,
-        string errorCode,
-        bool bWrite,
-        bool bMsgBox,
-        out StdResult_Error error)
+        string controlName, Draw.Point checkPoint, string errorCode, bool bWrite, bool bMsgBox, out StdResult_Error error)
     {
         IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, checkPoint);
         if (hWnd == IntPtr.Zero)
@@ -311,23 +295,48 @@ public class InsungsAct_RcptRegPage
 
             // TODO: 3-1. StatusBtn 이미지 매칭으로 확인 (Up 상태) - OCR 사용시 BlockInput 필요
 
-            // 4. StatusBtn - 전체버튼 클릭
-            await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.StatusBtn_hWnd전체);
-            await Task.Delay(300); // 클릭 반영 대기
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 완료");
+            // 4. StatusBtn - 전체버튼 클릭 (Down 상태로 변경되도록 여러 번 시도)
+            bool bClickSuccess = false;
+            for (int clickRetry = 0; clickRetry < 3; clickRetry++)
+            {
+                await Task.Delay(CommonVars.c_nWaitNormal); // 클릭 전 안정화 대기
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.StatusBtn_hWnd전체);
+                await Task.Delay(CommonVars.c_nWaitLong); // 클릭 반영 대기 (기존 300ms → 500ms)
 
-            // 4-1. 클릭 후 간단 검증 (핸들 유효성 재확인)
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 시도 {clickRetry + 1}/3");
+
+                // 4-1. 클릭 후 Down 상태 확인 (OFR)
+                StdResult_NulBool resultOfrCheck = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
+                    m_RcptPage.StatusBtn_hWnd전체, HEADER_GAB, "Img_전체버튼_Down", false, false, false);
+
+                if (StdConvert.NullableBoolToBool(resultOfrCheck.bResult))
+                {
+                    bClickSuccess = true;
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 성공 - Down 상태 확인됨");
+                    break;
+                }
+
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 Down 상태 미확인 - 재시도");
+            }
+
+            if (!bClickSuccess)
+            {
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 실패 - Down 상태로 전환되지 않음 (계속 진행)");
+                // 에러는 발생시키지 않고 경고만 출력
+            }
+
+            // 4-2. 핸들 유효성 재확인
             string textCheck = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd전체);
             if (!textCheck.Contains("전체"))
             {
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage]전체버튼 클릭 후 검증 실패: 텍스트={textCheck}",
+                    $"[{m_Context.AppName}/RcptRegPage]전체버튼 핸들 검증 실패: 텍스트={textCheck}",
                     "InsungsAct_RcptRegPage/InitializeAsync_04_1", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 클릭 검증 완료");
+            Debug.WriteLine($"[InsungsAct_RcptRegPage] 전체버튼 핸들 검증 완료");
 
-            // 4-2. StatusBtn Down 상태 OFR 확인 (전체버튼 클릭 후 UI 상태 변화 대기)
-            // 4-2-1. 접수버튼 Down (첫 버튼) - OFR 루프로 Down 상태 대기
+            // 4-3. StatusBtn Down 상태 OFR 확인 (전체버튼 클릭 후 나머지 버튼들 상태 확인)
+            // 4-3-1. 접수버튼 Down (첫 버튼) - OFR 루프로 Down 상태 대기
             bool bFoundDown접수 = false;
             for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
             {
@@ -345,8 +354,8 @@ public class InsungsAct_RcptRegPage
             if (!bFoundDown접수)
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수버튼 Down 상태 OFR 실패 (무시)");
 
-            // 4-2-2. 중간 버튼들 Down - 딜레이 후 OFR 바로
-            await Task.Delay(300);
+            // 4-3-2. 중간 버튼들 Down - 딜레이 후 OFR 바로
+            await Task.Delay(CommonVars.c_nWaitLong);
 
             // 배차버튼 Down
             StdResult_NulBool resultOfrStatus배차 = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
@@ -741,7 +750,7 @@ public class InsungsAct_RcptRegPage
                     }
                     catch (Exception ex)
                     {
-                        //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 예외: {ex.Message}");
+                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 예외: {ex.Message}");
                         m_RcptPage.DG오더_ColumnTexts[i] = null;
                     }
                 }
