@@ -13,7 +13,7 @@ namespace Kai.Client.CallCenter.Classes.Class_Master;
 /// 자동배차 주문 큐 관리자
 /// Queue 기반으로 주문을 관리하여 복잡성 제거
 /// </summary>
-public class AutoAllocQueueManager
+public class AutoAllocQueueController
 {
     #region Queues - 4개 외부앱별
     // 인성1
@@ -33,10 +33,10 @@ public class AutoAllocQueueManager
     /// <summary>
     /// 앱별 주문 큐 크기
     /// </summary>
-    public int GetQueueCount(string networkName)
-    {
-        return GetQueue(networkName).Count;
-    }
+    //public int GetQueueCount(string networkName)
+    //{
+    //    return GetQueue(networkName).Count;
+    //}
 
     /// <summary>
     /// 전체 주문 큐 크기

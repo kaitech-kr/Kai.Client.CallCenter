@@ -41,58 +41,58 @@ public partial class ImageToCharWnd : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        this.Topmost = true;
+        // this.Topmost = true;
 
-        MsgBox("코딩해야 합니다", "ImageToCharWnd/Window_Loaded_01");
+        // MsgBox("코딩해야 합니다", "ImageToCharWnd/Window_Loaded_01");
     }
     #endregion
 
     #region Button Events
     private void BtnSave_Click(object sender, RoutedEventArgs e)
     {
-        if (TBoxCharType.Text.Length != 1) return;
+        // if (TBoxCharType.Text.Length != 1) return;
 
-        MessageBoxResult response = MessageBox.Show(
-            $"문자: {TBoxChar.Text}\n타입: {TBoxCharType.Text}", "확인", MessageBoxButton.YesNo, MessageBoxImage.Information);
+        // MessageBoxResult response = MessageBox.Show(
+        // $"문자: {TBoxChar.Text}\n타입: {TBoxCharType.Text}", "확인", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
-        if (response == MessageBoxResult.No) return;
+        // if (response == MessageBoxResult.No) return;
 
         //tbChar = 
 
-        Close();
+        // Close();
     }
     private void BtnJump_Click(object sender, RoutedEventArgs e)
     {
-        Close();
+        // Close();
     }
 
     private void BtnCancelAll_Click(object sender, RoutedEventArgs e)
     {
-        Close();
+        // Close();
     }
     #endregion
 
     #region Etc Events
     private void TBoxChar_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
-        if (TBoxChar.Text.Length >= 2)
-        {
-            e.Handled = true; // 입력 차단
-        }
+        // if (TBoxChar.Text.Length >= 2)
+        // {
+        // e.Handled = true; // 입력 차단
+        // }
     }
 
     private void TBoxChar_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        if (TBoxChar.Text.Length == 0)
-        {
-            TBoxCharType.Text = "";
-            BtnSave.IsEnabled = false;
-            return;
-        }
+        // if (TBoxChar.Text.Length == 0)
+        // {
+        // TBoxCharType.Text = "";
+        // BtnSave.IsEnabled = false;
+        // return;
+        // }
 
-        if (TBoxChar.Text.Length == 1)
-        {
-            MsgBox("코딩 해야함.", "TBoxChar_TextChanged_002");
+        // if (TBoxChar.Text.Length == 1)
+        // {
+        // MsgBox("코딩 해야함.", "TBoxChar_TextChanged_002");
 
             //m_tpCharIndex = StdUtil.FindIndexIn2DList(s_ListCharGroup, TBoxChar.Text);
             //if (m_tpCharIndex.Item1 != -1 && m_tpCharIndex.Item2 != -1)
@@ -101,14 +101,14 @@ public partial class ImageToCharWnd : Window
             //    BtnSave.IsEnabled = true;
             //    return;
             //}
-        }
+        // }
 
-        if (TBoxChar.Text.Length == 2)
-        {
-            TBoxCharType.Text = "L";
-            BtnSave.IsEnabled = true;
-            return;
-        }
+        // if (TBoxChar.Text.Length == 2)
+        // {
+        // TBoxCharType.Text = "L";
+        // BtnSave.IsEnabled = true;
+        // return;
+        // }
     }
     #endregion
 }

@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Read(//d/CodeWork/WithVs2022/KaiWork/**)"
+      "Read(//d/CodeWork/WithVs2022/KaiWork/**)",
+      "Bash(powershell:*)",
+      "Bash(git checkout:*)",
+      "Bash(python:*)",
+      "Bash(dotnet build:*)",
+      "Bash(Select-String -Pattern \"error|warning|Build succeeded|Build FAILED\" -Context 0,2)",
+      "Bash(echo:*)",
+      "Bash(cmd /c \"del .\\nul\")"
     ],
     "deny": [],
     "ask": []

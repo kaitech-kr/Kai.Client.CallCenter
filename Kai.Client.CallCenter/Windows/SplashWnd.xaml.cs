@@ -26,8 +26,8 @@ public partial class SplashWnd : Window
     {
         s_SplashWnd = this;
 
-        // Init ListChars
-        CommonFuncs.Init();
+        //Init ListChars
+         CommonFuncs.Init();
 
         TBoxID.Text = s_sKaiLogId;
         PwBoxPW.Password = s_sKaiLogPw;
@@ -36,7 +36,7 @@ public partial class SplashWnd : Window
         TBoxID.IsEnabled = false;
         PwBoxPW.IsEnabled = false;
 
-        // 5초 후 취소 버튼 표시
+        //5초 후 취소 버튼 표시
         _ = Task.Run(async () =>
         {
             await Task.Delay(5000);
@@ -44,14 +44,14 @@ public partial class SplashWnd : Window
             if (Application.Current?.Dispatcher != null)
             {
                 await Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    if (BtnCancel != null)
-                        BtnCancel.Visibility = Visibility.Visible;
-                });
+                 {
+            if (BtnCancel != null)
+                BtnCancel.Visibility = Visibility.Visible;
+        });
             }
         });
 
-        // 백그라운드에서 연결 시도
+        //백그라운드에서 연결 시도
         _ = Task.Run(async () =>
         {
             await s_SrGClient.ConnectAsync();
@@ -60,8 +60,8 @@ public partial class SplashWnd : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        SrGlobalClient_LoginEvent -= OnSignalRLogin;
-        SrGlobalClient_RetryEvent -= OnSignalRClosed;
+        // SrGlobalClient_LoginEvent -= OnSignalRLogin;
+         SrGlobalClient_RetryEvent -= OnSignalRClosed;
     }
     #endregion
 
@@ -100,22 +100,22 @@ public partial class SplashWnd : Window
 
     public void OnSignalRClosed(object sender, IntEventArgs e)
     {
-        UpdateStatus($"서버 연결 재시도 중... ({e.nValue}번째)");
+         UpdateStatus($"서버 연결 재시도 중... ({e.nValue}번째)");
     }
     #endregion
 
     #region Normal Events
     private void TBoxID_KeyDown(object sender, KeyEventArgs e)
     {
-        MsgBox("TBoxID_KeyDown");
+         MsgBox("TBoxID_KeyDown");
     }
     private void ChBoxID_Click(object sender, RoutedEventArgs e)
     {
-        MsgBox("ChBoxID_Click");
+         MsgBox("ChBoxID_Click");
     }
     private void PwBoxPW_KeyDown(object sender, KeyEventArgs e)
     {
-        MsgBox("PwBoxPW_KeyDown");
+         MsgBox("PwBoxPW_KeyDown");
     }
 
     private async void BtnCancel_Click(object sender, RoutedEventArgs e)

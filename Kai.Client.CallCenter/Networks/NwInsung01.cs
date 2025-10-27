@@ -5,11 +5,11 @@ using System.Diagnostics;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.Networks.NwInsungs;
-using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
@@ -88,14 +88,14 @@ public class NwInsung01 : IExternalApp
                 return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, "NwInsung01/InitializeAsync_01");
             }
 
-            // FileInfo 로드 확인 (테스트용)
-            Debug.WriteLine($"[NwInsung01] ===== FileInfo 로드 확인 =====");
-            Debug.WriteLine($"  App_sPredictFolder: {m_Context.FileInfo.App_sPredictFolder}");
-            Debug.WriteLine($"  App_sExeFileName: {m_Context.FileInfo.App_sExeFileName}");
-            Debug.WriteLine($"  Splash_TopWnd_sWndName: {m_Context.FileInfo.Splash_TopWnd_sWndName}");
-            Debug.WriteLine($"  Splash_IdWnd_ptChk: {m_Context.FileInfo.Splash_IdWnd_ptChk}");
-            Debug.WriteLine($"  Main_TopWnd_sWndNameReduct: {m_Context.FileInfo.Main_TopWnd_sWndNameReduct}");
-            Debug.WriteLine($"[NwInsung01] ================================");
+            //// FileInfo 로드 확인 (테스트용)
+            //Debug.WriteLine($"[NwInsung01] ===== FileInfo 로드 확인 =====");
+            //Debug.WriteLine($"  App_sPredictFolder: {m_Context.FileInfo.App_sPredictFolder}");
+            //Debug.WriteLine($"  App_sExeFileName: {m_Context.FileInfo.App_sExeFileName}");
+            //Debug.WriteLine($"  Splash_TopWnd_sWndName: {m_Context.FileInfo.Splash_TopWnd_sWndName}");
+            //Debug.WriteLine($"  Splash_IdWnd_ptChk: {m_Context.FileInfo.Splash_IdWnd_ptChk}");
+            //Debug.WriteLine($"  Main_TopWnd_sWndNameReduct: {m_Context.FileInfo.Main_TopWnd_sWndNameReduct}");
+            //Debug.WriteLine($"[NwInsung01] ================================");
 
             // 2. 앱 경로 확인
             if (string.IsNullOrEmpty(s_AppPath))
@@ -103,7 +103,7 @@ public class NwInsung01 : IExternalApp
                 Debug.WriteLine($"[NwInsung01] AppPath가 설정되지 않았습니다.");
                 return new StdResult_Status(StdResult.Fail, "AppPath가 appsettings.json에 설정되지 않았습니다.", "NwInsung01/InitializeAsync_02");
             }
-            Debug.WriteLine($"[NwInsung01] 앱 경로: {s_AppPath}");
+            //Debug.WriteLine($"[NwInsung01] 앱 경로: {s_AppPath}");
 
             // Show Loding
             if (s_Screens.m_WorkingMonitor != s_Screens.m_PrimaryMonitor) // 작업 모니터가 기본 모니터면 LoadingPanel을 사용하지 않는다.
@@ -116,7 +116,7 @@ public class NwInsung01 : IExternalApp
                 Debug.WriteLine($"[NwInsung01] UpdaterWork 실패: {resultUpdater.sErrNPos}");
                 return new StdResult_Status(StdResult.Fail, resultUpdater.sErrNPos, "NwInsung01/InitializeAsync_03");
             }
-            Debug.WriteLine($"[NwInsung01] Updater 종료 완료");
+            //Debug.WriteLine($"[NwInsung01] Updater 종료 완료");
 
             // 4. SplashWork - 스플래시 창 처리 및 로그인
             StdResult_Error resultSplash = await m_Context.AppAct.SplashWorkAsync();
@@ -125,7 +125,7 @@ public class NwInsung01 : IExternalApp
                 Debug.WriteLine($"[NwInsung01] SplashWork 실패: {resultSplash.sErrNPos}");
                 return new StdResult_Status(StdResult.Fail, resultSplash.sErrNPos, "NwInsung01/InitializeAsync_04");
             }
-            Debug.WriteLine($"[NwInsung01] 스플래시 로그인 완료");
+            //Debug.WriteLine($"[NwInsung01] 스플래시 로그인 완료");
 
             // 5. MainWnd 초기화
             StdResult_Error resultMainWnd = await m_Context.MainWndAct.InitializeAsync();
@@ -136,14 +136,14 @@ public class NwInsung01 : IExternalApp
             }
             Debug.WriteLine($"[NwInsung01] MainWnd 초기화 완료");
 
-            // 6. RcptRegPage 초기화
-            StdResult_Error resultRcptRegPage = await m_Context.RcptRegPageAct.InitializeAsync();
-            if (resultRcptRegPage != null)
-            {
-                Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
-                return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung01/InitializeAsync_06");
-            }
-            Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 완료");
+            //// 6. RcptRegPage 초기화
+            //StdResult_Error resultRcptRegPage = await m_Context.RcptRegPageAct.InitializeAsync();
+            //if (resultRcptRegPage != null)
+            //{
+            //    Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
+            //    return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung01/InitializeAsync_06");
+            //}
+            //Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 완료");
 
             Debug.WriteLine("[NwInsung01] InitializeAsync 완료");
             return new StdResult_Status(StdResult.Success);
@@ -240,119 +240,119 @@ public class NwInsung01 : IExternalApp
             }
             Debug.WriteLine($"[{APP_NAME}] ==========================================");
 
-            // ===== 상세 로깅: listEtcGroup 내용 출력 =====
-            Debug.WriteLine($"[{APP_NAME}] ===== listEtcGroup (기존주문관리용) 상세 정보 =====");
-            Debug.WriteLine($"[{APP_NAME}] listEtcGroup 개수: {listEtcGroup.Count}");
-            for (int i = 0; i < listEtcGroup.Count; i++)
-            {
-                var item = listEtcGroup[i];
-                Debug.WriteLine($"[{APP_NAME}]   [{i}] KeyCode={item.KeyCode}, " +
-                              $"StateFlag={item.StateFlag}, " +
-                              $"SeqNo={item.NewOrder.Insung1 ?? "(없음)"}, " +
-                              $"CarType={item.NewOrder.CarType}");
-            }
-            Debug.WriteLine($"[{APP_NAME}] ==========================================");
+            //// ===== 상세 로깅: listEtcGroup 내용 출력 =====
+            //Debug.WriteLine($"[{APP_NAME}] ===== listEtcGroup (기존주문관리용) 상세 정보 =====");
+            //Debug.WriteLine($"[{APP_NAME}] listEtcGroup 개수: {listEtcGroup.Count}");
+            //for (int i = 0; i < listEtcGroup.Count; i++)
+            //{
+            //    var item = listEtcGroup[i];
+            //    Debug.WriteLine($"[{APP_NAME}]   [{i}] KeyCode={item.KeyCode}, " +
+            //                  $"StateFlag={item.StateFlag}, " +
+            //                  $"SeqNo={item.NewOrder.Insung1 ?? "(없음)"}, " +
+            //                  $"CarType={item.NewOrder.CarType}");
+            //}
+            //Debug.WriteLine($"[{APP_NAME}] ==========================================");
 
-            // 할일 갯수 체크
-            int tot = listCreated.Count + listEtcGroup.Count;
+            //// 할일 갯수 체크
+            //int tot = listCreated.Count + listEtcGroup.Count;
 
-            if (tot == 0)
-            {
-                m_lRestCount += 1;
-                if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
-                {
-                    // TODO: Helper 함수 구현 필요 (세션 3에서 설계됨)
-                    // await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
-                    await Task.Delay(c_nWaitLong, ctrl.Token);
-                }
+            //if (tot == 0)
+            //{
+            //    m_lRestCount += 1;
+            //    if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
+            //    {
+            //        // TODO: Helper 함수 구현 필요 (세션 3에서 설계됨)
+            //        // await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
+            //        await Task.Delay(c_nWaitLong, ctrl.Token);
+            //    }
 
-                Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 없음: lAllocCount={lAllocCount}");
-                return new StdResult_Status(StdResult.Success); // 할일 없으면 돌아간다
-            }
-            else
-            {
-                m_lRestCount = 0;
-                Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 있음: lAllocCount={lAllocCount}, tot={tot}, listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
-            }
+            //    Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 없음: lAllocCount={lAllocCount}");
+            //    return new StdResult_Status(StdResult.Success); // 할일 없으면 돌아간다
+            //}
+            //else
+            //{
+            //    m_lRestCount = 0;
+            //    Debug.WriteLine($"[{APP_NAME}] 자동배차 할일 있음: lAllocCount={lAllocCount}, tot={tot}, listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
+            //}
             #endregion
 
             #region 3. Check Datagrid
-            // Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
-            bool bDatagridExists = false;
-            for (int i = 0; i < c_nRepeatShort; i++)
-            {
-                await ctrl.WaitIfPausedOrCancelledAsync();
+            //// Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
+            //bool bDatagridExists = false;
+            //for (int i = 0; i < c_nRepeatShort; i++)
+            //{
+            //    await ctrl.WaitIfPausedOrCancelledAsync();
 
-                // Datagrid 핸들이 유효하고 윈도우가 존재하는지 확인
-                if (m_Context.MemInfo.RcptPage.DG오더_hWnd != IntPtr.Zero &&
-                    Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
-                {
-                    bDatagridExists = true;
-                    Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
-                    break;
-                }
+            //    // Datagrid 핸들이 유효하고 윈도우가 존재하는지 확인
+            //    if (m_Context.MemInfo.RcptPage.DG오더_hWnd != IntPtr.Zero &&
+            //        Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
+            //    {
+            //        bDatagridExists = true;
+            //        Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
+            //        break;
+            //    }
 
-                // 마지막 시도가 아닐 때만 대기 (불필요한 지연 방지)
-                if (i < c_nRepeatShort - 1)
-                {
-                    await Task.Delay(c_nWaitNormal, ctrl.Token);
-                }
-            }
+            //    // 마지막 시도가 아닐 때만 대기 (불필요한 지연 방지)
+            //    if (i < c_nRepeatShort - 1)
+            //    {
+            //        await Task.Delay(c_nWaitNormal, ctrl.Token);
+            //    }
+            //}
 
-            if (!bDatagridExists)
-            {
-                Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우를 찾을 수 없음");
-                return new StdResult_Status(StdResult.Fail, "Datagrid 윈도우를 찾을 수 없습니다.", "NwInsung01/AutoAllocAsync_03");
-            }
+            //if (!bDatagridExists)
+            //{
+            //    Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우를 찾을 수 없음");
+            //    return new StdResult_Status(StdResult.Fail, "Datagrid 윈도우를 찾을 수 없습니다.", "NwInsung01/AutoAllocAsync_03");
+            //}
             #endregion
 
             #region 4. Created Order 처리 (신규)
-            if (listCreated.Count > 0)
-            {
-                Debug.WriteLine($"[{APP_NAME}] Region 4: 신규 주문 처리 시작 (총 {listCreated.Count}건)");
+            //if (listCreated.Count > 0)
+            //{
+            //    Debug.WriteLine($"[{APP_NAME}] Region 4: 신규 주문 처리 시작 (총 {listCreated.Count}건)");
 
-                // 역순으로 처리 (삭제를 위해)
-                for (int i = listCreated.Count; i > 0; i--)
-                {
-                    await ctrl.WaitIfPausedOrCancelledAsync();
+            //    // 역순으로 처리 (삭제를 위해)
+            //    for (int i = listCreated.Count; i > 0; i--)
+            //    {
+            //        await ctrl.WaitIfPausedOrCancelledAsync();
 
-                    int index = i - 1;
-                    if (index < 0) break;
+            //        int index = i - 1;
+            //        if (index < 0) break;
 
-                    AutoAlloc item = listCreated[index];
-                    Debug.WriteLine($"[{APP_NAME}]   [{i}/{listCreated.Count}] 신규 주문 처리: " +
-                                  $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
+            //        AutoAlloc item = listCreated[index];
+            //        Debug.WriteLine($"[{APP_NAME}]   [{i}/{listCreated.Count}] 신규 주문 처리: " +
+            //                      $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
 
-                    // 신규 주문 등록 시도
-                    InsungsAct_RcptRegPage.RegistResult registResult = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
+            //        // 신규 주문 등록 시도
+            //        InsungsAct_RcptRegPage.RegistResult registResult = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
 
-                    if (registResult.Success)
-                    {
-                        // 성공: listProcessed에 추가, listCreated에서 제거
-                        Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
+            //        if (registResult.Success)
+            //        {
+            //            // 성공: listProcessed에 추가, listCreated에서 제거
+            //            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
 
-                        // NotChanged 상태로 변경
-                        item.StateFlag = PostgService_Common_OrderState.NotChanged;
+            //            // NotChanged 상태로 변경
+            //            item.StateFlag = PostgService_Common_OrderState.NotChanged;
 
-                        // listProcessed에 추가 (나중에 큐에 재적재됨)
-                        listProcessed.Add(item);
+            //            // listProcessed에 추가 (나중에 큐에 재적재됨)
+            //            listProcessed.Add(item);
 
-                        // listCreated에서 제거
-                        listCreated.RemoveAt(index);
-                    }
-                    else
-                    {
-                        // 실패: 에러 로그 출력, listCreated에 남김 (다음 사이클에서 재시도)
-                        Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (재시도 예정): " +
-                                      $"{item.KeyCode} - {registResult.ErrorMessage}");
+            //            // listCreated에서 제거
+            //            listCreated.RemoveAt(index);
+            //        }
+            //        else
+            //        {
+            //            // 실패: 에러 로그 출력, listCreated에 남김 (다음 사이클에서 재시도)
+            //            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (재시도 예정): " +
+            //                          $"{item.KeyCode} - {registResult.ErrorMessage}");
 
-                        // TODO: 실패 횟수 카운트 후 일정 횟수 이상 실패 시 처리
-                        // 현재는 listCreated에 남아있어 다음에 큐에 재적재됨
-                    }
-                }
+            //            // TODO: 실패 횟수 카운트 후 일정 횟수 이상 실패 시 처리
+            //            // 현재는 listCreated에 남아있어 다음에 큐에 재적재됨
+            //        }
+            //    }
 
-                Debug.WriteLine($"[{APP_NAME}] Region 4 완료: 성공={listProcessed.Count}건, 실패/재시도={listCreated.Count}건");
-            }
+            //    Debug.WriteLine($"[{APP_NAME}] Region 4 완료: 성공={listProcessed.Count}건, 실패/재시도={listCreated.Count}건");
+            //}
             #endregion
 
             #region 5. Updated, NotChanged Order 처리 (기존)
@@ -383,14 +383,14 @@ public class NwInsung01 : IExternalApp
             #endregion
 
             #region 6. 처리 완료된 항목을 큐에 재적재
-            if (listProcessed.Count > 0)
-            {
-                foreach (var item in listProcessed)
-                {
-                    ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1);
-                }
-                Debug.WriteLine($"[{APP_NAME}] 처리 완료된 항목 {listProcessed.Count}개를 큐에 재적재");
-            }
+            //if (listProcessed.Count > 0)
+            //{
+            //    foreach (var item in listProcessed)
+            //    {
+            //        ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1);
+            //    }
+            //    Debug.WriteLine($"[{APP_NAME}] 처리 완료된 항목 {listProcessed.Count}개를 큐에 재적재");
+            //}
             #endregion
 
             Debug.WriteLine($"[NwInsung01] AutoAllocAsync 완료 - Count={lAllocCount}");

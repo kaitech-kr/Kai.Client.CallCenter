@@ -197,117 +197,8 @@ public partial class MainWnd : Window
         //}
         #endregion
 
-        //#region if AutoAlloc Or Not
-        //if (s_bAutoAlloc)
-        //{
-        //    List<MonitorInfo> listOrg = await s_Screens.MonitorInfosToListAsync();
-        //    if (s_Screens.m_VirtualMonitor == null) // 가상모니터가 없으면 생성
-        //    {
-        //        //if (s_Screens.m_WorkingMonitor != s_Screens.m_PrimaryMonitor) // 작업 모니터가 기본 모니터면 LoadingPanel을 사용하지 않는다.
-        //        //NetLoadingWnd.ShowLoading(s_MainWnd, "   인성2 초기화 작업중입니다, \n     입력작업을 하지 마세요...   ");
-        //        // ShowLoading
-        //        NetLoadingWnd.ShowLoading(s_MainWnd, "가상모니터를 생성중 입니다.");
-
-        //        //Test
-        //        for (int i = 0; i < listOrg.Count; i++)
-        //        {
-        //            Debug.WriteLine($"Org: {i}, {listOrg[i]}");
-        //        }
-
-        //        int nOldCount = s_Screens.m_ListMonitorInfo.Count;
-        //        //MessageBox.Show($"Monitor Count: {nOldCount}"); // Test
-
-        //        StdResult_Bool resultBool = await FrmVirtualMonitor.MakeVirtualMonitorAsync();
-        //        if (!resultBool.bResult)
-        //        {
-        //            FormFuncs.ErrMsgBox("가상모니터 생성실패", "MainWnd/MainWnd_10");
-        //            goto ERR_EXIT;
-        //        }
-
-        //        await Task.Delay(1000);
-        //        List<MonitorInfo> listNew = await s_Screens.MonitorInfosToListAsync();
-        //        int nNewCount = s_Screens.m_ListMonitorInfo.Count;
-        //        if (nOldCount == nNewCount)
-        //        {
-        //            FormFuncs.ErrMsgBox($"가상모니터 생성실패: 전({nOldCount})개 -> 후({nNewCount})개", "MainWnd/MainWnd_11");
-        //            goto ERR_EXIT;
-        //        }
-
-        //        // Check Virtual Monitor Resolution
-        //        if (!FrmVirtualMonitor.AdjustVirtualMonitorPosAndSize(s_Screens)) // 1920 x 1080 으로 변경
-        //        {
-        //            FormFuncs.ErrMsgBox("가상모니터 해상도 조정실패", "MainWnd/MainWnd_12");
-        //            goto ERR_EXIT;
-        //        }
-
-        //        // 원상복귀
-        //        int lastX = 0;
-        //        for (int i = 0; i < listOrg.Count; i++)
-        //        {
-        //            lastX = i * 1920;
-        //            s_Screens.ChangePosition(listOrg[i].DeviceName, lastX, 0);
-        //            int index = listNew.FindIndex(x => x.DeviceName == listOrg[i].DeviceName);
-        //            if (index >= 0) listNew.RemoveAt(index);
-        //        }
-
-        //        if (listNew.Count != 1)
-        //        {
-        //            FormFuncs.ErrMsgBox("가상모니터 생성실패", "MainWnd/MainWnd_12_1");
-        //            goto ERR_EXIT;
-        //        }
-        //        lastX += (1920);
-        //        s_Screens.ChangePosition(listNew[0].DeviceName, lastX, 1080);
-        //        await s_Screens.MonitorInfosToListAsync();
-
-        //        //Test
-        //        for (int i = 0; i < s_Screens.m_ListMonitorInfo.Count; i++)
-        //        {
-        //            Debug.WriteLine($"Updated: {i}, {s_Screens.m_ListMonitorInfo[i]}");
-        //        }
-
-        //        // Hide
-        //        NetLoadingWnd.HideLoading();
-
-        //        // 앱 제어용 클래스를 생성한다. - VirtualMonitor가 있다는 전제하에 생성한다.
-        //        if (s_Screens.m_VirtualMonitor != null)
-        //        {
-        //            s_Screens.m_WorkingMonitor = s_Screens.m_ListMonitorInfo[1];  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0] 
-        //            //s_Screens.m_WorkingMonitor = s_Screens.m_VirtualMonitor;  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0] 
-        //            StdResult_Status resultSt = await CtrlOtherApps.Instance.StartAsync();
-
-        //            switch (resultSt.Result)
-        //            {
-        //                //case StdResult.Success: // Test
-        //                //    // CtrlOtherApps 생성 성공
-        //                //    ThreadMsgBox($"CtrlOtherApps 생성성공: {resultSt}"); // Test
-        //                //    break;
-
-        //                case StdResult.Fail:
-        //                    FormFuncs.ErrMsgBox($"CtrlOtherApps 생성실패: {resultSt}", "MainWnd/MainWnd_13");
-        //                    goto ERR_EXIT;
-
-        //                case StdResult.Retry:
-        //                    FormFuncs.MsgBox($"CtrlOtherApps 결과: {resultSt}", "MainWnd/MainWnd_14");
-        //                    break;
-
-        //                case StdResult.Exit:
-        //                    FormFuncs.ErrMsgBox($"CtrlOtherApps 생성오류: {resultSt}", "MainWnd/MainWnd_15");
-        //                    goto ERR_EXIT;
-
-        //                default:
-        //                    break;
-        //            }
-        //        }
-        //    }
-        //}
-        //else
-        //{
-
-        //}
-        //#endregion if AutoAlloc Or Not끝
-
-        //// 가상모니터 를 보기위한 윈도 - 너무 일찍 만들어지지 않게한다(Timer Error)
-        //m_WndForVirtualMonitor = new VirtualMonitorWnd();
+        // 가상모니터 를 보기위한 윈도 - 너무 일찍 만들어지지 않게한다(Timer Error)
+        m_WndForVirtualMonitor = new VirtualMonitorWnd();
 
         // Master 모드일 때만 초기화
         if (IsMasterMode)
@@ -350,22 +241,17 @@ public partial class MainWnd : Window
 
     private void Window_Unloaded(object sender, RoutedEventArgs e) // 이거 잘못사용하면 디버그종료 안함.
     {
-        Debug.WriteLine("=== Window_Unloaded 호출됨!!! ===");
-        //MsgBox("Window_Unloaded");
-
-        // SignalR - Local Client
+        //SignalR - Local Client
         SrLocalClient_ConnectedEvent -= OnSrLocalClient_Connected;
         SrLocalClient_ClosedEvent -= OnSrLocalClient_Closed; // Reserved
 
-        // SignalR - Global Client
+        //SignalR - Global Client
         SrGlobalClient_ClosedEvent -= OnSrGlobalClient_Closed; // Reserved
 
         // Python 종료
         try
         {
-            Debug.WriteLine("Python 엔진 종료 시작");
             Py309Common.Destroy();
-            Debug.WriteLine("Python 엔진 종료 완료");
         }
         catch (Exception ex)
         {
@@ -373,50 +259,45 @@ public partial class MainWnd : Window
         }
 
         // Close NetMsgWnd
-        CommonFuncs.CloseExtMsgWndSimple();
+         CommonFuncs.CloseExtMsgWndSimple();
 
-        //if (Application.Current != null)
-        //{
-        //    // 혹시 모르는 윈도 Close
-        //    foreach (Window win in Application.Current.Windows)
-        //    {
-        //        win.Close();
-        //    }
+        if (Application.Current != null)
+        {
+            // 혹시 모르는 윈도 Close
+            foreach (Window win in Application.Current.Windows)
+            {
+                win.Close();
+            }
 
-        //    Application.Current.Shutdown();
-        //}
+            Application.Current.Shutdown();
+        }
 
         // ShutdownMode를 OnExplicitShutdown으로 설정했으므로 명시적으로 종료
-        Debug.WriteLine("Application.Current.Shutdown() 호출");
-        Application.Current.Shutdown();
-
-        Debug.WriteLine("Environment.Exit(0) 호출로 강제 종료");
-        Environment.Exit(0);
+         Application.Current.Shutdown();
+         Environment.Exit(0);
     }  
     
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         Debug.WriteLine("=== Window_Closing 시작 ===");
 
-        // 이미 종료 절차 진행 중이면 그대로 통과 (두 번째 호출부터는 취소하지 않음)
-        if (_isShuttingDown)
+        //이미 종료 절차 진행 중이면 그대로 통과(두 번째 호출부터는 취소하지 않음)
+         if (_isShuttingDown)
         {
             Debug.WriteLine("_isShuttingDown = true, 그대로 통과");
             return;
         }
 
-        // 1) 창 닫기 일단 막고
-        Debug.WriteLine("e.Cancel = true 설정");
+        //1) 창 닫기 일단 막고
         e.Cancel = true;
         _isShuttingDown = true;
 
         try
         {
-            // 사용자에게 종료 중 안내 (가능하면 비모달/오버레이 권장)
-            CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료중 입니다...");
+            //사용자에게 종료 중 안내(가능하면 비모달/ 오버레이 권장)
+             CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료중 입니다...");
 
-            // SignalR 연결 종료 (동기적으로)
-            Debug.WriteLine("SignalR 연결 종료 시작");
+            //SignalR 연결 종료(동기적으로)
             try
             {
                 if (s_SrGClient != null)
@@ -463,36 +344,24 @@ public partial class MainWnd : Window
             }
             catch (Exception ex) { Debug.WriteLine($"X86Proc close error: {ex.Message}"); }
 
-            //// 5) CtrlOtherApps 정리 (토큰/스레드 해제)
-            //try
-            //{
-            //    if (CtrlOtherApps.Instance != null)
-            //    {
-            //        await CtrlOtherApps.ctrlCancelToken.StopAsync();
+            // 4) 서브 윈도우/클라이언트 정리
+            try { m_WndForVirtualMonitor?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            try { s_TransparentWnd?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
 
-            //        CtrlOtherApps.Instance.Close(); // 내부에서 _cts Dispose 등 정리
-            //    }
-            //}
-            //catch (Exception ex) { Debug.WriteLine($"CtrlOtherApps.Close error: {ex.Message}"); }
+            try { s_SrGClient?.Dispose(); } catch (Exception ex) { Debug.WriteLine(ex); }
 
-            //// 4) 서브 윈도우/클라이언트 정리
-            //try { m_WndForVirtualMonitor?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
-            //try { s_TransparentWnd?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            // 5) 훅/리소스 해제 (필요 시 주석 해제)
+            // try { CtrlCppFuncs.ReleaseMouseHook(); } catch {}
+            // try { CtrlCppFuncs.ReleaseKeyboardHook(); } catch {}
+            // try { CtrlCppFuncs.GetHWndSource(this).RemoveHook(WindowProc); } catch {}
 
-            //try { s_SrGClient?.Dispose(); } catch (Exception ex) { Debug.WriteLine(ex); }
-
-            //// 6) 훅/리소스 해제 (필요 시 주석 해제)
-            //// try { CtrlCppFuncs.ReleaseMouseHook(); } catch {}
-            //// try { CtrlCppFuncs.ReleaseKeyboardHook(); } catch {}
-            //// try { CtrlCppFuncs.GetHWndSource(this).RemoveHook(WindowProc); } catch {}
-
-            //// 7) Python 등 기타 리소스 종료
-            //try { Py309Common.Destroy(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            // 6) Python 등 기타 리소스 종료
+            try { Py309Common.Destroy(); } catch (Exception ex) { Debug.WriteLine(ex); }
         }
         finally
         {
-            // Master 모드 리소스 정리 - 가상 모니터 제거 (있을 때만)
-            try
+            //Master 모드 리소스 정리 -가상 모니터 제거(있을 때만)
+             try
             {
                 if (m_MasterManager != null)
                 {
@@ -505,11 +374,10 @@ public partial class MainWnd : Window
             }
             catch (Exception ex) { Debug.WriteLine($"MasterModeManager 정리 실패: {ex.Message}"); }
 
-            //// 가상 모니터 제거 (있을 때만)
-            //if (s_Screens?.m_VirtualMonitor != null) FrmVirtualMonitor.DeleteVirtualMonitor();
+            // 가상 모니터 제거 (있을 때만)
+            if (s_Screens?.m_VirtualMonitor != null) FrmVirtualMonitor.DeleteVirtualMonitor();
 
-            // 이벤트 핸들러를 제거하고 Dispatcher로 다시 Close 호출
-            Debug.WriteLine("Closing 이벤트 제거 후 Dispatcher.BeginInvoke로 Close() 재호출");
+            //이벤트 핸들러를 제거하고 Dispatcher로 다시 Close 호출
             this.Closing -= Window_Closing;
 
             Dispatcher.BeginInvoke(new Action(() =>
@@ -521,18 +389,18 @@ public partial class MainWnd : Window
     }
     #endregion
 
-    #region MainMenu Events
-    #region 고객관리
-    // 고객등록  
+        #region MainMenu Events
+        #region 고객관리
+        // 고객등록  
     private void MenuCustomerMng_CustMainRegist_Click(object sender, RoutedEventArgs e)
     {
-        Customer_CustRegistTab = AddOrFocusPageInMainTabCtrl("고객등록", "CustMain_RegistPage"); // 고객등록=임의, CustMain_RegistPage=클래스명
+        // Customer_CustRegistTab = AddOrFocusPageInMainTabCtrl("고객등록", "CustMain_RegistPage"); // 고객등록=임의, CustMain_RegistPage=클래스명
     }
 
     // 거래처 등록
     private void Menu_CompMng_Regist_Click(object sender, RoutedEventArgs e)
     {
-        Company_CompRegistTab = AddOrFocusPageInMainTabCtrl("거래처등록", "Company_RegistPage");
+        // Company_CompRegistTab = AddOrFocusPageInMainTabCtrl("거래처등록", "Company_RegistPage");
     }
     #endregion End 고객관리
 
@@ -540,7 +408,7 @@ public partial class MainWnd : Window
     // 접수상황
     private void MenuOrderMng_ReceiptStatus_Click(object sender, RoutedEventArgs e)
     {
-        Order_StatusTab = AddOrFocusPageInMainTabCtrl("오더상황", "Order_StatusPage");
+        // Order_StatusTab = AddOrFocusPageInMainTabCtrl("오더상황", "Order_StatusPage");
     }
     #endregion
     #endregion
@@ -549,9 +417,9 @@ public partial class MainWnd : Window
     // 가상 모니터
     public void Menu_VirtualMonitor_Click(object sender, RoutedEventArgs e)
     {
-        m_WndForVirtualMonitor = new VirtualMonitorWnd();
-        m_WndForVirtualMonitor.ShowDialog();
-        m_WndForVirtualMonitor = null; // Clear reference
+        // m_WndForVirtualMonitor = new VirtualMonitorWnd();
+        // m_WndForVirtualMonitor.ShowDialog();
+        // m_WndForVirtualMonitor = null; // Clear reference
     }
 
     // 테스트 메뉴
@@ -567,10 +435,10 @@ public partial class MainWnd : Window
     #region TabControl Events
     private void CloseAnyTabButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Parent is StackPanel panel && panel.Parent is TabItem tab)
-        {
-            MainTabCtrl.Items.Remove(tab);
-        }
+        // if (sender is Button button && button.Parent is StackPanel panel && panel.Parent is TabItem tab)
+        // {
+        // MainTabCtrl.Items.Remove(tab);
+        // }
     }
     #endregion
 
@@ -622,25 +490,25 @@ public partial class MainWnd : Window
     }
     public void OnSrLocalClient_Closed(object sender, StdDelegate.ExceptionEventArgs e)
     {
-        try
-        {
-            if (Application.Current == null) return;
-            if (Application.Current.Dispatcher == null) return;
+        // try
+        // {
+        // if (Application.Current == null) return;
+        // if (Application.Current.Dispatcher == null) return;
 
-            _ = Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                if (s_MainWnd == null || !s_MainWnd.IsLoaded) return;
+        // _ = Application.Current.Dispatcher.BeginInvoke(() =>
+        // {
+        // if (s_MainWnd == null || !s_MainWnd.IsLoaded) return;
 
-                if (TblockConnLocal != null && s_SrLClient != null)
-                {
-                    TblockConnLocal.Text = s_SrLClient.m_sConnSignslR;
-                }
-            });
-        }
-        finally
-        {
+        // if (TblockConnLocal != null && s_SrLClient != null)
+        // {
+        // TblockConnLocal.Text = s_SrLClient.m_sConnSignslR;
+        // }
+        // });
+        // }
+        // finally
+        // {
             //await Task.Delay(1); // 잠시 대기
-        }
+        // }
     }
     #endregion
 
@@ -671,19 +539,19 @@ public partial class MainWnd : Window
     // Closed - Only By Self - Reserved
     public async void OnSrGlobalClient_Closed(object sender, StdDelegate.ExceptionEventArgs e)
     {
-        if (Application.Current == null || Application.Current.Dispatcher == null) return;
+        // if (Application.Current == null || Application.Current.Dispatcher == null) return;
 
-        try
-        {
-            await Application.Current.Dispatcher.InvokeAsync(() =>
-            {
-                if (TblockConnGlobal != null && s_SrGClient != null)
-                    TblockConnGlobal.Text = s_SrGClient.m_sLoginSignalR; // 수동으로 써준다 - 몇개 안되서.
-            });
-        }
-        catch
-        {
-        }
+        // try
+        // {
+        // await Application.Current.Dispatcher.InvokeAsync(() =>
+        // {
+        // if (TblockConnGlobal != null && s_SrGClient != null)
+        // TblockConnGlobal.Text = s_SrGClient.m_sLoginSignalR; // 수동으로 써준다 - 몇개 안되서.
+        // });
+        // }
+        // catch
+        // {
+        // }
     }
     #endregion
 

@@ -56,120 +56,120 @@ public partial class TransparantWnd : Wnd.Window, IDisposable
     public TransparantWnd(IntPtr targetHwnd)
     {
         InitializeComponent();
-        _targetHwnd = targetHwnd;
+        //_targetHwnd = targetHwnd;
 
-        Loaded += (_, __) =>
-        {
-            MakeClickThrough();
-            UpdatePosition(targetHwnd);   // HWND용 위치 맞춤
-            _isReady = true;
-        };
+        //Loaded += (_, __) =>
+        //{
+        //    MakeClickThrough();
+        //    UpdatePosition(targetHwnd);   // HWND용 위치 맞춤
+        //    _isReady = true;
+        //};
     }
 
     public TransparantWnd(Draw.Bitmap bmp)
     {
         InitializeComponent();
 
-        Loaded += (_, __) =>
-        {
-            MakeClickThrough();
-            // Bitmap -> WPF ImageSource 변환
-            var hBitmap = bmp.GetHbitmap();
-            try
-            {
-                var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
-                    hBitmap,
-                    IntPtr.Zero,
-                    Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
+        //Loaded += (_, __) =>
+        //{
+        //    MakeClickThrough();
+        //    // Bitmap -> WPF ImageSource 변환
+        //    var hBitmap = bmp.GetHbitmap();
+        //    try
+        //    {
+        //        var bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
+        //            hBitmap,
+        //            IntPtr.Zero,
+        //            Int32Rect.Empty,
+        //            BitmapSizeOptions.FromEmptyOptions());
 
-                var img = new System.Windows.Controls.Image
-                {
-                    Source = bitmapSource,
-                    Stretch = Stretch.None
-                };
-                OverlayCanvas.Children.Add(img);
-            }
-            finally
-            {
-                // GDI 리소스 해제 (메모리 누수 방지)
-                StdGdi32.DeleteObject(hBitmap);
-            }
+        //        var img = new System.Windows.Controls.Image
+        //        {
+        //            Source = bitmapSource,
+        //            Stretch = Stretch.None
+        //        };
+        //        OverlayCanvas.Children.Add(img);
+        //    }
+        //    finally
+        //    {
+        //        // GDI 리소스 해제 (메모리 누수 방지)
+        //        StdGdi32.DeleteObject(hBitmap);
+        //    }
 
-            UpdatePosition(bmp);          // Bitmap 크기로 맞춤
-            _isReady = true;
-        };
+        //    UpdatePosition(bmp);          // Bitmap 크기로 맞춤
+        //    _isReady = true;
+        //};
     }
     #endregion
 
     #region 내부용 함수들
-    private void UpdatePosition(IntPtr hwnd)
-    {
-        if (!StdWin32.GetWindowRect(hwnd, out RECT rect)) return;
+//     private void UpdatePosition(IntPtr hwnd)
+//     {
+//         if (!StdWin32.GetWindowRect(hwnd, out RECT rect)) return;
 
-        var dpi = VisualTreeHelper.GetDpi(this);
-        double fx = 96.0 / dpi.PixelsPerInchX;
-        double fy = 96.0 / dpi.PixelsPerInchY;
+//         var dpi = VisualTreeHelper.GetDpi(this);
+//         double fx = 96.0 / dpi.PixelsPerInchX;
+//         double fy = 96.0 / dpi.PixelsPerInchY;
 
-        Left = rect.Left * fx;
-        Top = rect.Top * fy;
-        Width = (rect.Right - rect.Left) * fx;
-        Height = (rect.Bottom - rect.Top) * fy;
-    }
+//         Left = rect.Left * fx;
+//         Top = rect.Top * fy;
+//         Width = (rect.Right - rect.Left) * fx;
+//         Height = (rect.Bottom - rect.Top) * fy;
+//     }
 
-    private void UpdatePosition(Draw.Bitmap bmp)
-    {
-        var dpi = VisualTreeHelper.GetDpi(this);
-        double fx = 96.0 / dpi.PixelsPerInchX;
-        double fy = 96.0 / dpi.PixelsPerInchY;
+//     private void UpdatePosition(Draw.Bitmap bmp)
+//     {
+//         var dpi = VisualTreeHelper.GetDpi(this);
+//         double fx = 96.0 / dpi.PixelsPerInchX;
+//         double fy = 96.0 / dpi.PixelsPerInchY;
 
-        Left = 0;
-        Top = 0;
-        Width = bmp.Width * fx;
-        Height = bmp.Height * fy;
-    }
+//         Left = 0;
+//         Top = 0;
+//         Width = bmp.Width * fx;
+//         Height = bmp.Height * fy;
+//     }
 
-    private void MakeClickThrough()
-    {
-        var hwnd = new WindowInteropHelper(this).Handle;
-        int exStyle = StdWin32.GetWindowLong(hwnd, GWL_EXSTYLE);
-        exStyle |= WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
-        StdWin32.SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
-    }
+//     private void MakeClickThrough()
+//     {
+//         var hwnd = new WindowInteropHelper(this).Handle;
+//         int exStyle = StdWin32.GetWindowLong(hwnd, GWL_EXSTYLE);
+//         exStyle |= WS_EX_TRANSPARENT | WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
+//         StdWin32.SetWindowLong(hwnd, GWL_EXSTYLE, exStyle);
+//     }
     #endregion
 
     #region Overlay 생성/제거 API
-    public static void CreateOverlay(IntPtr targetHwnd)
-    {
-        CreateOverlayInternal(() => new TransparantWnd(targetHwnd));
-    }
+    //public static void CreateOverlay(IntPtr targetHwnd)
+    //{
+    //    CreateOverlayInternal(() => new TransparantWnd(targetHwnd));
+    //}
 
-    public static void CreateOverlay(Draw.Bitmap bmp)
-    {
-        CreateOverlayInternal(() => new TransparantWnd(bmp));
-    }
+    //public static void CreateOverlay(Draw.Bitmap bmp)
+    //{
+    //    CreateOverlayInternal(() => new TransparantWnd(bmp));
+    //}
 
-    private static void CreateOverlayInternal(Func<TransparantWnd> factory)
-    {
-        if (_instance != null)
-            DeleteOverlay();
+//     private static void CreateOverlayInternal(Func<TransparantWnd> factory)
+//     {
+//         if (_instance != null)
+//             DeleteOverlay();
 
-        _isReady = false;
+//         _isReady = false;
 
-        _uiThread = new Thread(() =>
-        {
-            _instance = factory();
-            _instance.ShowActivated = false;
-            _instance.Show();
-            System.Windows.Threading.Dispatcher.Run();
-        });
+//         _uiThread = new Thread(() =>
+//         {
+//             _instance = factory();
+//             _instance.ShowActivated = false;
+//             _instance.Show();
+//             System.Windows.Threading.Dispatcher.Run();
+//         });
 
-        _uiThread.SetApartmentState(ApartmentState.STA);
-        _uiThread.IsBackground = true;
-        _uiThread.Start();
+//         _uiThread.SetApartmentState(ApartmentState.STA);
+//         _uiThread.IsBackground = true;
+//         _uiThread.Start();
 
-        while (!_isReady) Thread.Sleep(50);
-    }
+//         while (!_isReady) Thread.Sleep(50);
+//     }
 
     public static void DeleteOverlay()
     {
@@ -210,98 +210,98 @@ public partial class TransparantWnd : Wnd.Window, IDisposable
         });
     }
 
-    private static async Task BlinkAsync(UIElement element, int periodMs)
-    {
-        try
-        {
-            while (_instance != null && _instance.OverlayCanvas.Children.Contains(element))
-            {
-                element.Visibility = element.Visibility == Visibility.Visible
-                    ? Visibility.Hidden
-                    : Visibility.Visible;
+//     private static async Task BlinkAsync(UIElement element, int periodMs)
+//     {
+//         try
+//         {
+//             while (_instance != null && _instance.OverlayCanvas.Children.Contains(element))
+//             {
+//                 element.Visibility = element.Visibility == Visibility.Visible
+//                     ? Visibility.Hidden
+//                     : Visibility.Visible;
 
-                await Task.Delay(periodMs);
-            }
-        }
-        catch { }
-    }
+//                 await Task.Delay(periodMs);
+//             }
+//         }
+//         catch { }
+//     }
 
-    public static void DrawBoxAsync(int x, int y, int width, int height,
-        Color? strokeColor = null, double thickness = 1, bool dashed = false, bool blink = false, int blinkPeriodMs = 500)
-    {
-        _instance?.Dispatcher.BeginInvoke(new Action(() =>
-        {
-            var rect = new System.Windows.Shapes.Rectangle
-            {
-                Width = width,
-                Height = height,
-                Stroke = new SolidColorBrush(strokeColor ?? Colors.Black),
-                StrokeThickness = thickness,
-                Fill = Brushes.Transparent,
-                StrokeDashArray = dashed ? new DoubleCollection { 4, 2 } : null
-            };
+    //public static void DrawBoxAsync(int x, int y, int width, int height,
+    //    Color? strokeColor = null, double thickness = 1, bool dashed = false, bool blink = false, int blinkPeriodMs = 500)
+    //{
+    //    _instance?.Dispatcher.BeginInvoke(new Action(() =>
+    //    {
+    //        var rect = new System.Windows.Shapes.Rectangle
+    //        {
+    //            Width = width,
+    //            Height = height,
+    //            Stroke = new SolidColorBrush(strokeColor ?? Colors.Black),
+    //            StrokeThickness = thickness,
+    //            Fill = Brushes.Transparent,
+    //            StrokeDashArray = dashed ? new DoubleCollection { 4, 2 } : null
+    //        };
 
-            Canvas.SetLeft(rect, x);
-            Canvas.SetTop(rect, y);
-            _instance.OverlayCanvas.Children.Add(rect);
+    //        Canvas.SetLeft(rect, x);
+    //        Canvas.SetTop(rect, y);
+    //        _instance.OverlayCanvas.Children.Add(rect);
 
-            if (blink) _ = BlinkAsync(rect, blinkPeriodMs);
-        }));
-    }
+    //        if (blink) _ = BlinkAsync(rect, blinkPeriodMs);
+    //    }));
+    //}
 
 
-    public static void DrawBoxAsync(Draw.Rectangle rc,
-        Color? strokeColor = null, double thickness = 1, bool dashed = false, bool blink = false, int blinkPeriodMs = 500)
-    {
-        _instance?.Dispatcher.BeginInvoke(new Action(() =>
-        {
-            var rect = new System.Windows.Shapes.Rectangle
-            {
-                Width = rc.Width,
-                Height = rc.Height,
-                Stroke = new SolidColorBrush(strokeColor ?? Colors.Black),
-                StrokeThickness = thickness,
-                Fill = Brushes.Transparent,
-                StrokeDashArray = dashed ? new DoubleCollection { 4, 2 } : null
-            };
+    //public static void DrawBoxAsync(Draw.Rectangle rc,
+    //    Color? strokeColor = null, double thickness = 1, bool dashed = false, bool blink = false, int blinkPeriodMs = 500)
+    //{
+    //    _instance?.Dispatcher.BeginInvoke(new Action(() =>
+    //    {
+    //        var rect = new System.Windows.Shapes.Rectangle
+    //        {
+    //            Width = rc.Width,
+    //            Height = rc.Height,
+    //            Stroke = new SolidColorBrush(strokeColor ?? Colors.Black),
+    //            StrokeThickness = thickness,
+    //            Fill = Brushes.Transparent,
+    //            StrokeDashArray = dashed ? new DoubleCollection { 4, 2 } : null
+    //        };
 
-            Canvas.SetLeft(rect, rc.Left);
-            Canvas.SetTop(rect, rc.Top);
-            _instance.OverlayCanvas.Children.Add(rect);
+    //        Canvas.SetLeft(rect, rc.Left);
+    //        Canvas.SetTop(rect, rc.Top);
+    //        _instance.OverlayCanvas.Children.Add(rect);
 
-            if (blink) _ = BlinkAsync(rect, blinkPeriodMs);
-        }));
-    }
+    //        if (blink) _ = BlinkAsync(rect, blinkPeriodMs);
+    //    }));
+    //}
 
-    public static void DrawBoxAsync(int offset, 
-        Color? strokeColor = null, double thickness = 1, bool dashed = false, bool blink = false, int blinkPeriodMs = 500)
-    {
-        _instance?.Dispatcher.BeginInvoke(new Action(() =>
-        {
-            // Overlay 전체 크기 가져오기
-            double x = 0 - offset;
-            double y = 0 - offset;
-            double w = _instance.OverlayCanvas.ActualWidth + (offset * 2);
-            double h = _instance.OverlayCanvas.ActualHeight + (offset * 2);
+    //public static void DrawBoxAsync(int offset, 
+    //    Color? strokeColor = null, double thickness = 1, bool dashed = false, bool blink = false, int blinkPeriodMs = 500)
+    //{
+    //    _instance?.Dispatcher.BeginInvoke(new Action(() =>
+    //    {
+    //        // Overlay 전체 크기 가져오기
+    //        double x = 0 - offset;
+    //        double y = 0 - offset;
+    //        double w = _instance.OverlayCanvas.ActualWidth + (offset * 2);
+    //        double h = _instance.OverlayCanvas.ActualHeight + (offset * 2);
 
-            var rect = new System.Windows.Shapes.Rectangle
-            {
-                Width = w,
-                Height = h,
-                Stroke = new SolidColorBrush(strokeColor ?? Colors.Black),
-                StrokeThickness = thickness,
-                Fill = Brushes.Transparent,
-                StrokeDashArray = dashed ? new DoubleCollection { 4, 2 } : null
-            };
+    //        var rect = new System.Windows.Shapes.Rectangle
+    //        {
+    //            Width = w,
+    //            Height = h,
+    //            Stroke = new SolidColorBrush(strokeColor ?? Colors.Black),
+    //            StrokeThickness = thickness,
+    //            Fill = Brushes.Transparent,
+    //            StrokeDashArray = dashed ? new DoubleCollection { 4, 2 } : null
+    //        };
 
-            Canvas.SetLeft(rect, x);
-            Canvas.SetTop(rect, y);
-            _instance.OverlayCanvas.Children.Add(rect);
+    //        Canvas.SetLeft(rect, x);
+    //        Canvas.SetTop(rect, y);
+    //        _instance.OverlayCanvas.Children.Add(rect);
 
-            if (blink)
-                _ = BlinkAsync(rect, blinkPeriodMs);
-        }));
-    }
+    //        if (blink)
+    //            _ = BlinkAsync(rect, blinkPeriodMs);
+    //    }));
+    //}
 
     #endregion
 }

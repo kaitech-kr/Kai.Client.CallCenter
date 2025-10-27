@@ -43,39 +43,39 @@ public class InsungsAct_App
     }
     #endregion
 
-    //#region BeforeWork
-    ///// <summary>
-    ///// 앱 실행 전 준비 작업
-    ///// - Registry에서 앱 경로 찾기 (없으면 예측 경로 또는 사용자 선택)
-    ///// - 기존 프로세스 종료 (옵션)
-    ///// </summary>
-    //public async Task<StdResult_String> BeforeWorkAsync(string sRegNameOfAppPath, string sFolder, string sExecFile)
-    //{
-    //    MsgBox($"{sRegNameOfAppPath}, {sFolder}, {sExecFile}");
+    #region BeforeWork
+    /// <summary>
+    /// 앱 실행 전 준비 작업
+    /// - Registry에서 앱 경로 찾기 (없으면 예측 경로 또는 사용자 선택)
+    /// - 기존 프로세스 종료 (옵션)
+    /// </summary>
+    public async Task<StdResult_String> BeforeWorkAsync(string sRegNameOfAppPath, string sFolder, string sExecFile)
+    {
+        MsgBox($"{sRegNameOfAppPath}, {sFolder}, {sExecFile}");
 
-    //    // AppPath 구하기 - 틀리면 Registry에 새로 찾은 경로를 저장한다
-    //    StdResult_String result = await Task.Run(() =>
-    //        NwCommon.GetAppPath(sRegNameOfAppPath, sFolder, sExecFile)
-    //    );
+        // AppPath 구하기 - 틀리면 Registry에 새로 찾은 경로를 저장한다
+        StdResult_String result = await Task.Run(() =>
+            NwCommon.GetAppPath(sRegNameOfAppPath, sFolder, sExecFile)
+        );
 
-    //    if (string.IsNullOrEmpty(result.strResult)) // 경로가 없으면 종료
-    //        return result;
+        if (string.IsNullOrEmpty(result.strResult)) // 경로가 없으면 종료
+            return result;
 
-    //    // 혹시 이미 있는 인성 프로그램 죽이기 (필요시 주석 해제)
-    //    // Splash Window가 있으면 죽인다
-    //    //NwCommon.CloseSplash(null, m_FileInfo.Splash_TopWnd_sWndName);
+        // 혹시 이미 있는 인성 프로그램 죽이기 (필요시 주석 해제)
+        // Splash Window가 있으면 죽인다
+        //NwCommon.CloseSplash(null, m_FileInfo.Splash_TopWnd_sWndName);
 
-    //    // Main Window가 있으면 죽인다
-    //    //IntPtr hWnd = Std32Window.FindMainWindow_Reduct(null, m_FileInfo.Main_TopWnd_sWndNameReduct);
-    //    //if (hWnd != IntPtr.Zero)
-    //    //{
-    //    //    Std32Window.PostCloseTwiceWindow(hWnd); // MainWindow를 닫는다
-    //    //    await Task.Delay(1000); // 1초 대기 - 너무 짧으면 안됨
-    //    //}
+        // Main Window가 있으면 죽인다
+        //IntPtr hWnd = Std32Window.FindMainWindow_Reduct(null, m_FileInfo.Main_TopWnd_sWndNameReduct);
+        //if (hWnd != IntPtr.Zero)
+        //{
+        //    Std32Window.PostCloseTwiceWindow(hWnd); // MainWindow를 닫는다
+        //    await Task.Delay(1000); // 1초 대기 - 너무 짧으면 안됨
+        //}
 
-    //    return result;
-    //}
-    //#endregion
+        return result;
+    }
+    #endregion
 
     #region UpdaterWork
     /// <summary>

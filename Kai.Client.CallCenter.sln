@@ -13,23 +13,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kai.Server.Main", "..\..\Ka
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kai.Common.FrmDll_WpfCtrl", "..\..\Kai.Common\Kai.Common.FrmDll_WpfCtrl\Kai.Common.FrmDll_WpfCtrl\Kai.Common.FrmDll_WpfCtrl.csproj", "{0CC2FAA8-73F4-4275-825D-2955965D37B2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목(CallCanter2)", "솔루션 항목(CallCanter2)", "{57A80752-2A57-48B5-A51C-6185227C3E0A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{57A80752-2A57-48B5-A51C-6185227C3E0A}"
 	ProjectSection(SolutionItems) = preProject
 		Kai.Client.CallCenter\appsettings.json = Kai.Client.CallCenter\appsettings.json
 		..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt = ..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt
 		Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt = Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt
 		..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt = ..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt
-		보관.cs = 보관.cs
-		임시.cs = 임시.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kai.Common.FrmDll_FormCtrl", "..\..\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl.csproj", "{EE2FC8AB-3639-4181-A164-0352D30EE9DB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{2A3A057F-5D22-31FD-628C-DF5EF75AEF1E}"
-	ProjectSection(SolutionItems) = preProject
-		Backup\Classes_Old\AutoAllocCtrl.cs = Backup\Classes_Old\AutoAllocCtrl.cs
-		Backup\Networks\NwInsungs\InsungsAct_ReceiptPage.cs = Backup\Networks\NwInsungs\InsungsAct_ReceiptPage.cs
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

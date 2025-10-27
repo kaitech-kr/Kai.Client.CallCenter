@@ -69,15 +69,15 @@ public partial class VirtualMonitorWnd : Window//, IDisposable
     #region Basic Events
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        ImgDisplay.Source = FrmVirtualMonitor.CaptureScreen().imgResult;
+        // ImgDisplay.Source = FrmVirtualMonitor.CaptureScreen().imgResult;
 
-        if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
-        {
-            Timer = new DispatcherTimer();
-            Timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust as needed
-            Timer.Tick += Timer_Tick;
-            Timer.Start();
-        }
+        // if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+        // {
+        // Timer = new DispatcherTimer();
+        // Timer.Interval = TimeSpan.FromMilliseconds(100); // Adjust as needed
+        // Timer.Tick += Timer_Tick;
+        // Timer.Start();
+        // }
     }
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -92,7 +92,7 @@ public partial class VirtualMonitorWnd : Window//, IDisposable
     //Timer_Tick
     private void Timer_Tick(object sender, EventArgs e)
     {
-        ImgDisplay.Source = FrmVirtualMonitor.CaptureScreen().imgResult;
+        // ImgDisplay.Source = FrmVirtualMonitor.CaptureScreen().imgResult;
     }
     #endregion
 }

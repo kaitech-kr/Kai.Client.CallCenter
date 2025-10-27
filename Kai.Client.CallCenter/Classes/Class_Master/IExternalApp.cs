@@ -1,7 +1,6 @@
 using Kai.Common.StdDll_Common;
-using Kai.Client.CallCenter.Classes;
 
-namespace Kai.Client.CallCenter.Networks;
+namespace Kai.Client.CallCenter.Classes.Class_Master;
 
 /// <summary>
 /// 외부 네트워크 앱 공통 인터페이스

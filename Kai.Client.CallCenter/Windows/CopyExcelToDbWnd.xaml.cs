@@ -138,10 +138,10 @@ public partial class CopyExcelToDbWnd : Window
 
     private void BtnCancel_Click(object sender, RoutedEventArgs e)
     {
-        m_CancellationTokenSource.Cancel();
+        // m_CancellationTokenSource.Cancel();
 
-        m_msgResult = MessageBoxResult.Cancel;
-        Close();
+        // m_msgResult = MessageBoxResult.Cancel;
+        // Close();
     }
 }
 #nullable restore

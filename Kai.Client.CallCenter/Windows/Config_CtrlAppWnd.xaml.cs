@@ -64,7 +64,7 @@ public partial class Config_CtrlAppWnd : Window
     #region Events
     private void BtnClose_Click(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        // this.Close();
     }
 
     private void BtnSave_Click(object sender, RoutedEventArgs e)

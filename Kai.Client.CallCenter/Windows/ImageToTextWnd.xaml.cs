@@ -86,8 +86,8 @@ public partial class ImageToTextWnd : Window
     {
         //if (string.IsNullOrEmpty(TBoxText.Text))
         //{
-        MessageBox.Show("TEXT가 없습니다.");
-        return;
+        // MessageBox.Show("TEXT가 없습니다.");
+        // return;
         //}
 
         //Close();
@@ -95,7 +95,7 @@ public partial class ImageToTextWnd : Window
 
     private void BtnClose_Click(object sender, RoutedEventArgs e)
     {
-        Close();
+        // Close();
     }
     #endregion
 }
