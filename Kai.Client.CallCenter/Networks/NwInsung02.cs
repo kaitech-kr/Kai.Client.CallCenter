@@ -6,12 +6,13 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 
 using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.Networks.NwInsungs;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable
-public class NwInsung02 //: IExternalApp
+public class NwInsung02 : IExternalApp
 {
     #region Static Configuration (appsettings.json에서 로드)
     public static bool s_Use { get; set; } = false;
