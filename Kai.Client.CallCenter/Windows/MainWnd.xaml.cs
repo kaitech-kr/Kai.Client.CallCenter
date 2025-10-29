@@ -277,7 +277,7 @@ public partial class MainWnd : Window
          Environment.Exit(0);
     }  
     
-    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         Debug.WriteLine("=== Window_Closing 시작 ===");
 
@@ -302,6 +302,7 @@ public partial class MainWnd : Window
             {
                 if (s_SrGClient != null)
                 {
+                    s_SrGClient.StopReconnection(); // 재접속 중지 플래그 설정
                     s_SrGClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
                     Debug.WriteLine("SrGlobalClient 종료 완료");
                 }
@@ -315,6 +316,7 @@ public partial class MainWnd : Window
             {
                 if (s_SrLClient != null)
                 {
+                    s_SrLClient.StopReconnection(); // 재접속 중지 플래그 설정
                     s_SrLClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
                     Debug.WriteLine("SrLocalClient 종료 완료");
                 }
@@ -366,7 +368,7 @@ public partial class MainWnd : Window
                 if (m_MasterManager != null)
                 {
                     Debug.WriteLine("[MainWnd] MasterModeManager 정리 시작");
-                    m_MasterManager.Shutdown();
+                    await m_MasterManager.ShutdownAsync();
                     m_MasterManager.Dispose();
                     m_MasterManager = null;
                     Debug.WriteLine("[MainWnd] MasterModeManager 정리 완료");

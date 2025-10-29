@@ -245,6 +245,12 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         }
     }
 
+    public void StopReconnection()
+    {
+        m_bStopReconnect = true;
+        Debug.WriteLine("SrGlobalClient 재접속 중지 플래그 설정");
+    }
+
     public async Task DisconnectAsync()
     {
         var conn = HubConn;
@@ -269,6 +275,12 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         Debug.WriteLine("SignalR OnClosedAsync called");
 
         if (ex == null) return; // 정상 종료시 ex는 null
+
+        if (m_bStopReconnect)
+        {
+            Debug.WriteLine("재접속 중지 플래그가 설정됨, 재접속하지 않음");
+            return;
+        }
 
         m_bLoginSignalR = false;
         SrGlobalClient_ClosedEvent?.Invoke(this, new Common.StdDll_Common.StdDelegate.ExceptionEventArgs(ex));

@@ -411,14 +411,14 @@ public class ExternalAppController : IDisposable
         {
             try
             {
-                // ✅ 원칙 1: 루프 시작 시 한 번만 체크
-                await m_CtrlCancelToken.WaitIfPausedOrCancelledAsync();
-
                 stopwatch.Restart();
 
                 // ✅ 원칙 2: 리스트 활용 (확장 가능)
                 foreach (var app in m_ListApps)
                 {
+                    // ✅ 원칙 1: 각 앱 처리 전 Cancel/Pause 체크
+                    await m_CtrlCancelToken.WaitIfPausedOrCancelledAsync();
+
                     try
                     {
                         var result = await app.AutoAllocAsync(m_lAutoAllocCount, m_CtrlCancelToken);
@@ -468,11 +468,31 @@ public class ExternalAppController : IDisposable
     /// <summary>
     /// 리소스 정리
     /// </summary>
-    public void Shutdown()
+    public async Task ShutdownAsync()
     {
         try
         {
             Debug.WriteLine("[ExternalAppController] Shutdown 시작");
+
+            // AutoAlloc 루프 중단
+            if (m_CtrlCancelToken != null)
+            {
+                m_CtrlCancelToken.Cancel();
+            }
+
+            // Task 완료 대기
+            if (m_TaskAutoAlloc != null)
+            {
+                try
+                {
+                    await m_TaskAutoAlloc;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[ExternalAppController] AutoAlloc Task 대기 중 예외 (무시): {ex.Message}");
+                }
+                m_TaskAutoAlloc = null;
+            }
 
             // 리스트의 모든 앱 종료
             foreach (var app in m_ListApps)

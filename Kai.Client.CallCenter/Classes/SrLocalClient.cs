@@ -24,25 +24,21 @@ public class SrLocalClient : IDisposable, INotifyPropertyChanged
         {
             if (disposing)
             {
-                // TODO: 관리형 상태(관리형 개체)를 삭제합니다.
+                // 관리형 리소스 해제
+                if (HubConn != null)
+                {
+                    HubConn.StopAsync().Wait();
+                    HubConn.DisposeAsync().AsTask().Wait();
+                    HubConn = null;
+                }
             }
 
-            // TODO: 비관리형 리소스(비관리형 개체)를 해제하고 종료자를 재정의합니다.
-            // TODO: 큰 필드를 null로 설정합니다.
             disposedValue = true;
         }
     }
 
-    // // TODO: 비관리형 리소스를 해제하는 코드가 'Dispose(bool disposing)'에 포함된 경우에만 종료자를 재정의합니다.
-    // ~SrLocalClient()
-    // {
-    //     // 이 코드를 변경하지 마세요. 'Dispose(bool disposing)' 메서드에 정리 코드를 입력합니다.
-    //     Dispose(disposing: false);
-    // }
-
     public void Dispose()
     {
-        // 이 코드를 변경하지 마세요. 'Dispose(bool disposing)' 메서드에 정리 코드를 입력합니다.
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
@@ -210,6 +206,12 @@ public class SrLocalClient : IDisposable, INotifyPropertyChanged
         }
     }
 
+    public void StopReconnection()
+    {
+        m_bStopReconnect = true;
+        Debug.WriteLine("SrLocalClient 재접속 중지 플래그 설정");
+    }
+
     public async Task DisconnectAsync() // Active Disconnect
     {
         if (HubConn is not null)
@@ -222,6 +224,12 @@ public class SrLocalClient : IDisposable, INotifyPropertyChanged
 
     private Task OnClosedAsync(Exception ex) // When Disconnecting
     {
+        if (m_bStopReconnect)
+        {
+            Debug.WriteLine("재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음");
+            return Task.CompletedTask;
+        }
+
         m_bConnSignslR = false;
         SrLocalClient_ClosedEvent?.Invoke(this, new ExceptionEventArgs(ex));
         return Task.CompletedTask;

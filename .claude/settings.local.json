@@ -12,7 +12,12 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Read(//d/CodeWork/WithVs2022/Save/KaiWork_Backup002/Kai.Client/Kai.Client.CallCenter/Kai.Client.CallCenter/Networks/NwInsungs/**)",
-      "Read(//d/CodeWork/WithVs2022/Save/KaiWork_Backup002/**)"
+      "Read(//d/CodeWork/WithVs2022/Save/KaiWork_Backup002/**)",
+      "Bash(git diff:*)",
+      "Read(//d/CodeWork/WithVs2022/KaiWork_Backup/Kai.Client/Kai.Client.CallCenter/Backup/Networks/NwInsungs/**)",
+      "Bash(dir:*)",
+      "Bash(tree:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

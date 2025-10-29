@@ -939,8 +939,8 @@ public partial class Order_ReceiptWnd : Window
         //tbOrderNew.DtRegDate = ; // DB에서 자동입력
         if (!string.IsNullOrEmpty(orderState)) tbOrderNew.OrderState = orderState;  // MakeEmptyBasicNewTable에서 미리 작성
                                                                                     //tbOrderNew.OrderStateOld = ""; // MakeEmptyBasicNewTable에서 미리 작성
-        tbOrderNew.OrderRemarks = TBoxOrderRemarks.Text; // UiData
-        tbOrderNew.OrderMemo = TBoxOrderMemo.Text; // UiData
+        tbOrderNew.OrderRemarks = TBoxOrderRemarks.Text?.Trim(); // UiData
+        tbOrderNew.OrderMemo = TBoxOrderMemo.Text?.Trim(); // UiData
         tbOrderNew.OrderMemoExt = TBlkCallCustMemoExt.Text; // UiData - 지금은 넘어감.
                                                             //tbOrderNew.UserCode = ; // 필요 없을것 같음.
                                                             //tbOrderNew.UserName = ; // 필요 없을것 같음.
@@ -961,7 +961,7 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.CallDongBasic = Caller_TBoxDongBasic.Text; // UiData
         tbOrderNew.CallAddress = Caller_TBoxDongAddr.Text; // UiData
         tbOrderNew.CallDetailAddr = Caller_TBoxDetailAddr.Text; // UiData
-        tbOrderNew.CallRemarks = Caller_TBoxRemarks.Text; // UiData
+        tbOrderNew.CallRemarks = Caller_TBoxRemarks.Text?.Trim(); // UiData
                                                           //tbOrderNew.StartCustCodeE = 0; // MakeEmptyBasicNewTable에서 미리 작성
         tbOrderNew.StartCustCodeK = StartCustCodeK; // MakeEmptyBasicNewTable에서 미리 작성
         tbOrderNew.StartCustName = Start_TBoxCustName.Text;

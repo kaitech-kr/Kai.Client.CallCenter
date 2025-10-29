@@ -60,7 +60,7 @@ public class MasterModeManager : IDisposable
     #endregion
 
     #region Shutdown
-    public void Shutdown()
+    public async Task ShutdownAsync()
     {
         try
         {
@@ -72,7 +72,7 @@ public class MasterModeManager : IDisposable
                 try
                 {
                     Debug.WriteLine("[MasterModeManager] ExternalAppController 정리 중");
-                    m_ExternalAppController.Shutdown();
+                    await m_ExternalAppController.ShutdownAsync();
                     m_ExternalAppController.Dispose();
                     m_ExternalAppController = null;
                 }

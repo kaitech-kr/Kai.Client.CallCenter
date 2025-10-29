@@ -5,8 +5,8 @@ using System.Diagnostics;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
@@ -199,6 +199,9 @@ public class NwInsung01 : IExternalApp
             await Std32Window.SetWindowTopMostAndReleaseAsync(m_Context.MemInfo.Main.TopWnd_hWnd, c_nWaitShort);
             Debug.WriteLine($"[NwInsung01] TopMost 설정 완료");
             #endregion
+
+            // Cancel/Pause 체크 - Region 2 진입 전
+            await ctrl.WaitIfPausedOrCancelledAsync();
 
             #region 2. Local Variables 초기화
             // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)

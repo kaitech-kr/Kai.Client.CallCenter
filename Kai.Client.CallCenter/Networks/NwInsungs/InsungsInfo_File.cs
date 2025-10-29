@@ -220,22 +220,47 @@ public class InsungsInfo_File
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel물품종류 { get; set; } = new Draw.Rectangle(640, 275, 95, 21); // Check Rect - X=638,Y=273,Width=118,Height=25
     
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel차량톤수 { get; set; } = new Draw.Rectangle(696, 323, 50, 21); // Check Rect - X=638,Y=273,Width=118,Height=25
-    public Draw.Point 접수등록Wnd_우측상단_ptChkRel차량톤수Open { get; set; } = new Draw.Point(754, 355); // Check - Combo Button
-    //public Draw.Point 접수등록Wnd_우측상단_ptClkRel차량톤수Btn { get; set; } = new Draw.Point(754, 330); // click - Combo Button
-   
-    public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel트럭상세 { get; set; } = new Draw.Rectangle(768, 323, 52, 21); // Check Rect - X=638,Y=273,Width=118,Height=25
-    public Draw.Point 접수등록Wnd_우측상단_ptChkRel트럭상세Open { get; set; } = new Draw.Point(800, 355); // Check - Combo Button
-    //public Draw.Point 접수등록Wnd_우측상단_ptClkRel트럭상세Btn { get; set; } = new Draw.Point(830, 330); // click - Combo Button
+    public Draw.Point 접수등록Wnd_우측상단_ptChkRel차량톤수Open { get; set; } = new Draw.Point(721, 354); // Check - Combo Button (Center X=696+50/2=721, Bottom+10=323+21+10=354)
 
-    // RadioBtn 그룹 (TODO: 나중에 필요시 주석 해제)
-    //public OfrModel_RadioBtn[] 접수등록Wnd_우측상단_요금그룹 { get; set; } = null;
-    //public OfrModel_RadioBtn[] 접수등록Wnd_우측상단_차량그룹 { get; set; } = null;
+    public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel트럭상세 { get; set; } = new Draw.Rectangle(768, 323, 52, 21); // Check Rect - X=638,Y=273,Width=118,Height=25
+    public Draw.Point 접수등록Wnd_우측상단_ptChkRel트럭상세Open { get; set; } = new Draw.Point(794, 354); // Check - Combo Button (Center X=768+52/2=794, Bottom+10=323+21+10=354)
+
+    // 요금종류 RadioBtn 그룹 
+    public OfrModel_RadioBtn[] 접수등록Wnd_우측상단_요금그룹 { get; set; } = new OfrModel_RadioBtn[]
+    {
+        new OfrModel_RadioBtn("선불", new Draw.Rectangle(473, 301, 18, 18), new Draw.Rectangle(492, 301, 27, 19)),
+        new OfrModel_RadioBtn("착불", new Draw.Rectangle(521, 301, 18, 18), new Draw.Rectangle(540, 301, 27, 19)),
+        new OfrModel_RadioBtn("신용", new Draw.Rectangle(569, 301, 18, 18), new Draw.Rectangle(588, 301, 27, 19)),
+        new OfrModel_RadioBtn("송금", new Draw.Rectangle(617, 301, 18, 18), new Draw.Rectangle(636, 301, 27, 19)),
+        new OfrModel_RadioBtn("수금", new Draw.Rectangle(665, 301, 18, 18), new Draw.Rectangle(684, 301, 27, 19)),
+        new OfrModel_RadioBtn("카드", new Draw.Rectangle(713, 301, 18, 18), new Draw.Rectangle(732, 301, 27, 19))
+    };
+
+    // 4-4. 차량종류 RadioButton 그룹
+    public OfrModel_RadioBtn[] 접수등록Wnd_우측상단_차량그룹 { get; set; } = new OfrModel_RadioBtn[]
+    {
+        new OfrModel_RadioBtn("오토", new Draw.Rectangle(473, 326, 18, 18), new Draw.Rectangle(492, 326, 27, 19)),
+        new OfrModel_RadioBtn("밴", new Draw.Rectangle(526, 326, 18, 18), new Draw.Rectangle(545, 326, 18, 19)),
+        new OfrModel_RadioBtn("트럭", new Draw.Rectangle(580, 326, 18, 18), new Draw.Rectangle(599, 326, 27, 19)),
+        new OfrModel_RadioBtn("플렉스", new Draw.Rectangle(635, 326, 18, 18), new Draw.Rectangle(654, 326, 40, 19)),
+        new OfrModel_RadioBtn("다마", new Draw.Rectangle(473, 345, 18, 18), new Draw.Rectangle(492, 345, 27, 19)),
+        new OfrModel_RadioBtn("라보", new Draw.Rectangle(526, 345, 18, 18), new Draw.Rectangle(545, 345, 27, 19)),
+        new OfrModel_RadioBtn("지하", new Draw.Rectangle(580, 345, 18, 18), new Draw.Rectangle(599, 345, 27, 19))
+    };
 
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel플럭제외 { get; set; } = new Draw.Rectangle(696, 348, 18, 18); // Check Rect - X=694,Y=345,Width=73,Height=25
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel인수증필 { get; set; } = new Draw.Rectangle(768, 348, 18, 18); // Check Rect - X=766,Y=345,Width=75,Height=25
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel배송지정 { get; set; } = new Draw.Rectangle(471, 372, 19, 19); // Check Rect - X=469,Y=369,Width=51,Height=25
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel당일택배 { get; set; } = new Draw.Rectangle(521, 372, 19, 19); // Check Rect - X=519,Y=369,Width=74,Height=25
-    //public OfrModel_RadioBtn[] 접수등록Wnd_우측상단_배송그룹 { get; set; } = null;
+
+    // qothd종류 RadioButton 그룹
+    public OfrModel_RadioBtn[] 접수등록Wnd_우측상단_배송그룹 { get; set; } = new OfrModel_RadioBtn[]
+    {
+        new OfrModel_RadioBtn("편도", new Draw.Rectangle(596, 373, 18, 18), new Draw.Rectangle(615, 373, 27, 19)),
+        new OfrModel_RadioBtn("왕복", new Draw.Rectangle(641, 373, 18, 18), new Draw.Rectangle(660, 373, 27, 19)),
+        new OfrModel_RadioBtn("경유", new Draw.Rectangle(686, 373, 18, 18), new Draw.Rectangle(705, 373, 27, 19)),
+        new OfrModel_RadioBtn("긴급", new Draw.Rectangle(731, 373, 19, 18), new Draw.Rectangle(750, 373, 27, 19))
+    };
 
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel배송조건 { get; set; } = new Draw.Rectangle(784, 371, 36, 21); // Check Rect
 
