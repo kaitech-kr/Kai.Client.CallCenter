@@ -183,21 +183,23 @@ public class ExternalAppController : IDisposable
     /// <param name="isNewOrder">신규 주문 여부 (true=Created, false=Existed)</param>
     private void ClassifyAndEnqueueOrder(TbOrder order, bool isNewOrder)
     {
-        // Step 1: 차량 타입 판단 (절대 기준)
+        // Step 1: 차량 타입 판단 (제외 로직)
         bool isMotorcycle = order.CarType == "오토";
-        bool isSmallTruck = order.CarType == "트럭" &&
-                            (order.CarWeight == "1t" || order.CarWeight == "1.4t");
-        bool isLargeTruck = order.CarType == "트럭" &&
-                            order.CarWeight != "1t" &&
-                            order.CarWeight != "1.4t";
+        bool isFlex = order.CarType == "플렉스";
+        bool isLargeTruck = order.CarType == "트럭" && order.CarWeight != "1t" && order.CarWeight != "1.4t";
+
+        // 인성1, 인성2: 대형트럭만 제외 (오토, 플렉스, 다마, 라보, 밴, 트럭1t, 1.4t 모두 포함)
+        bool isForInsung = !isLargeTruck;
+
+        // 화물24시, 원콜: 오토, 플렉스만 제외 (다마, 라보, 밴, 트럭 모두 포함)
+        bool isForCargo24Onecall = !isMotorcycle && !isFlex;
 
         Debug.WriteLine($"[분류] KeyCode={order.KeyCode}, CarType={order.CarType}, " +
-                        $"CarWeight={order.CarWeight}, 오토={isMotorcycle}, " +
-                        $"소형={isSmallTruck}, 대형={isLargeTruck}");
+                        $"CarWeight={order.CarWeight}, 인성={isForInsung}, 화물/원콜={isForCargo24Onecall}");
 
         // Step 2: 외부앱별 분배
-        // 오토바이 또는 1.4톤 이하 트럭 → 인성1, 인성2
-        if (isMotorcycle || isSmallTruck)
+        // 인성1, 인성2: 오토, 플렉스, 다마, 라보, 밴, 트럭(~1.4t)
+        if (isForInsung)
         {
             // 인성1: 인성2 신용업체 무조건 제외 (현금/신용 무관)
             // 이유: 결제 방법이 도중에 변경되어도 회계 일관성 유지
@@ -213,8 +215,8 @@ public class ExternalAppController : IDisposable
             }
         }
 
-        // 1.4톤 이하 또는 초과 트럭 → 화물24시, 원콜
-        if (isSmallTruck || isLargeTruck)
+        // 화물24시, 원콜: 오토, 플렉스 제외한 모든 차량
+        if (isForCargo24Onecall)
         {
             EnqueueToApp(order, StdConst_Network.CARGO24, isNewOrder);
             EnqueueToApp(order, StdConst_Network.ONECALL, isNewOrder);
