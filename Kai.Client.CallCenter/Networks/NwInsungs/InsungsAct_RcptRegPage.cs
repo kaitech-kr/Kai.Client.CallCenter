@@ -776,8 +776,9 @@ public class InsungsAct_RcptRegPage
                 int rows = listTH.Count;
                 m_RcptPage.DG오더_RelChildRects = new Draw.Rectangle[columns, rows];
 
-                Draw.Rectangle rcDG_Rel = m_FileInfo.접수등록Page_DG오더_rcRel; // MainWnd 기준 상대좌표
+                Draw.Rectangle rcDG_Rel = m_FileInfo.접수등록Page_DG오더_rcRel; // MainWnd 기준 상대좌표 (참고용)
 
+                // RelChildRects를 DG 기준 좌표로 저장 (rcDG_Rel을 더하지 않음)
                 for (int y = 0; y < rows; y++)
                 {
                     for (int x = 0; x < columns; x++)
@@ -786,8 +787,8 @@ public class InsungsAct_RcptRegPage
                         {
                             // 첫 번째 컬럼은 약간 다르게 처리 (순번 컬럼)
                             m_RcptPage.DG오더_RelChildRects[x, y] = new Draw.Rectangle(
-                                listLW[x].nLeft + rcDG_Rel.Left + 1,
-                                listTH[y].nTop + rcDG_Rel.Top,
+                                listLW[x].nLeft + 1,
+                                listTH[y].nTop,
                                 listLW[x].nWidth - 1,
                                 listTH[y].nHeight
                             );
@@ -795,8 +796,8 @@ public class InsungsAct_RcptRegPage
                         else
                         {
                             m_RcptPage.DG오더_RelChildRects[x, y] = new Draw.Rectangle(
-                                listLW[x].nLeft + rcDG_Rel.Left,
-                                listTH[y].nTop + rcDG_Rel.Top,
+                                listLW[x].nLeft,
+                                listTH[y].nTop,
                                 listLW[x].nWidth,
                                 listTH[y].nHeight
                             );
@@ -809,10 +810,10 @@ public class InsungsAct_RcptRegPage
                 // 4-3. Background Brightness 계산 (첫 번째 데이터 행의 한 점에서 측정)
                 if (rows >= 2)
                 {
-                    // Empty Row의 샘플 포인트 (비트맵 기준 상대 좌표)
+                    // Empty Row의 샘플 포인트 (DG 기준 좌표, 비트맵도 DG 기준)
                     Draw.Point ptSampleRel = new Draw.Point(
-                        m_RcptPage.DG오더_RelChildRects[0, 1].Left - rcDG_Rel.Left + 3,
-                        m_RcptPage.DG오더_RelChildRects[0, 1].Top - rcDG_Rel.Top + 3
+                        m_RcptPage.DG오더_RelChildRects[0, 1].Left + 3,
+                        m_RcptPage.DG오더_RelChildRects[0, 1].Top + 3
                     );
 
                     m_RcptPage.DG오더_nBackgroundBright =
@@ -2028,7 +2029,7 @@ public class InsungsAct_RcptRegPage
 
             EXIT:
 
-            #region ===== 종료작업 =====
+            #region ===== 저장작업 =====
 
             if (result.Result == StdResult.Success)
             {
@@ -2038,27 +2039,59 @@ public class InsungsAct_RcptRegPage
                 string btnName;
                 bool bClosed = false;
 
+                // ==== 테스트 시작 ====
                 // Step 1: 저장 버튼 선택 (접수 or 대기)
-                if (tbOrder.OrderState == "접수")
-                {
-                    hWndBtn = wndRcpt.Btn_hWnd접수저장;
-                    btnName = "접수저장";
-                }
-                else
-                {
-                    hWndBtn = wndRcpt.Btn_hWnd대기저장;
-                    btnName = "대기저장";
-                }
+                //if (tbOrder.OrderState == "접수")
+                //{
+                //    hWndBtn = wndRcpt.Btn_hWnd접수저장;
+                //    btnName = "접수저장";
+                //}
+                //else
+                //{
+                //    hWndBtn = wndRcpt.Btn_hWnd대기저장;
+                //    btnName = "대기저장";
+                //}
+
+                // 테스트용: 저장하지 않고 닫기 버튼으로 테스트
+                hWndBtn = wndRcpt.Btn_hWnd닫기;
+                btnName = "닫기(테스트)";
+                // ==== 테스트 끝 ====
 
                 Debug.WriteLine($"[{m_Context.AppName}] 입력 성공 → {btnName} 버튼 클릭 시도");
 
                 // Step 2: 저장 버튼 클릭 및 창 닫힘 확인
                 bClosed = await ClickNWaitWindowChangedAsync(hWndBtn, wndRcpt.TopWnd_hWnd, ctrl);
 
+
                 if (bClosed)
                 {
-                    Debug.WriteLine($"[{m_Context.AppName}] {btnName} 버튼으로 창 닫힘 확인 → 성공");
-                    return new StdResult_Status(StdResult.Success, $"{btnName} 완료");
+                    // ==== 테스트: 조회 버튼 클릭 및 첫 로우 선택 ====
+                    await Task.Delay(CommonVars.c_nWaitLong, ctrl.Token); // 창 닫힌 후 UI 안정화 대기
+
+                    StdResult_Status resultQuery = await Click조회버튼Async(ctrl);
+
+                    bool bClicked = false;
+                    if (resultQuery.Result == StdResult.Success)
+                    {
+                        bClicked = await ClickFirstRowAsync(ctrl);
+                    }
+
+                    // 테스트 결과 한번에 표시
+                    MsgBox($"[{m_Context.AppName}] 테스트 결과\n" +
+                           $"창 닫기: {btnName}\n" +
+                           $"조회 결과: {resultQuery.Result}\n" +
+                           $"첫 로우 클릭: {bClicked}");
+                    // ==== 테스트 끝 ====
+
+                    // TODO: DB 작업
+                    // 1. 조회 버튼 클릭 (DB refresh) - 완료 (테스트 중)
+                    // 2. 첫 로우 클릭 (OFR 준비) - 완료 (테스트 중)
+                    // 3. Datagrid 캡처 + 첫 로우 명도 반전 처리
+                    // 4. Seqno 획득 (OFR - 명도 반전된 이미지로)
+                    // 5. item.NewOrder.Insung1/2 업데이트
+                    // 6. SignalR로 Kai DB 업데이트
+
+                    return new StdResult_Status(StdResult.Success, $"{btnName} 완료 (테스트)");
                 }
 
                 // Step 3: 저장 버튼으로 안 닫혔으면 닫기 버튼 시도
@@ -2101,39 +2134,7 @@ public class InsungsAct_RcptRegPage
 
                 #endregion
             }
-
             #endregion
-
-
-            //// 30초 대기 (캔슬 가능)
-            ////Std32Cursor.SetCursorPos_RelDrawPos(wndRcpt.요금그룹_hWnd기본요금, 0, 0);
-            //await Task.Delay(5000, ctrl.Token);
-            //MsgBox("Here");
-
-            //// 닫기 버튼 찾기
-            //IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(
-            //    hWndPopup, m_Context.FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
-
-            //if (hWndClose == IntPtr.Zero)
-            //{
-            //    return new StdResult_Status(StdResult.Fail,
-            //        "닫기 버튼을 찾을 수 없습니다.", "RegistOrderToPopupAsync_01");
-            //}
-
-            //// 닫기 버튼 클릭
-            //await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndClose);
-            //Debug.WriteLine($"[{m_Context.AppName}] 닫기 버튼 클릭 완료");
-
-            //// 창이 사라질 때까지 대기 (참조: InsungsAct_ReceiptPage.cs:6541)
-            //bool bDisappeared = await Std32Window.WaitWindow_InvisibleAsync(hWndPopup);
-
-            //if (!bDisappeared)
-            //{
-            //    return new StdResult_Status(StdResult.Fail, $"팝업창이 닫히지 않았습니다: {hWndPopup:X}", "RegistOrderToPopupAsync_02");
-            //}
-
-            //Debug.WriteLine($"[{m_Context.AppName}] 팝업창 닫힘 확인: {hWndPopup:X}");
-            //return new StdResult_Status(StdResult.Success);
         }
         catch (Exception ex)
         {
@@ -2402,6 +2403,248 @@ public class InsungsAct_RcptRegPage
 
         if (bResult) return new StdResult_Status(StdResult.Success);
         else return new StdResult_Status(StdResult.Fail, $"{fieldName} 입력 실패", "ResgistAndVerify요금Async_01");
+    }
+
+    /// <summary>
+    /// 로딩 패널 대기 (조회 시 데이터 로딩 확인)
+    /// - Phase 1: 로딩 패널 출현 대기 (최대 250ms)
+    /// - Phase 2: 로딩 패널 사라짐 대기 (최대 timeoutSec초)
+    /// </summary>
+    /// <param name="hWndDG">Datagrid 핸들</param>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <param name="timeoutSec">Phase 2 타임아웃 (초)</param>
+    /// <returns>Success: 로딩 완료, Skip: 이미 완료, Fail: 타임아웃</returns>
+    private async Task<StdResult_Status> WaitPanLoadedAsync(IntPtr hWndDG, CancelTokenControl ctrl, int timeoutSec = 50)
+    {
+        try
+        {
+            IntPtr hWndFind = IntPtr.Zero;
+            Draw.Point ptCheckPan = m_FileInfo.접수등록Page_DG오더_ptChkRelPanL;
+
+            // Phase 1: 로딩 패널 출현 대기 (최대 250ms)
+            Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 대기 시작");
+
+            for (int i = 0; i < CommonVars.c_nWaitLong; i++) // 250ms
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, ptCheckPan);
+                if (hWndFind != hWndDG)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 확인 ({i}ms)");
+                    break;
+                }
+                await Task.Delay(1, ctrl.Token);
+            }
+
+            if (hWndFind == hWndDG)
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 미출현 → Skip (이미 로딩 완료)");
+                return new StdResult_Status(StdResult.Skip);
+            }
+
+            // Phase 2: 로딩 패널 사라짐 대기 (최대 timeoutSec초)
+            Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 사라짐 대기 시작 (최대 {timeoutSec}초)");
+
+            int iterations = timeoutSec * 10; // 100ms 단위
+            for (int i = 0; i < iterations; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, ptCheckPan);
+                if (hWndFind == hWndDG)
+                {
+                    int elapsedMs = i * 100;
+                    Debug.WriteLine($"[{m_Context.AppName}] 로딩 완료 ({elapsedMs}ms)");
+                    return new StdResult_Status(StdResult.Success);
+                }
+
+                // 5초마다 진행 상황 로그
+                if (i > 0 && i % 50 == 0)
+                {
+                    int elapsedSec = i / 10;
+                    Debug.WriteLine($"[{m_Context.AppName}] 로딩 대기 중... ({elapsedSec}초 경과)");
+                }
+
+                await Task.Delay(100, ctrl.Token);
+            }
+
+            // 타임아웃
+            Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 타임아웃 ({timeoutSec}초)");
+            return new StdResult_Status(StdResult.Fail, $"로딩 대기 시간 초과 ({timeoutSec}초)", "InsungsAct_RcptRegPage/WaitPanLoadedAsync_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "InsungsAct_RcptRegPage/WaitPanLoadedAsync_999");
+        }
+    }
+
+    /// <summary>
+    /// 첫 번째 데이터 행 클릭 및 선택 검증
+    /// - [0, 2] 셀 클릭 (첫 번째 컬럼, 세 번째 행 = 첫 데이터 행)
+    /// - 클릭 후 선택 검증 수행
+    /// - 재시도 로직 포함
+    /// </summary>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <param name="retryCount">재시도 횟수</param>
+    /// <returns>true: 클릭 및 선택 성공, false: 실패</returns>
+    private async Task<bool> ClickFirstRowAsync(CancelTokenControl ctrl, int retryCount = 3)
+    {
+        try
+        {
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                Debug.WriteLine($"[{m_Context.AppName}] ===== 첫 로우 클릭 시도 {i}/{retryCount} =====");
+
+                // 첫 데이터 행 [0, 2] (DG 기준 좌표)
+                Draw.Rectangle rectDG = m_RcptPage.DG오더_RelChildRects[0, 2];
+                Draw.Point ptRel = StdUtil.GetDrawPoint(rectDG, 3, 3);
+
+                Debug.WriteLine($"[{m_Context.AppName}] DG 기준 Rect: ({rectDG.Left},{rectDG.Top},{rectDG.Right},{rectDG.Bottom})");
+                Debug.WriteLine($"[{m_Context.AppName}] 클릭 포인트: ({ptRel.X},{ptRel.Y})");
+
+                // 클릭
+                await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptRel);
+                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+
+                Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 클릭 완료, 검증 시작");
+
+                // 선택 검증
+                bool isSelected = await VerifyFirstRowSelectedAsync(ctrl);
+
+                if (isSelected)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 성공 (시도 {i}/{retryCount})");
+                    return true;
+                }
+
+                Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 실패 (시도 {i}/{retryCount})");
+
+                if (i < retryCount)
+                {
+                    await Task.Delay(200, ctrl.Token);
+                }
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 클릭/선택 실패 (재시도 {retryCount}회 초과)");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] ClickFirstRowAsync 예외: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 첫 번째 데이터 로우가 선택되었는지 검증
+    /// - 중심 라인의 평균 밝기를 측정하여 배경 밝기와 비교
+    /// - 선택 시 반전되어 어두워지므로 배경보다 낮은 밝기를 가짐
+    /// </summary>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <returns>true: 선택됨, false: 선택 안됨 또는 실패</returns>
+    private async Task<bool> VerifyFirstRowSelectedAsync(CancelTokenControl ctrl)
+    {
+        try
+        {
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
+            // 1. DG 캡처
+            Draw.Bitmap bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd);
+            if (bmpDG == null)
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] VerifyFirstRowSelected 실패: 캡처 실패");
+                return false;
+            }
+
+            try
+            {
+                // 2. 첫 데이터 행 [0, 2]의 Rectangle 가져오기
+                Draw.Rectangle rectRow = m_RcptPage.DG오더_RelChildRects[0, 2];
+
+                // 3. 중심 라인의 Rectangle 생성 (높이 1픽셀)
+                int centerY = rectRow.Top + rectRow.Height / 2;
+                Draw.Rectangle rcCenterLine = new Draw.Rectangle(
+                    rectRow.Left,
+                    centerY,
+                    rectRow.Width,
+                    1  // 높이 1픽셀
+                );
+
+                // 4. 중심 라인의 평균 밝기 계산
+                byte avgBrightness = OfrService.GetAverageBrightness_FromColorBitmapRectFast(
+                    bmpDG,
+                    rcCenterLine,
+                    1.0  // weight: 보정 없이 순수 평균
+                );
+
+                // 5. 배경 밝기와 비교
+                int threshold = 10;
+                bool isSelected = avgBrightness < (m_RcptPage.DG오더_nBackgroundBright - threshold);
+
+                Debug.WriteLine($"[{m_Context.AppName}] ===== 첫 로우 선택 검증 =====");
+                Debug.WriteLine($"[{m_Context.AppName}] 배경 밝기: {m_RcptPage.DG오더_nBackgroundBright}");
+                Debug.WriteLine($"[{m_Context.AppName}] 중심 라인 평균: {avgBrightness}");
+                Debug.WriteLine($"[{m_Context.AppName}] 차이: {m_RcptPage.DG오더_nBackgroundBright - avgBrightness}");
+                Debug.WriteLine($"[{m_Context.AppName}] 선택 여부: {(isSelected ? "선택됨" : "선택 안됨")}");
+
+                return isSelected;
+            }
+            finally
+            {
+                bmpDG?.Dispose();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] VerifyFirstRowSelectedAsync 예외: {ex.Message}");
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// 조회 버튼 클릭 및 데이터 로딩 대기
+    /// - WaitPanLoadedAsync로 로딩 완료 확인
+    /// - 재시도 로직 포함
+    /// </summary>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <param name="retryCount">재시도 횟수</param>
+    /// <returns>Success: 조회 완료, Fail: 조회 실패</returns>
+    private async Task<StdResult_Status> Click조회버튼Async(CancelTokenControl ctrl, int retryCount = 3)
+    {
+        try
+        {
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                Debug.WriteLine($"[{m_Context.AppName}] 조회 버튼 클릭 시도 {i}/{retryCount}");
+
+                // 조회 버튼 클릭
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
+
+                // 로딩 패널 대기 - 이것만으로 성공 여부 판단
+                StdResult_Status resultSts = await WaitPanLoadedAsync(m_RcptPage.DG오더_hWnd, ctrl);
+
+                if (resultSts.Result == StdResult.Success || resultSts.Result == StdResult.Skip)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 조회 완료 (시도 {i}회, 결과: {resultSts.Result})");
+                    return new StdResult_Status(StdResult.Success, "조회 완료");
+                }
+
+                // Fail = 타임아웃 → 재시도
+                Debug.WriteLine($"[{m_Context.AppName}] 조회 실패 (시도 {i}회): 타임아웃");
+                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+            }
+
+            return new StdResult_Status(StdResult.Fail, $"조회 버튼 클릭 {retryCount}회 모두 실패", "InsungsAct_RcptRegPage/Click조회버튼Async_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "InsungsAct_RcptRegPage/Click조회버튼Async_999");
+        }
     }
     #endregion
 
