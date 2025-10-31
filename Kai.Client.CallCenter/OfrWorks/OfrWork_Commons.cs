@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System.Text;
+using System.Windows;
 using System.Drawing;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Mvc;
 using Draw = System.Drawing;
 using Wnd = System.Windows;
@@ -24,6 +26,62 @@ namespace Kai.Client.CallCenter.OfrWorks;
 #nullable disable
 public class OfrWork_Common
 {
+    #region Config
+    /// <summary>
+    /// TbChar 대규모 입력 작업 완료 시 false로 변경
+    /// </summary>
+    private static bool s_bUseTbCharBackup = true;
+
+    /// <summary>
+    /// 텍스트 캐시 최대 크기 (하루 업무량 기준)
+    /// </summary>
+    private const int MAX_TEXT_CACHE_SIZE = 20000;
+
+    /// <summary>
+    /// 텍스트 캐시 (전체 텍스트용) - Key: "{width}x{height}_{hexArray}", Value: Text
+    /// </summary>
+    private static ConcurrentDictionary<string, string> s_TextCache = new ConcurrentDictionary<string, string>();
+    #endregion
+
+    #region Cache Management
+    /// <summary>
+    /// 텍스트 캐시 초기화
+    /// </summary>
+    public static void ClearTextCache() => s_TextCache.Clear();
+
+    /// <summary>
+    /// 텍스트 캐시 조회
+    /// </summary>
+    /// <param name="analyText">비트맵 분석 결과</param>
+    /// <param name="cachedText">캐시된 텍스트 (HIT 시)</param>
+    /// <returns>캐시 HIT 여부</returns>
+    private static bool TryGetTextCache(OfrModel_BitmapAnalysis analyText, out string cachedText)
+    {
+        string cacheKey = $"{analyText.nWidth}x{analyText.nHeight}_{analyText.sHexArray}";
+        return s_TextCache.TryGetValue(cacheKey, out cachedText);
+    }
+
+    /// <summary>
+    /// 텍스트 캐시 저장 (크기 제한 체크 포함)
+    /// </summary>
+    /// <param name="analyText">비트맵 분석 결과</param>
+    /// <param name="text">저장할 텍스트</param>
+    private static void SaveTextCache(OfrModel_BitmapAnalysis analyText, string text)
+    {
+        string cacheKey = $"{analyText.nWidth}x{analyText.nHeight}_{analyText.sHexArray}";
+
+        // 캐시 크기 제한 체크
+        if (s_TextCache.Count >= MAX_TEXT_CACHE_SIZE)
+        {
+            Debug.WriteLine($"[Cache LIMIT] TextCache 한계 도달! 현재: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
+            MsgBox($"텍스트 캐시가 한계({MAX_TEXT_CACHE_SIZE}개)에 도달했습니다.\n\n개발자에게 문의하세요.");
+            return; // 저장하지 않음
+        }
+
+        s_TextCache[cacheKey] = text;
+    }
+    #endregion
+
     // TbText
     //public static async Task<OfrResult_TbText> OfrImage_LooseDrawRelRectAsync(Draw.Bitmap bmpLoose)
     //{
@@ -101,6 +159,111 @@ public class OfrWork_Common
         return ErrMsgResult_TbText(null, analyText,
             $"DB에서 텍스트를 찾을 수 없습니다: {analyText.nWidth}x{analyText.nHeight}, Hex={analyText.sHexArray}",
             "OfrWork_Common/OfrImage_ExactDrawRelRectAsync_03", bWrite, bMsgBox);
+    }
+
+    /// <summary>
+    /// TbChar/TbCharBackup에서 문자 검색
+    /// </summary>
+    private static async Task<string?> SelectCharByBasicAsync(int width, int height, string hexString)
+    {
+        string? character = null;
+        if (s_bUseTbCharBackup)
+        {
+            PgResult_TbCharBackup result = await PgService_TbCharBackup.SelectRowByBasicAsync(width, height, hexString);
+            character = result?.tbCharBackup?.Character;
+        }
+        else
+        {
+            PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
+            character = result?.tbChar?.Character;
+        }
+
+        return character;
+    }
+
+    /// <summary>
+    /// 순차 문자 인식 (단음소) - 주문번호, 시간 등 숫자 문자열 전용
+    /// - 텍스트 캐시 적용: 전체 비트맵 패턴으로 캐싱
+    /// </summary>
+    public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpSource)
+    {
+        Stopwatch sw = Stopwatch.StartNew();
+
+        try
+        {
+            byte avgBright = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpSource);
+            Draw.Rectangle rcFull = new Draw.Rectangle(0, 0, bmpSource.Width, bmpSource.Height);
+            Draw.Rectangle rcFore = OfrService.GetForeGroundDrawRectangle_FromColorBitmapRectFast(bmpSource, rcFull, avgBright, 0);
+
+            if (rcFore == StdUtil.s_rcDrawEmpty)
+                return new StdResult_String("전경 영역 없음", "OfrStr_SeqCharAsync_01");
+
+            // ========================================
+            // 1. 텍스트 캐시 조회 (전체 전경 영역 기준)
+            // ========================================
+            Draw.Bitmap bmpFore = OfrService.GetBitmapInBitmapFast(bmpSource, rcFore);
+            if (bmpFore == null)
+                return new StdResult_String("전경 비트맵 추출 실패", "OfrStr_SeqCharAsync_01_2");
+
+            byte avgBright2 = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpFore);
+            OfrModel_BitmapAnalysis analyText = OfrService.GetBitmapAnalysisFast(bmpFore, avgBright2);
+            bmpFore.Dispose();
+
+            if (analyText == null || string.IsNullOrEmpty(analyText.sHexArray))
+                return new StdResult_String("전경 비트맵 분석 실패", "OfrStr_SeqCharAsync_01_3");
+
+            // 캐시 HIT
+            if (TryGetTextCache(analyText, out string cachedText))
+            {
+                sw.Stop();
+                Debug.WriteLine($"[Cache HIT] OfrStr_SeqCharAsync: '{cachedText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
+                return new StdResult_String(cachedText);
+            }
+
+            // ========================================
+            // 2. 캐시 MISS → 전경/배경 방식으로 문자 분리
+            // ========================================
+            List<OfrModel_StartEnd> charList = OfrService.GetStartEndList_FromColorBitmap(bmpSource, avgBright, rcFore);
+            if (charList == null || charList.Count == 0)
+                return new StdResult_String("문자 분리 실패", "OfrStr_SeqCharAsync_02");
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < charList.Count; i++)
+            {
+                StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(bmpSource, avgBright, rcFore, charList, i, i);
+                if (rcIndex == null)
+                    return new StdResult_String($"문자{i + 1} 영역 실패", "OfrStr_SeqCharAsync_03");
+
+                Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
+                OfrModel_BitmapAnalysis modelChar = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright);
+                if (modelChar == null)
+                    return new StdResult_String($"문자{i + 1} 분석 실패", "OfrStr_SeqCharAsync_04");
+
+                string? character = await SelectCharByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
+                if (character == null)
+                    return new StdResult_String($"문자{i + 1} DB 없음 ({modelChar.nWidth}x{modelChar.nHeight})", "OfrStr_SeqCharAsync_05");
+
+                sb.Append(character);
+            }
+
+            if (sb.Length == 0)
+                return new StdResult_String("인식 문자 없음", "OfrStr_SeqCharAsync_06");
+
+            // ========================================
+            // 3. 성공 → 텍스트 캐시에 저장
+            // ========================================
+            string resultText = sb.ToString();
+            SaveTextCache(analyText, resultText);
+
+            sw.Stop();
+            Debug.WriteLine($"[Cache MISS] OfrStr_SeqCharAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
+
+            return new StdResult_String(resultText);
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_String(StdUtil.GetExceptionMessage(ex), "OfrStr_SeqCharAsync_999");
+        }
     }
 
     /// <summary>

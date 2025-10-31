@@ -1,17 +1,19 @@
 using System.Linq;
 using System.Diagnostics;
 using Draw = System.Drawing;
+using DrawImg = System.Drawing.Imaging;
 
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
+using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
-
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.OfrWorks;
+using Kai.Client.CallCenter.Windows;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks.NwInsungs;
@@ -79,6 +81,14 @@ public class InsungsAct_RcptRegPage
     /// Datagrid 헤더 텍스트 영역 높이
     /// </summary>
     private const int HEADER_TEXT_HEIGHT = 18;
+
+    /// <summary>
+    /// Datagrid 컬럼 인덱스 상수 (변경 시 수동으로 같이 변경 필요)
+    /// </summary>
+    public const int c_nCol번호 = 0;
+    public const int c_nCol상태 = 1;
+    public const int c_nCol주문번호 = 2;
+    public const int c_nCol오더메모 = 18;
 
     /// <summary>
     /// 접수등록 Datagrid 컬럼 헤더 정보 (20개 컬럼)
@@ -573,6 +583,14 @@ public class InsungsAct_RcptRegPage
 
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼 경계 검출 완료: 실제 컬럼={columns}");
 
+                // [디버깅] listLW 첫 3개 값 출력
+                string debugInfo = "[디버깅] listLW 첫 3개:\n";
+                for (int dbg = 0; dbg < Math.Min(3, listLW.Count); dbg++)
+                {
+                    debugInfo += $"[{dbg}] Left={listLW[dbg].nLeft}, Width={listLW[dbg].nWidth}\n";
+                }
+                Debug.WriteLine(debugInfo);
+
                 // 컬럼 개수가 20개가 아니면 즉시 InitDG오더Async 호출하여 강제 초기화
                 if (columns != 20)
                 {
@@ -778,30 +796,30 @@ public class InsungsAct_RcptRegPage
 
                 Draw.Rectangle rcDG_Rel = m_FileInfo.접수등록Page_DG오더_rcRel; // MainWnd 기준 상대좌표 (참고용)
 
+                // Left offset: 첫 번째 컬럼의 Left 값을 빼서 0 기준으로 조정
+                int leftOffset = listLW[0].nLeft;
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] Left offset 적용: {leftOffset}");
+
                 // RelChildRects를 DG 기준 좌표로 저장 (rcDG_Rel을 더하지 않음)
+                // 셀 영역 조정:
+                // - 로우(Top, Height): 헤더(y=0)는 Top 그대로/Height -1, 데이터(y>=1)는 Top -1/Height -1
+                // - 셀(Left, Width): 첫 셀(x=0)은 Left +2, 나머지(x>0)는 Left +1, 모든 셀 Width -1
                 for (int y = 0; y < rows; y++)
                 {
                     for (int x = 0; x < columns; x++)
                     {
-                        if (x == 0)
-                        {
-                            // 첫 번째 컬럼은 약간 다르게 처리 (순번 컬럼)
-                            m_RcptPage.DG오더_RelChildRects[x, y] = new Draw.Rectangle(
-                                listLW[x].nLeft + 1,
-                                listTH[y].nTop,
-                                listLW[x].nWidth - 1,
-                                listTH[y].nHeight
-                            );
-                        }
-                        else
-                        {
-                            m_RcptPage.DG오더_RelChildRects[x, y] = new Draw.Rectangle(
-                                listLW[x].nLeft,
-                                listTH[y].nTop,
-                                listLW[x].nWidth,
-                                listTH[y].nHeight
-                            );
-                        }
+                        int baseLeft = listLW[x].nLeft - leftOffset;  // offset 적용
+                        int adjustedLeft = (x == 0) ? baseLeft + 2 : baseLeft + 1;  // 첫 셀 +2, 나머지 +1
+                        int adjustedTop = (y == 0) ? listTH[y].nTop : listTH[y].nTop - 1;  // 헤더는 그대로, 데이터는 -1
+                        int adjustedWidth = listLW[x].nWidth - 1;  // 모든 셀 Width -1
+                        int adjustedHeight = listTH[y].nHeight - 1;  // 모든 행 Height -1
+
+                        m_RcptPage.DG오더_RelChildRects[x, y] = new Draw.Rectangle(
+                            adjustedLeft,
+                            adjustedTop,
+                            adjustedWidth,
+                            adjustedHeight
+                        );
                     }
                 }
 
@@ -2065,33 +2083,48 @@ public class InsungsAct_RcptRegPage
 
                 if (bClosed)
                 {
-                    // ==== 테스트: 조회 버튼 클릭 및 첫 로우 선택 ====
+                    // ==== 테스트: 조회, 첫 로우 선택, Seqno OFR ====
                     await Task.Delay(CommonVars.c_nWaitLong, ctrl.Token); // 창 닫힌 후 UI 안정화 대기
 
+                    // 1. 조회 버튼 클릭 (DB refresh)
                     StdResult_Status resultQuery = await Click조회버튼Async(ctrl);
-
-                    bool bClicked = false;
-                    if (resultQuery.Result == StdResult.Success)
+                    if (resultQuery.Result != StdResult.Success)
                     {
-                        bClicked = await ClickFirstRowAsync(ctrl);
+                        return new StdResult_Status(StdResult.Fail, $"조회 실패: {resultQuery.sErr}");
                     }
 
-                    // 테스트 결과 한번에 표시
-                    MsgBox($"[{m_Context.AppName}] 테스트 결과\n" +
-                           $"창 닫기: {btnName}\n" +
-                           $"조회 결과: {resultQuery.Result}\n" +
-                           $"첫 로우 클릭: {bClicked}");
+                    // 2. 첫 로우 클릭 및 선택 검증
+                    bool bClicked = await ClickFirstRowAsync(ctrl);
+                    if (!bClicked)
+                    {
+                        return new StdResult_Status(StdResult.Fail, "첫 로우 선택 실패");
+                    }
+
+                    // 3. Seqno OFR (첫 로우 선택 상태에서 RGB 반전 후 인식)
+                    StdResult_String resultSeqno = await GetFirstRowSeqnoAsync(ctrl);
+                    if (string.IsNullOrEmpty(resultSeqno.strResult))
+                    {
+                        return new StdResult_Status(StdResult.Fail, $"Seqno 획득 실패: {resultSeqno.sErr}");
+                    }
+
+                    // 4. item.NewOrder 업데이트
+                    item.NewOrder.Insung1 = resultSeqno.strResult;  // 주문번호
+
+                    Debug.WriteLine($"[{m_Context.AppName}] 주문 등록 완료 - Seqno: {resultSeqno.strResult}");
+
+                    // 테스트 결과 표시
+                    Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox.MsgBox(
+                        $"[{m_Context.AppName}] 주문 등록 성공\n" +
+                        $"창 닫기: {btnName}\n" +
+                        $"조회 결과: {resultQuery.Result}\n" +
+                        $"첫 로우 선택: {bClicked}\n" +
+                        $"Seqno: {resultSeqno.strResult}");
                     // ==== 테스트 끝 ====
 
-                    // TODO: DB 작업
-                    // 1. 조회 버튼 클릭 (DB refresh) - 완료 (테스트 중)
-                    // 2. 첫 로우 클릭 (OFR 준비) - 완료 (테스트 중)
-                    // 3. Datagrid 캡처 + 첫 로우 명도 반전 처리
-                    // 4. Seqno 획득 (OFR - 명도 반전된 이미지로)
-                    // 5. item.NewOrder.Insung1/2 업데이트
-                    // 6. SignalR로 Kai DB 업데이트
+                    // TODO: 다음 작업
+                    // 5. SignalR로 Kai DB 업데이트
 
-                    return new StdResult_Status(StdResult.Success, $"{btnName} 완료 (테스트)");
+                    return new StdResult_Status(StdResult.Success, $"{btnName} 완료 (Seqno: {resultSeqno.strResult})");
                 }
 
                 // Step 3: 저장 버튼으로 안 닫혔으면 닫기 버튼 시도
@@ -2480,55 +2513,76 @@ public class InsungsAct_RcptRegPage
     }
 
     /// <summary>
-    /// 첫 번째 데이터 행 클릭 및 선택 검증
-    /// - [0, 2] 셀 클릭 (첫 번째 컬럼, 세 번째 행 = 첫 데이터 행)
-    /// - 클릭 후 선택 검증 수행
-    /// - 재시도 로직 포함
+    /// 첫 번째 데이터 로우 클릭 및 선택 검증
+    /// - 첫 로우의 [0,2] 셀 클릭
+    /// - 첫 로우의 [1,2] 셀에서 선택 검증 (4코너 기반)
     /// </summary>
     /// <param name="ctrl">취소 토큰</param>
     /// <param name="retryCount">재시도 횟수</param>
-    /// <returns>true: 클릭 및 선택 성공, false: 실패</returns>
+    /// <returns>true: 선택 검증 성공, false: 실패</returns>
     private async Task<bool> ClickFirstRowAsync(CancelTokenControl ctrl, int retryCount = 3)
     {
         try
         {
+            // 클릭용 셀: [0, 2] (첫 번째 데이터 로우의 첫 번째 셀)
+            Draw.Rectangle rectClickCell = m_RcptPage.DG오더_RelChildRects[0, 2];
+
+            // 검증용 셀: [1, 2] (첫 번째 데이터 로우의 두 번째 셀)
+            Draw.Rectangle rectVerifyCell = m_RcptPage.DG오더_RelChildRects[1, 2];
+
             for (int i = 1; i <= retryCount; i++)
             {
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
                 Debug.WriteLine($"[{m_Context.AppName}] ===== 첫 로우 클릭 시도 {i}/{retryCount} =====");
 
-                // 첫 데이터 행 [0, 2] (DG 기준 좌표)
-                Draw.Rectangle rectDG = m_RcptPage.DG오더_RelChildRects[0, 2];
-                Draw.Point ptRel = StdUtil.GetDrawPoint(rectDG, 3, 3);
-
-                Debug.WriteLine($"[{m_Context.AppName}] DG 기준 Rect: ({rectDG.Left},{rectDG.Top},{rectDG.Right},{rectDG.Bottom})");
-                Debug.WriteLine($"[{m_Context.AppName}] 클릭 포인트: ({ptRel.X},{ptRel.Y})");
+                // 클릭 포인트
+                Draw.Point ptRelDG = StdUtil.GetDrawPoint(rectClickCell, 3, 3);
 
                 // 클릭
-                await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptRel);
-                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+                await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptRelDG);
+                await Task.Delay(200, ctrl.Token);
 
-                Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 클릭 완료, 검증 시작");
+                Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 클릭 완료, 선택 검증 시작");
 
-                // 선택 검증
-                bool isSelected = await VerifyFirstRowSelectedAsync(ctrl);
-
-                if (isSelected)
+                // 검증용 셀 캡처
+                Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rectVerifyCell);
+                if (bmpCell == null)
                 {
-                    Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 성공 (시도 {i}/{retryCount})");
-                    return true;
+                    Debug.WriteLine($"[{m_Context.AppName}] 검증 셀 캡처 실패 (시도 {i}/{retryCount})");
+                    if (i < retryCount) await Task.Delay(200, ctrl.Token);
+                    continue;
                 }
 
-                Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 실패 (시도 {i}/{retryCount})");
+                try
+                {
+                    // 캡처된 비트맵은 (0,0) 기준이므로 Rectangle 재생성
+                    Draw.Rectangle rectInBitmap = new Draw.Rectangle(0, 0, rectVerifyCell.Width, rectVerifyCell.Height);
+
+                    // 선택 검증 (4코너 기반)
+                    bool isSelected = OfrService.IsInvertedSelection(bmpCell, rectInBitmap);
+
+                    Debug.WriteLine($"[{m_Context.AppName}] 선택 여부: {(isSelected ? "선택됨" : "선택 안됨")}");
+
+                    if (isSelected)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 성공 (시도 {i}/{retryCount})");
+                        return true;
+                    }
+                }
+                finally
+                {
+                    bmpCell?.Dispose();
+                }
 
                 if (i < retryCount)
                 {
+                    Debug.WriteLine($"[{m_Context.AppName}] 선택 실패, 재시도...");
                     await Task.Delay(200, ctrl.Token);
                 }
             }
 
-            Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 클릭/선택 실패 (재시도 {retryCount}회 초과)");
+            Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 실패 ({retryCount}회 시도)");
             return false;
         }
         catch (Exception ex)
@@ -2539,49 +2593,156 @@ public class InsungsAct_RcptRegPage
     }
 
     /// <summary>
-    /// 첫 번째 데이터 로우가 선택되었는지 검증
-    /// - 4코너 평균(배경)과 중심 라인 평균 비교
-    /// - 선택 시: 배경(어두움) + 전경(밝음) → 중심 > 코너
-    /// - 비선택 시: 배경(밝음) + 전경(어두움) → 중심 <= 코너
+    /// 비트맵 RGB 반전 (선택된 셀의 파란 배경 + 흰 텍스트 → 일반 상태로 변환)
+    /// - 반전 후 기존 OFR 로직 그대로 사용 가능
+    /// </summary>
+    /// <param name="source">원본 비트맵</param>
+    /// <returns>RGB 반전된 비트맵</returns>
+    private static Draw.Bitmap InvertBitmap(Draw.Bitmap source)
+    {
+        int width = source.Width;
+        int height = source.Height;
+
+        // PixelFormat을 명시적으로 지정하여 생성
+        Draw.Bitmap result = new Draw.Bitmap(width, height, DrawImg.PixelFormat.Format24bppRgb);
+
+        DrawImg.BitmapData srcData = source.LockBits(
+            new Draw.Rectangle(0, 0, width, height),
+            DrawImg.ImageLockMode.ReadOnly,
+            DrawImg.PixelFormat.Format24bppRgb);
+
+        DrawImg.BitmapData dstData = result.LockBits(
+            new Draw.Rectangle(0, 0, width, height),
+            DrawImg.ImageLockMode.WriteOnly,
+            DrawImg.PixelFormat.Format24bppRgb);
+
+        try
+        {
+            int bytes = Math.Abs(srcData.Stride) * height;
+            byte[] srcBytes = new byte[bytes];
+            byte[] dstBytes = new byte[bytes];
+
+            System.Runtime.InteropServices.Marshal.Copy(srcData.Scan0, srcBytes, 0, bytes);
+
+            // RGB 반전: 255 - 원래값
+            for (int i = 0; i < bytes; i++)
+            {
+                dstBytes[i] = (byte)(255 - srcBytes[i]);
+            }
+
+            System.Runtime.InteropServices.Marshal.Copy(dstBytes, 0, dstData.Scan0, bytes);
+        }
+        finally
+        {
+            source.UnlockBits(srcData);
+            result.UnlockBits(dstData);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 첫 번째 데이터 로우의 주문번호(Seqno) OFR
+    /// - 첫 로우가 선택된 상태에서 주문번호 셀 캡처
+    /// - RGB 반전 후 단음소 OFR (TbCharBackup 사용)
     /// </summary>
     /// <param name="ctrl">취소 토큰</param>
-    /// <returns>true: 선택됨, false: 선택 안됨 또는 실패</returns>
-    private async Task<bool> VerifyFirstRowSelectedAsync(CancelTokenControl ctrl)
+    /// <param name="retryCount">재시도 횟수</param>
+    /// <returns>성공: strResult에 Seqno, 실패: sErr에 에러 메시지</returns>
+    private async Task<StdResult_String> GetFirstRowSeqnoAsync(CancelTokenControl ctrl, int retryCount = 3)
     {
         try
         {
-            await ctrl.WaitIfPausedOrCancelledAsync();
+            // 주문번호 컬럼 인덱스 (상수 사용)
+            int seqnoColIndex = c_nCol주문번호;
 
-            // 1. DG 캡처
-            Draw.Bitmap bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd);
-            if (bmpDG == null)
+            Debug.WriteLine($"[{m_Context.AppName}] 주문번호 컬럼 인덱스: {seqnoColIndex}");
+
+            for (int i = 1; i <= retryCount; i++)
             {
-                Debug.WriteLine($"[{m_Context.AppName}] VerifyFirstRowSelected 실패: 캡처 실패");
-                return false;
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                Debug.WriteLine($"[{m_Context.AppName}] ===== Seqno OFR 시도 {i}/{retryCount} =====");
+
+                // 1. 주문번호 셀 위치: [seqnoColIndex, 2] (y=2: 첫 데이터 로우)
+                Draw.Rectangle rectSeqnoCell = m_RcptPage.DG오더_RelChildRects[seqnoColIndex, 2];
+
+                Debug.WriteLine($"[{m_Context.AppName}] 주문번호 셀 위치 [{seqnoColIndex}, 2]: {rectSeqnoCell}");
+
+                // 2. 셀 캡처 (선택 상태 - 파란 배경에 흰 텍스트)
+                Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(
+                    m_RcptPage.DG오더_hWnd, rectSeqnoCell);
+
+                if (bmpCell == null)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 주문번호 셀 캡처 실패 (시도 {i}/{retryCount})");
+                    if (i < retryCount) await Task.Delay(200, ctrl.Token);
+                    continue;
+                }
+
+                Draw.Bitmap bmpInverted = null;
+
+                try
+                {
+                    // 3. RGB 반전 (파란 배경 + 흰 텍스트 → 일반 상태로)
+                    bmpInverted = InvertBitmap(bmpCell);
+                    bmpCell.Dispose();
+                    bmpCell = null;
+
+                    Debug.WriteLine($"[{m_Context.AppName}] RGB 반전 완료");
+
+                    // 4. 단음소 OFR (TbCharBackup 사용) + 성능 테스트
+                    StdResult_String resultSeqno = null;
+
+                    // ===== 성능 측정: 10회 반복 테스트 =====
+                    List<long> times = new List<long>();
+                    for (int testIdx = 1; testIdx <= 10; testIdx++)
+                    {
+                        Stopwatch sw = Stopwatch.StartNew();
+                        resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpInverted);
+                        sw.Stop();
+                        times.Add(sw.ElapsedMilliseconds);
+                        Debug.WriteLine($"[성능 테스트 {testIdx}/10] '{resultSeqno.strResult}' - {sw.ElapsedMilliseconds}ms");
+                    }
+
+                    // 성능 통계 출력
+                    long firstTime = times[0];
+                    long avgTime = (long)times.Skip(1).Average();
+                    long improvement = firstTime - avgTime;
+                    double improvementPercent = firstTime > 0 ? (improvement * 100.0 / firstTime) : 0;
+
+                    Debug.WriteLine($"[성능 통계]");
+                    Debug.WriteLine($"  첫 실행(캐시 MISS): {firstTime}ms");
+                    Debug.WriteLine($"  평균(캐시 HIT): {avgTime}ms");
+                    Debug.WriteLine($"  속도 향상: {improvement}ms ({improvementPercent:F1}%)");
+                    // ===== 성능 측정 끝 =====
+
+                    // 5. Seqno 반환
+                    if (!string.IsNullOrEmpty(resultSeqno.strResult))
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] Seqno 획득 성공: '{resultSeqno.strResult}' (시도 {i}/{retryCount})");
+                        return new StdResult_String(resultSeqno.strResult);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] OFR 실패: {resultSeqno.sErr} (시도 {i}/{retryCount})");
+                    }
+                }
+                finally
+                {
+                    bmpCell?.Dispose();
+                    bmpInverted?.Dispose();
+                }
+
+                if (i < retryCount) await Task.Delay(200, ctrl.Token);
             }
 
-            try
-            {
-                // 2. 첫 데이터 행 [0, 2]의 Rectangle 가져오기
-                Draw.Rectangle rectRow = m_RcptPage.DG오더_RelChildRects[0, 2];
-
-                // 3. 색상 반전 여부 검증 (OfrService.IsInvertedSelection 사용)
-                bool isSelected = OfrService.IsInvertedSelection(bmpDG, rectRow);
-
-                Debug.WriteLine($"[{m_Context.AppName}] ===== 첫 로우 선택 검증 =====");
-                Debug.WriteLine($"[{m_Context.AppName}] 선택 여부: {(isSelected ? "선택됨" : "선택 안됨")}");
-
-                return isSelected;
-            }
-            finally
-            {
-                bmpDG?.Dispose();
-            }
+            return new StdResult_String($"Seqno OFR 실패 ({retryCount}회 시도)", "GetFirstRowSeqnoAsync_99");
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[{m_Context.AppName}] VerifyFirstRowSelectedAsync 예외: {ex.Message}");
-            return false;
+            Debug.WriteLine($"[{m_Context.AppName}] GetFirstRowSeqnoAsync 예외: {ex.Message}");
+            return new StdResult_String(StdUtil.GetExceptionMessage(ex), "GetFirstRowSeqnoAsync_999");
         }
     }
 
