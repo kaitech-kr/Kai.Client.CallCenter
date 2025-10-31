@@ -2540,8 +2540,9 @@ public class InsungsAct_RcptRegPage
 
     /// <summary>
     /// 첫 번째 데이터 로우가 선택되었는지 검증
-    /// - 중심 라인의 평균 밝기를 측정하여 배경 밝기와 비교
-    /// - 선택 시 반전되어 어두워지므로 배경보다 낮은 밝기를 가짐
+    /// - 4코너 평균(배경)과 중심 라인 평균 비교
+    /// - 선택 시: 배경(어두움) + 전경(밝음) → 중심 > 코너
+    /// - 비선택 시: 배경(밝음) + 전경(어두움) → 중심 <= 코너
     /// </summary>
     /// <param name="ctrl">취소 토큰</param>
     /// <returns>true: 선택됨, false: 선택 안됨 또는 실패</returns>
@@ -2564,30 +2565,10 @@ public class InsungsAct_RcptRegPage
                 // 2. 첫 데이터 행 [0, 2]의 Rectangle 가져오기
                 Draw.Rectangle rectRow = m_RcptPage.DG오더_RelChildRects[0, 2];
 
-                // 3. 중심 라인의 Rectangle 생성 (높이 1픽셀)
-                int centerY = rectRow.Top + rectRow.Height / 2;
-                Draw.Rectangle rcCenterLine = new Draw.Rectangle(
-                    rectRow.Left,
-                    centerY,
-                    rectRow.Width,
-                    1  // 높이 1픽셀
-                );
-
-                // 4. 중심 라인의 평균 밝기 계산
-                byte avgBrightness = OfrService.GetAverageBrightness_FromColorBitmapRectFast(
-                    bmpDG,
-                    rcCenterLine,
-                    1.0  // weight: 보정 없이 순수 평균
-                );
-
-                // 5. 배경 밝기와 비교
-                int threshold = 10;
-                bool isSelected = avgBrightness < (m_RcptPage.DG오더_nBackgroundBright - threshold);
+                // 3. 색상 반전 여부 검증 (OfrService.IsInvertedSelection 사용)
+                bool isSelected = OfrService.IsInvertedSelection(bmpDG, rectRow);
 
                 Debug.WriteLine($"[{m_Context.AppName}] ===== 첫 로우 선택 검증 =====");
-                Debug.WriteLine($"[{m_Context.AppName}] 배경 밝기: {m_RcptPage.DG오더_nBackgroundBright}");
-                Debug.WriteLine($"[{m_Context.AppName}] 중심 라인 평균: {avgBrightness}");
-                Debug.WriteLine($"[{m_Context.AppName}] 차이: {m_RcptPage.DG오더_nBackgroundBright - avgBrightness}");
                 Debug.WriteLine($"[{m_Context.AppName}] 선택 여부: {(isSelected ? "선택됨" : "선택 안됨")}");
 
                 return isSelected;
