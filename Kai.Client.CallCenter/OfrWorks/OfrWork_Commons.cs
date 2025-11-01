@@ -132,9 +132,26 @@ public class OfrWork_Common
 
     private static async Task SaveToTbCharFail(OfrModel_BitmapAnalysis modelChar, string failMark)
     {
-        // TODO: TbCharFail 테이블 저장 로직 구현
-        Debug.WriteLine($"[TbCharFail 저장] '{failMark}' ({modelChar.nWidth}x{modelChar.nHeight}) HEX={modelChar.sHexArray?.Substring(0, Math.Min(20, modelChar.sHexArray?.Length ?? 0))}...");
-        // await CharDbService.InsertTbCharFailAsync(...);
+        // TbCharFail에 저장 (인식 실패 기록)
+        TbCharFail newCharFail = new TbCharFail
+        {
+            Character = failMark,
+            Width = modelChar.nWidth,
+            Height = modelChar.nHeight,
+            HexStrValue = modelChar.sHexArray,
+            Threshold = modelChar.threshold,
+            Searched = 1
+        };
+
+        StdResult_Long saveResult = await PgService_TbCharFail.InsertRowAsync(newCharFail);
+        if (saveResult.lResult > 0)
+        {
+            Debug.WriteLine($"[TbCharFail 저장 성공] '{failMark}' ({modelChar.nWidth}x{modelChar.nHeight})");
+        }
+        else
+        {
+            Debug.WriteLine($"[TbCharFail 저장 실패] {saveResult.sErr}");
+        }
     }
 
     private static async Task<string> ShowImageToCharDialog(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string failReason)
