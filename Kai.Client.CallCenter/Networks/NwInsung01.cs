@@ -89,15 +89,6 @@ public class NwInsung01 : IExternalApp
                 return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, "NwInsung01/InitializeAsync_01");
             }
 
-            //// FileInfo 로드 확인 (테스트용)
-            //Debug.WriteLine($"[NwInsung01] ===== FileInfo 로드 확인 =====");
-            //Debug.WriteLine($"  App_sPredictFolder: {m_Context.FileInfo.App_sPredictFolder}");
-            //Debug.WriteLine($"  App_sExeFileName: {m_Context.FileInfo.App_sExeFileName}");
-            //Debug.WriteLine($"  Splash_TopWnd_sWndName: {m_Context.FileInfo.Splash_TopWnd_sWndName}");
-            //Debug.WriteLine($"  Splash_IdWnd_ptChk: {m_Context.FileInfo.Splash_IdWnd_ptChk}");
-            //Debug.WriteLine($"  Main_TopWnd_sWndNameReduct: {m_Context.FileInfo.Main_TopWnd_sWndNameReduct}");
-            //Debug.WriteLine($"[NwInsung01] ================================");
-
             // 2. 앱 경로 확인
             if (string.IsNullOrEmpty(s_AppPath))
             {

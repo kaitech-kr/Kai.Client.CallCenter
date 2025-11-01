@@ -17,7 +17,10 @@
       "Read(//d/CodeWork/WithVs2022/KaiWork_Backup/Kai.Client/Kai.Client.CallCenter/Backup/Networks/NwInsungs/**)",
       "Bash(dir:*)",
       "Bash(tree:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(cmd /c \"dir /a D:\\CodeWork\\WithVs2022\\Save\")",
+      "Read(//d/CodeWork/WithVs2022/Save/KaiWork_Tmp/Kai.Client/Kai.Client.CallCenter/Backup/Networks/NwInsungs/**)",
+      "Read(//d/CodeWork/WithVs2022/Save/**)"
     ],
     "deny": [],
     "ask": []
