@@ -30,7 +30,7 @@ public class OfrWork_Common
     /// <summary>
     /// TbChar 대규모 입력 작업 완료 시 false로 변경
     /// </summary>
-    private static bool s_bUseTbCharBackup = false;  // false = TbChar 검색/저장
+    private static bool s_bUseTbCharBackup = true;  // false = TbChar 검색/저장, true = TbCharBackup 검색/저장
 
     /// <summary>
     /// 텍스트 캐시 최대 크기 (하루 업무량 기준)
@@ -83,11 +83,11 @@ public class OfrWork_Common
 
     private static async Task SaveToTbCharBackup(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string charValue)
     {
-        // 명도별(60~254)로 TbChar 저장
+        // 명도별(60~254)로 TbCharBackup 저장
         Draw.Bitmap bmpChar = OfrService.GetBitmapInBitmapFast(bmpSource, rcChar);
         if (bmpChar == null)
         {
-            Debug.WriteLine($"[TbChar 저장 실패] 비트맵 추출 실패");
+            Debug.WriteLine($"[TbCharBackup 저장 실패] 비트맵 추출 실패");
             return;
         }
 
@@ -108,7 +108,7 @@ public class OfrWork_Common
 
                 savedHexStrings.Add(analysis.sHexArray);
 
-                TbChar newChar = new TbChar
+                TbCharBackup newChar = new TbCharBackup
                 {
                     Character = charValue,
                     Width = analysis.nWidth,
@@ -117,7 +117,7 @@ public class OfrWork_Common
                     Threshold = threshold
                 };
 
-                StdResult_Long saveResult = await PgService_TbChar.InsertRowAsync(newChar);
+                StdResult_Long saveResult = await PgService_TbCharBackup.InsertRowAsync(newChar);
                 if (saveResult.lResult > 0)
                 {
                     savedCount++;
@@ -127,7 +127,7 @@ public class OfrWork_Common
 
         bmpChar.Dispose();
 
-        Debug.WriteLine($"[TbChar 저장 완료] '{charValue}' ({savedCount}개 명도, 고유={savedHexStrings.Count}개)");
+        Debug.WriteLine($"[TbCharBackup 저장 완료] '{charValue}' ({savedCount}개 명도, 고유={savedHexStrings.Count}개)");
     }
 
     private static async Task SaveToTbCharFail(OfrModel_BitmapAnalysis modelChar, string failMark)
