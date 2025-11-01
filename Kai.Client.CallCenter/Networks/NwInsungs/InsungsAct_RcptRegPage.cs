@@ -2107,22 +2107,39 @@ public class InsungsAct_RcptRegPage
                         return new StdResult_Status(StdResult.Fail, $"Seqno 획득 실패: {resultSeqno.sErr}");
                     }
 
-                    // 4. item.NewOrder 업데이트
-                    item.NewOrder.Insung1 = resultSeqno.strResult;  // 주문번호
-
                     Debug.WriteLine($"[{m_Context.AppName}] 주문 등록 완료 - Seqno: {resultSeqno.strResult}");
 
-                    // 테스트 결과 표시
-                    Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox.MsgBox(
-                        $"[{m_Context.AppName}] 주문 등록 성공\n" +
-                        $"창 닫기: {btnName}\n" +
-                        $"조회 결과: {resultQuery.Result}\n" +
-                        $"첫 로우 선택: {bClicked}\n" +
-                        $"Seqno: {resultSeqno.strResult}");
-                    // ==== 테스트 끝 ====
+                    // 4. Kai DB의 Insung1 필드 업데이트
+                    // 4-1. 사전 체크
+                    if (item.NewOrder.KeyCode <= 0)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] KeyCode 없음 - Kai DB에 없는 주문");
+                        return new StdResult_Status(StdResult.Fail, "Kai DB에 없는 주문입니다");
+                    }
 
-                    // TODO: 다음 작업
-                    // 5. SignalR로 Kai DB 업데이트
+                    if (!string.IsNullOrEmpty(item.NewOrder.Insung1))
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] 이미 등록된 주문번호: {item.NewOrder.Insung1}");
+                        return new StdResult_Status(StdResult.Skip, "이미 Insung1 번호가 등록되어 있습니다");
+                    }
+
+                    if (s_SrGClient == null || !s_SrGClient.m_bLoginSignalR)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] SignalR 연결 안됨");
+                        return new StdResult_Status(StdResult.Fail, "서버 연결이 끊어졌습니다");
+                    }
+
+                    // 4-2. 업데이트 실행
+                    item.NewOrder.Insung1 = resultSeqno.strResult;
+                    StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(item.NewOrder);
+
+                    if (resultUpdate.nResult < 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] Kai DB 업데이트 실패: {resultUpdate.sErr}");
+                        return new StdResult_Status(StdResult.Fail, $"Kai DB 업데이트 실패: {resultUpdate.sErr}");
+                    }
+
+                    Debug.WriteLine($"[{m_Context.AppName}] Kai DB 업데이트 성공 - Insung1: {resultSeqno.strResult}");
 
                     return new StdResult_Status(StdResult.Success, $"{btnName} 완료 (Seqno: {resultSeqno.strResult})");
                 }
