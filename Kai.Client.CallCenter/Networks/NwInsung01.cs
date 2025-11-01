@@ -196,15 +196,15 @@ public class NwInsung01 : IExternalApp
 
             #region 2. Local Variables 초기화
             // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)
-            List<AutoAlloc> listFromController = ExternalAppController.QueueManager.DequeueAllToList(StdConst_Network.INSUNG1);
+            List<AutoAllocModel> listFromController = ExternalAppController.QueueManager.DequeueAllToList(StdConst_Network.INSUNG1);
             Debug.WriteLine($"[{APP_NAME}] 큐에서 가져온 주문 개수: {listFromController.Count}");
 
             // 작업잔량 파악 리스트 (원본 복사)
-            var listInsung = new List<AutoAlloc>(listFromController);
+            var listInsung = new List<AutoAllocModel>(listFromController);
             // 큐에서 이미 꺼냈으므로 Clear 불필요
 
             // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
-            var listProcessed = new List<AutoAlloc>();
+            var listProcessed = new List<AutoAllocModel>();
 
             var listCreated = listInsung
                 .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
@@ -314,7 +314,7 @@ public class NwInsung01 : IExternalApp
                     int index = i - 1;
                     if (index < 0) break;
 
-                    AutoAlloc item = listCreated[index];
+                    AutoAllocModel item = listCreated[index];
                     Debug.WriteLine($"[{APP_NAME}]   [{i}/{listCreated.Count}] 신규 주문 처리: " +
                                   $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
 
@@ -404,8 +404,60 @@ public class NwInsung01 : IExternalApp
                 Debug.WriteLine($"[{APP_NAME}] 총 데이터: {nThisTotCount}개, 총 페이지: {nTotPage}");
                 #endregion
 
-                #region 5-3. Kai갯수만큼 작업
-                // TODO: listEtcGroup 순회하며 StateFlag별 처리
+                #region 5-3. 페이지별 리스트 검사 및 처리
+                // 페이지별로 순회하면서 listEtcGroup의 모든 항목을 검사
+                for (int pageIdx = 1; pageIdx <= nTotPage; pageIdx++)
+                {
+                    // TODO: 페이지 이동 (첫 페이지는 이미 조회버튼으로 이동됨)
+                    if (pageIdx > 1)
+                    {
+                        // TODO: 다음 페이지로 이동
+                    }
+
+                    // TODO: 현재 페이지 캡처
+
+                    // listEtcGroup을 역순으로 순회 (삭제 안전)
+                    for (int no = listEtcGroup.Count; no > 0; no--)
+                    {
+                        int index = no - 1;
+                        if (index < 0) break;
+
+                        AutoAllocModel kaiCopy = listEtcGroup[index];
+                        PostgService_Common_OrderState kaiFlag = kaiCopy.StateFlag;
+                        string sSeqNo = kaiCopy.NewOrder.Insung1;
+
+                        // TODO: 현재 페이지에서 sSeqNo 찾기
+                        bool bFoundInPage = false; // placeholder
+                        int nRowIndex = -1; // placeholder
+                        string sStatus = ""; // placeholder
+
+                        if (bFoundInPage)
+                        {
+                            // TODO: OFR로 상태 읽기
+
+                            // TODO: StateFlag별 처리
+                            // if (kaiFlag == NotChanged) ...
+                            // else if (kaiFlag == Change_ToCancel_DoDelete) ...
+                            // else if ...
+
+                            // TODO: 처리 결과에 따라 재적재 및 삭제
+                            // AutoAlloc_StateResult result = ...
+                            // if (result == Done_DoDelete)
+                            //     listEtcGroup.RemoveAt(index);
+                            // else if (result == Done_NoDelete)
+                            //     ctrl.ReEnqueue(kaiCopy);
+                            //     listEtcGroup.RemoveAt(index);
+                        }
+                        // 못찾으면 다음 페이지에서 찾기 위해 리스트에 유지
+                    }
+
+                    // 조기 탈출: 모든 항목을 처리했으면
+                    if (listEtcGroup.Count == 0)
+                    {
+                        Debug.WriteLine($"[{APP_NAME}] 모든 항목 처리 완료, 페이지 {pageIdx}/{nTotPage}에서 종료");
+                        break;
+                    }
+                }
                 #endregion
 
                 // Region 5 완료

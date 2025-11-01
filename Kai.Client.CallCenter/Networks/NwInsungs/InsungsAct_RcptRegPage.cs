@@ -1586,7 +1586,7 @@ public class InsungsAct_RcptRegPage
     /// - 팝업창 대기 및 검증 (최대 5초)
     /// - 성공 시 RegistOrderToPopupAsync 호출
     /// </summary>
-    public async Task<StdResult_Status> OpenNewOrderPopupAsync(AutoAlloc item, CancelTokenControl ctrl)
+    public async Task<StdResult_Status> OpenNewOrderPopupAsync(AutoAllocModel item, CancelTokenControl ctrl)
     {
         IntPtr hWndPopup = IntPtr.Zero;
         bool bFound = false;
@@ -1645,7 +1645,7 @@ public class InsungsAct_RcptRegPage
     /// - 닫기 버튼 클릭
     /// - 창 닫힘 확인 (성공 판단)
     /// </summary>
-    public async Task<StdResult_Status> RegistOrderToPopupAsync(AutoAlloc item, IntPtr hWndPopup, CancelTokenControl ctrl)
+    public async Task<StdResult_Status> RegistOrderToPopupAsync(AutoAllocModel item, IntPtr hWndPopup, CancelTokenControl ctrl)
     {
         Draw.Bitmap bmpWnd = null;
 
@@ -2196,7 +2196,7 @@ public class InsungsAct_RcptRegPage
     /// <summary>
     /// 신규 주문 등록 확인 (Kai에만 존재, 인성에 없음)
     /// </summary>
-    public async Task<StdResult_Status> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAlloc item, CancelTokenControl ctrl)
+    public async Task<StdResult_Status> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAllocModel item, CancelTokenControl ctrl)
     {
         // Cancel/Pause 체크 - 긴 작업 전
         await ctrl.WaitIfPausedOrCancelledAsync();

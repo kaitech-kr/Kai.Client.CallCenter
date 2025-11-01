@@ -39,8 +39,8 @@ public class ExternalAppController : IDisposable
 
     #region Variables
     // 정적 변수 - 자동배차 주문 리스트 (Master 모드 전용)
-    public static List<AutoAlloc> listForInsung01 = new List<AutoAlloc>();
-    public static List<AutoAlloc> listForInsung02 = new List<AutoAlloc>();
+    public static List<AutoAllocModel> listForInsung01 = new List<AutoAllocModel>();
+    public static List<AutoAllocModel> listForInsung02 = new List<AutoAllocModel>();
     // public static List<AutoAlloc> listForCargo24 = new List<AutoAlloc>();
     // public static List<AutoAlloc> listForOnecall = new List<AutoAlloc>();
 
@@ -66,7 +66,7 @@ public class ExternalAppController : IDisposable
     /// <summary>
     /// 자동배차 큐 관리자 (Phase 1: Queue 기반) - Static으로 관리
     /// </summary>
-    public static AutoAllocQueueController QueueManager { get; private set; } = new AutoAllocQueueController();
+    public static QueueController QueueManager { get; private set; } = new QueueController();
 
     /// <summary>
     /// 자동배차 실행 중 여부
@@ -246,7 +246,7 @@ public class ExternalAppController : IDisposable
         }
 
         // AutoAlloc 생성 및 큐에 추가
-        var autoAlloc = new AutoAlloc(stateFlag, order);
+        var autoAlloc = new AutoAllocModel(stateFlag, order);
         QueueManager.Enqueue(autoAlloc, networkName);
 
         Debug.WriteLine($"  → {networkName} 큐 추가: SeqNo={seqNo ?? "(없음)"}, Flag={stateFlag}");

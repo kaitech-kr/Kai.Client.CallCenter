@@ -9,7 +9,7 @@ namespace Kai.Client.CallCenter.Classes.Class_Master;
 /// - SignalR 실시간 업데이트와 연동
 /// - ExternalAppController의 Dictionary 리스트에서 사용
 /// </summary>
-public class AutoAlloc
+public class AutoAllocModel
 {
     #region Properties
 
@@ -52,7 +52,7 @@ public class AutoAlloc
     /// 새로 생성된 주문용 생성자
     /// </summary>
     /// <param name="newOrder">SignalR OnOrderCreated에서 받은 주문</param>
-    public AutoAlloc(TbOrder newOrder)
+    public AutoAllocModel(TbOrder newOrder)
     {
         StateFlag = PostgService_Common_OrderState.Created;
         NewOrder = newOrder;
@@ -64,7 +64,7 @@ public class AutoAlloc
     /// </summary>
     /// <param name="oldOrder">기존 주문 정보</param>
     /// <param name="newOrder">업데이트된 주문 정보</param>
-    public AutoAlloc(TbOrder oldOrder, TbOrder newOrder)
+    public AutoAllocModel(TbOrder oldOrder, TbOrder newOrder)
     {
         StateFlag = PostgService_Common_OrderState.Updated_Assume;
         OldOrder = oldOrder;
@@ -76,7 +76,7 @@ public class AutoAlloc
     /// </summary>
     /// <param name="stateFlag">상태 플래그 (Existed_NonSeqno 또는 Existed_WithSeqno)</param>
     /// <param name="newOrder">로드된 주문 정보</param>
-    public AutoAlloc(PostgService_Common_OrderState stateFlag, TbOrder newOrder)
+    public AutoAllocModel(PostgService_Common_OrderState stateFlag, TbOrder newOrder)
     {
         StateFlag = stateFlag;
         NewOrder = newOrder;
@@ -86,7 +86,7 @@ public class AutoAlloc
     /// <summary>
     /// 복사 생성자 (Clone용)
     /// </summary>
-    private AutoAlloc(AutoAlloc source)
+    private AutoAllocModel(AutoAllocModel source)
     {
         StateFlag = source.StateFlag;
         NewOrder = source.NewOrder;
@@ -101,14 +101,14 @@ public class AutoAlloc
     /// 깊은 복사 (리스트 작업용)
     /// - 같은 TbOrder 인스턴스를 참조 (TbOrder 자체는 복사하지 않음)
     /// </summary>
-    public AutoAlloc Clone()
+    public AutoAllocModel Clone()
     {
-        return new AutoAlloc(this);
+        return new AutoAllocModel(this);
     }
 
     /// <summary>
     /// 디버그용 문자열
-    /// </summary>
+    /// </summary>ㅐㅇ디
     public override string ToString()
     {
         return $"[AutoAlloc] KeyCode={KeyCode}, State={StateFlag}";
@@ -116,3 +116,5 @@ public class AutoAlloc
 
     #endregion
 }
+
+

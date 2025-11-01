@@ -7,7 +7,7 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Client.CallCenter.Classes;
 namespace Kai.Client.CallCenter.Classes.Class_Master;
 #nullable disable
-public class CtrlExcel : IDisposable
+public class ExcelController : IDisposable
 {
     #region Dispose
     private bool disposedValue;
@@ -42,7 +42,7 @@ public class CtrlExcel : IDisposable
     #endregion
 
     #region Constructor
-    public CtrlExcel()
+    public ExcelController()
     {
         //ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // Set the license context here - 필요없음.
     }

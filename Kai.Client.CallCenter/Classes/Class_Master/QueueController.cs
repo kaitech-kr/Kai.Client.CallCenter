@@ -13,20 +13,20 @@ namespace Kai.Client.CallCenter.Classes.Class_Master;
 /// 자동배차 주문 큐 관리자
 /// Queue 기반으로 주문을 관리하여 복잡성 제거
 /// </summary>
-public class AutoAllocQueueController
+public class QueueController
 {
     #region Queues - 4개 외부앱별
     // 인성1
-    private Queue<AutoAlloc> _ordersInsung1 = new();
+    private Queue<AutoAllocModel> _ordersInsung1 = new();
 
     // 인성2
-    private Queue<AutoAlloc> _ordersInsung2 = new();
+    private Queue<AutoAllocModel> _ordersInsung2 = new();
 
     // 화물24시
-    private Queue<AutoAlloc> _ordersCargo24 = new();
+    private Queue<AutoAllocModel> _ordersCargo24 = new();
 
     // 원콜
-    private Queue<AutoAlloc> _ordersOnecall = new();
+    private Queue<AutoAllocModel> _ordersOnecall = new();
     #endregion
 
     #region Properties
@@ -52,7 +52,7 @@ public class AutoAllocQueueController
     /// <summary>
     /// 네트워크 이름으로 큐 가져오기
     /// </summary>
-    private Queue<AutoAlloc> GetQueue(string networkName)
+    private Queue<AutoAllocModel> GetQueue(string networkName)
     {
         return networkName switch
         {
@@ -69,7 +69,7 @@ public class AutoAllocQueueController
     /// <summary>
     /// 주문을 큐에 추가
     /// </summary>
-    public void Enqueue(AutoAlloc order, string networkName)
+    public void Enqueue(AutoAllocModel order, string networkName)
     {
         if (order == null)
         {
@@ -113,7 +113,7 @@ public class AutoAllocQueueController
                 : PostgService_Common_OrderState.Existed_NonSeqno;
 
             // AutoAlloc 객체 생성 및 큐에 추가
-            var autoAlloc = new AutoAlloc(stateFlag, order);
+            var autoAlloc = new AutoAllocModel(stateFlag, order);
             queue.Enqueue(autoAlloc);
             addedCount++;
 
@@ -126,10 +126,10 @@ public class AutoAllocQueueController
     /// <summary>
     /// 큐에서 모든 주문을 꺼내서 List로 반환
     /// </summary>
-    public List<AutoAlloc> DequeueAllToList(string networkName)
+    public List<AutoAllocModel> DequeueAllToList(string networkName)
     {
         var queue = GetQueue(networkName);
-        var list = new List<AutoAlloc>();
+        var list = new List<AutoAllocModel>();
 
         while (queue.Count > 0)
         {
@@ -143,7 +143,7 @@ public class AutoAllocQueueController
     /// <summary>
     /// 처리 완료 후 큐에 재적재
     /// </summary>
-    public void ReEnqueue(AutoAlloc order, string networkName)
+    public void ReEnqueue(AutoAllocModel order, string networkName)
     {
         if (order == null)
         {
