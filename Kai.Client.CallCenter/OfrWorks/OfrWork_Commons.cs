@@ -30,7 +30,7 @@ public class OfrWork_Common
     /// <summary>
     /// TbChar 대규모 입력 작업 완료 시 false로 변경
     /// </summary>
-    private static bool s_bUseTbCharBackup = true;
+    private static bool s_bUseTbCharBackup = false;  // false = TbChar 검색/저장
 
     /// <summary>
     /// 텍스트 캐시 최대 크기 (하루 업무량 기준)
@@ -83,11 +83,24 @@ public class OfrWork_Common
 
     private static async Task SaveToTbCharBackup(OfrModel_BitmapAnalysis modelChar, string charValue)
     {
-        if (s_bUseTbCharBackup)
+        // TbChar에 저장 (테스트 용도)
+        TbChar newChar = new TbChar
         {
-            // TODO: TbCharBackup 저장 로직 구현
-            Debug.WriteLine($"[TbCharBackup 저장] '{charValue}' ({modelChar.nWidth}x{modelChar.nHeight})");
-            // await CharDbService.InsertTbCharBackupAsync(...);
+            Character = charValue,
+            Width = modelChar.nWidth,
+            Height = modelChar.nHeight,
+            HexStrValue = modelChar.sHexArray,
+            Threshold = 0
+        };
+
+        StdResult_Long saveResult = await PgService_TbChar.InsertRowAsync(newChar);
+        if (saveResult.lResult > 0)
+        {
+            Debug.WriteLine($"[TbChar 저장 성공] '{charValue}' ({modelChar.nWidth}x{modelChar.nHeight})");
+        }
+        else
+        {
+            Debug.WriteLine($"[TbChar 저장 실패] {saveResult.sErr}");
         }
     }
 
