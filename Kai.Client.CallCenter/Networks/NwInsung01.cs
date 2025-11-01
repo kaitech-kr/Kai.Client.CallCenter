@@ -360,30 +360,58 @@ public class NwInsung01 : IExternalApp
             #endregion
 
             #region 5. Updated, NotChanged Order 처리 (기존)
-            // TODO: 5-1. 조회버튼 클릭 + 총계 확인
-            // resultStr = await m_RcptRegPage.Click조회버튼Async(ctrl);
-            // bClicked = await m_RcptRegPage.ClickEmptyRowAsync(ctrl);
+            if (listEtcGroup.Count > 0)
+            {
+                Debug.WriteLine($"[{APP_NAME}] Region 5: 기존 주문 관리 시작 (총 {listEtcGroup.Count}건)");
 
-            // TODO: 5-2. 오더 총갯수/페이지 산정
-            // nThisTotCount = StdConvert.StringToInt(sThisTotCount, -1);
-            // nTotPage 계산
+                #region 5-1. 조회버튼 클릭 + 총계 확인
+                StdResult_Status resultQuery = await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
+                if (resultQuery.Result != StdResult.Success)
+                {
+                    Debug.WriteLine($"[{APP_NAME}] 조회 버튼 클릭 실패: {resultQuery.sErr}");
+                    return new StdResult_Status(StdResult.Retry, $"조회 버튼 클릭 실패: {resultQuery.sErr}", "NwInsung01/AutoAllocAsync_50");
+                }
 
-            // TODO: 5-3. Kai갯수만큼 작업
-            // for (int no = listEtcGroup.Count; no > 0; no--)
-            // {
-            //     resultDg = await m_RcptRegPage.FindDatagridPageNIndex(...);
-            //
-            //     StateFlag별 처리:
-            //     - NotChanged → CheckIsOrderAsync_KaiSameInsungIfChanged
-            //     - Change_ToCancel_DoDelete → Command_ChaneTo취소AndDoDelete
-            //     - Existed_WithSeqno → CheckIsOrderAsync_AssumeKaiUpdated
-            //     - Updated_Assume → CheckIsOrderAsync_AssumeKaiUpdated
-            //
-            //     결과 처리:
-            //     - Done_DoDelete → listOrg Flag Empty, listEtcGroup에서 제거
-            //     - Done_NoDelete → listOrg에 NotChanged 추가, listEtcGroup에서 제거
-            //     - Done_NeedRefresh → ClickEmptyRowAsync
-            // }
+                string sThisTotCount = Std32Window.GetWindowCaption(m_Context.MemInfo.RcptPage.CallCount_hWnd총계);
+                if (string.IsNullOrEmpty(sThisTotCount))
+                {
+                    Debug.WriteLine($"[{APP_NAME}] 접수상황판 총계 읽기 실패");
+                    return new StdResult_Status(StdResult.Retry, "접수상황판 총계 읽기 실패", "NwInsung01/AutoAllocAsync_51");
+                }
+
+                Debug.WriteLine($"[{APP_NAME}] 총계: {sThisTotCount}");
+                #endregion
+
+                #region 5-2. 오더 총갯수/페이지 산정
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                int nTotPage = 1;
+                int nThisTotCount = StdConvert.StringToInt(sThisTotCount, -1);
+                if (nThisTotCount < 0)
+                {
+                    Debug.WriteLine($"[{APP_NAME}] 총계가 음수: {sThisTotCount}");
+                    return new StdResult_Status(StdResult.Retry, $"접수상황판 총계가 음수입니다: {sThisTotCount}", "NwInsung01/AutoAllocAsync_52");
+                }
+
+                // 페이지 계산
+                if (nThisTotCount > m_Context.FileInfo.접수등록Page_DG오더_dataRowCount)
+                {
+                    nTotPage = nThisTotCount / m_Context.FileInfo.접수등록Page_DG오더_dataRowCount;
+                    if ((nThisTotCount % m_Context.FileInfo.접수등록Page_DG오더_dataRowCount) > 0)
+                        nTotPage += 1;
+                }
+
+                Debug.WriteLine($"[{APP_NAME}] 총 데이터: {nThisTotCount}개, 총 페이지: {nTotPage}");
+                #endregion
+
+                #region 5-3. Kai갯수만큼 작업
+                // TODO: listEtcGroup 순회하며 StateFlag별 처리
+                #endregion
+
+                // Region 5 완료
+                Debug.WriteLine($"[{APP_NAME}] Region 5 완료");
+                listEtcGroup.Clear();
+            }
             #endregion
 
             #region 6. 처리 완료된 항목을 큐에 재적재

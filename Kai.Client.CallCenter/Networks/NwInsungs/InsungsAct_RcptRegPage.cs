@@ -2057,23 +2057,17 @@ public class InsungsAct_RcptRegPage
                 string btnName;
                 bool bClosed = false;
 
-                // ==== 테스트 시작 ====
                 // Step 1: 저장 버튼 선택 (접수 or 대기)
-                //if (tbOrder.OrderState == "접수")
-                //{
-                //    hWndBtn = wndRcpt.Btn_hWnd접수저장;
-                //    btnName = "접수저장";
-                //}
-                //else
-                //{
-                //    hWndBtn = wndRcpt.Btn_hWnd대기저장;
-                //    btnName = "대기저장";
-                //}
-
-                // 테스트용: 저장하지 않고 닫기 버튼으로 테스트
-                hWndBtn = wndRcpt.Btn_hWnd닫기;
-                btnName = "닫기(테스트)";
-                // ==== 테스트 끝 ====
+                if (tbOrder.OrderState == "접수")
+                {
+                    hWndBtn = wndRcpt.Btn_hWnd접수저장;
+                    btnName = "접수저장";
+                }
+                else
+                {
+                    hWndBtn = wndRcpt.Btn_hWnd대기저장;
+                    btnName = "대기저장";
+                }
 
                 Debug.WriteLine($"[{m_Context.AppName}] 입력 성공 → {btnName} 버튼 클릭 시도");
 
@@ -2771,7 +2765,7 @@ public class InsungsAct_RcptRegPage
     /// <param name="ctrl">취소 토큰</param>
     /// <param name="retryCount">재시도 횟수</param>
     /// <returns>Success: 조회 완료, Fail: 조회 실패</returns>
-    private async Task<StdResult_Status> Click조회버튼Async(CancelTokenControl ctrl, int retryCount = 3)
+    public async Task<StdResult_Status> Click조회버튼Async(CancelTokenControl ctrl, int retryCount = 3)
     {
         try
         {
