@@ -80,6 +80,41 @@ public class OfrWork_Common
 
         s_TextCache[cacheKey] = text;
     }
+
+    private static async Task SaveToTbCharBackup(OfrModel_BitmapAnalysis modelChar, string charValue)
+    {
+        if (s_bUseTbCharBackup)
+        {
+            // TODO: TbCharBackup 저장 로직 구현
+            Debug.WriteLine($"[TbCharBackup 저장] '{charValue}' ({modelChar.nWidth}x{modelChar.nHeight})");
+            // await CharDbService.InsertTbCharBackupAsync(...);
+        }
+    }
+
+    private static async Task SaveToTbCharFail(OfrModel_BitmapAnalysis modelChar, string failMark)
+    {
+        // TODO: TbCharFail 테이블 저장 로직 구현
+        Debug.WriteLine($"[TbCharFail 저장] '{failMark}' ({modelChar.nWidth}x{modelChar.nHeight}) HEX={modelChar.sHexArray?.Substring(0, Math.Min(20, modelChar.sHexArray?.Length ?? 0))}...");
+        // await CharDbService.InsertTbCharFailAsync(...);
+    }
+
+    private static async Task<string> ShowImageToCharDialog(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string failReason)
+    {
+        string result = null;
+
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            ImageToCharWnd wnd = new ImageToCharWnd(bmpSource, rcChar, failReason);
+            wnd.ShowDialog();
+
+            if (wnd.IsConfirmed && !string.IsNullOrEmpty(wnd.UserInput))
+            {
+                result = wnd.UserInput;
+            }
+        });
+
+        return result;
+    }
     #endregion
 
     // TbText
@@ -241,9 +276,28 @@ public class OfrWork_Common
 
                 string? character = await SelectCharByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
                 if (character == null)
-                    return new StdResult_String($"문자{i + 1} DB 없음 ({modelChar.nWidth}x{modelChar.nHeight})", "OfrStr_SeqCharAsync_05");
+                {
+                    if (CommonVars.s_bDebugMode)
+                    {
+                        // 수동 입력
+                        string manualChar = await ShowImageToCharDialog(bmpSource, rcChar, $"문자{i + 1} DB 검색 실패");
 
-                sb.Append(character);
+                        if (!string.IsNullOrEmpty(manualChar))
+                        {
+                            await SaveToTbCharBackup(modelChar, manualChar);
+                            sb.Append(manualChar);
+                            continue;
+                        }
+                    }
+
+                    // 디버그 아니거나 건너뜀 → ☒
+                    sb.Append("☒");
+                    await SaveToTbCharFail(modelChar, "☒");
+                }
+                else
+                {
+                    sb.Append(character);
+                }
             }
 
             if (sb.Length == 0)
