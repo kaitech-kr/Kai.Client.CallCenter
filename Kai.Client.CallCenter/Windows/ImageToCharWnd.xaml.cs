@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -19,96 +20,147 @@ namespace Kai.Client.CallCenter.Windows;
 public partial class ImageToCharWnd : Window
 {
     #region Variables
-    //public OfrModel_BmpCharAnalysis modelAnaly = null;
-    //public TbChar tbChar = null;
+    private Draw.Bitmap _bmpSource;     // 전체 비트맵 (ImgString용)
+    private Draw.Rectangle _rcChar;     // 개별 문자 영역 (ImgChar용)
+    private string _failReason;         // 실패 사유
+
+    // 출력 데이터
+    public string UserInput { get; private set; } = null;
+    public bool IsConfirmed { get; private set; } = false;  // 확인=true, 건너뜀/취소=false
     #endregion
 
     #region Basic
-    //public ImageToCharWnd(OfrModel_BmpCharAnalysis model)
-    //{
-    //    InitializeComponent();
+    public ImageToCharWnd(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string failReason = "")
+    {
+        InitializeComponent();
 
-    //    modelAnaly = model;
+        _bmpSource = bmpSource;
+        _rcChar = rcChar;
+        _failReason = failReason;
 
-    //    Draw.Bitmap bmpTmp = modelAnaly.bmpExact;
-    //    int len = OfrService.GetLongerLen(bmpTmp);
-    //    double scale = (double)100 / len;
-    //    if (scale > 3) scale = 3;
-    //    if (scale != 1) bmpTmp = OfrService.ConvertSizeBitmap(bmpTmp, scale);
-
-    //    ImgChar.Source = OfrService.ConvertBitmap_ToBitmapImage(bmpTmp);
-    //}
+        this.Topmost = true;
+    }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        // this.Topmost = true;
+        // 이미지 표시
+        DisplayBitmaps();
 
-        // MsgBox("코딩해야 합니다", "ImageToCharWnd/Window_Loaded_01");
+        // 실패 사유 표시
+        if (!string.IsNullOrEmpty(_failReason))
+            LabelReason.Content = $"인식 실패: {_failReason}";
+
+        // 포커스
+        TBoxChar.Focus();
     }
     #endregion
 
     #region Button Events
     private void BtnSave_Click(object sender, RoutedEventArgs e)
     {
-        // if (TBoxCharType.Text.Length != 1) return;
+        if (string.IsNullOrWhiteSpace(TBoxChar.Text))
+        {
+            MessageBox.Show("문자를 입력하세요.", "입력 오류", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
 
-        // MessageBoxResult response = MessageBox.Show(
-        // $"문자: {TBoxChar.Text}\n타입: {TBoxCharType.Text}", "확인", MessageBoxButton.YesNo, MessageBoxImage.Information);
+        if (TBoxChar.Text.Trim().Length != 1)
+        {
+            MessageBox.Show("1글자만 입력하세요.", "입력 오류", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
 
-        // if (response == MessageBoxResult.No) return;
-
-        //tbChar = 
-
-        // Close();
+        UserInput = TBoxChar.Text.Trim();
+        IsConfirmed = true;
+        Close();
     }
+
     private void BtnJump_Click(object sender, RoutedEventArgs e)
     {
-        // Close();
+        // 건너뜀
+        IsConfirmed = false;
+        Close();
     }
 
     private void BtnCancelAll_Click(object sender, RoutedEventArgs e)
     {
-        // Close();
+        // 전부 취소
+        IsConfirmed = false;
+        Close();
     }
     #endregion
 
     #region Etc Events
     private void TBoxChar_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
-        // if (TBoxChar.Text.Length >= 2)
-        // {
-        // e.Handled = true; // 입력 차단
-        // }
+        // 2글자 이상 입력 차단
+        if (TBoxChar.Text.Length >= 1)
+        {
+            e.Handled = true;
+        }
     }
 
     private void TBoxChar_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        // if (TBoxChar.Text.Length == 0)
-        // {
-        // TBoxCharType.Text = "";
-        // BtnSave.IsEnabled = false;
-        // return;
-        // }
+        // 저장 버튼 활성화 제어
+        BtnSave.IsEnabled = !string.IsNullOrWhiteSpace(TBoxChar.Text);
+    }
+    #endregion
 
-        // if (TBoxChar.Text.Length == 1)
-        // {
-        // MsgBox("코딩 해야함.", "TBoxChar_TextChanged_002");
+    #region Helper Functions
+    private void DisplayBitmaps()
+    {
+        try
+        {
+            // 1. ImgString: 전체 비트맵 표시 (문맥 제공)
+            if (_bmpSource != null)
+            {
+                Draw.Bitmap bmpString = ScaleBitmap(_bmpSource, 360, 80);
+                ImgString.Source = OfrService.ConvertBitmap_ToBitmapImage(bmpString);
+                if (bmpString != _bmpSource)
+                    bmpString.Dispose();
+            }
 
-            //m_tpCharIndex = StdUtil.FindIndexIn2DList(s_ListCharGroup, TBoxChar.Text);
-            //if (m_tpCharIndex.Item1 != -1 && m_tpCharIndex.Item2 != -1)
-            //{
-            //    TBoxCharType.Text = s_sCharTypes[m_tpCharIndex.Item1];
-            //    BtnSave.IsEnabled = true;
-            //    return;
-            //}
-        // }
+            // 2. ImgChar: 개별 문자만 확대 표시
+            if (_bmpSource != null && _rcChar != Draw.Rectangle.Empty)
+            {
+                Draw.Bitmap bmpChar = OfrService.GetBitmapInBitmapFast(_bmpSource, _rcChar);
+                if (bmpChar != null)
+                {
+                    Draw.Bitmap bmpCharScaled = ScaleBitmap(bmpChar, 140, 140);
+                    ImgChar.Source = OfrService.ConvertBitmap_ToBitmapImage(bmpCharScaled);
 
-        // if (TBoxChar.Text.Length == 2)
-        // {
-        // TBoxCharType.Text = "L";
-        // BtnSave.IsEnabled = true;
-        // return;
-        // }
+                    if (bmpCharScaled != bmpChar)
+                        bmpCharScaled.Dispose();
+                    bmpChar.Dispose();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ImageToCharWnd] DisplayBitmaps 오류: {ex.Message}");
+        }
+    }
+
+    private Draw.Bitmap ScaleBitmap(Draw.Bitmap bmp, int maxWidth, int maxHeight)
+    {
+        if (bmp == null) return null;
+
+        int maxLen = Math.Max(bmp.Width, bmp.Height);
+        double scaleW = (double)maxWidth / bmp.Width;
+        double scaleH = (double)maxHeight / bmp.Height;
+        double scale = Math.Min(scaleW, scaleH);
+
+        // 너무 작으면 확대 (최대 3배)
+        if (maxLen < 50)
+        {
+            scale = Math.Min(3.0, scale);
+        }
+
+        if (Math.Abs(scale - 1.0) < 0.01)
+            return bmp;
+
+        return OfrService.ConvertSizeBitmap(bmp, scale);
     }
     #endregion
 }
