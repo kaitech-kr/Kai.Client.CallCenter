@@ -81,27 +81,53 @@ public class OfrWork_Common
         s_TextCache[cacheKey] = text;
     }
 
-    private static async Task SaveToTbCharBackup(OfrModel_BitmapAnalysis modelChar, string charValue)
+    private static async Task SaveToTbCharBackup(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string charValue)
     {
-        // TbChar에 저장 (테스트 용도)
-        TbChar newChar = new TbChar
+        // 명도별(60~254)로 TbChar 저장
+        Draw.Bitmap bmpChar = OfrService.GetBitmapInBitmapFast(bmpSource, rcChar);
+        if (bmpChar == null)
         {
-            Character = charValue,
-            Width = modelChar.nWidth,
-            Height = modelChar.nHeight,
-            HexStrValue = modelChar.sHexArray,
-            Threshold = 0
-        };
+            Debug.WriteLine($"[TbChar 저장 실패] 비트맵 추출 실패");
+            return;
+        }
 
-        StdResult_Long saveResult = await PgService_TbChar.InsertRowAsync(newChar);
-        if (saveResult.lResult > 0)
+        byte minThreshold = 60;
+        byte maxThreshold = 254;
+        HashSet<string> savedHexStrings = new HashSet<string>(); // 중복 방지
+        int savedCount = 0;
+
+        for (byte threshold = minThreshold; threshold <= maxThreshold; threshold++)
         {
-            Debug.WriteLine($"[TbChar 저장 성공] '{charValue}' ({modelChar.nWidth}x{modelChar.nHeight})");
+            OfrModel_BitmapAnalysis analysis = OfrService.GetBitmapAnalysisFast(bmpChar, threshold);
+
+            if (analysis != null && analysis.sHexArray != null && analysis.trueRate > 0 && analysis.trueRate < 1)
+            {
+                // 중복된 HexString은 건너뛰기
+                if (savedHexStrings.Contains(analysis.sHexArray))
+                    continue;
+
+                savedHexStrings.Add(analysis.sHexArray);
+
+                TbChar newChar = new TbChar
+                {
+                    Character = charValue,
+                    Width = analysis.nWidth,
+                    Height = analysis.nHeight,
+                    HexStrValue = analysis.sHexArray,
+                    Threshold = threshold
+                };
+
+                StdResult_Long saveResult = await PgService_TbChar.InsertRowAsync(newChar);
+                if (saveResult.lResult > 0)
+                {
+                    savedCount++;
+                }
+            }
         }
-        else
-        {
-            Debug.WriteLine($"[TbChar 저장 실패] {saveResult.sErr}");
-        }
+
+        bmpChar.Dispose();
+
+        Debug.WriteLine($"[TbChar 저장 완료] '{charValue}' ({savedCount}개 명도, 고유={savedHexStrings.Count}개)");
     }
 
     private static async Task SaveToTbCharFail(OfrModel_BitmapAnalysis modelChar, string failMark)
@@ -297,7 +323,7 @@ public class OfrWork_Common
 
                         if (!string.IsNullOrEmpty(manualChar))
                         {
-                            await SaveToTbCharBackup(modelChar, manualChar);
+                            await SaveToTbCharBackup(bmpSource, rcChar, manualChar);
                             sb.Append(manualChar);
                             continue;
                         }
