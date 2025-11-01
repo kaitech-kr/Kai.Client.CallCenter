@@ -277,7 +277,7 @@ public class OfrWork_Common
                 string? character = await SelectCharByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
                 if (character == null)
                 {
-                    if (CommonVars.s_bDebugMode)
+                    if (s_bDebugMode)
                     {
                         // 수동 입력
                         string manualChar = await ShowImageToCharDialog(bmpSource, rcChar, $"문자{i + 1} DB 검색 실패");
