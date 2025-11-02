@@ -327,11 +327,18 @@ public class NwInsung01 : IExternalApp
                             // 성공: 큐에 재적재 (다음 사이클에 관리 대상으로 분류됨)
                             Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
 
-                            // NotChanged 상태로 변경
-                            item.StateFlag = PostgService_Common_OrderState.NotChanged;
-
-                            // 큐에 재적재 (다음 사이클에 listEtcGroup으로 분류)
+                            // 큐에 재적재 (기본값 NotChanged로 변경됨)
                             ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1);
+                            break;
+
+                        case StdResult.Skip:
+                            // 이미 등록된 주문 (StateFlag 동기화 이슈)
+                            // SignalR 업데이트로 NewOrder.Insung1이 채워졌지만 StateFlag는 Existed_NonSeqno인 경우
+                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 이미 등록된 주문 스킵: {item.KeyCode}, Insung1={item.NewOrder.Insung1}");
+
+                            // StateFlag 보정: Existed_WithSeqno로 변경 후 재적재
+                            ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1,
+                                PostgService_Common_OrderState.Existed_WithSeqno);
                             break;
 
                         case StdResult.Fail:

@@ -143,7 +143,10 @@ public class QueueController
     /// <summary>
     /// 처리 완료 후 큐에 재적재
     /// </summary>
-    public void ReEnqueue(AutoAllocModel order, string networkName)
+    /// <param name="order">재적재할 주문</param>
+    /// <param name="networkName">네트워크 이름</param>
+    /// <param name="newStateFlag">새로운 StateFlag (null이면 기본값: NotChanged)</param>
+    public void ReEnqueue(AutoAllocModel order, string networkName, PostgService_Common_OrderState? newStateFlag = null)
     {
         if (order == null)
         {
@@ -151,13 +154,21 @@ public class QueueController
             return;
         }
 
-        // StateFlag를 NotChanged로 변경
-        order.StateFlag = PostgService_Common_OrderState.NotChanged;
+        // StateFlag 변경
+        if (newStateFlag.HasValue)
+        {
+            order.StateFlag = newStateFlag.Value;
+        }
+        else
+        {
+            // 기본값: NotChanged (테스트를 위해 계속 보이도록)
+            order.StateFlag = PostgService_Common_OrderState.NotChanged;
+        }
 
         var queue = GetQueue(networkName);
         queue.Enqueue(order);
 
-        Debug.WriteLine($"[AutoAllocQueue] ReEnqueue: {networkName}, KeyCode={order.KeyCode}, 큐크기={queue.Count}");
+        Debug.WriteLine($"[AutoAllocQueue] ReEnqueue: {networkName}, KeyCode={order.KeyCode}, StateFlag={order.StateFlag}, 큐크기={queue.Count}");
     }
 
     /// <summary>

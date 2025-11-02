@@ -2702,30 +2702,30 @@ public class InsungsAct_RcptRegPage
 
                     Debug.WriteLine($"[{m_Context.AppName}] RGB 반전 완료");
 
-                    // 4. 단음소 OFR (TbCharBackup 사용) + 성능 테스트
-                    StdResult_String resultSeqno = null;
+                    // 4. 단음소 OFR (TbCharBackup 사용)
+                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpInverted);
 
-                    // ===== 성능 측정: 10회 반복 테스트 =====
-                    List<long> times = new List<long>();
-                    for (int testIdx = 1; testIdx <= 10; testIdx++)
-                    {
-                        Stopwatch sw = Stopwatch.StartNew();
-                        resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpInverted);
-                        sw.Stop();
-                        times.Add(sw.ElapsedMilliseconds);
-                        Debug.WriteLine($"[성능 테스트 {testIdx}/10] '{resultSeqno.strResult}' - {sw.ElapsedMilliseconds}ms");
-                    }
+                    // ===== 성능 측정: 10회 반복 테스트 ===== (주석처리)
+                    //List<long> times = new List<long>();
+                    //for (int testIdx = 1; testIdx <= 10; testIdx++)
+                    //{
+                    //    Stopwatch sw = Stopwatch.StartNew();
+                    //    resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpInverted);
+                    //    sw.Stop();
+                    //    times.Add(sw.ElapsedMilliseconds);
+                    //    Debug.WriteLine($"[성능 테스트 {testIdx}/10] '{resultSeqno.strResult}' - {sw.ElapsedMilliseconds}ms");
+                    //}
 
-                    // 성능 통계 출력
-                    long firstTime = times[0];
-                    long avgTime = (long)times.Skip(1).Average();
-                    long improvement = firstTime - avgTime;
-                    double improvementPercent = firstTime > 0 ? (improvement * 100.0 / firstTime) : 0;
+                    //// 성능 통계 출력
+                    //long firstTime = times[0];
+                    //long avgTime = (long)times.Skip(1).Average();
+                    //long improvement = firstTime - avgTime;
+                    //double improvementPercent = firstTime > 0 ? (improvement * 100.0 / firstTime) : 0;
 
-                    Debug.WriteLine($"[성능 통계]");
-                    Debug.WriteLine($"  첫 실행(캐시 MISS): {firstTime}ms");
-                    Debug.WriteLine($"  평균(캐시 HIT): {avgTime}ms");
-                    Debug.WriteLine($"  속도 향상: {improvement}ms ({improvementPercent:F1}%)");
+                    //Debug.WriteLine($"[성능 통계]");
+                    //Debug.WriteLine($"  첫 실행(캐시 MISS): {firstTime}ms");
+                    //Debug.WriteLine($"  평균(캐시 HIT): {avgTime}ms");
+                    //Debug.WriteLine($"  속도 향상: {improvement}ms ({improvementPercent:F1}%)");
                     // ===== 성능 측정 끝 =====
 
                     // 5. Seqno 반환
