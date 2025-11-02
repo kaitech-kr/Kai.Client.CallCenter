@@ -1,16 +1,20 @@
 using System.IO;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using Draw = System.Drawing;
+using System.Windows.Media;
 
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.Networks.NwInsungs;
+using Kai.Client.CallCenter.Windows;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
@@ -204,8 +208,6 @@ public class NwInsung01 : IExternalApp
             // 큐에서 이미 꺼냈으므로 Clear 불필요
 
             // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
-            var listProcessed = new List<AutoAllocModel>();
-
             var listCreated = listInsung
                 .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
                                item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno))
@@ -372,21 +374,29 @@ public class NwInsung01 : IExternalApp
                 Debug.WriteLine($"[{APP_NAME}] Region 5: 기존 주문 관리 시작 (총 {listEtcGroup.Count}건)");
 
                 #region 5-1. 조회버튼 클릭 + 총계 확인
-                StdResult_Status resultQuery = await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
-                if (resultQuery.Result != StdResult.Success)
+                string sThisTotCount = string.Empty;
+                for (int i = 0; i < c_nRepeatNormal; i++)
                 {
-                    Debug.WriteLine($"[{APP_NAME}] 조회 버튼 클릭 실패: {resultQuery.sErr}");
-                    return new StdResult_Status(StdResult.Retry, $"조회 버튼 클릭 실패: {resultQuery.sErr}", "NwInsung01/AutoAllocAsync_50");
+                    await ctrl.WaitIfPausedOrCancelledAsync();
+
+                    StdResult_Status resultQuery = await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
+                    if (resultQuery.Result == StdResult.Fail) continue;
+
+                    sThisTotCount = Std32Window.GetWindowCaption(m_Context.MemInfo.RcptPage.CallCount_hWnd총계);
+                    if (!string.IsNullOrEmpty(sThisTotCount))
+                    {
+                        Debug.WriteLine($"[{APP_NAME}] 총계 읽기 성공 (시도 {i + 1}회): {sThisTotCount}");
+                        break;
+                    }
+
+                    await Task.Delay(c_nWaitNormal, ctrl.Token);
                 }
 
-                string sThisTotCount = Std32Window.GetWindowCaption(m_Context.MemInfo.RcptPage.CallCount_hWnd총계);
                 if (string.IsNullOrEmpty(sThisTotCount))
                 {
-                    Debug.WriteLine($"[{APP_NAME}] 접수상황판 총계 읽기 실패");
+                    Debug.WriteLine($"[{APP_NAME}] 접수상황판 총계 읽기 실패 ({c_nRepeatNormal}회 시도)");
                     return new StdResult_Status(StdResult.Retry, "접수상황판 총계 읽기 실패", "NwInsung01/AutoAllocAsync_51");
                 }
-
-                Debug.WriteLine($"[{APP_NAME}] 총계: {sThisTotCount}");
                 #endregion
 
                 #region 5-2. 오더 총갯수/페이지 산정
@@ -415,48 +425,64 @@ public class NwInsung01 : IExternalApp
                 // 페이지별로 순회하면서 listEtcGroup의 모든 항목을 검사
                 for (int pageIdx = 1; pageIdx <= nTotPage; pageIdx++)
                 {
-                    // TODO: 페이지 이동 (첫 페이지는 이미 조회버튼으로 이동됨)
+                    // 페이지 이동 (첫 페이지는 이미 조회버튼으로 이동됨)
                     if (pageIdx > 1)
                     {
-                        // TODO: 다음 페이지로 이동
+                        // 수직스크롤 핸들 얻기 (메인윈도우 기준 상대좌표)
+                        m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤 = Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤M);
+
+                        // 스크롤바의 스크롤Down 영역 클릭 (페이지다운)
+                        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel스크롤Down);
                     }
 
-                    // TODO: 현재 페이지 캡처
+                    // 페이지 로딩 대기
+                    await Task.Delay(500, ctrl.Token);
 
-                    // listEtcGroup을 역순으로 순회 (삭제 안전)
-                    for (int no = listEtcGroup.Count; no > 0; no--)
+                    // 페이지 캡처 (재시도)
+                    Draw.Bitmap bmpDG = null;
+                    for (int j = 0; j < CommonVars.c_nRepeatNormal; j++)
                     {
-                        int index = no - 1;
-                        if (index < 0) break;
-
-                        AutoAllocModel kaiCopy = listEtcGroup[index];
-                        PostgService_Common_OrderState kaiFlag = kaiCopy.StateFlag;
-                        string sSeqNo = kaiCopy.NewOrder.Insung1;
-
-                        // TODO: 현재 페이지에서 sSeqNo 찾기
-                        bool bFoundInPage = false; // placeholder
-                        int nRowIndex = -1; // placeholder
-                        string sStatus = ""; // placeholder
-
-                        if (bFoundInPage)
-                        {
-                            // TODO: OFR로 상태 읽기
-
-                            // TODO: StateFlag별 처리
-                            // if (kaiFlag == NotChanged) ...
-                            // else if (kaiFlag == Change_ToCancel_DoDelete) ...
-                            // else if ...
-
-                            // TODO: 처리 결과에 따라 재적재 및 삭제
-                            // AutoAlloc_StateResult result = ...
-                            // if (result == Done_DoDelete)
-                            //     listEtcGroup.RemoveAt(index);
-                            // else if (result == Done_NoDelete)
-                            //     ctrl.ReEnqueue(kaiCopy);
-                            //     listEtcGroup.RemoveAt(index);
-                        }
-                        // 못찾으면 다음 페이지에서 찾기 위해 리스트에 유지
+                        bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
+                        if (bmpDG != null) break;
+                        await Task.Delay(CommonVars.c_nWaitShort, ctrl.Token);
                     }
+
+                    if (bmpDG == null)
+                    {
+                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx} 캡처 실패 ({CommonVars.c_nRepeatNormal}회 시도)");
+                        return new StdResult_Status(StdResult.Fail, $"페이지 {pageIdx} DG 캡처 실패", "NwInsung01/AutoAllocAsync_Region5_3_01");
+                    }
+
+                    // 배경 밝기 값 체크
+                    int nBackgroundBright = m_Context.MemInfo.RcptPage.DG오더_nBackgroundBright;
+                    if (nBackgroundBright <= 0 || nBackgroundBright > 255)
+                    {
+                        Debug.WriteLine($"[{APP_NAME}] 배경 밝기 값이 유효하지 않음: {nBackgroundBright}");
+                        bmpDG?.Dispose();
+                        continue;
+                    }
+
+                    // 유효한 로우 갯수 얻기
+                    Draw.Rectangle[,] rects = m_Context.MemInfo.RcptPage.DG오더_RelChildRects;
+                    int nThreshold = nBackgroundBright - 1;
+                    int nValidRows = 0;
+
+                    for (int y = 2; y < rects.GetLength(1); y++)
+                    {
+                        Draw.Point ptCheck = new Draw.Point(rects[0, y].Right, rects[0, y].Top + 6);
+                        int nCurBright = OfrService.GetPixelBrightness(bmpDG, ptCheck);
+
+                        if (nCurBright < nThreshold)
+                            nValidRows++;
+                        else
+                            break;
+                    }
+
+                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx}: 유효 로우 {nValidRows}개 (배경 밝기: {nBackgroundBright})");
+
+                    // TODO: 각 로우에서 주문번호 찾기
+
+                    bmpDG?.Dispose();
 
                     // 조기 탈출: 모든 항목을 처리했으면
                     if (listEtcGroup.Count == 0)
@@ -469,6 +495,10 @@ public class NwInsung01 : IExternalApp
 
                 // Region 5 완료
                 Debug.WriteLine($"[{APP_NAME}] Region 5 완료");
+                foreach (var item in listEtcGroup)
+                {
+                    ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1, PostgService_Common_OrderState.NotChanged);
+                }
                 listEtcGroup.Clear();
             }
             #endregion

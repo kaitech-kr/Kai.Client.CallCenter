@@ -7,7 +7,7 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
-using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
+//using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 
 using Kai.Client.CallCenter.Classes;
@@ -829,13 +829,9 @@ public class InsungsAct_RcptRegPage
                 if (rows >= 2)
                 {
                     // Empty Row의 샘플 포인트 (DG 기준 좌표, 비트맵도 DG 기준)
-                    Draw.Point ptSampleRel = new Draw.Point(
-                        m_RcptPage.DG오더_RelChildRects[0, 1].Left + 3,
-                        m_RcptPage.DG오더_RelChildRects[0, 1].Top + 3
-                    );
+                    Draw.Point ptSampleRel = StdUtil.GetDrawPoint(m_RcptPage.DG오더_RelChildRects[0, 1], 8, 8);
 
-                    m_RcptPage.DG오더_nBackgroundBright =
-                        OfrService.GetPixelBrightness(bmpDG, ptSampleRel);
+                    m_RcptPage.DG오더_nBackgroundBright = OfrService.GetPixelBrightness(bmpDG, ptSampleRel);
 
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] Background Brightness: {m_RcptPage.DG오더_nBackgroundBright} (샘플 위치: {ptSampleRel})");
                 }

@@ -215,6 +215,42 @@ public class QueueController
         Debug.WriteLine($"[AutoAllocQueue] 모든 큐 클리어 완료");
     }
     #endregion
+
+    #region Helper - 페이지 계산
+    /// <summary>
+    /// 페이지별 첫 번호 배열 반환
+    /// 인성 Datagrid 특성: 마지막 페이지도 항상 로우가 꽉 차 있음 (중복 표시)
+    /// </summary>
+    /// <param name="totItemCount">전체 데이터 개수</param>
+    /// <param name="countPerPage">페이지당 로우 개수</param>
+    /// <returns>페이지별 첫 번호 배열</returns>
+    public static int[] GetPageFirstNumArray(int totItemCount, int countPerPage)
+    {
+        if (totItemCount == 0) return null;
+        if (totItemCount <= countPerPage) return new int[1] { 1 };
+
+        int pageCount = totItemCount / countPerPage;
+        int remain = totItemCount % countPerPage;
+
+        // 배열 크기: remain 있으면 페이지 1개 더
+        int arraySize = (remain == 0) ? pageCount : (pageCount + 1);
+        int[] arr = new int[arraySize];
+
+        // 일반 페이지들
+        for (int i = 0; i < pageCount; i++)
+        {
+            arr[i] = (i * countPerPage) + 1;
+        }
+
+        // 마지막 페이지 (중복 표시되므로: 전체 - 한페이지 + 1)
+        if (remain > 0)
+        {
+            arr[pageCount] = totItemCount - countPerPage + 1;
+        }
+
+        return arr;
+    }
+    #endregion
 }
 
 #nullable restore
