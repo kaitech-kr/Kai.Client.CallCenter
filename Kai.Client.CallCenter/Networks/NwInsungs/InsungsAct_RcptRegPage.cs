@@ -2941,6 +2941,96 @@ public class InsungsAct_RcptRegPage
 
         return new StdResult_Status(StdResult.Fail, $"페이지 조정 {nRetryCount}회 모두 실패", "InsungsAct_RcptRegPage/VerifyAndAdjustPageAsync");
     }
+
+    /// <summary>
+    /// 유효 로우 갯수 얻기
+    /// - 밝기 측정으로 실제 데이터가 있는 행 갯수 확인
+    /// - 배경 밝기 - 1을 임계값으로 사용
+    /// </summary>
+    /// <param name="bmpPage">캡처된 데이터그리드 이미지</param>
+    /// <returns>StdResult_Int (nResult: 유효 로우 갯수)</returns>
+    public async Task<StdResult_Int> GetValidRowCountAsync(Draw.Bitmap bmpPage)
+    {
+        await Task.CompletedTask;
+
+        Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
+        int nBackgroundBright = m_RcptPage.DG오더_nBackgroundBright;
+
+        if (rects == null)
+            return new StdResult_Int(0, "RelChildRects가 null입니다", "InsungsAct_RcptRegPage/GetValidRowCountAsync_01");
+
+        if (nBackgroundBright <= 0 || nBackgroundBright > 255)
+            return new StdResult_Int(0, $"배경 밝기 값이 유효하지 않음: {nBackgroundBright}", "InsungsAct_RcptRegPage/GetValidRowCountAsync_02");
+
+        int nThreshold = nBackgroundBright - 1;
+        int nValidRows = 0;
+
+        for (int y = 2; y < rects.GetLength(1); y++)
+        {
+            Draw.Point ptCheck = new Draw.Point(rects[0, y].Right, rects[0, y].Top + 6);
+            int nCurBright = OfrService.GetPixelBrightness(bmpPage, ptCheck);
+
+            if (nCurBright < nThreshold)
+                nValidRows++;
+            else
+                break;
+        }
+
+        Debug.WriteLine($"[InsungsAct_RcptRegPage] 유효 로우: {nValidRows}개 (배경 밝기: {nBackgroundBright}, 임계값: {nThreshold})");
+        return new StdResult_Int(nValidRows);
+    }
+
+    /// <summary>
+    /// 캡처된 페이지 이미지에서 특정 로우의 주문번호 읽기
+    /// </summary>
+    /// <param name="bmpPage">캡처된 데이터그리드 전체 이미지</param>
+    /// <param name="rectSeqno">주문번호 셀 Rectangle</param>
+    /// <param name="bInvertRgb">RGB 반전 여부 (선택된 행인 경우 true)</param>
+    /// <returns>StdResult_String (주문번호)</returns>
+    public async Task<StdResult_String> GetRowSeqnoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectSeqno, bool bInvertRgb = false)
+    {
+        await Task.CompletedTask;
+
+        try
+        {
+            // 1. bmpPage에서 rectSeqno 영역 crop
+            Draw.Bitmap bmpCell = OfrService.GetBitmapInBitmapFast(bmpPage, rectSeqno);
+            if (bmpCell == null)
+                return new StdResult_String("셀 crop 실패", "GetRowSeqnoAsync_01");
+
+            Draw.Bitmap bmpOfrTarget = bmpCell;
+
+            // 2. RGB 반전 필요하면
+            if (bInvertRgb)
+            {
+                bmpOfrTarget = InvertBitmap(bmpCell);
+                bmpCell.Dispose();
+            }
+
+            // 3. OFR
+            StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpOfrTarget);
+
+            // 4. Bitmap 해제
+            bmpOfrTarget?.Dispose();
+
+            // 5. 반환
+            if (!string.IsNullOrEmpty(resultSeqno.strResult))
+            {
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 주문번호 읽기 성공: {resultSeqno.strResult}");
+                return new StdResult_String(resultSeqno.strResult);
+            }
+            else
+            {
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 주문번호 읽기 실패: {resultSeqno.sErr}");
+                return new StdResult_String(resultSeqno.sErr, resultSeqno.sPos);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[InsungsAct_RcptRegPage] GetRowSeqnoAsync 예외: {ex.Message}");
+            return new StdResult_String(StdUtil.GetExceptionMessage(ex), "GetRowSeqnoAsync_999");
+        }
+    }
     #endregion
 
     #region UI용 함수들

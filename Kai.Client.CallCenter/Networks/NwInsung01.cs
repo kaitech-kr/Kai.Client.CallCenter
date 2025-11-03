@@ -186,6 +186,8 @@ public class NwInsung01 : IExternalApp
 
     public async Task<StdResult_Status> AutoAllocAsync(long lAllocCount, CancelTokenControl ctrl)
     {
+        Draw.Bitmap bmpPage = null;
+
         try
         {
             Debug.WriteLine($"\n-----------------[NwInsung01] AutoAllocAsync 시작 - Count={lAllocCount}--------------------------");
@@ -423,7 +425,7 @@ public class NwInsung01 : IExternalApp
                 }
 
                 // 여러 페이지면 스크롤 핸들 다시 얻어야함
-                if (nTotPage > 1) 
+                if (nTotPage > 1)
                     m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤 =
                         Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤M);
                 #endregion
@@ -442,9 +444,74 @@ public class NwInsung01 : IExternalApp
                     if (resultVerify.Result == StdResult.Fail)
                         return resultVerify;
 
-                    // 테스트용
-                    await Task.Delay(2000, ctrl.Token);
+                    // 페이지 캡처
+                    for (int j = 0; j < CommonVars.c_nRepeatShort; j++)
+                    {
+                        bmpPage = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
+                        if (bmpPage != null) break;
+                        await Task.Delay(CommonVars.c_nWaitShort, ctrl.Token);
+                    }
+                    if (bmpPage == null)
+                    {
+                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} 캡처 실패 ({CommonVars.c_nRepeatShort}회 시도)");
+                        return new StdResult_Status(StdResult.Fail, $"페이지 {pageIdx + 1} DG 캡처 실패", "NwInsung01/AutoAllocAsync_Region5_3_Capture");
+                    }
 
+
+                    // 유효 로우 갯수 얻기
+                    StdResult_Int resultInt = await m_Context.RcptRegPageAct.GetValidRowCountAsync(bmpPage);
+                    if (resultInt.nResult == 0)
+                    {
+                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} 유효 로우 갯수 얻기 실패: {resultInt.sErr}");
+                        return new StdResult_Status(StdResult.Fail, resultInt.sErr, resultInt.sPos);
+                    }
+                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: 유효 로우 {resultInt}개");
+
+
+                    #region 본작업
+                    Draw.Rectangle[,] rects = m_Context.MemInfo.RcptPage.DG오더_RelChildRects;
+
+                    // 마지막 페이지의 경우 시작 인덱스 계산
+                    int remainder = nThisTotCount % InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+                    int startIndex = (pageIdx == nTotPage - 1 && remainder != 0) ?
+                        InsungsInfo_File.접수등록Page_DG오더_dataRowCount - remainder : 0;
+
+                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: startIndex={startIndex}, remainder={remainder}");
+
+                    for (int i = startIndex, y = i + 2; i < resultInt.nResult; i++, y++)
+                    {
+                        // 첫 페이지 첫 로우면 선택
+                        if (pageIdx == 0 && i == startIndex)
+                        {
+                            Draw.Rectangle rcFirstRow = rects[3, y]; // 4번째 컬럼
+                            Draw.Point ptClick = new Draw.Point(rcFirstRow.Left + 5, rcFirstRow.Top + 5);
+                            await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Context.MemInfo.RcptPage.DG오더_hWnd, ptClick);
+                            await Task.Delay(100, ctrl.Token);
+                            Debug.WriteLine($"[{APP_NAME}] 첫 페이지 첫 로우 선택 완료: y={y}");
+                        }
+
+                        // 로우에서 주문번호 얻기
+                        Draw.Rectangle rectSeqno = rects[InsungsAct_RcptRegPage.c_nCol주문번호, y];
+                        bool bInvertRgb = (pageIdx == 0 && y == 2);
+
+                        StdResult_String resultSeqno = await m_Context.RcptRegPageAct.GetRowSeqnoAsync(bmpPage, rectSeqno, bInvertRgb);
+
+                        if (!string.IsNullOrEmpty(resultSeqno.strResult))
+                        {
+                            string seqno = resultSeqno.strResult;
+                            Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, 주문번호={seqno}");
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, 주문번호 읽기 실패: {resultSeqno.sErr}");
+                        }
+
+                        //await Task.Delay(100, ctrl.Token);
+                    }
+                    #endregion
+
+                    // Bitmap 해제
+                    bmpPage?.Dispose();
 
                     // 조기 탈출: 모든 항목을 처리했으면
                     if (listEtcGroup.Count == 0)
@@ -462,10 +529,6 @@ public class NwInsung01 : IExternalApp
                         Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} -> {pageIdx + 2} 이동");
                     }
                 }
-                #endregion
-
-                #region 본작업
-
                 #endregion
 
                 // Region 5 완료
@@ -502,6 +565,11 @@ public class NwInsung01 : IExternalApp
         {
             Debug.WriteLine($"[NwInsung01] AutoAllocAsync 예외: {ex.Message}");
             return new StdResult_Status(StdResult.Fail, ex.Message, "NwInsung01/AutoAllocAsync_999");
+        }
+        finally
+        {
+            // Bitmap 해제
+            bmpPage?.Dispose();
         }
     }
     #endregion
