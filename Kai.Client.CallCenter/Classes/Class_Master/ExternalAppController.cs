@@ -405,7 +405,7 @@ public class ExternalAppController : IDisposable
     private async Task AutoAllocLoopAsync()
     {
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        const int nMinWorkingMiliSec = 5000; // 최소 5초
+        const int nMinWorkingMiliSec = 10000; // 최소 ~초
 
         Debug.WriteLine("[ExternalAppController] AutoAllocLoopAsync 시작");
 
@@ -441,9 +441,7 @@ public class ExternalAppController : IDisposable
                 stopwatch.Stop();
 
                 // Delay 보정 (최소 5초 유지)
-                int nDelay = stopwatch.ElapsedMilliseconds < nMinWorkingMiliSec
-                    ? nMinWorkingMiliSec - (int)stopwatch.ElapsedMilliseconds
-                    : 0;
+                int nDelay = stopwatch.ElapsedMilliseconds < nMinWorkingMiliSec ? nMinWorkingMiliSec - (int)stopwatch.ElapsedMilliseconds : 0;
 
                 if (nDelay > 0)
                 {

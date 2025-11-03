@@ -276,7 +276,10 @@ public class OfrWork_Common
     /// 순차 문자 인식 (단음소) - 주문번호, 시간 등 숫자 문자열 전용
     /// - 텍스트 캐시 적용: 전체 비트맵 패턴으로 캐싱
     /// </summary>
-    public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpSource)
+    /// <param name="bmpSource">원본 비트맵</param>
+    /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
+    /// <returns>인식 결과</returns>
+    public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpSource, bool bEdit = true)
     {
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -333,7 +336,7 @@ public class OfrWork_Common
                 string? character = await SelectCharByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
                 if (character == null)
                 {
-                    if (s_bDebugMode)
+                    if (bEdit && s_bDebugMode)
                     {
                         // 수동 입력
                         string manualChar = await ShowImageToCharDialog(bmpSource, rcChar, $"문자{i + 1} DB 검색 실패");

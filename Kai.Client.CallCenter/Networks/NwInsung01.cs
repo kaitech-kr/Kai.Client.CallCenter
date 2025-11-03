@@ -15,6 +15,7 @@ using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.Networks.NwInsungs;
 using Kai.Client.CallCenter.Windows;
+using Kai.Client.CallCenter.OfrWorks;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
@@ -189,14 +190,14 @@ public class NwInsung01 : IExternalApp
         {
             Debug.WriteLine($"\n-----------------[NwInsung01] AutoAllocAsync 시작 - Count={lAllocCount}--------------------------");
 
+            // Cancel/Pause 체크 - Region 2 진입 전
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
             #region 1. 사전작업
             // TopMost 설정 - 인성1 메인 창을 최상위로
             await Std32Window.SetWindowTopMostAndReleaseAsync(m_Context.MemInfo.Main.TopWnd_hWnd, c_nWaitShort);
             Debug.WriteLine($"[NwInsung01] TopMost 설정 완료");
             #endregion
-
-            // Cancel/Pause 체크 - Region 2 진입 전
-            await ctrl.WaitIfPausedOrCancelledAsync();
 
             #region 2. Local Variables 초기화
             // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)
@@ -397,100 +398,74 @@ public class NwInsung01 : IExternalApp
                     Debug.WriteLine($"[{APP_NAME}] 접수상황판 총계 읽기 실패 ({c_nRepeatNormal}회 시도)");
                     return new StdResult_Status(StdResult.Retry, "접수상황판 총계 읽기 실패", "NwInsung01/AutoAllocAsync_51");
                 }
+
+                // 총계 > 0 확인
+                int nThisTotCount = StdConvert.StringToInt(sThisTotCount, -1);
+                if (nThisTotCount <= 0)
+                {
+                    Debug.WriteLine($"[{APP_NAME}] 데이터 없음 (총계: {sThisTotCount}) - Region 5 스킵");
+                    return new StdResult_Status(StdResult.Success);
+                }
+
+                Debug.WriteLine($"[{APP_NAME}] 데이터 있음 (총계: {nThisTotCount}건)");
                 #endregion
 
-                #region 5-2. 오더 총갯수/페이지 산정
+                #region 5-2. 페이지 산정
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
                 int nTotPage = 1;
-                int nThisTotCount = StdConvert.StringToInt(sThisTotCount, -1);
-                if (nThisTotCount < 0)
-                {
-                    Debug.WriteLine($"[{APP_NAME}] 총계가 음수: {sThisTotCount}");
-                    return new StdResult_Status(StdResult.Retry, $"접수상황판 총계가 음수입니다: {sThisTotCount}", "NwInsung01/AutoAllocAsync_52");
-                }
-
                 // 페이지 계산
-                if (nThisTotCount > m_Context.FileInfo.접수등록Page_DG오더_dataRowCount)
+                if (nThisTotCount > InsungsInfo_File.접수등록Page_DG오더_dataRowCount)
                 {
-                    nTotPage = nThisTotCount / m_Context.FileInfo.접수등록Page_DG오더_dataRowCount;
-                    if ((nThisTotCount % m_Context.FileInfo.접수등록Page_DG오더_dataRowCount) > 0)
+                    nTotPage = nThisTotCount / InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+                    if ((nThisTotCount % InsungsInfo_File.접수등록Page_DG오더_dataRowCount) > 0)
                         nTotPage += 1;
                 }
 
-                Debug.WriteLine($"[{APP_NAME}] 총 데이터: {nThisTotCount}개, 총 페이지: {nTotPage}");
+                // 여러 페이지면 스크롤 핸들 다시 얻어야함
+                if (nTotPage > 1) 
+                    m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤 =
+                        Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤M);
                 #endregion
 
                 #region 5-3. 페이지별 리스트 검사 및 처리
-                // 페이지별로 순회하면서 listEtcGroup의 모든 항목을 검사
-                for (int pageIdx = 1; pageIdx <= nTotPage; pageIdx++)
+                for (int pageIdx = 0; pageIdx < nTotPage; pageIdx++)
                 {
-                    // 페이지 이동 (첫 페이지는 이미 조회버튼으로 이동됨)
-                    if (pageIdx > 1)
-                    {
-                        // 수직스크롤 핸들 얻기 (메인윈도우 기준 상대좌표)
-                        m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤 = Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤M);
+                    await ctrl.WaitIfPausedOrCancelledAsync();
 
-                        // 스크롤바의 스크롤Down 영역 클릭 (페이지다운)
-                        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel스크롤Down);
-                    }
+                    // 현재 페이지가 맞는지 체크
+                    int nExpectedFirstNum = InsungsAct_RcptRegPage.GetExpectedFirstRowNum(nThisTotCount, pageIdx);
+                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage} → 예상 첫 번호: {nExpectedFirstNum}");
 
-                    // 페이지 로딩 대기
-                    await Task.Delay(500, ctrl.Token);
+                    // 페이지 검증 및 자동 조정
+                    StdResult_Status resultVerify = await m_Context.RcptRegPageAct.VerifyAndAdjustPageAsync(nExpectedFirstNum, ctrl);
+                    if (resultVerify.Result == StdResult.Fail)
+                        return resultVerify;
 
-                    // 페이지 캡처 (재시도)
-                    Draw.Bitmap bmpDG = null;
-                    for (int j = 0; j < CommonVars.c_nRepeatNormal; j++)
-                    {
-                        bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
-                        if (bmpDG != null) break;
-                        await Task.Delay(CommonVars.c_nWaitShort, ctrl.Token);
-                    }
+                    // 테스트용
+                    await Task.Delay(2000, ctrl.Token);
 
-                    if (bmpDG == null)
-                    {
-                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx} 캡처 실패 ({CommonVars.c_nRepeatNormal}회 시도)");
-                        return new StdResult_Status(StdResult.Fail, $"페이지 {pageIdx} DG 캡처 실패", "NwInsung01/AutoAllocAsync_Region5_3_01");
-                    }
-
-                    // 배경 밝기 값 체크
-                    int nBackgroundBright = m_Context.MemInfo.RcptPage.DG오더_nBackgroundBright;
-                    if (nBackgroundBright <= 0 || nBackgroundBright > 255)
-                    {
-                        Debug.WriteLine($"[{APP_NAME}] 배경 밝기 값이 유효하지 않음: {nBackgroundBright}");
-                        bmpDG?.Dispose();
-                        continue;
-                    }
-
-                    // 유효한 로우 갯수 얻기
-                    Draw.Rectangle[,] rects = m_Context.MemInfo.RcptPage.DG오더_RelChildRects;
-                    int nThreshold = nBackgroundBright - 1;
-                    int nValidRows = 0;
-
-                    for (int y = 2; y < rects.GetLength(1); y++)
-                    {
-                        Draw.Point ptCheck = new Draw.Point(rects[0, y].Right, rects[0, y].Top + 6);
-                        int nCurBright = OfrService.GetPixelBrightness(bmpDG, ptCheck);
-
-                        if (nCurBright < nThreshold)
-                            nValidRows++;
-                        else
-                            break;
-                    }
-
-                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx}: 유효 로우 {nValidRows}개 (배경 밝기: {nBackgroundBright})");
-
-                    // TODO: 각 로우에서 주문번호 찾기
-
-                    bmpDG?.Dispose();
 
                     // 조기 탈출: 모든 항목을 처리했으면
                     if (listEtcGroup.Count == 0)
                     {
-                        Debug.WriteLine($"[{APP_NAME}] 모든 항목 처리 완료, 페이지 {pageIdx}/{nTotPage}에서 종료");
+                        Debug.WriteLine($"[{APP_NAME}] 모든 항목 처리 완료, 페이지 {pageIdx + 1}/{nTotPage}에서 종료");
                         break;
                     }
+
+                    if (pageIdx < nTotPage - 1)
+                    {
+                        // 다음 페이지로 이동
+                        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(
+                            m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel스크롤Down);
+                        await Task.Delay(c_nWaitNormal, ctrl.Token);
+                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} -> {pageIdx + 2} 이동");
+                    }
                 }
+                #endregion
+
+                #region 본작업
+
                 #endregion
 
                 // Region 5 완료
@@ -501,6 +476,7 @@ public class NwInsung01 : IExternalApp
                 }
                 listEtcGroup.Clear();
             }
+
             #endregion
 
             #region 6. 처리 완료된 항목을 큐에 재적재

@@ -126,7 +126,7 @@ public class InsungsInfo_File
     public int 접수등록Page_DG오더_headerHeight { get; set; } = 30; // HeaderRow Height
     public int 접수등록Page_DG오더_emptyRowHeight { get; set; } = 25; // EmptyRow Height
     public int 접수등록Page_DG오더_dataRowHeight { get; set; } = 20; // DataRow Height
-    public int 접수등록Page_DG오더_dataRowCount { get; set; } = 28; // DataRow Count
+    public const int 접수등록Page_DG오더_dataRowCount = 28; // DataRow Count
 
     public Draw.Point 접수등록Page_DG오더_ptChkRel수직스크롤M { get; set; } = new Draw.Point(1900, 542); // 스크롤 중간 - MainWnd 기준
     public Draw.Point 접수등록Page_DG오더_ptClkRel스크롤Down { get; set; } = new Draw.Point(8, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - VScrollBar기준

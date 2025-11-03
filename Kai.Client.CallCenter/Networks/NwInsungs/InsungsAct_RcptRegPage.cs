@@ -780,7 +780,7 @@ public class InsungsAct_RcptRegPage
 
                 // 4-1-3. Data Rows
                 curRowTop += m_FileInfo.접수등록Page_DG오더_emptyRowHeight;
-                for (int i = 0; i < m_FileInfo.접수등록Page_DG오더_dataRowCount; i++)
+                for (int i = 0; i < InsungsInfo_File.접수등록Page_DG오더_dataRowCount; i++)
                 {
                     listTH.Add(new Kai.Common.NetDll_WpfCtrl.NetOFR.OfrModel_TopHeight(
                         curRowTop + 1,
@@ -788,7 +788,7 @@ public class InsungsAct_RcptRegPage
                     ));
                     curRowTop += m_FileInfo.접수등록Page_DG오더_dataRowHeight;
                 }
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] Data Rows 추가 완료: 총 {m_FileInfo.접수등록Page_DG오더_dataRowCount}개");
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] Data Rows 추가 완료: 총 {InsungsInfo_File.접수등록Page_DG오더_dataRowCount}개");
 
                 // 4-2. RelChildRects 2차원 배열 생성 [열, 행]
                 int rows = listTH.Count;
@@ -2605,7 +2605,7 @@ public class InsungsAct_RcptRegPage
     /// </summary>
     /// <param name="source">원본 비트맵</param>
     /// <returns>RGB 반전된 비트맵</returns>
-    private static Draw.Bitmap InvertBitmap(Draw.Bitmap source)
+    public static Draw.Bitmap InvertBitmap(Draw.Bitmap source)
     {
         int width = source.Width;
         int height = source.Height;
@@ -2794,6 +2794,152 @@ public class InsungsAct_RcptRegPage
         {
             return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "InsungsAct_RcptRegPage/Click조회버튼Async_999");
         }
+    }
+
+    /// <summary>
+    /// 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
+    /// </summary>
+    /// <param name="nTotRows">총 행 수</param>
+    /// <param name="pageIdx">페이지 인덱스 (0-based)</param>
+    /// <returns>예상 첫 로우 번호</returns>
+    public static int GetExpectedFirstRowNum(int nTotRows, int pageIdx)
+    {
+        int nRowsPerPage = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+
+        // 총 페이지 수 계산
+        int nTotPage = 1;
+        if (nTotRows > nRowsPerPage)
+        {
+            nTotPage = nTotRows / nRowsPerPage;
+            if (nTotRows % nRowsPerPage > 0)
+                nTotPage += 1;
+        }
+
+        int nCurPage = pageIdx + 1;
+        int nNum = (nRowsPerPage * pageIdx) + 1;
+
+        if (nTotPage == 1) return 1;
+
+        if (nCurPage < nTotPage) return nNum;
+
+        // 마지막 페이지 특수 처리: 나머지 행이 있는 경우
+        if (nTotRows % nRowsPerPage == 0) return nNum;
+        else return nNum - nRowsPerPage + (nTotRows % nRowsPerPage);
+    }
+
+    /// <summary>
+    /// 번호 컬럼(x=0)에서 첫 로우 번호 읽기
+    /// </summary>
+    /// <param name="bEdit">OFR 실패 시 수동 입력 다이얼로그 표시 여부 (기본값: false)</param>
+    /// <returns>첫 로우 번호 (실패 시 -1)</returns>
+    public async Task<int> ReadFirstRowNumAsync(bool bEdit = false)
+    {
+        IntPtr hWndDG = m_RcptPage.DG오더_hWnd;
+        Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
+        int firstNum = -1;
+
+        for (int y = 2; y < 2 + InsungsInfo_File.접수등록Page_DG오더_dataRowCount; y++)
+        {
+            // 1. 번호 컬럼(x=0) 캡처
+            Draw.Rectangle rcNo = rects[0, y];
+            Draw.Bitmap bmpNo = OfrService.CaptureScreenRect_InWndHandle(hWndDG, rcNo);
+            if (bmpNo == null) continue;
+
+            // 2. OFR (bEdit=false이면 대화상자 안 띄움)
+            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, bEdit);
+            bmpNo.Dispose();
+
+            if (!string.IsNullOrEmpty(resultNo.strResult))
+            {
+                int curNum = StdConvert.StringToInt(resultNo.strResult, -1);
+                if (curNum >= 1)
+                {
+                    firstNum = curNum - (y - 2);
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] ReadFirstRowNum: y={y}, curNum={curNum}, firstNum={firstNum}");
+                    break;
+                }
+            }
+        }
+
+        return firstNum;
+    }
+
+    /// <summary>
+    /// 페이지 검증 및 자동 조정
+    /// </summary>
+    /// <param name="nExpectedFirstNum">예상 첫 번호</param>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <param name="nRetryCount">재시도 횟수 (기본값: 3)</param>
+    /// <returns>성공/실패</returns>
+    public async Task<StdResult_Status> VerifyAndAdjustPageAsync(int nExpectedFirstNum, CancelTokenControl ctrl, int nRetryCount = CommonVars.c_nRepeatShort)
+    {
+        for (int retry = 0; retry < nRetryCount; retry++)
+        {
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
+            // OFR로 실제 번호 읽기
+            int nActualFirstNum = await ReadFirstRowNumAsync();
+            Debug.WriteLine($"[InsungsAct_RcptRegPage] OFR 결과 (시도 {retry + 1}/{nRetryCount}) - 예상={nExpectedFirstNum}, 실제={nActualFirstNum}");
+
+            if (nExpectedFirstNum == nActualFirstNum)
+            {
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] ✓ 페이지 검증 성공 (시도 {retry + 1}회)");
+                return new StdResult_Status(StdResult.Success);
+            }
+
+            Debug.WriteLine($"[InsungsAct_RcptRegPage] ✗ 페이지 검증 실패 (시도 {retry + 1}/{nRetryCount})");
+
+            if (retry < nRetryCount - 1)  // 마지막 시도가 아니면 조정
+            {
+                // 바로잡기: 차이 계산
+                int diff = nActualFirstNum - nExpectedFirstNum;
+                int absDiff = Math.Abs(diff);
+                int dataRowCount = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+
+                int pageClicks = absDiff / dataRowCount;
+                int rowClicks = absDiff % dataRowCount;
+
+                // 최적화: rowClicks > dataRowCount/2 이면 역방향이 더 효율적
+                bool bReverse = false;
+                if (rowClicks > dataRowCount / 2)
+                {
+                    pageClicks += 1;
+                    rowClicks = dataRowCount - rowClicks;
+                    bReverse = true;
+                }
+
+                // 방향 결정
+                Draw.Point ptPage, ptRow;
+                if ((diff > 0 && !bReverse) || (diff < 0 && bReverse))  // 위로
+                {
+                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel스크롤Up;
+                    ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Up;
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 스크롤 조정: UP - {pageClicks}페이지 + {rowClicks}로우");
+                }
+                else  // 아래로
+                {
+                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel스크롤Down;
+                    ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Down;
+                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 스크롤 조정: DOWN - {pageClicks}페이지 + {rowClicks}로우");
+                }
+
+                // 페이지 스크롤
+                for (int i = 0; i < pageClicks; i++)
+                {
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd수직스크롤, ptPage);
+                }
+
+                // 로우 스크롤
+                for (int i = 0; i < rowClicks; i++)
+                {
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd수직스크롤, ptRow);
+                }
+
+                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+            }
+        }
+
+        return new StdResult_Status(StdResult.Fail, $"페이지 조정 {nRetryCount}회 모두 실패", "InsungsAct_RcptRegPage/VerifyAndAdjustPageAsync");
     }
     #endregion
 
