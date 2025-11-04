@@ -20,7 +20,7 @@ public class AutoAllocModel
     /// - Existed_WithSeqno: 기존 주문 (Seqno 있음, 배차 완료)
     /// - Updated_Assume: 업데이트된 주문 (재배차 필요)
     /// - NotChanged: 처리 완료 (다음 루프에서 스킵)
-    /// - Change_ToCancel_DoDelete: 취소된 주문 (리스트에서 제거 예정)
+    /// - CompletedExternal: 외부에서 완료됨 (다른 외주사에서 처리완료, 취소 필요)
     /// </summary>
     public PostgService_Common_OrderState StateFlag { get; set; }
 
@@ -108,7 +108,7 @@ public class AutoAllocModel
 
     /// <summary>
     /// 디버그용 문자열
-    /// </summary>ㅐㅇ디
+    /// </summary>
     public override string ToString()
     {
         return $"[AutoAlloc] KeyCode={KeyCode}, State={StateFlag}";

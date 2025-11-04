@@ -28,7 +28,7 @@ public class InsungContext
     /// <summary>
     /// 앱 상태
     /// </summary>
-    public NwCommon_AppStatus AppStatus { get; set; } = NwCommon_AppStatus.NotUse;
+    public CEnum_AppUsing AppStatus { get; set; } = CEnum_AppUsing.NotUse;
     #endregion
 
     #region 정보 객체들
@@ -69,7 +69,7 @@ public class InsungContext
         AppName = appName;
         Id = id;
         Pw = pw;
-        AppStatus = NwCommon_AppStatus.NotUse;
+        AppStatus = CEnum_AppUsing.NotUse;
 
         // FileInfo 생성
         FileInfo = new InsungsInfo_File();

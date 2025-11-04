@@ -366,7 +366,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                 m_bLoginSignalR = true;
 
                 // App Mode
-                if (result.nLogCount == 1) s_AppMode = KaiEnum_AppMode.Master; // 기본은 Sub
+                if (result.nLogCount == 1) s_AppMode = CEnum_KaiAppMode.Master; // 기본은 Sub
             }
         }
         catch (Exception ex)

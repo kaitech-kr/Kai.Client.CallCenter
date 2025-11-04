@@ -1,0 +1,5 @@
+{
+  "hooks": {
+    "user-prompt-submit": "powershell Get-Content 기본.md"
+  }
+}

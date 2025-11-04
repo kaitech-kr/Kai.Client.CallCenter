@@ -38,10 +38,10 @@ public partial class Config_CtrlAppWnd : Window
     {
         // TmpHide
         //// Use
-        //ChkBoxInsung01.IsChecked = NwInsung01.s_AppStatus == NwCommon_AppStatus.Use ? true : false;
-        //ChkBoxInsung02.IsChecked = NwInsung02.s_AppStatus == NwCommon_AppStatus.Use ? true : false;
-        //ChkBoxCargo24.IsChecked = NwCargo24.s_AppStatus == NwCommon_AppStatus.Use ? true : false;
-        //ChkBoxOnecall.IsChecked = NwOnecall.s_AppStatus == NwCommon_AppStatus.Use ? true : false;
+        //ChkBoxInsung01.IsChecked = NwInsung01.s_AppStatus == CEnum_AppUsing.Use ? true : false;
+        //ChkBoxInsung02.IsChecked = NwInsung02.s_AppStatus == CEnum_AppUsing.Use ? true : false;
+        //ChkBoxCargo24.IsChecked = NwCargo24.s_AppStatus == CEnum_AppUsing.Use ? true : false;
+        //ChkBoxOnecall.IsChecked = NwOnecall.s_AppStatus == CEnum_AppUsing.Use ? true : false;
 
         //// ID
         //TBoxIdInsung01.Text = NwInsung01.s_sId;
@@ -72,19 +72,19 @@ public partial class Config_CtrlAppWnd : Window
         // TmpHide
         //// Use
         //bool b = StdConvert.NullableBoolToBool(ChkBoxInsung01.IsChecked);
-        //NwInsung01.s_AppStatus = b ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
+        //NwInsung01.s_AppStatus = b ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
         //s_KaiReg.SetValue(Insung01_bUse, b);
 
         //b = StdConvert.NullableBoolToBool(ChkBoxInsung02.IsChecked);
-        //NwInsung02.s_AppStatus = b ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
+        //NwInsung02.s_AppStatus = b ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
         //s_KaiReg.SetValue(Insung02_bUse, b);
 
         //b = StdConvert.NullableBoolToBool(ChkBoxCargo24.IsChecked);
-        //NwCargo24.s_AppStatus = b ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
+        //NwCargo24.s_AppStatus = b ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
         //s_KaiReg.SetValue(Cargo24_bUse, b);
 
         //b = StdConvert.NullableBoolToBool(ChkBoxOnecall.IsChecked);
-        //NwOnecall.s_AppStatus = b ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
+        //NwOnecall.s_AppStatus = b ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
         //s_KaiReg.SetValue(Onecall_bUse, b);
 
         //// ID
@@ -111,10 +111,10 @@ public partial class Config_CtrlAppWnd : Window
     //public static void LoadRegistry()
     //{
     //    //s_AppStatus
-    //    NwInsung01.s_AppStatus = s_KaiReg.GetBoolValue(Insung01_bUse) ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
-    //    NwInsung02.s_AppStatus = s_KaiReg.GetBoolValue(Insung02_bUse) ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
-    //    NwCargo24.s_AppStatus = s_KaiReg.GetBoolValue(Cargo24_bUse) ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
-    //    NwOnecall.s_AppStatus = s_KaiReg.GetBoolValue(Onecall_bUse) ? NwCommon_AppStatus.Use : NwCommon_AppStatus.NotUse;
+    //    NwInsung01.s_AppStatus = s_KaiReg.GetBoolValue(Insung01_bUse) ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
+    //    NwInsung02.s_AppStatus = s_KaiReg.GetBoolValue(Insung02_bUse) ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
+    //    NwCargo24.s_AppStatus = s_KaiReg.GetBoolValue(Cargo24_bUse) ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
+    //    NwOnecall.s_AppStatus = s_KaiReg.GetBoolValue(Onecall_bUse) ? CEnum_AppUsing.Use : CEnum_AppUsing.NotUse;
 
     //    // ID
     //    NwInsung01.s_sId = s_KaiReg.GetStringValue(Insung01_sId);
@@ -137,10 +137,10 @@ public partial class Config_CtrlAppWnd : Window
 
     //public static bool IsAnyUse()
     //{
-    //    if (NwInsung01.s_AppStatus == NwCommon_AppStatus.Use) return true;
-    //    if (NwInsung02.s_AppStatus == NwCommon_AppStatus.Use) return true;
-    //    if (NwCargo24.s_AppStatus == NwCommon_AppStatus.Use) return true;
-    //    if (NwOnecall.s_AppStatus == NwCommon_AppStatus.Use) return true;
+    //    if (NwInsung01.s_AppStatus == CEnum_AppUsing.Use) return true;
+    //    if (NwInsung02.s_AppStatus == CEnum_AppUsing.Use) return true;
+    //    if (NwCargo24.s_AppStatus == CEnum_AppUsing.Use) return true;
+    //    if (NwOnecall.s_AppStatus == CEnum_AppUsing.Use) return true;
 
     //    return false;
     //}

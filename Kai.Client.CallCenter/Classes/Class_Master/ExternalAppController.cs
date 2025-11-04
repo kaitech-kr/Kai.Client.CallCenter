@@ -1,8 +1,11 @@
 using System.Diagnostics;
-using System.Linq;
+
+
 using Kai.Common.StdDll_Common;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
+
 using Kai.Client.CallCenter.Networks;
 using Kai.Client.CallCenter.Classes;
 
@@ -425,15 +428,35 @@ public class ExternalAppController : IDisposable
                     {
                         var result = await app.AutoAllocAsync(m_lAutoAllocCount, m_CtrlCancelToken);
 
-                        // ✅ 원칙 3: 에러 로깅
-                        if (result.Result != StdResult.Success && result.Result != StdResult.Skip)
+                        // ✅ 원칙 3: 결과 처리
+                        switch (result.Result)
                         {
-                            Debug.WriteLine($"[ExternalAppController] {app.AppName} AutoAlloc 실패: {result.sErrNPos}");
+                            case StdResult.Success:
+                                // 성공 - 계속 진행
+                                break;
+
+                            case StdResult.Skip:
+                                // 스킵 - 계속 진행
+                                break;
+
+                            case StdResult.Retry:
+                                // 재시도 - 로그만 출력하고 계속
+                                Debug.WriteLine($"[ExternalAppController] {app.AppName} AutoAlloc 재시도 필요: {result.sErrNPos}");
+                                break;
+
+                            case StdResult.Fail:
+                                // 실패 - 에러 메시지 출력 후 루프 탈출
+                                ErrMsgBox($"[ExternalAppController] {app.AppName} AutoAlloc 실패 - 루프 중단: {result.sErrNPos}");
+                                return;
+
+                            default:
+                                ErrMsgBox($"[ExternalAppController] {app.AppName} 알 수 없는 결과: {result.Result}");
+                                break;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"[ExternalAppController] {app.AppName} AutoAlloc 예외: {ex.Message}");
+                        ErrMsgBox($"[ExternalAppController] {app.AppName} AutoAlloc 예외: {ex.Message}");
                         // 예외 발생해도 다음 앱 계속 진행
                     }
                 }

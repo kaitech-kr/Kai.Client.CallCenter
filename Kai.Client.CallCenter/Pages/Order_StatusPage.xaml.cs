@@ -794,10 +794,10 @@ public partial class Order_StatusPage : Page
     //     StdResult_Int resultInt = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(tb);
     //    if (resultInt.nResult <= 0) return new StdResult_Error(resultInt.sErr + resultInt.sPos, "Insung01접수Or배차To운행Async_01");
 
-    //    // 외주오더를 취소시키고, 리스트에서 삭제
-    //    AutoAllocCtrl.SetOrgFlagFromCopiedItem(AutoAllocCtrl.listForInsung02, PostgService_Common_OrderState.Change_ToCancel_DoDelete, kaiCpy); // Insung02
-    //    AutoAllocCtrl.SetOrgFlagFromCopiedItem(AutoAllocCtrl.listForCargo24, PostgService_Common_OrderState.Change_ToCancel_DoDelete, kaiCpy); // Cargo24
-    //    AutoAllocCtrl.SetOrgFlagFromCopiedItem(AutoAllocCtrl.listForOnecall, PostgService_Common_OrderState.Change_ToCancel_DoDelete, kaiCpy); // Onecall
+    //    // 외주오더를 완료 처리 (다른 외주사에서 처리됨)
+    //    AutoAllocCtrl.SetOrgFlagFromCopiedItem(AutoAllocCtrl.listForInsung02, PostgService_Common_OrderState.CompletedExternal, kaiCpy); // Insung02
+    //    AutoAllocCtrl.SetOrgFlagFromCopiedItem(AutoAllocCtrl.listForCargo24, PostgService_Common_OrderState.CompletedExternal, kaiCpy); // Cargo24
+    //    AutoAllocCtrl.SetOrgFlagFromCopiedItem(AutoAllocCtrl.listForOnecall, PostgService_Common_OrderState.CompletedExternal, kaiCpy); // Onecall
 
     //    return null;
     //}

@@ -433,6 +433,7 @@ public class NwInsung01 : IExternalApp
                 #region 5-3. 페이지별 리스트 검사 및 처리
                 for (int pageIdx = 0; pageIdx < nTotPage; pageIdx++)
                 {
+                    #region 사전작업
                     await ctrl.WaitIfPausedOrCancelledAsync();
 
                     // 현재 페이지가 맞는지 체크
@@ -457,7 +458,6 @@ public class NwInsung01 : IExternalApp
                         return new StdResult_Status(StdResult.Fail, $"페이지 {pageIdx + 1} DG 캡처 실패", "NwInsung01/AutoAllocAsync_Region5_3_Capture");
                     }
 
-
                     // 유효 로우 갯수 얻기
                     StdResult_Int resultInt = await m_Context.RcptRegPageAct.GetValidRowCountAsync(bmpPage);
                     if (resultInt.nResult == 0)
@@ -465,21 +465,22 @@ public class NwInsung01 : IExternalApp
                         Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} 유효 로우 갯수 얻기 실패: {resultInt.sErr}");
                         return new StdResult_Status(StdResult.Fail, resultInt.sErr, resultInt.sPos);
                     }
-                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: 유효 로우 {resultInt}개");
+                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: 유효 로우 {resultInt}개"); 
 
-
-                    #region 본작업
                     Draw.Rectangle[,] rects = m_Context.MemInfo.RcptPage.DG오더_RelChildRects;
 
-                    // 마지막 페이지의 경우 시작 인덱스 계산
+                    // 마지막 페이지의 경우 시작 인덱스 계산 (페이지가 2개 이상일 때만)
                     int remainder = nThisTotCount % InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
-                    int startIndex = (pageIdx == nTotPage - 1 && remainder != 0) ?
+                    int startIndex = (nTotPage > 1 && pageIdx == nTotPage - 1 && remainder != 0) ?
                         InsungsInfo_File.접수등록Page_DG오더_dataRowCount - remainder : 0;
 
-                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: startIndex={startIndex}, remainder={remainder}");
+                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: startIndex={startIndex}, remainder={remainder}, resultInt.nResult={resultInt.nResult}");
+                    #endregion
 
+                    #region 본작업
                     for (int i = startIndex, y = i + 2; i < resultInt.nResult; i++, y++)
                     {
+                        #region 찾기
                         // 첫 페이지 첫 로우면 선택
                         if (pageIdx == 0 && i == startIndex)
                         {
@@ -490,34 +491,126 @@ public class NwInsung01 : IExternalApp
                             Debug.WriteLine($"[{APP_NAME}] 첫 페이지 첫 로우 선택 완료: y={y}");
                         }
 
-                        // 로우에서 주문번호 얻기
+                        // 로우에서 주문번호 읽기
                         Draw.Rectangle rectSeqno = rects[InsungsAct_RcptRegPage.c_nCol주문번호, y];
                         bool bInvertRgb = (pageIdx == 0 && y == 2);
 
-                        StdResult_String resultSeqno = await m_Context.RcptRegPageAct.GetRowSeqnoAsync(bmpPage, rectSeqno, bInvertRgb);
-
-                        if (!string.IsNullOrEmpty(resultSeqno.strResult))
-                        {
-                            string seqno = resultSeqno.strResult;
-                            Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, 주문번호={seqno}");
-                        }
-                        else
+                        // 주문번호 읽기 (숫자 - 단음소)
+                        StdResult_String resultSeqno = await m_Context.RcptRegPageAct.GetRowSeqnoAsync(bmpPage, rectSeqno, bInvertRgb, ctrl);
+                        if (string.IsNullOrEmpty(resultSeqno.strResult))
                         {
                             Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, 주문번호 읽기 실패: {resultSeqno.sErr}");
+                            return new StdResult_Status(StdResult.Fail, resultSeqno.sErr, resultSeqno.sPos);
                         }
 
-                        //await Task.Delay(100, ctrl.Token);
+                        string seqno = resultSeqno.strResult;
+
+                        //주문번호로 listEtcGroup에서 아이템 찾기
+                        var foundItem = listEtcGroup.FirstOrDefault(item => item.NewOrder.Insung1 == seqno);
+                        if (foundItem == null) continue;
+
+                        // 찾았으면 상태 읽기 (모든 케이스에서 필요)
+                        Draw.Rectangle rectStatus = rects[InsungsAct_RcptRegPage.c_nCol상태, y];
+                        StdResult_String resultStatus = await m_Context.RcptRegPageAct.GetRowStatusAsync(bmpPage, rectStatus, bInvertRgb, ctrl);
+                        if (string.IsNullOrEmpty(resultStatus.strResult))
+                        {
+                            Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, 상태 읽기 실패: {resultStatus.sErr}");
+                            return new StdResult_Status(StdResult.Fail, resultStatus.sErr, resultStatus.sPos);
+                        }
+
+                        string status = resultStatus.strResult;
+                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, status={status}");
+                        #endregion
+
+                        #region StateFlag별 분기
+                        CommonResult_AutoAllocProcess resultAuto;
+
+                        switch (foundItem.StateFlag)
+                        {
+                            case PostgService_Common_OrderState.Empty:
+                                // 있을 수 없는 경우 → 스킵
+                                Debug.WriteLine($"[{APP_NAME}] 예외: Empty StateFlag - seqno={seqno}");
+                                continue;
+
+                            case PostgService_Common_OrderState.NotChanged:
+                                // Kai는 변화 없음 → Insung 상태 변경 확인
+                                // TODO: StateTransitionRules 적용
+                                var dgInfoNotChanged = new CommonResult_AutoAllocDatagrid(i, status);
+                                // resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_KaiSameInsungIfChanged(foundItem, dgInfoNotChanged, ctrl);
+                                resultAuto = CommonResult_AutoAllocProcess.SuccessAndReEnqueue(); // 임시
+                                break;
+
+                            //case PostgService_Common_OrderState.CompletedExternal:
+                            //    // TODO: 외부 완료 처리 (취소 명령 실행)
+                            //    // resultAuto = await m_Context.RcptRegPageAct.Command_CancelExternal(foundItem, ctrl);
+                            //    resultAuto = CommonResult_AutoAllocProcess.SuccessAndComplete(); // 임시 (취소 성공 → 비적재)
+                            //    break;
+
+                            case PostgService_Common_OrderState.Existed_WithSeqno:
+                            case PostgService_Common_OrderState.Updated_Assume:
+                                // Kai 변경됨 → Insung을 Kai에 맞춰 업데이트
+                                var dgInfo = new CommonResult_AutoAllocDatagrid(i, status);
+                                // TODO: CheckIsOrderAsync_AssumeKaiUpdated 재구현 필요 (현재 주석처리됨)
+                                resultAuto = CommonResult_AutoAllocProcess.SuccessAndReEnqueue(); // 임시
+                                // resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiUpdated(foundItem, dgInfo, ctrl);
+                                break;
+
+                            default:
+                                // 알 수 없는 StateFlag → 에러
+                                Debug.WriteLine($"[{APP_NAME}] 알 수 없는 StateFlag: {foundItem.StateFlag}");
+                                return new StdResult_Status(StdResult.Fail, $"알 수 없는 StateFlag: {foundItem.StateFlag}", "NwInsung01/AutoAllocAsync_Region5_3_StateFlag");
+                        }
+                        #endregion
+
+                        #region 통합 결과 처리
+                        switch (resultAuto.ResultType)
+                        {
+                            case CEnum_AutoAllocProcessResult.SuccessAndReEnqueue:
+                                // 성공 + 재적재 (계속 관리)
+                                Debug.WriteLine($"[{APP_NAME}] 처리 완료 (재적재): seqno={seqno}, StateFlag={foundItem.StateFlag}");
+                                ExternalAppController.QueueManager.ReEnqueue(foundItem, StdConst_Network.INSUNG1);
+                                break;
+
+                            case CEnum_AutoAllocProcessResult.SuccessAndComplete:
+                                // 성공 + 비적재 (완료)
+                                Debug.WriteLine($"[{APP_NAME}] 처리 완료 (비적재): seqno={seqno}, Message={resultAuto.sErr}");
+                                break;
+
+                            case CEnum_AutoAllocProcessResult.FailureAndRetry:
+                                // 실패 + 재적재 (재시도)
+                                Debug.WriteLine($"[{APP_NAME}] 처리 실패 (재적재): seqno={seqno}, Error={resultAuto.sErrNPos}");
+                                ExternalAppController.QueueManager.ReEnqueue(foundItem, StdConst_Network.INSUNG1);
+                                break;
+
+                            case CEnum_AutoAllocProcessResult.FailureAndDiscard:
+                                // 실패 + 비적재 (복구 불가능)
+                                Debug.WriteLine($"[{APP_NAME}] 처리 실패 (비적재): seqno={seqno}, Error={resultAuto.sErrNPos}");
+                                break;
+                        }
+                        #endregion
+
+                        #region 정리작업
+                        // **무조건 삭제** (모든 케이스) - KeyCode 기반으로 제거
+                        listEtcGroup.RemoveAll(item => item.KeyCode == foundItem.KeyCode);
+
+                        // **조기 탈출: listEtcGroup 비면 종료**
+                        if (listEtcGroup.Count == 0)
+                        {
+                            Debug.WriteLine($"[{APP_NAME}] listEtcGroup 모두 처리 완료 → 페이지 {pageIdx + 1}, 로우 {y}에서 for 루프 종료");
+                            break; // for 로우 루프 탈출
+                        }
+                        #endregion
                     }
                     #endregion
 
                     // Bitmap 해제
                     bmpPage?.Dispose();
 
-                    // 조기 탈출: 모든 항목을 처리했으면
+                    // 조기 탈출: 모든 항목을 처리했으면 (로우 루프에서 이미 체크됨)
                     if (listEtcGroup.Count == 0)
                     {
-                        Debug.WriteLine($"[{APP_NAME}] 모든 항목 처리 완료, 페이지 {pageIdx + 1}/{nTotPage}에서 종료");
-                        break;
+                        Debug.WriteLine($"[{APP_NAME}] listEtcGroup 모두 처리 완료 → 페이지 {pageIdx + 1}/{nTotPage}에서 페이지 루프 종료");
+                        break; // 페이지 루프 탈출
                     }
 
                     if (pageIdx < nTotPage - 1)
@@ -533,27 +626,25 @@ public class NwInsung01 : IExternalApp
 
                 // Region 5 완료
                 Debug.WriteLine($"[{APP_NAME}] Region 5 완료");
-                foreach (var item in listEtcGroup)
+
+                // 처리 못한 항목 (DG에서 찾지 못함 = 이미 배차/완료됨)
+                if (listEtcGroup.Count > 0)
                 {
-                    ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1, PostgService_Common_OrderState.NotChanged);
+                    Debug.WriteLine($"[{APP_NAME}] DG에서 찾지 못한 항목: {listEtcGroup.Count}건 - 상세 정보:");
+                    for (int idx = 0; idx < listEtcGroup.Count && idx < 20; idx++)
+                    {
+                        var item = listEtcGroup[idx];
+                        Debug.WriteLine($"[{APP_NAME}]   [{idx}] KeyCode={item.KeyCode}, StateFlag={item.StateFlag}, Insung1={item.NewOrder.Insung1 ?? "(null)"}");
+                    }
+
+                    ErrMsgBox($"[{APP_NAME}] DG에서 찾지 못한 항목: {listEtcGroup.Count}건 (배차/완료된 것으로 추정, 재적재 안 함)");
+                    // 재적재 안 함 (버림)
                 }
                 listEtcGroup.Clear();
             }
 
             #endregion
 
-            #region 6. 처리 완료된 항목을 큐에 재적재
-            //if (listProcessed.Count > 0)
-            //{
-            //    foreach (var item in listProcessed)
-            //    {
-            //        ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1);
-            //    }
-            //    Debug.WriteLine($"[{APP_NAME}] 처리 완료된 항목 {listProcessed.Count}개를 큐에 재적재");
-            //}
-            #endregion
-
-            Debug.WriteLine($"[NwInsung01] AutoAllocAsync 완료 - Count={lAllocCount}");
             return new StdResult_Status(StdResult.Success);
         }
         catch (OperationCanceledException)
