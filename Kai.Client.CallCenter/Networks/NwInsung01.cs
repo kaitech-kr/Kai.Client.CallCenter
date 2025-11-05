@@ -494,6 +494,7 @@ public class NwInsung01 : IExternalApp
                         // 로우에서 주문번호 읽기
                         Draw.Rectangle rectSeqno = rects[InsungsAct_RcptRegPage.c_nCol주문번호, y];
                         bool bInvertRgb = (pageIdx == 0 && y == 2);
+                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, bInvertRgb={bInvertRgb}");
 
                         // 주문번호 읽기 (숫자 - 단음소)
                         StdResult_String resultSeqno = await m_Context.RcptRegPageAct.GetRowSeqnoAsync(bmpPage, rectSeqno, bInvertRgb, ctrl);
