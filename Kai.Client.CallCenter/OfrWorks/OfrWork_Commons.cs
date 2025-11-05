@@ -310,7 +310,7 @@ public class OfrWork_Common
             if (TryGetTextCache(analyText, out string cachedText))
             {
                 sw.Stop();
-                Debug.WriteLine($"[Cache HIT] OfrStr_SeqCharAsync: '{cachedText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
+                //Debug.WriteLine($"[Cache HIT] OfrStr_SeqCharAsync: '{cachedText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
                 return new StdResult_String(cachedText);
             }
 
@@ -451,7 +451,7 @@ public class OfrWork_Common
             {
                 bmpFore.Dispose();
                 sw.Stop();
-                Debug.WriteLine($"[Cache HIT] OfrStr_ComplexCharSetAsync: '{cachedText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
+                //Debug.WriteLine($"[Cache HIT] OfrStr_ComplexCharSetAsync: '{cachedText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
                 return new StdResult_String(cachedText);
             }
 
