@@ -2449,7 +2449,7 @@ public class InsungsAct_RcptRegPage
             Draw.Point ptCheckPan = m_FileInfo.접수등록Page_DG오더_ptChkRelPanL;
 
             // Phase 1: 로딩 패널 출현 대기 (최대 250ms)
-            Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 대기 시작");
+            //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 대기 시작");
 
             for (int i = 0; i < CommonVars.c_nWaitLong; i++) // 250ms
             {
@@ -2458,7 +2458,7 @@ public class InsungsAct_RcptRegPage
                 hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, ptCheckPan);
                 if (hWndFind != hWndDG)
                 {
-                    Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 확인 ({i}ms)");
+                    //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 확인 ({i}ms)");
                     break;
                 }
                 await Task.Delay(1, ctrl.Token);
@@ -2466,12 +2466,12 @@ public class InsungsAct_RcptRegPage
 
             if (hWndFind == hWndDG)
             {
-                Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 미출현 → Skip (이미 로딩 완료)");
+                //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 미출현 → Skip (이미 로딩 완료)");
                 return new StdResult_Status(StdResult.Skip);
             }
 
             // Phase 2: 로딩 패널 사라짐 대기 (최대 timeoutSec초)
-            Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 사라짐 대기 시작 (최대 {timeoutSec}초)");
+            //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 사라짐 대기 시작 (최대 {timeoutSec}초)");
 
             int iterations = timeoutSec * 10; // 100ms 단위
             for (int i = 0; i < iterations; i++)
@@ -2482,7 +2482,7 @@ public class InsungsAct_RcptRegPage
                 if (hWndFind == hWndDG)
                 {
                     int elapsedMs = i * 100;
-                    Debug.WriteLine($"[{m_Context.AppName}] 로딩 완료 ({elapsedMs}ms)");
+                    //Debug.WriteLine($"[{m_Context.AppName}] 로딩 완료 ({elapsedMs}ms)");
                     return new StdResult_Status(StdResult.Success);
                 }
 
