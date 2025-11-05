@@ -200,22 +200,14 @@ public class OfrWork_Insungs : OfrWork_Common
                 if (bmpExact == null) continue;
 
                 // 5. OFR 수행
-                Draw.Rectangle rcSpare = new Draw.Rectangle(0, 0, bmpExact.Width, bmpExact.Height);
-                OfrResult_TbCharSetList resultCharSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                    bmpExact,
-                    rcSpare,
-                    bSaveToTbText: false,
-                    bEdit: false,
-                    bWrite: false,
-                    bMsgBox: false
-                );
+                StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit: false);
 
                 bmpExact?.Dispose();
 
                 // 6. 번호 변환 성공 시
-                if (!string.IsNullOrEmpty(resultCharSet?.strResult))
+                if (!string.IsNullOrEmpty(result?.strResult))
                 {
-                    int curNum = StdConvert.StringToInt(resultCharSet.strResult, -1);
+                    int curNum = StdConvert.StringToInt(result.strResult, -1);
                     if (curNum > 0)
                     {
                         // 소급 계산: firstNum = curNum - y + 2

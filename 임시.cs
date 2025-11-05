@@ -14,8 +14,7 @@ public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpSo
         Draw.Rectangle rcFull = new Draw.Rectangle(0, 0, bmpSource.Width, bmpSource.Height);
         Draw.Rectangle rcFore = OfrService.GetForeGroundDrawRectangle_FromColorBitmapRectFast(bmpSource, rcFull, avgBright, 0);
 
-        if (rcFore == StdUtil.s_rcDrawEmpty)
-            return new StdResult_String("전경 영역 없음", "OfrStr_SeqCharAsync_01");
+        if (rcFore == StdUtil.s_rcDrawEmpty) return new StdResult_String("전경 영역 없음", "OfrStr_SeqCharAsync_01");
 
         // ========================================
         // 1. 텍스트 캐시 조회 (전체 전경 영역 기준)

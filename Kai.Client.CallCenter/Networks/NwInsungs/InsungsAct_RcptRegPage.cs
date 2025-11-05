@@ -682,29 +682,20 @@ public class InsungsAct_RcptRegPage
 
                         // 3-6. TEXT OFR 수행 - OfrStr_ComplexCharSetAsync (범용 함수 - 한글/영문/숫자 모두 처리)
                         // bmpExact는 이미 전경 영역만 추출된 상태, rcSpare는 전체 영역
-                        Draw.Rectangle rcSpare = new Draw.Rectangle(0, 0, bmpExact.Width, bmpExact.Height);
-
-                        OfrResult_TbCharSetList resultCharSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                            bmpExact,
-                            rcSpare,
-                            bSaveToTbText: false,  // 컬럼 헤더는 앱마다 달라 저장 안 함
-                            bEdit,
-                            bWrite,
-                            bMsgBox: false         // 에러 메시지 표시 안 함
-                        );
+                        StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit);
 
                         bmpExact?.Dispose();
 
                         // 3-7. 결과 저장
-                        if (resultCharSet != null && !string.IsNullOrEmpty(resultCharSet.strResult))
+                        if (result != null && !string.IsNullOrEmpty(result.strResult))
                         {
-                            m_RcptPage.DG오더_ColumnTexts[i] = resultCharSet.strResult;
+                            m_RcptPage.DG오더_ColumnTexts[i] = result.strResult;
                             //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 성공: '{m_RcptPage.DG오더_ColumnTexts[i]}'");
                         }
                         else
                         {
                             m_RcptPage.DG오더_ColumnTexts[i] = null;
-                            //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 실패: {resultCharSet?.sErr}");
+                            //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 실패: {result?.sErr}");
                         }
                     }
                     catch (Exception ex)
@@ -1060,13 +1051,11 @@ public class InsungsAct_RcptRegPage
                     }
 
                     // OFR 수행
-                    Draw.Rectangle rcSpare = new Draw.Rectangle(0, 0, bmpExact.Width, bmpExact.Height);
-                    OfrResult_TbCharSetList resultCharSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                        bmpExact, rcSpare, bSaveToTbText: false, bEdit, bWrite, bMsgBox: false);
+                    StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit);
 
                     bmpExact?.Dispose();
 
-                    texts[x] = resultCharSet?.strResult;
+                    texts[x] = result?.strResult;
                     //Debug.WriteLine($"[InitDG오더] 2-{iteration+1}. 컬럼[{x}] 인식: '{texts[x]}'");
                 }
 
@@ -1170,13 +1159,11 @@ public class InsungsAct_RcptRegPage
 
                     if (bmpExact == null) continue;
 
-                    Draw.Rectangle rcSpare = new Draw.Rectangle(0, 0, bmpExact.Width, bmpExact.Height);
-                    OfrResult_TbCharSetList resultCharSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                        bmpExact, rcSpare, bSaveToTbText: false, bEdit, bWrite, bMsgBox: false);
+                    StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit);
 
                     bmpExact?.Dispose();
 
-                    if (resultCharSet?.strResult == targetText)
+                    if (result?.strResult == targetText)
                     {
                         index = tx;
                         //Debug.WriteLine($"[InitDG오더] 3-{x+1}. 찾음: '{targetText}' at [{tx}]");
@@ -2956,7 +2943,7 @@ public class InsungsAct_RcptRegPage
     public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectStatus, bool bInvertRgb, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_ComplexCharSetAsync2(bmpPage, rectStatus, bInvertRgb);
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb);
     }
     #endregion
 
