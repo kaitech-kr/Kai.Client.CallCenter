@@ -535,7 +535,7 @@ public class NwInsung01 : IExternalApp
                             }
                         }
 
-                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, bInvertRgb={bInvertRgb}");
+                        //Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, bInvertRgb={bInvertRgb}");
 
                         // 로우에서 주문번호 읽기
                         Draw.Rectangle rectSeqno = rects[InsungsAct_RcptRegPage.c_nCol주문번호, y];
