@@ -481,20 +481,64 @@ public class NwInsung01 : IExternalApp
                     for (int i = startIndex, y = i + 2; i < resultInt.nResult; i++, y++)
                     {
                         #region 찾기
-                        // 첫 페이지 첫 로우면 선택
+                        bool bInvertRgb = false;
+
+                        // 첫 페이지 첫 로우면 선택 확인 및 처리
                         if (pageIdx == 0 && i == startIndex)
                         {
-                            Draw.Rectangle rcFirstRow = rects[3, y]; // 4번째 컬럼
-                            Draw.Point ptClick = new Draw.Point(rcFirstRow.Left + 5, rcFirstRow.Top + 5);
-                            await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Context.MemInfo.RcptPage.DG오더_hWnd, ptClick);
-                            await Task.Delay(100, ctrl.Token);
-                            Debug.WriteLine($"[{APP_NAME}] 첫 페이지 첫 로우 선택 완료: y={y}");
+                            // 반전 체크용 셀 캡처 (두 번째 컬럼)
+                            Draw.Rectangle rectVerify = rects[1, y];
+                            Draw.Bitmap bmpVerify = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd, rectVerify);
+
+                            if (bmpVerify != null)
+                            {
+                                try
+                                {
+                                    // 반전 상태 체크
+                                    Draw.Rectangle rectInBmp = new Draw.Rectangle(0, 0, rectVerify.Width, rectVerify.Height);
+                                    bool isSelected = OfrService.IsInvertedSelection(bmpVerify, rectInBmp);
+
+                                    if (isSelected)
+                                    {
+                                        // 이미 선택됨 → RGB 반전 OFR
+                                        bInvertRgb = true;
+                                        Debug.WriteLine($"[{APP_NAME}] 첫 로우 이미 선택됨 (RGB 반전 OFR)");
+                                    }
+                                    else
+                                    {
+                                        // 선택 안됨 → 클릭 후 재캡처
+                                        Debug.WriteLine($"[{APP_NAME}] 첫 로우 선택 안됨 → 클릭 후 재캡처");
+
+                                        Draw.Rectangle rcFirstRow = rects[3, y]; // 4번째 컬럼
+                                        Draw.Point ptClick = new Draw.Point(rcFirstRow.Left + 5, rcFirstRow.Top + 5);
+                                        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Context.MemInfo.RcptPage.DG오더_hWnd, ptClick);
+                                        await Task.Delay(100, ctrl.Token);
+
+                                        // 재캡처
+                                        bmpPage?.Dispose();
+                                        bmpPage = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
+
+                                        if (bmpPage == null)
+                                        {
+                                            Debug.WriteLine($"[{APP_NAME}] 첫 로우 클릭 후 재캡처 실패");
+                                            return new StdResult_Status(StdResult.Fail, "첫 로우 클릭 후 재캡처 실패", "NwInsung01/AutoAllocAsync_Region5_3_ReCapture");
+                                        }
+
+                                        bInvertRgb = true;
+                                        Debug.WriteLine($"[{APP_NAME}] 첫 로우 선택 후 재캡처 완료 (RGB 반전 OFR)");
+                                    }
+                                }
+                                finally
+                                {
+                                    bmpVerify.Dispose();
+                                }
+                            }
                         }
+
+                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, bInvertRgb={bInvertRgb}");
 
                         // 로우에서 주문번호 읽기
                         Draw.Rectangle rectSeqno = rects[InsungsAct_RcptRegPage.c_nCol주문번호, y];
-                        bool bInvertRgb = (pageIdx == 0 && y == 2);
-                        Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, bInvertRgb={bInvertRgb}");
 
                         // 주문번호 읽기 (숫자 - 단음소)
                         StdResult_String resultSeqno = await m_Context.RcptRegPageAct.GetRowSeqnoAsync(bmpPage, rectSeqno, bInvertRgb, ctrl);
