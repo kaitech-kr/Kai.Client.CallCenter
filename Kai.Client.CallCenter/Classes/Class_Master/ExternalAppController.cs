@@ -143,6 +143,10 @@ public class ExternalAppController : IDisposable
                 }
             }
 
+            // 3. SignalR 연결 끊김 이벤트 구독
+            SrGlobalClient.SrGlobalClient_ClosedEvent += OnSignalRDisconnected;
+            Debug.WriteLine("[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료");
+
             Debug.WriteLine("[ExternalAppController] InitializeAsync 완료");
             return new StdResult_Status(StdResult.Success);
         }
@@ -488,6 +492,30 @@ public class ExternalAppController : IDisposable
     }
     #endregion
 
+    #region SignalR 연결 끊김 처리
+    /// <summary>
+    /// SignalR 연결 끊김 시 자동배차 일시정지
+    /// </summary>
+    private void OnSignalRDisconnected(object sender, Common.StdDll_Common.StdDelegate.ExceptionEventArgs e)
+    {
+        Debug.WriteLine($"[ExternalAppController] SignalR 연결 끊김 감지: {e.e?.Message}");
+        Debug.WriteLine("[ExternalAppController] 자동배차를 일시정지(Pause) 상태로 전환합니다.");
+
+        // 자동배차 일시정지
+        if (m_CtrlCancelToken != null)
+        {
+            m_CtrlCancelToken.Pause();
+            Debug.WriteLine("[ExternalAppController] 자동배차 Pause 완료");
+        }
+
+        // 사용자 알림 (메시지박스)
+        System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+        {
+            ErrMsgBox($"SignalR 서버 연결이 끊겼습니다.\n\n자동배차를 일시정지합니다.\n\n에러: {e.e?.Message ?? "알 수 없는 오류"}");
+        });
+    }
+    #endregion
+
     /// <summary>
     /// 리소스 정리
     /// </summary>
@@ -496,6 +524,10 @@ public class ExternalAppController : IDisposable
         try
         {
             Debug.WriteLine("[ExternalAppController] Shutdown 시작");
+
+            // SignalR 연결 끊김 이벤트 구독 해제
+            SrGlobalClient.SrGlobalClient_ClosedEvent -= OnSignalRDisconnected;
+            Debug.WriteLine("[ExternalAppController] SignalR 연결 끊김 이벤트 구독 해제 완료");
 
             // AutoAlloc 루프 중단
             if (m_CtrlCancelToken != null)
