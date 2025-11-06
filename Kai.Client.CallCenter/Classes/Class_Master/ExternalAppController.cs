@@ -183,12 +183,48 @@ public class ExternalAppController : IDisposable
     }
 
     /// <summary>
-    /// 주문을 4개 외부앱별로 분류하여 큐에 적재
+    /// 주문이 속할 큐 목록 반환 (분류 로직 기반)
+    /// </summary>
+    private List<string> GetTargetQueues(TbOrder order)
+    {
+        var queues = new List<string>();
+
+        // 차량 타입 판단
+        bool isMotorcycle = order.CarType == "오토";
+        bool isFlex = order.CarType == "플렉스";
+        bool isLargeTruck = order.CarType == "트럭" && order.CarWeight != "1t" && order.CarWeight != "1.4t";
+
+        bool isForInsung = !isLargeTruck;
+        bool isForCargo24Onecall = !isMotorcycle && !isFlex;
+
+        // 인성1, 인성2
+        if (isForInsung)
+        {
+            if (order.CallCustFrom != StdConst_Network.INSUNG2)
+                queues.Add(StdConst_Network.INSUNG1);
+
+            if (order.CallCustFrom != StdConst_Network.INSUNG1)
+                queues.Add(StdConst_Network.INSUNG2);
+        }
+
+        // 화물24시, 원콜
+        if (isForCargo24Onecall)
+        {
+            queues.Add(StdConst_Network.CARGO24);
+            queues.Add(StdConst_Network.ONECALL);
+        }
+
+        return queues;
+    }
+
+    /// <summary>
+    /// 주문을 4개 외부앱별로 분류하여 큐에 추가
     /// 참조: 주문_분류_로직_확정.md
     /// </summary>
     /// <param name="order">분류할 주문</param>
-    /// <param name="isNewOrder">신규 주문 여부 (true=Created, false=Existed)</param>
-    private void ClassifyAndEnqueueOrder(TbOrder order, bool isNewOrder)
+    /// <param name="stateFlag">StateFlag (지정 시 직접 사용, null이면 isNewOrder 기반으로 자동 결정)</param>
+    /// <param name="isNewOrder">신규 주문 여부 (stateFlag가 null일 때만 사용)</param>
+    private void ClassifyAndEnqueueOrder(TbOrder order, PostgService_Common_OrderState? stateFlag = null, bool isNewOrder = false)
     {
         // Step 1: 차량 타입 판단 (제외 로직)
         bool isMotorcycle = order.CarType == "오토";
@@ -212,28 +248,32 @@ public class ExternalAppController : IDisposable
             // 이유: 결제 방법이 도중에 변경되어도 회계 일관성 유지
             if (order.CallCustFrom != StdConst_Network.INSUNG2)
             {
-                EnqueueToApp(order, StdConst_Network.INSUNG1, isNewOrder);
+                EnqueueToApp(order, StdConst_Network.INSUNG1, stateFlag, isNewOrder);
             }
 
             // 인성2: 인성1 신용업체 무조건 제외 (현금/신용 무관)
             if (order.CallCustFrom != StdConst_Network.INSUNG1)
             {
-                EnqueueToApp(order, StdConst_Network.INSUNG2, isNewOrder);
+                EnqueueToApp(order, StdConst_Network.INSUNG2, stateFlag, isNewOrder);
             }
         }
 
         // 화물24시, 원콜: 오토, 플렉스 제외한 모든 차량
         if (isForCargo24Onecall)
         {
-            EnqueueToApp(order, StdConst_Network.CARGO24, isNewOrder);
-            EnqueueToApp(order, StdConst_Network.ONECALL, isNewOrder);
+            EnqueueToApp(order, StdConst_Network.CARGO24, stateFlag, isNewOrder);
+            EnqueueToApp(order, StdConst_Network.ONECALL, stateFlag, isNewOrder);
         }
     }
 
     /// <summary>
     /// 주문을 특정 앱의 큐에 추가
     /// </summary>
-    private void EnqueueToApp(TbOrder order, string networkName, bool isNewOrder)
+    /// <param name="order">추가할 주문</param>
+    /// <param name="networkName">네트워크 이름</param>
+    /// <param name="overrideFlag">StateFlag 직접 지정 (null이면 isNewOrder 기반으로 자동 결정)</param>
+    /// <param name="isNewOrder">신규 주문 여부 (overrideFlag가 null일 때만 사용)</param>
+    private void EnqueueToApp(TbOrder order, string networkName, PostgService_Common_OrderState? overrideFlag = null, bool isNewOrder = false)
     {
         // SeqNo 확인
         string seqNo = GetSeqNoByNetwork(order, networkName);
@@ -241,7 +281,12 @@ public class ExternalAppController : IDisposable
 
         // StateFlag 결정
         PostgService_Common_OrderState stateFlag;
-        if (isNewOrder)
+        if (overrideFlag.HasValue)
+        {
+            // 직접 지정된 Flag 사용
+            stateFlag = overrideFlag.Value;
+        }
+        else if (isNewOrder)
         {
             stateFlag = PostgService_Common_OrderState.Created;
         }
@@ -323,16 +368,8 @@ public class ExternalAppController : IDisposable
             if (oldOrder.StartDongBasic != newOrder.StartDongBasic)
                 Debug.WriteLine($"  출발지 변경: {oldOrder.StartDongBasic} → {newOrder.StartDongBasic}");
 
-            // TbOrder에 EndDongBasic 속성이 없음 - TODO: 실제 속성명 확인 필요
-            // if (oldOrder.EndDongBasic != newOrder.EndDongBasic)
-            //     Debug.WriteLine($"  도착지 변경: {oldOrder.EndDongBasic} → {newOrder.EndDongBasic}");
-
             if (oldOrder.FeeBasic != newOrder.FeeBasic)
                 Debug.WriteLine($"  요금 변경: {oldOrder.FeeBasic} → {newOrder.FeeBasic}");
-
-            // TbOrder에 Status 또는 StatusFlag 속성이 없음 - TODO: 실제 속성명 확인 필요
-            // if (oldOrder.StatusFlag != newOrder.StatusFlag)
-            //     Debug.WriteLine($"  상태 변경: {oldOrder.StatusFlag} → {newOrder.StatusFlag}");
 
             if (oldOrder.CallCustFrom != newOrder.CallCustFrom)
                 Debug.WriteLine($"  접수처 변경: {oldOrder.CallCustFrom} → {newOrder.CallCustFrom}");
@@ -340,11 +377,12 @@ public class ExternalAppController : IDisposable
 
         Debug.WriteLine($"[ExternalAppController] =========================================");
 
-        // 참조 공유로 인해 s_listTbOrderToday의 TbOrder 객체가 업데이트되면
-        // 큐의 AutoAlloc.NewOrder도 같은 객체를 참조하므로 자동으로 반영됨!
-        //
-        // 다음 AutoAllocAsync() 루프에서 최신 데이터 사용됨
-        // (할일 많으면 거의 즉시, 없으면 최대 5초 내)
+        // ✅ 해당 큐들에서만 기존 항목 제거 후 재분류하여 추가
+        // - 차량 타입이나 접수처가 변경되었을 수 있으므로 재분류 필요
+        // - GetTargetQueues로 효율적으로 해당 큐들만 탐색
+        var targetQueues = GetTargetQueues(newOrder);
+        QueueManager.RemoveFromQueues(newOrder.KeyCode, targetQueues);
+        ClassifyAndEnqueueOrder(newOrder, stateFlag: changedFlag);
     }
 
     #region 자동배차 제어

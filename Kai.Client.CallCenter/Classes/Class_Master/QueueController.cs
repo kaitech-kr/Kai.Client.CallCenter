@@ -145,8 +145,8 @@ public class QueueController
     /// </summary>
     /// <param name="order">재적재할 주문</param>
     /// <param name="networkName">네트워크 이름</param>
-    /// <param name="newStateFlag">새로운 StateFlag (null이면 기본값: NotChanged)</param>
-    public void ReEnqueue(AutoAllocModel order, string networkName, PostgService_Common_OrderState? newStateFlag = null)
+    /// <param name="newStateFlag">새로운 StateFlag (필수)</param>
+    public void ReEnqueue(AutoAllocModel order, string networkName, PostgService_Common_OrderState newStateFlag)
     {
         if (order == null)
         {
@@ -155,15 +155,7 @@ public class QueueController
         }
 
         // StateFlag 변경
-        if (newStateFlag.HasValue)
-        {
-            order.StateFlag = newStateFlag.Value;
-        }
-        else
-        {
-            // 기본값: NotChanged (테스트를 위해 계속 보이도록)
-            order.StateFlag = PostgService_Common_OrderState.NotChanged;
-        }
+        order.StateFlag = newStateFlag;
 
         var queue = GetQueue(networkName);
         queue.Enqueue(order);
@@ -184,6 +176,62 @@ public class QueueController
             StdConst_Network.ONECALL => order.Onecall,
             _ => null
         };
+    }
+
+    /// <summary>
+    /// 지정된 큐들에서 특정 주문 제거 (SignalR 업데이트 시 사용)
+    /// </summary>
+    /// <param name="keyCode">제거할 주문의 KeyCode</param>
+    /// <param name="targetQueues">제거할 큐 이름 목록</param>
+    /// <returns>제거된 항목 개수</returns>
+    public int RemoveFromQueues(long keyCode, List<string> targetQueues)
+    {
+        int removedCount = 0;
+
+        foreach (var networkName in targetQueues)
+        {
+            var queue = GetQueue(networkName);
+            removedCount += RemoveFromQueue(queue, keyCode, networkName);
+        }
+
+        if (removedCount > 0)
+        {
+            Debug.WriteLine($"[AutoAllocQueue] RemoveFromQueues: KeyCode={keyCode}, 총 {removedCount}개 제거");
+        }
+
+        return removedCount;
+    }
+
+    /// <summary>
+    /// 특정 큐에서 주문 제거
+    /// </summary>
+    private int RemoveFromQueue(Queue<AutoAllocModel> queue, long keyCode, string networkName)
+    {
+        var tempList = new List<AutoAllocModel>();
+        int removedCount = 0;
+
+        // 큐에서 모든 항목 꺼내기
+        while (queue.Count > 0)
+        {
+            var item = queue.Dequeue();
+            if (item.NewOrder.KeyCode == keyCode)
+            {
+                removedCount++;
+                Debug.WriteLine($"[AutoAllocQueue] 제거: {networkName}, KeyCode={keyCode}, StateFlag={item.StateFlag}");
+            }
+            else
+            {
+                tempList.Add(item);
+            }
+        }
+
+        // 제거되지 않은 항목만 다시 큐에 넣기
+        foreach (var item in tempList)
+        {
+            queue.Enqueue(item);
+        }
+
+        return removedCount;
     }
     #endregion
 
