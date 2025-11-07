@@ -44,6 +44,13 @@ public class AutoAllocModel
     /// </summary>
     public long KeyCode => NewOrder?.KeyCode ?? 0;
 
+    /// <summary>
+    /// 인성 "운행" 상태 진입 시간 (40초 타이머용)
+    /// - null: 운행 상태 아님 또는 40초 경과됨
+    /// - DateTime: 운행 진입 시간 (40초 경과 체크용)
+    /// </summary>
+    public DateTime? RunStartTime { get; set; } = null;
+
     #endregion
 
     #region Constructors

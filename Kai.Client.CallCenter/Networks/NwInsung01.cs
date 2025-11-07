@@ -288,7 +288,7 @@ public class NwInsung01 : IExternalApp
                     Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
                 {
                     bDatagridExists = true;
-                    Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
+                    //Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
                     break;
                 }
 
@@ -337,23 +337,20 @@ public class NwInsung01 : IExternalApp
                                 PostgService_Common_OrderState.NotChanged);
                             break;
 
-                        case StdResult.Skip:
-                            // 이미 등록된 주문 (StateFlag 동기화 이슈)
-                            // SignalR 업데이트로 NewOrder.Insung1이 채워졌지만 StateFlag는 Existed_NonSeqno인 경우
-                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 이미 등록된 주문 스킵: {item.KeyCode}, Insung1={item.NewOrder.Insung1}");
+                        //case StdResult.Skip:
+                        //    // 이미 등록된 주문 (StateFlag 동기화 이슈)
+                        //    // SignalR 업데이트로 NewOrder.Insung1이 채워졌지만 StateFlag는 Existed_NonSeqno인 경우
+                        //    Debug.WriteLine($"[{APP_NAME}]   [{i}] 이미 등록된 주문 스킵: {item.KeyCode}, Insung1={item.NewOrder.Insung1}");
 
-                            // StateFlag 보정: Existed_WithSeqno로 변경 후 재적재
-                            ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1,
-                                PostgService_Common_OrderState.Existed_WithSeqno);
-                            break;
+                        //    // StateFlag 보정: Existed_WithSeqno로 변경 후 재적재
+                        //    ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1,
+                        //        PostgService_Common_OrderState.NotChanged);
+                        //    break;
 
                         case StdResult.Fail:
                             // 신규 등록 실패는 치명적 에러 → 앱 종료
                             Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (치명적): {item.KeyCode} - {resultState.sErr}");
-
-                            ErrMsgBox(
-                                $"신규 주문 등록 실패 (앱 종료)\n주문: {item.KeyCode}\n\n{resultState.sErr}",
-                                resultState.sPos);
+                            ErrMsgBox($"신규 주문 등록 실패 (앱 종료)\n주문: {item.KeyCode}\n\n{resultState.sErr}", resultState.sPos);
 
                             Environment.Exit(1);
                             break;
@@ -375,7 +372,7 @@ public class NwInsung01 : IExternalApp
             #region 5. Updated, NotChanged Order 처리 (기존)
             if (listEtcGroup.Count > 0)
             {
-                Debug.WriteLine($"[{APP_NAME}] Region 5: 기존 주문 관리 시작 (총 {listEtcGroup.Count}건)");
+                //Debug.WriteLine($"[{APP_NAME}] Region 5: 기존 주문 관리 시작 (총 {listEtcGroup.Count}건)");
 
                 #region 5-1. 조회버튼 클릭 + 총계 확인
                 string sThisTotCount = string.Empty;
@@ -389,7 +386,7 @@ public class NwInsung01 : IExternalApp
                     sThisTotCount = Std32Window.GetWindowCaption(m_Context.MemInfo.RcptPage.CallCount_hWnd총계);
                     if (!string.IsNullOrEmpty(sThisTotCount))
                     {
-                        Debug.WriteLine($"[{APP_NAME}] 총계 읽기 성공 (시도 {i + 1}회): {sThisTotCount}");
+                        //Debug.WriteLine($"[{APP_NAME}] 총계 읽기 성공 (시도 {i + 1}회): {sThisTotCount}");
                         break;
                     }
 
@@ -410,7 +407,7 @@ public class NwInsung01 : IExternalApp
                     return new StdResult_Status(StdResult.Success);
                 }
 
-                Debug.WriteLine($"[{APP_NAME}] 데이터 있음 (총계: {nThisTotCount}건)");
+                //Debug.WriteLine($"[{APP_NAME}] 데이터 있음 (총계: {nThisTotCount}건)");
                 #endregion
 
                 #region 5-2. 페이지 산정
@@ -439,7 +436,7 @@ public class NwInsung01 : IExternalApp
 
                     // 현재 페이지가 맞는지 체크
                     int nExpectedFirstNum = InsungsAct_RcptRegPage.GetExpectedFirstRowNum(nThisTotCount, pageIdx);
-                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage} → 예상 첫 번호: {nExpectedFirstNum}");
+                    //Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage} → 예상 첫 번호: {nExpectedFirstNum}");
 
                     // 페이지 검증 및 자동 조정
                     StdResult_Status resultVerify = await m_Context.RcptRegPageAct.VerifyAndAdjustPageAsync(nExpectedFirstNum, ctrl);
@@ -466,7 +463,7 @@ public class NwInsung01 : IExternalApp
                         Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} 유효 로우 갯수 얻기 실패: {resultInt.sErr}");
                         return new StdResult_Status(StdResult.Fail, resultInt.sErr, resultInt.sPos);
                     }
-                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: 유효 로우 {resultInt}개"); 
+                    //Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: 유효 로우 {resultInt}개");
 
                     Draw.Rectangle[,] rects = m_Context.MemInfo.RcptPage.DG오더_RelChildRects;
 
@@ -475,7 +472,7 @@ public class NwInsung01 : IExternalApp
                     int startIndex = (nTotPage > 1 && pageIdx == nTotPage - 1 && remainder != 0) ?
                         InsungsInfo_File.접수등록Page_DG오더_dataRowCount - remainder : 0;
 
-                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: startIndex={startIndex}, remainder={remainder}, resultInt.nResult={resultInt.nResult}");
+                    //Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: startIndex={startIndex}, remainder={remainder}, resultInt.nResult={resultInt.nResult}");
                     #endregion
 
                     #region 본작업
@@ -503,7 +500,7 @@ public class NwInsung01 : IExternalApp
                                     {
                                         // 이미 선택됨 → RGB 반전 OFR
                                         bInvertRgb = true;
-                                        Debug.WriteLine($"[{APP_NAME}] 첫 로우 이미 선택됨 (RGB 반전 OFR)");
+                                        //Debug.WriteLine($"[{APP_NAME}] 첫 로우 이미 선택됨 (RGB 반전 OFR)");
                                     }
                                     else
                                     {
@@ -572,20 +569,19 @@ public class NwInsung01 : IExternalApp
                         CommonResult_AutoAllocProcess resultAuto;
 
                         // 비트 플래그 체크를 위해 if-else if 사용 (백업 로직과 동일)
-                        if ((foundItem.StateFlag & PostgService_Common_OrderState.Existed_WithSeqno) != 0 ||
+                        if (foundItem.StateFlag == PostgService_Common_OrderState.NotChanged)
+                        {
+                            // Kai는 변화 없음 → Insung 상태 변경 확인
+                            // TODO: StateTransitionRules 적용
+                            var dgInfoNotChanged = new CommonResult_AutoAllocDatagrid(i, status);
+                            resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_InsungOrderManage(foundItem, dgInfoNotChanged, ctrl);
+                        }
+                        else if ((foundItem.StateFlag & PostgService_Common_OrderState.Existed_WithSeqno) != 0 ||
                             (foundItem.StateFlag & PostgService_Common_OrderState.Updated_Assume) != 0)
                         {
                             // Updated_Assume 플래그 포함 (Updated_Status, Updated_Etc 등) → Insung을 Kai에 맞춰 업데이트
                             var dgInfo = new CommonResult_AutoAllocDatagrid(i, status);
                             resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiUpdated(foundItem, dgInfo, ctrl);
-                        }
-                        else if (foundItem.StateFlag == PostgService_Common_OrderState.NotChanged)
-                        {
-                            // Kai는 변화 없음 → Insung 상태 변경 확인
-                            // TODO: StateTransitionRules 적용
-                            var dgInfoNotChanged = new CommonResult_AutoAllocDatagrid(i, status);
-                            // resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_KaiSameInsungIfChanged(foundItem, dgInfoNotChanged, ctrl);
-                            resultAuto = CommonResult_AutoAllocProcess.SuccessAndReEnqueue(); // 임시
                         }
                         //else if (foundItem.StateFlag == PostgService_Common_OrderState.CompletedExternal)
                         //{
@@ -635,7 +631,7 @@ public class NwInsung01 : IExternalApp
                         // **조기 탈출: listEtcGroup 비면 종료**
                         if (listEtcGroup.Count == 0)
                         {
-                            Debug.WriteLine($"[{APP_NAME}] listEtcGroup 모두 처리 완료 → 페이지 {pageIdx + 1}, 로우 {y}에서 for 루프 종료");
+                            //Debug.WriteLine($"[{APP_NAME}] listEtcGroup 모두 처리 완료 → 페이지 {pageIdx + 1}, 로우 {y}에서 for 루프 종료");
                             break; // for 로우 루프 탈출
                         }
                         #endregion
@@ -648,7 +644,7 @@ public class NwInsung01 : IExternalApp
                     // 조기 탈출: 모든 항목을 처리했으면 (로우 루프에서 이미 체크됨)
                     if (listEtcGroup.Count == 0)
                     {
-                        Debug.WriteLine($"[{APP_NAME}] listEtcGroup 모두 처리 완료 → 페이지 {pageIdx + 1}/{nTotPage}에서 페이지 루프 종료");
+                        //Debug.WriteLine($"[{APP_NAME}] listEtcGroup 모두 처리 완료 → 페이지 {pageIdx + 1}/{nTotPage}에서 페이지 루프 종료");
                         break; // 페이지 루프 탈출
                     }
 
@@ -664,7 +660,7 @@ public class NwInsung01 : IExternalApp
                 #endregion
 
                 // Region 5 완료
-                Debug.WriteLine($"[{APP_NAME}] Region 5 완료");
+                //Debug.WriteLine($"[{APP_NAME}] Region 5 완료");
 
                 // 처리 못한 항목 (DG에서 찾지 못함 = 이미 배차/완료됨)
                 if (listEtcGroup.Count > 0)

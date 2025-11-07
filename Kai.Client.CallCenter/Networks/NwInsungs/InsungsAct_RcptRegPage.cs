@@ -9,6 +9,7 @@ using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 //using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
@@ -2207,6 +2208,226 @@ public class InsungsAct_RcptRegPage
         }
     }
 
+    /// <summary>
+    /// Insung 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
+    /// - Insung 상태를 primary switch로 분기
+    /// - 각 Insung 상태별 handler 함수 호출
+    /// - 로그만 출력 (DB 업데이트, 앱 취소 작업 없음)
+    /// </summary>
+    public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_InsungOrderManage(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        // Cancel/Pause 체크
+        await ctrl.WaitIfPausedOrCancelledAsync();
+
+        string kaiState = item.NewOrder.OrderState;
+        string insungState = dgInfo.sStatus;
+
+        Debug.WriteLine($"[CheckIsOrderAsync_KaiSameInsungIfChanged] KeyCode={item.KeyCode}, Kai={kaiState}, Insung={insungState}");
+
+        // Insung 상태별로 handler 함수 호출 (2중 switch 방지)
+        switch (insungState)
+        {
+            case "접수":
+            case "배차":
+                return await InsungOrderManage_접수Or배차Async(item, kaiState, dgInfo, ctrl);
+            case "운행":
+                return await InsungOrderManage_운행Async(item, kaiState, dgInfo, ctrl);
+            case "완료":
+                return await InsungOrderManage_완료Async(item, kaiState, dgInfo, ctrl);
+            case "취소":
+                return await InsungOrderManage_취소Async(item, kaiState, dgInfo, ctrl);
+            default:
+                Debug.WriteLine($"  → 미정의 Insung 상태: {insungState}");
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+        }
+    }
+
+    /// <summary>
+    /// Insung "접수" 또는 "배차" 상태 처리 - Kai 상태별 로깅
+    /// </summary>
+    private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_접수Or배차Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        string insungState = dgInfo.sStatus;
+
+        switch (kaiState)
+        {
+            case "접수":
+            case "배차":
+                Debug.WriteLine($"  → [{insungState}/{kaiState}] 비정상 - Kai는 배차인데 Insung은 {insungState}");
+                Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
+                item.StateFlag = PostgService_Common_OrderState.NotChanged;
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+            case "운행":
+                Debug.WriteLine($"  → [{insungState}/{kaiState}] 비정상 - Kai는 운행인데 Insung은 {insungState}");
+                break;
+            case "완료":
+                Debug.WriteLine($"  → [{insungState}/{kaiState}] 비정상 - Kai는 완료인데 Insung은 {insungState}");
+                break;
+            case "취소":
+                Debug.WriteLine($"  → [{insungState}/{kaiState}] 비정상 - Kai는 취소인데 Insung은 {insungState}");
+                break;
+            default:
+                Debug.WriteLine($"  → [{insungState}/?] 미정의 Kai 상태: {kaiState}");
+                break;
+        }
+
+        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+    }
+
+    /// <summary>
+    /// Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
+    /// </summary>
+    private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_운행Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        switch (kaiState)
+        {
+            case "접수":
+                // 40초 타이머 로직
+                if (item.RunStartTime == null)
+                {
+                    // 타이머 시작
+                    item.RunStartTime = DateTime.Now;
+                    Debug.WriteLine($"  → [운행/접수] 운행 진입 - 타이머 시작 ({item.RunStartTime:HH:mm:ss})");
+                }
+                else
+                {
+                    // 타이머 체크
+                    TimeSpan elapsed = DateTime.Now - item.RunStartTime.Value;
+                    Debug.WriteLine($"  → [운행/접수] 운행 중 - 경과 시간: {elapsed.TotalSeconds:F1}초");
+
+                    if (elapsed.TotalSeconds >= 40)
+                    {
+                        Debug.WriteLine($"  → [운행/접수] 40초 경과! 기사 확정 상태");
+                        Debug.WriteLine($"  → TODO: Kai DB 업데이트 (접수 → 배차)");
+                        Debug.WriteLine($"  → TODO: 다른 앱 취소 (Insung2, 화물24시, 원콜)");
+                        // 타이머 리셋
+                        item.RunStartTime = null;
+                    }
+                }
+                break;
+
+            case "배차":
+                Debug.WriteLine($"  → [운행/배차] 정상 상태 (40초 경과 후 배차됨)");
+                // 타이머 리셋
+                if (item.RunStartTime != null)
+                {
+                    Debug.WriteLine($"  → 타이머 리셋 (이미 배차됨)");
+                    item.RunStartTime = null;
+                }
+                break;
+
+            case "운행":
+                Debug.WriteLine($"  → [운행/운행] 비정상 - Kai는 운행인데 Insung도 운행");
+                break;
+
+            case "완료":
+                Debug.WriteLine($"  → [운행/완료] 비정상 - Kai는 완료인데 Insung은 운행");
+                break;
+
+            case "취소":
+                Debug.WriteLine($"  → [운행/취소] 비정상 - Kai는 취소인데 Insung은 운행");
+                break;
+
+            default:
+                Debug.WriteLine($"  → [운행/?] 미정의 Kai 상태: {kaiState}");
+                break;
+        }
+
+        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+    }
+
+    /// <summary>
+    /// Insung "완료" 상태 처리 - Kai 상태별 로깅
+    /// </summary>
+    private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_완료Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        switch (kaiState)
+        {
+            case "접수":
+                Debug.WriteLine($"  → [완료/접수] 비정상 - Kai는 접수인데 Insung은 완료");
+                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (접수 → 완료)");
+                break;
+
+            case "배차":
+                Debug.WriteLine($"  → [완료/배차] 정상 상태 - 배송 완료");
+                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (배차 → 완료)");
+                break;
+
+            case "운행":
+                Debug.WriteLine($"  → [완료/운행] 비정상 - Kai는 운행인데 Insung은 완료");
+                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (운행 → 완료)");
+                break;
+
+            case "완료":
+                Debug.WriteLine($"  → [완료/완료] 정상 상태 - 이미 완료됨");
+                break;
+
+            case "취소":
+                Debug.WriteLine($"  → [완료/취소] 비정상 - Kai는 취소인데 Insung은 완료");
+                break;
+
+            default:
+                Debug.WriteLine($"  → [완료/?] 미정의 Kai 상태: {kaiState}");
+                break;
+        }
+
+        // 타이머 리셋
+        if (item.RunStartTime != null)
+        {
+            Debug.WriteLine($"  → 타이머 리셋 (완료 상태)");
+            item.RunStartTime = null;
+        }
+
+        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+    }
+
+    /// <summary>
+    /// Insung "취소" 상태 처리 - Kai 상태별 로깅
+    /// </summary>
+    private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_취소Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        switch (kaiState)
+        {
+            case "접수":
+                Debug.WriteLine($"  → [취소/접수] 인성에서 주문 취소됨");
+                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (접수 → 취소)");
+                Debug.WriteLine($"  → TODO: 다른 앱 취소 (Insung2, 화물24시, 원콜)");
+                break;
+
+            case "배차":
+                Debug.WriteLine($"  → [취소/배차] 인성에서 주문 취소됨 (배차 후 취소)");
+                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (배차 → 취소)");
+                Debug.WriteLine($"  → TODO: 다른 앱 취소 (Insung2, 화물24시, 원콜)");
+                break;
+
+            case "운행":
+                Debug.WriteLine($"  → [취소/운행] 비정상 - Kai는 운행인데 Insung은 취소");
+                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (운행 → 취소)");
+                break;
+
+            case "완료":
+                Debug.WriteLine($"  → [취소/완료] 비정상 - Kai는 완료인데 Insung은 취소");
+                break;
+
+            case "취소":
+                Debug.WriteLine($"  → [취소/취소] 정상 상태 - 이미 취소됨");
+                break;
+
+            default:
+                Debug.WriteLine($"  → [취소/?] 미정의 Kai 상태: {kaiState}");
+                break;
+        }
+
+        // 타이머 리셋
+        if (item.RunStartTime != null)
+        {
+            Debug.WriteLine($"  → 타이머 리셋 (취소 상태)");
+            item.RunStartTime = null;
+        }
+
+        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+    }
+
 
     #endregion
 
@@ -2797,7 +3018,7 @@ public class InsungsAct_RcptRegPage
             {
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
-                Debug.WriteLine($"[{m_Context.AppName}] 조회 버튼 클릭 시도 {i}/{retryCount}");
+                //Debug.WriteLine($"[{m_Context.AppName}] 조회 버튼 클릭 시도 {i}/{retryCount}");
 
                 // 조회 버튼 클릭
                 await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
@@ -2807,7 +3028,7 @@ public class InsungsAct_RcptRegPage
 
                 if (resultSts.Result == StdResult.Success || resultSts.Result == StdResult.Skip)
                 {
-                    Debug.WriteLine($"[{m_Context.AppName}] 조회 완료 (시도 {i}회, 결과: {resultSts.Result})");
+                    //Debug.WriteLine($"[{m_Context.AppName}] 조회 완료 (시도 {i}회, 결과: {resultSts.Result})");
                     return new StdResult_Status(StdResult.Success, "조회 완료");
                 }
 
@@ -2883,7 +3104,7 @@ public class InsungsAct_RcptRegPage
                 if (curNum >= 1)
                 {
                     firstNum = curNum - (y - 2);
-                    Debug.WriteLine($"[InsungsAct_RcptRegPage] ReadFirstRowNum: y={y}, curNum={curNum}, firstNum={firstNum}");
+                    //Debug.WriteLine($"[InsungsAct_RcptRegPage] ReadFirstRowNum: y={y}, curNum={curNum}, firstNum={firstNum}");
                     break;
                 }
             }
@@ -2907,11 +3128,11 @@ public class InsungsAct_RcptRegPage
 
             // OFR로 실제 번호 읽기
             int nActualFirstNum = await ReadFirstRowNumAsync();
-            Debug.WriteLine($"[InsungsAct_RcptRegPage] OFR 결과 (시도 {retry + 1}/{nRetryCount}) - 예상={nExpectedFirstNum}, 실제={nActualFirstNum}");
+            //Debug.WriteLine($"[InsungsAct_RcptRegPage] OFR 결과 (시도 {retry + 1}/{nRetryCount}) - 예상={nExpectedFirstNum}, 실제={nActualFirstNum}");
 
             if (nExpectedFirstNum == nActualFirstNum)
             {
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] ✓ 페이지 검증 성공 (시도 {retry + 1}회)");
+                //Debug.WriteLine($"[InsungsAct_RcptRegPage] ✓ 페이지 검증 성공 (시도 {retry + 1}회)");
                 return new StdResult_Status(StdResult.Success);
             }
 
@@ -3004,7 +3225,7 @@ public class InsungsAct_RcptRegPage
                 break;
         }
 
-        Debug.WriteLine($"[InsungsAct_RcptRegPage] 유효 로우: {nValidRows}개 (배경 밝기: {nBackgroundBright}, 임계값: {nThreshold})");
+        //Debug.WriteLine($"[InsungsAct_RcptRegPage] 유효 로우: {nValidRows}개 (배경 밝기: {nBackgroundBright}, 임계값: {nThreshold})");
         return new StdResult_Int(nValidRows);
     }
 
