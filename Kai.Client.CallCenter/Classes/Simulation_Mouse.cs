@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Draw = System.Drawing;
 
+using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 
 namespace Kai.Client.CallCenter.Classes;
@@ -214,6 +215,48 @@ public static class Simulation_Mouse
             if (bBkCursor) Std32Cursor.SetCursorPos_AbsDrawPt(ptBk);
             SafeBlockInputStop();
             await Task.Delay(100);
+        }
+    }
+    #endregion
+
+    #region Event - DoubleClick
+    /// <summary>
+    /// 상대좌표 기준 좌클릭 더블클릭 (외부 입력 차단, 커서 복원)
+    /// </summary>
+    /// <param name="hWnd">대상 윈도우 핸들</param>
+    /// <param name="ptClickRel">상대 좌표</param>
+    /// <param name="betweenClickDelay">첫 번째와 두 번째 클릭 사이 딜레이 (ms)</param>
+    /// <param name="bBkCursor">커서 위치 복원 여부</param>
+    /// <param name="nDelay">더블클릭 후 대기 시간 (ms)</param>
+    public static async Task SafeMouseSend_DblClickLeft_ptRelAsync(IntPtr hWnd, Draw.Point ptClickRel, int betweenClickDelay = 0, bool bBkCursor = true)
+    {
+        Draw.Point ptBk = Std32Cursor.GetCursorPos_AbsDrawPt(); // 커서 백업
+        IntPtr hWndFocusBk = StdWin32.GetForegroundWindow(); // 포커스 핸들 백업
+        IntPtr lParam = StdUtil.MakeIntPtrLParam(ptClickRel.X, ptClickRel.Y);
+
+        try
+        {
+            // 첫 번째 클릭
+            SafeBlockInputStart();
+            Std32Cursor.SetCursorPos_RelDrawPt(hWnd, ptClickRel); // 커서 이동
+            StdWin32.SendMessage(hWnd, StdWin32.WM_LBUTTONDOWN, 1, (ulong)lParam);
+            StdWin32.PostMessage(hWnd, StdWin32.WM_LBUTTONUP, 0, lParam);
+            //SafeBlockInputStop();
+
+            await Task.Delay(betweenClickDelay);
+
+            // 두 번째 클릭 (DBLCLK 메시지)
+            //SafeBlockInputStart();
+            StdWin32.SendMessage(hWnd, StdWin32.WM_LBUTTONDBLCLK, 1, (ulong)lParam);
+            StdWin32.PostMessage(hWnd, StdWin32.WM_LBUTTONUP, 0, lParam);
+            SafeBlockInputStop();
+
+            await Task.Delay(CommonVars.c_nWaitVeryShort);
+        }
+        finally
+        {
+            if (bBkCursor) Std32Cursor.SetCursorPos_AbsDrawPt(ptBk); // 커서 복원
+            if (hWndFocusBk != IntPtr.Zero) StdWin32.SetForegroundWindow(hWndFocusBk); // 포커스 복원
         }
     }
     #endregion

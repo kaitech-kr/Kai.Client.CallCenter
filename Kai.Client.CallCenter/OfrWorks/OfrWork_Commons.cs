@@ -406,7 +406,7 @@ public class OfrWork_Common
                 Draw.Bitmap bmpOriginal = bmpCell;
                 bmpCell = OfrService.InvertBitmap(bmpOriginal);
                 bmpOriginal.Dispose();
-                Debug.WriteLine($"[OfrStr_SeqCharAsync] RGB 반전 실행: {bmpCell.Width}x{bmpCell.Height}");
+                //Debug.WriteLine($"[OfrStr_SeqCharAsync] RGB 반전 실행: {bmpCell.Width}x{bmpCell.Height}");
             }
 
             // 3. 기존 오버로드 호출
@@ -560,7 +560,7 @@ public class OfrWork_Common
                 Draw.Bitmap bmpOriginal = bmpCell;
                 bmpCell = OfrService.InvertBitmap(bmpOriginal);
                 bmpOriginal.Dispose();
-                Debug.WriteLine($"[OfrStr_ComplexCharSetAsync] RGB 반전 실행: {bmpCell.Width}x{bmpCell.Height}");
+                //Debug.WriteLine($"[OfrStr_ComplexCharSetAsync] RGB 반전 실행: {bmpCell.Width}x{bmpCell.Height}");
             }
 
             // 3. 기존 오버로드 호출

@@ -51,6 +51,12 @@ public class AutoAllocModel
     /// </summary>
     public DateTime? RunStartTime { get; set; } = null;
 
+    /// <summary>
+    /// 기사 전화번호 (운행 진입 시 DG에서 OFR로 획득)
+    /// - 40초 타이머 경과 후 Kai DB 업데이트에 사용
+    /// </summary>
+    public string? DriverPhone { get; set; } = null;
+
     #endregion
 
     #region Constructors
@@ -98,6 +104,8 @@ public class AutoAllocModel
         StateFlag = source.StateFlag;
         NewOrder = source.NewOrder;
         OldOrder = source.OldOrder;
+        RunStartTime = source.RunStartTime;
+        DriverPhone = source.DriverPhone;
     }
 
     #endregion

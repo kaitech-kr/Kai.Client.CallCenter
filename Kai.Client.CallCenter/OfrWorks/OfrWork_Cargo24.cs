@@ -39,7 +39,6 @@ public class OfrWork_Cargo24 : OfrWork_Common
     //    {
     //        return new OfrResult_TbCharSet($"[{x}]: {sName} is null", "OfrWork_Cargo24/OfrAnyResultFrom_From접수등록DatagridAsync_01", s_sLogDir);
     //    }
-    //    //Debug.WriteLine($"[{x}]: {sName}, {c.m_ReceiptDgHeaderInfos[x].bSaveObject}"); // Test
 
     //    if (colHeader.bOfrSeq) return await OfrStrResultFrom_SeqCharBitmapAsync(bmpOrg, rc, bSaveTextIfNotFind, bSaveCharIfNotFind);
     //    else return await OfrStrResultFrom_ComplexMultiCharBitmapAsync(bmpOrg, rc, bSaveTextIfNotFind, bSaveCharIfNotFind);

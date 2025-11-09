@@ -23,6 +23,10 @@
       "Read(//d/CodeWork/WithVs2022/Save/**)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [
+      "Edit(*)",
+      "Write(*)",
+      "NotebookEdit(*)"
+    ]
   }
 }

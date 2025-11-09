@@ -324,40 +324,26 @@ public class NwInsung01 : IExternalApp
                                   $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
 
                     // 신규 주문 등록 시도
-                    StdResult_Status resultState = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
+                    CommonResult_AutoAllocProcess resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
 
-                    switch (resultState.Result)
+                    switch (resultAuto.ResultType)
                     {
-                        case StdResult.Success:
-                            // 성공: 큐에 재적재 (다음 사이클에 관리 대상으로 분류됨)
+                        case CEnum_AutoAllocProcessResult.SuccessAndReEnqueue:
+                            // 성공: 함수 내부에서 이미 StateFlag가 NotChanged로 설정됨
                             Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
-
-                            // 큐에 재적재 (NotChanged로 변경)
-                            ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1,
-                                PostgService_Common_OrderState.NotChanged);
+                            ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1, item.StateFlag);
                             break;
 
-                        //case StdResult.Skip:
-                        //    // 이미 등록된 주문 (StateFlag 동기화 이슈)
-                        //    // SignalR 업데이트로 NewOrder.Insung1이 채워졌지만 StateFlag는 Existed_NonSeqno인 경우
-                        //    Debug.WriteLine($"[{APP_NAME}]   [{i}] 이미 등록된 주문 스킵: {item.KeyCode}, Insung1={item.NewOrder.Insung1}");
-
-                        //    // StateFlag 보정: Existed_WithSeqno로 변경 후 재적재
-                        //    ExternalAppController.QueueManager.ReEnqueue(item, StdConst_Network.INSUNG1,
-                        //        PostgService_Common_OrderState.NotChanged);
-                        //    break;
-
-                        case StdResult.Fail:
+                        case CEnum_AutoAllocProcessResult.FailureAndDiscard:
                             // 신규 등록 실패는 치명적 에러 → 앱 종료
-                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (치명적): {item.KeyCode} - {resultState.sErr}");
-                            ErrMsgBox($"신규 주문 등록 실패 (앱 종료)\n주문: {item.KeyCode}\n\n{resultState.sErr}", resultState.sPos);
-
+                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 신규 주문 등록 실패 (치명적): {item.KeyCode} - {resultAuto.sErr}");
+                            // ErrMsgBox는 이미 생성자에서 호출됨 (디버그 모드)
                             Environment.Exit(1);
                             break;
 
                         default:
                             // 예상 못한 결과 → 앱 종료
-                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 예상 못한 결과: {resultState.Result}");
+                            Debug.WriteLine($"[{APP_NAME}]   [{i}] 예상 못한 결과: {resultAuto.ResultType}");
                             Environment.Exit(1);
                             break;
                     }
@@ -573,14 +559,14 @@ public class NwInsung01 : IExternalApp
                         {
                             // Kai는 변화 없음 → Insung 상태 변경 확인
                             // TODO: StateTransitionRules 적용
-                            var dgInfoNotChanged = new CommonResult_AutoAllocDatagrid(i, status);
+                            var dgInfoNotChanged = new CommonResult_AutoAllocDatagrid(i, status, bInvertRgb, bmpPage);
                             resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_InsungOrderManage(foundItem, dgInfoNotChanged, ctrl);
                         }
                         else if ((foundItem.StateFlag & PostgService_Common_OrderState.Existed_WithSeqno) != 0 ||
                             (foundItem.StateFlag & PostgService_Common_OrderState.Updated_Assume) != 0)
                         {
                             // Updated_Assume 플래그 포함 (Updated_Status, Updated_Etc 등) → Insung을 Kai에 맞춰 업데이트
-                            var dgInfo = new CommonResult_AutoAllocDatagrid(i, status);
+                            var dgInfo = new CommonResult_AutoAllocDatagrid(i, status, bInvertRgb, bmpPage);
                             resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiUpdated(foundItem, dgInfo, ctrl);
                         }
                         //else if (foundItem.StateFlag == PostgService_Common_OrderState.CompletedExternal)
@@ -603,6 +589,7 @@ public class NwInsung01 : IExternalApp
                             case CEnum_AutoAllocProcessResult.SuccessAndReEnqueue:
                                 // 성공 + 재적재 (계속 관리) - NotChanged 플래그로 재적재
                                 Debug.WriteLine($"[{APP_NAME}] 처리 완료 (재적재): seqno={seqno}, 기존 StateFlag={foundItem.StateFlag} → NotChanged로 재적재");
+                                Debug.WriteLine($"[{APP_NAME}] 재적재 전 foundItem 상태: RunStartTime={foundItem.RunStartTime?.ToString("HH:mm:ss") ?? "null"}, DriverPhone={foundItem.DriverPhone ?? "null"}");
                                 ExternalAppController.QueueManager.ReEnqueue(foundItem, StdConst_Network.INSUNG1, PostgService_Common_OrderState.NotChanged);
                                 break;
 

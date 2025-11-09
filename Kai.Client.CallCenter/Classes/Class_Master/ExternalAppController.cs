@@ -377,12 +377,11 @@ public class ExternalAppController : IDisposable
 
         Debug.WriteLine($"[ExternalAppController] =========================================");
 
-        // ✅ 해당 큐들에서만 기존 항목 제거 후 재분류하여 추가
-        // - 차량 타입이나 접수처가 변경되었을 수 있으므로 재분류 필요
-        // - GetTargetQueues로 효율적으로 해당 큐들만 탐색
-        var targetQueues = GetTargetQueues(newOrder);
-        QueueManager.RemoveFromQueues(newOrder.KeyCode, targetQueues);
-        ClassifyAndEnqueueOrder(newOrder, stateFlag: changedFlag);
+        // ✅ 모든 큐에서 주문 업데이트 또는 제거 (인스턴스 재사용)
+        // - 분류 규칙에 맞으면: 기존 AutoAllocModel의 NewOrder, StateFlag만 업데이트
+        // - 분류 규칙에 안 맞으면: 큐에서 제거
+        // - 기존 인스턴스 재사용으로 RunStartTime, LastDriverNo 등 유지됨
+        QueueManager.UpdateOrRemoveInQueues(newOrder.KeyCode, newOrder, changedFlag);
     }
 
     #region 자동배차 제어
@@ -450,7 +449,7 @@ public class ExternalAppController : IDisposable
     private async Task AutoAllocLoopAsync()
     {
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        const int nMinWorkingMiliSec = 10000; // 최소 ~초
+        const int nMinWorkingMiliSec = 5000; // 최소 ~초
 
         Debug.WriteLine("[ExternalAppController] AutoAllocLoopAsync 시작");
 
@@ -514,7 +513,7 @@ public class ExternalAppController : IDisposable
                     await Task.Delay(nDelay, m_CtrlCancelToken.Token);
                 }
 
-                Debug.WriteLine($"[ExternalAppController] AutoAlloc [{m_lAutoAllocCount}] 완료 - Elapsed={stopwatch.ElapsedMilliseconds}ms, Delay={nDelay}ms");
+                Debug.WriteLine($"-----------[ExternalAppController] AutoAlloc [{m_lAutoAllocCount}] 완료 - Elapsed={stopwatch.ElapsedMilliseconds}ms, Delay={nDelay}ms");
             }
             catch (OperationCanceledException)
             {

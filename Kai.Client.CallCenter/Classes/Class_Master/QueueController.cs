@@ -133,7 +133,9 @@ public class QueueController
 
         while (queue.Count > 0)
         {
-            list.Add(queue.Dequeue());
+            var item = queue.Dequeue();
+            Debug.WriteLine($"[AutoAllocQueue] Dequeue: KeyCode={item.KeyCode}, RunStartTime={item.RunStartTime?.ToString("HH:mm:ss") ?? "null"}, DriverPhone={item.DriverPhone ?? "null"}");
+            list.Add(item);
         }
 
         Debug.WriteLine($"[AutoAllocQueue] DequeueAllToList: {networkName}, {list.Count}개 꺼냄");
@@ -160,7 +162,7 @@ public class QueueController
         var queue = GetQueue(networkName);
         queue.Enqueue(order);
 
-        Debug.WriteLine($"[AutoAllocQueue] ReEnqueue: {networkName}, KeyCode={order.KeyCode}, StateFlag={order.StateFlag}, 큐크기={queue.Count}");
+        Debug.WriteLine($"[AutoAllocQueue] ReEnqueue: {networkName}, KeyCode={order.KeyCode}, StateFlag={order.StateFlag}, RunStartTime={order.RunStartTime?.ToString("HH:mm:ss") ?? "null"}, DriverPhone={order.DriverPhone ?? "null"}, 큐크기={queue.Count}");
     }
 
     /// <summary>
@@ -232,6 +234,84 @@ public class QueueController
         }
 
         return removedCount;
+    }
+
+    /// <summary>
+    /// 모든 큐에서 주문 업데이트 또는 제거 (인스턴스 재사용)
+    /// - 분류 규칙에 맞으면: 기존 인스턴스의 NewOrder, StateFlag만 업데이트
+    /// - 분류 규칙에 안 맞으면: 큐에서 제거
+    /// </summary>
+    /// <param name="keyCode">업데이트할 주문의 KeyCode</param>
+    /// <param name="newOrder">새로운 주문 정보</param>
+    /// <param name="newStateFlag">새로운 StateFlag</param>
+    public void UpdateOrRemoveInQueues(long keyCode, TbOrder newOrder, PostgService_Common_OrderState newStateFlag)
+    {
+        UpdateOrRemoveInQueue(_ordersInsung1, StdConst_Network.INSUNG1, keyCode, newOrder, newStateFlag);
+        UpdateOrRemoveInQueue(_ordersInsung2, StdConst_Network.INSUNG2, keyCode, newOrder, newStateFlag);
+        UpdateOrRemoveInQueue(_ordersCargo24, StdConst_Network.CARGO24, keyCode, newOrder, newStateFlag);
+        UpdateOrRemoveInQueue(_ordersOnecall, StdConst_Network.ONECALL, keyCode, newOrder, newStateFlag);
+    }
+
+    /// <summary>
+    /// 특정 큐에서 주문 업데이트 또는 제거
+    /// </summary>
+    private void UpdateOrRemoveInQueue(Queue<AutoAllocModel> queue, string networkName, long keyCode, TbOrder newOrder, PostgService_Common_OrderState newStateFlag)
+    {
+        var tempList = new List<AutoAllocModel>();
+
+        // 큐에서 모든 항목 꺼내기
+        while (queue.Count > 0)
+        {
+            var item = queue.Dequeue();
+
+            if (item.NewOrder.KeyCode == keyCode)
+            {
+                // 이 큐에 있어야 하는 주문인가?
+                if (ShouldBeInQueue(newOrder, networkName))
+                {
+                    // 기존 인스턴스 재사용 - NewOrder와 StateFlag만 업데이트
+                    item.NewOrder = newOrder;
+                    item.StateFlag = newStateFlag;
+                    tempList.Add(item);
+                    Debug.WriteLine($"[AutoAllocQueue] 업데이트: {networkName}, KeyCode={keyCode}, StateFlag={newStateFlag}");
+                }
+                else
+                {
+                    // 분류 규칙에 안 맞음 - 제거 (tempList에 추가 안함)
+                    Debug.WriteLine($"[AutoAllocQueue] 제거: {networkName}, KeyCode={keyCode} (분류 규칙 불일치)");
+                }
+            }
+            else
+            {
+                tempList.Add(item);
+            }
+        }
+
+        // 모든 항목 다시 큐에 넣기
+        foreach (var item in tempList)
+        {
+            queue.Enqueue(item);
+        }
+    }
+
+    /// <summary>
+    /// 주문이 해당 큐에 있어야 하는지 판단 (분류 규칙)
+    /// </summary>
+    private bool ShouldBeInQueue(TbOrder order, string networkName)
+    {
+        // 차량 타입 판단
+        bool isMotorcycle = order.CarType == "오토";
+        bool isFlex = order.CarType == "플렉스";
+        bool isLargeTruck = order.CarType == "트럭" && order.CarWeight != "1t" && order.CarWeight != "1.4t";
+
+        return networkName switch
+        {
+            StdConst_Network.INSUNG1 => !isLargeTruck && order.CallCustFrom != StdConst_Network.INSUNG2,
+            StdConst_Network.INSUNG2 => !isLargeTruck && order.CallCustFrom != StdConst_Network.INSUNG1,
+            StdConst_Network.CARGO24 => !isMotorcycle && !isFlex,
+            StdConst_Network.ONECALL => !isMotorcycle && !isFlex,
+            _ => false
+        };
     }
     #endregion
 

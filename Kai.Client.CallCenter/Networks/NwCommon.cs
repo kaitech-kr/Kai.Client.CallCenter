@@ -118,7 +118,6 @@ public class NwCommon_DgColumnHeader
 {
     public string sName = string.Empty;
     public bool bOfrSeq = false; // Ofr시 Multi, Seq처리 여부
-    public bool bSaveObject = false; // DB에 텍스트로 저장여부
     public int nWidth = 0;
 }
 #nullable enable

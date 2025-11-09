@@ -306,45 +306,48 @@ public class InsungsInfo_Mem
             base.SetWndHandles(TopWnd_hWnd, fInfo);
         }
     }
-    //public class RcptWnd_Edit : RcptWnd_Common
-    //{
-    //    // TopWnd
-    //    public IntPtr TopWnd_hWnd;  // hWnd 
-                                    
-    //    // 버튼들 
-    //    public IntPtr Btn_hWnd닫기;  
+    /// <summary>
+    /// 접수등록 수정 팝업 윈도우 (주문 업데이트용)
+    /// </summary>
+    public class RcptWnd_Edit : RcptWnd_Common
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
 
-    //    public IntPtr Btn_hWnd고객수정;
-    //    public IntPtr Btn_hWnd배차;
-    //    public IntPtr Btn_hWnd처리완료;
-    //    public IntPtr Btn_hWnd대기;
-    //    public IntPtr Btn_hWnd주문취소;
-    //    public IntPtr Btn_hWnd접수상태;
-    //    public IntPtr Btn_hWnd저장;
+        // 버튼들
+        public IntPtr Btn_hWnd닫기;
 
-    //    public RcptWnd_Edit(IntPtr hWnd, InsungsInfo_File fInfo)
-    //    {
-    //        TopWnd_hWnd = hWnd;
+        public IntPtr Btn_hWnd고객수정;
+        public IntPtr Btn_hWnd배차;
+        public IntPtr Btn_hWnd처리완료;
+        public IntPtr Btn_hWnd대기;
+        public IntPtr Btn_hWnd주문취소;
+        public IntPtr Btn_hWnd접수상태;
+        public IntPtr Btn_hWnd저장;
 
-    //        // 버튼들
-    //        Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel닫기);
+        public RcptWnd_Edit(IntPtr hWnd, InsungsInfo_File fInfo)
+        {
+            TopWnd_hWnd = hWnd;
 
-    //        this.SetWndHandle( fInfo);
-    //    }
+            // 버튼들
+            Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel닫기);
 
-    //    public void SetWndHandle(InsungsInfo_File fInfo) // 확인필요
-    //    {
-    //        Btn_hWnd고객수정 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_ptChkRel고객수정);
-    //        Btn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel배차);
-    //        Btn_hWnd처리완료 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel처리완료);
-    //        Btn_hWnd대기 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel대기);
-    //        Btn_hWnd주문취소 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel주문취소);
-    //        Btn_hWnd접수상태 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel접수상태);
-    //        Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel저장);
+            this.SetWndHandle(fInfo);
+        }
 
-    //        base.SetWndHandles(TopWnd_hWnd, fInfo);
-    //    }
-    //}
+        public void SetWndHandle(InsungsInfo_File fInfo)
+        {
+            Btn_hWnd고객수정 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_ptChkRel고객수정);
+            Btn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel배차);
+            Btn_hWnd처리완료 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel처리완료);
+            Btn_hWnd대기 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel대기);
+            Btn_hWnd주문취소 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel주문취소);
+            Btn_hWnd접수상태 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel접수상태);
+            Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel저장);
+
+            base.SetWndHandles(TopWnd_hWnd, fInfo);
+        }
+    }
 
     //public class CustRegWnd
     //{

@@ -1,4 +1,5 @@
 using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.MVVM.ViewModels;
 using Kai.Client.CallCenter.MVVM.ViewServices;
 //using Kai.Client.CallCenter.Networks.NwInsungs;
@@ -723,7 +724,14 @@ public partial class Order_StatusPage : Page
 
         TbOrder tb = selectedOrder.tbOrder;
         TbOrder tbNew = NetUtil.DeepCopyFrom(tb);
+
+        // Empty Some Data
         tbNew.KeyCode = 0; // 새 주문이므로 KeyCode 초기화
+        tbNew.Insung1 = "";
+        tbNew.Insung2 = "";
+        tbNew.Cargo24 = "";
+        tbNew.Onecall = "";
+
         tbNew.OrderState = "접수";
 
         StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
@@ -742,7 +750,14 @@ public partial class Order_StatusPage : Page
 
         TbOrder tb = selectedOrder.tbOrder;
         TbOrder tbNew = NetUtil.DeepCopyFrom(tb);
+
+        // Empty Some Data
         tbNew.KeyCode = 0; // 새 주문이므로 KeyCode 초기화
+        tbNew.Insung1 = "";
+        tbNew.Insung2 = "";
+        tbNew.Cargo24 = "";
+        tbNew.Onecall = "";
+
         tbNew.OrderState = "대기";
 
         StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
@@ -781,7 +796,64 @@ public partial class Order_StatusPage : Page
     }
     #endregion
 
-    #region From Insungs 
+    #region From Insungs
+    /// <summary>
+    /// 인성 운행 상태 40초 경과 - 기사 확정 처리
+    /// 1. Kai DB 업데이트 (접수 → 배차)
+    /// 2. 배차중인 다른 앱 선별
+    /// 3. 다른 앱 취소 처리
+    /// </summary>
+    /// <param name="item">AutoAllocModel (기사전번 포함)</param>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <returns>CommonResult_AutoAllocProcess</returns>
+    public async Task<CommonResult_AutoAllocProcess> ProcessDriverConfirmed40SecAsync(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine($" ----------------[ProcessDriverConfirmed40Sec] 시작 - KeyCode={item.KeyCode}");
+            Debug.WriteLine($"  ===== 기사 정보 =====");
+            Debug.WriteLine($"    주문상태: '{item.NewOrder.OrderState}'");
+            Debug.WriteLine($"    기사번호: '{item.NewOrder.DriverId}'");
+            Debug.WriteLine($"    기사이름: '{item.NewOrder.DriverName}'");
+            Debug.WriteLine($"    기사소속: '{item.NewOrder.DriverCenterName}'");
+            Debug.WriteLine($"    기사전번(원본): '{item.DriverPhone}'");
+            Debug.WriteLine($"    기사전번(숫자): '{item.NewOrder.DriverTelNo}'");
+
+            // 1. Kai DB 업데이트 (접수 → 운행)
+            Debug.WriteLine($"  → [DB 업데이트] 시작: KeyCode={item.KeyCode}");
+            Debug.WriteLine($"      OrderState: '{item.NewOrder.OrderState}', DriverTelNo: '{item.NewOrder.DriverTelNo}'");
+
+            StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+
+            if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
+            {
+                Debug.WriteLine($"  → [DB 업데이트 실패] nResult={resultUpdate.nResult}, Err={resultUpdate.sErr}, Pos={resultUpdate.sPos}");
+                return CommonResult_AutoAllocProcess.FailureAndRetry(
+                    $"Kai DB 업데이트 실패: {resultUpdate.sErr}",
+                    $"ProcessDriverConfirmed40Sec_UpdateFail_{resultUpdate.sPos}");
+            }
+
+            Debug.WriteLine($"  → [DB 업데이트 성공] nResult={resultUpdate.nResult}");
+
+            // 2. 배차중인 다른 앱 선별
+            // TODO: item.NewOrder.Insung2, Cargo24, OneCall 필드 확인
+            Debug.WriteLine($"  → TODO: 배차중인 다른 앱 선별");
+
+            // 3. 다른 앱 취소 처리
+            // TODO: 운행 상태 확인 및 취소 명령
+            Debug.WriteLine($"  → TODO: 다른 앱 취소 처리");
+
+            // 4. NotChanged 상태로 재적재 (다음 루프에서 스킵, SignalR 이벤트 대기)
+            Debug.WriteLine($"  → [완료] NotChanged 상태로 재적재");
+            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ProcessDriverConfirmed40Sec] 예외: {ex.Message}");
+            return CommonResult_AutoAllocProcess.FailureAndRetry($"40초 처리 예외: {ex.Message}", "ProcessDriverConfirmed40Sec_Exception");
+        }
+    }
+
     //public async Task<StdResult_Error> Insung01접수Or배차To운행Async(TbOrder tb, AutoAlloc kaiCpy, AutoAllocResult_Datagrid dgInfo, CancelTokenControl ctrl)
     //{
     //    // 무시용 리스트에 무시할 SeqNo기입하고

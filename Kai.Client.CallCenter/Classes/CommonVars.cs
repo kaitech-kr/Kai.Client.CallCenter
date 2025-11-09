@@ -22,6 +22,7 @@ public class CommonVars
     public const int c_nRepeatMany = 50; // 많은 반복횟수 - 50회
     public const int c_nRepeatVeryMany = 100; // 많은 반복횟수 - 100회
 
+    public const int c_nWaitUltraShort = 20;
     public const int c_nWaitVeryShort = 30;
     public const int c_nWaitShort = 50;
     public const int c_nWaitNormal = 100;
