@@ -23,19 +23,6 @@ namespace Kai.Client.CallCenter.Networks.NwInsungs;
 #nullable disable
 
 /// <summary>
-/// Datagrid 검증 이슈 플래그 (비트 조합 가능)
-/// </summary>
-[Flags]
-public enum DgValidationIssue
-{
-    None = 0,               // 문제 없음
-    InvalidColumnCount = 1, // 컬럼 개수 틀림
-    InvalidColumn = 2,      // 필요 없는 컬럼 존재
-    WrongOrder = 4,         // 컬럼 순서 틀림
-    WrongWidth = 8          // 컬럼 너비 틀림 (허용 오차 초과)
-}
-
-/// <summary>
 /// 인성 앱 접수등록 페이지 초기화 및 제어 담당 클래스
 /// Context 패턴 사용: InsungContext를 통해 모든 정보에 접근
 /// </summary>
@@ -618,7 +605,7 @@ public partial class InsungsAct_RcptRegPage
 
                     // InitDG오더Async 호출하여 Datagrid 강제 초기화
                     StdResult_Error initResult = await InitDG오더Async(
-                        DgValidationIssue.InvalidColumnCount,
+                        CEnum_DgValidationIssue.InvalidColumnCount,
                         bEdit, bWrite,
                         bMsgBox: false  // 중간 에러는 메시지박스 표시 안 함
                     );
@@ -731,9 +718,9 @@ public partial class InsungsAct_RcptRegPage
                 Debug.WriteLine("[SetDG오더RectsAsync] Datagrid 상태 검증 시작");
                 Debug.WriteLine($"[SetDG오더RectsAsync] 검출 컬럼({listLW.Count}): {string.Join(", ", m_RcptPage.DG오더_ColumnTexts.Where(t => !string.IsNullOrEmpty(t)))}");
 
-                DgValidationIssue validationIssues = ValidateDatagridState(m_RcptPage.DG오더_ColumnTexts, listLW);
+                CEnum_DgValidationIssue validationIssues = ValidateDatagridState(m_RcptPage.DG오더_ColumnTexts, listLW);
 
-                if (validationIssues != DgValidationIssue.None)
+                if (validationIssues != CEnum_DgValidationIssue.None)
                 {
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] Datagrid 상태 검증 실패: {validationIssues} (재시도 {retry}/{c_nRepeatShort})");
 
@@ -943,7 +930,7 @@ public partial class InsungsAct_RcptRegPage
     /// <param name="bWrite">로그 작성 여부</param>
     /// <param name="bMsgBox">메시지박스 표시 여부</param>
     /// <returns>에러 발생 시 StdResult_Error, 성공 시 null</returns>
-    private async Task<StdResult_Error> InitDG오더Async(DgValidationIssue issues, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    private async Task<StdResult_Error> InitDG오더Async(CEnum_DgValidationIssue issues, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
     {
         // 마우스 커서 위치 백업 (작업 완료 후 복원용)
         Draw.Point ptCursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
@@ -1720,8 +1707,8 @@ public partial class InsungsAct_RcptRegPage
             }
 
             // 2. 컬럼 조정 (WrongOrder 또는 WrongWidth 이슈가 있을 때만)
-            if ((issues & DgValidationIssue.WrongOrder) != 0 ||
-                (issues & DgValidationIssue.WrongWidth) != 0)
+            if ((issues & CEnum_DgValidationIssue.WrongOrder) != 0 ||
+                (issues & CEnum_DgValidationIssue.WrongWidth) != 0)
             {
                 Debug.WriteLine($"[InitDG오더Async] 컬럼 조정 시작");
 
@@ -2261,14 +2248,14 @@ public partial class InsungsAct_RcptRegPage
     /// <param name="columnTexts">현재 읽은 컬럼 헤더 텍스트 배열</param>
     /// <param name="listLW">컬럼 Left/Width 리스트</param>
     /// <returns>검증 이슈 플래그 (None이면 정상)</returns>
-    private DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
+    private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
     {
-        DgValidationIssue issues = DgValidationIssue.None;
+        CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
 
         // 1. 컬럼 개수 체크
         if (columnTexts == null || columnTexts.Length != m_ReceiptDgHeaderInfos.Length)
         {
-            issues |= DgValidationIssue.InvalidColumnCount;
+            issues |= CEnum_DgValidationIssue.InvalidColumnCount;
             Debug.WriteLine($"[ValidateDatagridState] 컬럼 개수 불일치: 실제={columnTexts?.Length}, 예상={m_ReceiptDgHeaderInfos.Length}");
             return issues; // 개수가 다르면 더 이상 체크 불가
         }
@@ -2283,7 +2270,7 @@ public partial class InsungsAct_RcptRegPage
 
             if (index < 0) // 존재하지 않는 컬럼
             {
-                issues |= DgValidationIssue.InvalidColumn;
+                issues |= CEnum_DgValidationIssue.InvalidColumn;
                 Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}'");
                 continue; // 다음 컬럼 검사
             }
@@ -2291,7 +2278,7 @@ public partial class InsungsAct_RcptRegPage
             // 2-2. 컬럼 순서가 맞는지
             if (index != x)
             {
-                issues |= DgValidationIssue.WrongOrder;
+                issues |= CEnum_DgValidationIssue.WrongOrder;
                 Debug.WriteLine($"[ValidateDatagridState] 컬럼 순서 불일치[{x}]: '{columnText}' (예상 위치={index})");
             }
 
@@ -2302,13 +2289,13 @@ public partial class InsungsAct_RcptRegPage
 
             if (widthDiff > COLUMN_WIDTH_TOLERANCE)
             {
-                issues |= DgValidationIssue.WrongWidth;
+                issues |= CEnum_DgValidationIssue.WrongWidth;
             }
 
             Debug.WriteLine($"[ValidateDatagridState] 컬럼 너비[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
         }
 
-        if (issues == DgValidationIssue.None)
+        if (issues == CEnum_DgValidationIssue.None)
         {
             Debug.WriteLine($"[ValidateDatagridState] Datagrid 상태 정상");
         }
