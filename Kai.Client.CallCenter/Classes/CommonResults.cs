@@ -78,10 +78,14 @@ public class CommonResult_AutoAllocProcess : StdResult_Error
     }
 
     /// <summary>
-    /// 성공 + 비적재 (완료)
+    /// 성공 + 비적재 (완료) - 객체 파괴
     /// </summary>
-    public static CommonResult_AutoAllocProcess SuccessAndComplete()
+    public static CommonResult_AutoAllocProcess SuccessAndDestroy(AutoAllocModel item)
     {
+        // 플래그 초기화 (Empty 상태로 파괴)
+        item.StateFlag = 0; // Empty
+        item.RunStartTime = null;
+        item.DriverPhone = null;
         return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.SuccessAndComplete);
     }
 

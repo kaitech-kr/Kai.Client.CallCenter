@@ -1658,11 +1658,109 @@ public partial class InsungsAct_RcptRegPage
             if (wantState == "취소")
             {
                 Debug.WriteLine($"[{m_Context.AppName}] 취소 상태 전환 완료 - 큐에서 제거 (변경: {totalChangeCount}개, KeyCode: {item.KeyCode})");
-                return CommonResult_AutoAllocProcess.SuccessAndComplete();
+                return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
             }
             else
             {
                 Debug.WriteLine($"[{m_Context.AppName}] 모든 영역 업데이트 완료 (변경: {totalChangeCount}개, KeyCode: {item.KeyCode})");
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+            }
+        }
+
+        // 모든 재시도 실패 (정상적으로는 위에서 return되므로 여기 도달 안 함)
+        Debug.WriteLine($"[{m_Context.AppName}] 모든 재시도 실패 (KeyCode: {item.KeyCode})");
+        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+    }
+
+    /// <summary>
+    /// 팝업 내 주문 상태만 업데이트 (필드는 건드리지 않음)
+    /// </summary>
+    private async Task<CommonResult_AutoAllocProcess> UpdateOrderStateOnlyAsync(
+        string wantState, AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, bool useRepeat, CancelTokenControl ctrl)
+    {
+        if (string.IsNullOrEmpty(wantState))
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] UpdateOrderStateOnlyAsync: wantState가 비어있음");
+            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+        }
+
+        int repeatCount = useRepeat ? CommonVars.c_nRepeatNormal : 1;
+
+        Debug.WriteLine($"[{m_Context.AppName}] UpdateOrderStateOnlyAsync 시작");
+        Debug.WriteLine($"  - wantState: '{wantState}'");
+        Debug.WriteLine($"  - useRepeat: {useRepeat} (반복 횟수: {repeatCount})");
+
+        for (int attempt = 0; attempt < repeatCount; attempt++)
+        {
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
+            // 1. 팝업 열기
+            Debug.WriteLine($"[{m_Context.AppName}] 1단계: 팝업 열기 시도 (시도 {attempt + 1}/{repeatCount})");
+            var (wnd, openError) = await OpenEditPopupAsync(dgInfo.nIndex, ctrl);
+
+            if (openError != null)
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 팝업 열기 실패: {openError.sErr}");
+
+                if (attempt < repeatCount - 1)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 재시도 예정 ({attempt + 1}/{repeatCount})");
+                    continue;
+                }
+
+                // 모든 시도 실패 - 재시도 큐로
+                Debug.WriteLine($"[{m_Context.AppName}] 팝업 열기 실패 (KeyCode: {item.KeyCode})");
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] 팝업 열기 성공");
+
+            // 2. 상태 버튼 클릭
+            Debug.WriteLine($"[{m_Context.AppName}] 2단계: 상태 버튼 클릭 (목표 상태: {wantState})");
+
+            IntPtr hWndStateBtn = wantState switch
+            {
+                "접수" => wnd.Btn_hWnd접수상태,
+                "완료" => wnd.Btn_hWnd처리완료,
+                "대기" => wnd.Btn_hWnd대기,
+                "취소" => wnd.Btn_hWnd주문취소,
+                _ => IntPtr.Zero
+            };
+
+            if (hWndStateBtn == IntPtr.Zero)
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 알 수 없는 상태 (wantState: {wantState}, KeyCode: {item.KeyCode})");
+                await CloseEditPopupAsync(wnd, shouldSave: false, ctrl);
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+            }
+
+            await Std32Mouse_Post.MousePostAsync_ClickLeft_Center(hWndStateBtn);
+            Debug.WriteLine($"[{m_Context.AppName}] 상태 버튼 클릭 완료: {wantState}");
+
+            await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+
+            // 3. 팝업 닫기 (상태 버튼을 눌렀으므로 항상 저장)
+            Debug.WriteLine($"[{m_Context.AppName}] 3단계: 팝업 닫기 시도 (저장)");
+            bool closed = await CloseEditPopupAsync(wnd, shouldSave: true, ctrl);
+
+            if (!closed)
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 팝업 닫기 실패 - 재시도 (KeyCode: {item.KeyCode})");
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] 팝업 닫기 성공 - 상태 변경 완료");
+
+            // 취소 상태로 전환: 비적재 (더 이상 모니터링 불필요)
+            // 그 외: 재적재 (계속 모니터링)
+            if (wantState == "취소")
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 취소 상태 전환 완료 - 큐에서 제거 (KeyCode: {item.KeyCode})");
+                return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+            }
+            else
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 상태 변경 완료 (KeyCode: {item.KeyCode})");
                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
             }
         }

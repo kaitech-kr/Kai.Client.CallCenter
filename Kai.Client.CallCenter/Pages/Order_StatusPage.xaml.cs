@@ -858,7 +858,7 @@ public partial class Order_StatusPage : Page
     /// 인성1 운행 → 완료 처리
     /// 1. Kai DB 업데이트 (운행 → 완료)
     /// 2. 타이머 리셋
-    /// 3. 큐에서 제거 (SuccessAndComplete)
+    /// 3. 큐에서 제거 (SuccessAndDestroy)
     /// </summary>
     /// <param name="item">AutoAllocModel</param>
     /// <param name="ctrl">취소 토큰</param>
@@ -898,7 +898,7 @@ public partial class Order_StatusPage : Page
 
             // 3. 큐에서 제거 (완료 처리)
             Debug.WriteLine($"  → [완료] 큐에서 제거 (완료 처리 성공: {originalState} → 완료)");
-            return CommonResult_AutoAllocProcess.SuccessAndComplete();
+            return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
         }
         catch (Exception ex)
         {

@@ -484,19 +484,24 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     {
         if (tbNewOrder == null) return;
 
-        // Request ID 체크 (자신의 업데이트인지 확인)
+        // ========== 1. 자신의 업데이트 체크 (무한 루프 방지) ==========
         if (CheckAndRemoveRequestId(requestId))
         {
             Debug.WriteLine($"[SrGlobalClient] 로컬 업데이트 감지 - UI 갱신: KeyCode={tbNewOrder.KeyCode}, Seq={nSeq}");
             VsOrder_StatusPage.s_nLastSeq = nSeq;
-            TbOrder tbOldOrder = VsOrder_StatusPage.s_listTbOrderToday.FirstOrDefault(o => o.KeyCode == tbNewOrder.KeyCode);
-            if (tbOldOrder != null) { NetUtil.DeepCopyTo(tbNewOrder, tbOldOrder); }
 
-            // UI 갱신 (Load 함수 호출)
+            // 기존 주문 찾아서 업데이트
+            TbOrder tbOldOrder = VsOrder_StatusPage.s_listTbOrderToday.FirstOrDefault(o => o.KeyCode == tbNewOrder.KeyCode);
+            if (tbOldOrder != null)
+            {
+                NetUtil.DeepCopyTo(tbNewOrder, tbOldOrder);
+            }
+
+            // UI 갱신 ("오늘" 선택된 경우만)
             if (s_Order_StatusPage != null)
             {
                 int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
-                if (index == 0)  // "오늘" 선택된 경우
+                if (index == 0)
                 {
                     await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
                 }
@@ -504,6 +509,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             return;
         }
 
+        // ========== 2. 기존 주문 찾기 ==========
         TbOrder tbOldOrder2 = VsOrder_StatusPage.s_listTbOrderToday.FirstOrDefault(o => o.KeyCode == tbNewOrder.KeyCode);
         if (tbOldOrder2 == null)
         {
@@ -511,12 +517,19 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             return;
         }
 
+        // ========== 3. 변경 플래그 계산 ==========
         PostgService_Common_OrderState changedFlag = PostgService_TbOrder.CompareTable(tbNewOrder, tbOldOrder2);
-        if (changedFlag == PostgService_Common_OrderState.Empty) changedFlag = PostgService_Common_OrderState.Updated_AnyWay;
-
-        // 시퀀스가 맞지 않으면 전체 재조회
-        if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
+        if (changedFlag == PostgService_Common_OrderState.Empty)
         {
+            changedFlag = PostgService_Common_OrderState.Updated_AnyWay;
+        }
+
+        // ========== 4. 시퀀스 체크 ==========
+        bool isSequenceValid = (nSeq == VsOrder_StatusPage.s_nLastSeq + 1) || (VsOrder_StatusPage.s_nLastSeq == 0);
+
+        if (!isSequenceValid)
+        {
+            // 시퀀스 불일치 → 전체 재조회
             if (s_Order_StatusPage != null)
             {
                 await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -525,12 +538,14 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                 });
             }
         }
-        // 시퀀스가 정상이면 주문 업데이트
         else
         {
+            // ========== 5. 시퀀스 정상 → 주문 업데이트 ==========
+            // 백업 후 업데이트
             TbOrder tbBackup = NetUtil.DeepCopyFrom(tbOldOrder2);
             NetUtil.DeepCopyTo(tbNewOrder, tbOldOrder2);
 
+            // UI 갱신 ("오늘" 선택된 경우만)
             if (s_Order_StatusPage != null)
             {
                 int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
@@ -540,11 +555,12 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                 }
             }
 
+            // ========== 6. 자동배차 시스템 알림 ==========
             // 무시 리스트 확인
             int nFind = m_ListIgnoreSeqno.IndexOf(nSeq);
             if (nFind < 0)
             {
-                // 자동배차 시스템에 주문 업데이트 알림
+                // 자동배차 시스템에 알림
                 if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
                 {
                     s_MainWnd.m_MasterManager.ExternalAppController.UpdateOrder(changedFlag, tbNewOrder, tbBackup, nSeq);
@@ -552,11 +568,13 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             }
             else
             {
+                // 무시 리스트에서 제거
                 m_ListIgnoreSeqno.RemoveAt(nFind);
                 Debug.WriteLine($"무시리스트에서 삭제: Seqno={nSeq}, OrderNum={tbNewOrder.KeyCode}");
             }
         }
 
+        // ========== 7. 시퀀스 업데이트 ==========
         VsOrder_StatusPage.s_nLastSeq = nSeq;
     }
     #endregion

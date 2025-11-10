@@ -1938,27 +1938,15 @@ public partial class InsungsAct_RcptRegPage
         string kaiState = item.NewOrder.OrderState;
         string isState = dgInfo.sStatus;
 
-        Debug.WriteLine($"[{m_Context.AppName}] CheckIsOrderAsync_AssumeKaiUpdated 호출됨");
-        Debug.WriteLine($"  - KeyCode: {item.KeyCode}, Insung1: {item.NewOrder.Insung1 ?? "(없음)"}");
-        Debug.WriteLine($"  - Kai 상태: {kaiState}, IS 상태: {isState}");
-        Debug.WriteLine($"  - DG Index: {dgInfo.nIndex}");
+        //Debug.WriteLine($"[{m_Context.AppName}] CheckIsOrderAsync_AssumeKaiUpdated 호출됨");
+        //Debug.WriteLine($"  - KeyCode: {item.KeyCode}, Insung1: {item.NewOrder.Insung1 ?? "(없음)"}");
+        //Debug.WriteLine($"  - Kai 상태: {kaiState}, IS 상태: {isState}");
+        //Debug.WriteLine($"  - DG Index: {dgInfo.nIndex}");
 
         // 상태가 같은 경우: 필드만 업데이트
-        if (kaiState == isState)
-        {
-            Debug.WriteLine($"  → 같은 상태: 필드만 업데이트 시도");
-            var result = await UpdateOrderSameStateAsync(item, dgInfo, ctrl);
-            Debug.WriteLine($"[{m_Context.AppName}] CheckIsOrderAsync_AssumeKaiUpdated 반환: ResultType={result.ResultType}, Message={result.sErr}");
-            return result;
-        }
+        if (kaiState == isState) return await UpdateOrderSameStateAsync(item, dgInfo, ctrl);
         // 상태가 다른 경우: 필드 업데이트 + 상태 전환
-        else
-        {
-            Debug.WriteLine($"  → 다른 상태: 필드 업데이트 + 상태 전환 시도 ({isState} → {kaiState})");
-            var result = await UpdateOrderDiffStateAsync(item, dgInfo, kaiState, isState, ctrl);
-            Debug.WriteLine($"[{m_Context.AppName}] CheckIsOrderAsync_AssumeKaiUpdated 반환: ResultType={result.ResultType}, Message={result.sErr}");
-            return result;
-        }
+        else return await UpdateOrderDiffStateAsync(item, dgInfo, kaiState, isState, ctrl);
     }
 
     /// <summary>
@@ -1972,26 +1960,22 @@ public partial class InsungsAct_RcptRegPage
         // 인성 앱 특성: 상태가 변경되면 저장 안 됨 → 같은 상태 버튼 클릭 필요
         // 대기/취소: 외부에서 상태 변경 불가 → 반복 불필요
         // 접수/배차: 외부에서 상태 변경 가능 → 타이밍 이슈 대비 반복 필요
-        switch (isState)
+        switch (dgInfo.sStatus)
         {
-            case "취소":
-            case "대기":
-                useRepeat = false;  // 외부 변경 없음 → 1번만
-                break;
+            case "대기":  // 외부 변경 없음 → 1번만
+                return await UpdateOrderInPopupAsync("", item, dgInfo, false, ctrl);
 
-            case "접수":
+            case "접수": // 외부 변경 가능 → 10번 재시도
             case "배차":
-                useRepeat = true;   // 외부 변경 가능 → 10번 재시도
-                break;
+                return await UpdateOrderInPopupAsync("", item, dgInfo, true, ctrl);
+
+            case "취소":
+            case "완료":
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
 
             default:
-                return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(SameState): Kai={isState}, IS={isState}", "UpdateOrderSameStateAsync_01");
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(SameState): Kai={isState}, IS={isState}", "UpdateOrderSameStateAsync_999");
         }
-
-        // 팝업 열기 → 필드 업데이트 → 같은 상태 버튼 클릭 → 저장/닫기
-        var result = await UpdateOrderInPopupAsync("", item, dgInfo, useRepeat, ctrl);
-        Debug.WriteLine($"[{m_Context.AppName}] UpdateOrderSameStateAsync 반환: ResultType={result.ResultType}, Message={result.sErr}");
-        return result;
     }
 
     /// <summary>
@@ -2043,17 +2027,26 @@ public partial class InsungsAct_RcptRegPage
                     case "접수": // 접수 → 취소
                     case "배차": // 배차 → 취소
                     case "운행": // 운행 → 취소
-                        useRepeat = true; // 10번 재시도
-                        break;
+                        return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, true, ctrl); // 10번 재시도
+
                     case "예약": // 예약 → 취소
                     case "완료": // 완료 → 취소
                     case "대기": // 대기 → 취소
-                        useRepeat = false; // 1번만
-                        break;
+                        return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, false, ctrl); // 1번만
+
                     default:
                         return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "UpdateOrderDiffStateAsync_03");
                 }
-                break;
+
+            case "운행":
+                switch (isState)
+                {
+                    case "완료": // 운행 → 완료
+                        return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
+
+                    default:
+                        return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "UpdateOrderDiffStateAsync_03");
+                }
 
             default:
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(DiffState): Kai={kaiState}, IS={isState}", "UpdateOrderDiffStateAsync_04");
@@ -2077,12 +2070,12 @@ public partial class InsungsAct_RcptRegPage
         await ctrl.WaitIfPausedOrCancelledAsync();
 
         string kaiState = item.NewOrder.OrderState;
-        string insungState = dgInfo.sStatus;
+        string isState = dgInfo.sStatus;
 
-        Debug.WriteLine($"[CheckIsOrderAsync_InsungOrderManage] KeyCode={item.KeyCode}, Kai={kaiState}, Insung={insungState}");
+        Debug.WriteLine($"[CheckIsOrderAsync_InsungOrderManage] KeyCode={item.KeyCode}, Kai={kaiState}, Insung={isState}");
 
         // Insung 상태별로 handler 함수 호출 (2중 switch 방지)
-        switch (insungState)
+        switch (isState)
         {
             case "접수":
             case "배차":
@@ -2091,11 +2084,14 @@ public partial class InsungsAct_RcptRegPage
                 return await InsungOrderManage_운행Async(item, kaiState, dgInfo, ctrl);
             case "완료":
                 return await InsungOrderManage_완료Async(item, kaiState, dgInfo, ctrl);
+            case "대기":
+                return await InsungOrderManage_대기Async(item, kaiState, dgInfo, ctrl);
             case "취소":
                 return await InsungOrderManage_취소Async(item, kaiState, dgInfo, ctrl);
+
             default:
-                Debug.WriteLine($"  → 미정의 Insung 상태: {insungState}");
-                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+                Debug.WriteLine($"  → 미정의 Insung 상태: {isState}");
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
         }
     }
 
@@ -2112,15 +2108,7 @@ public partial class InsungsAct_RcptRegPage
             case "배차":
                 Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-            //case "운행":
-            //    Debug.WriteLine($"  → [{insungState}/{kaiState}] 비정상 - Kai는 운행인데 Insung은 {insungState}");
-            //    return CommonResult_AutoAllocProcess.FailureAndRetry($"비정상 상태: Kai={kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_01");
-            //case "완료":
-            //    Debug.WriteLine($"  → [{insungState}/{kaiState}] 비정상 - Kai는 완료인데 Insung은 {insungState}");
-            //    return CommonResult_AutoAllocProcess.FailureAndRetry($"비정상 상태: Kai={kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_02");
-            //case "취소":
-            //    Debug.WriteLine($"  → [{insungState}/{kaiState}] 비정상 - Kai는 취소인데 Insung은 {insungState}");
-            //    return CommonResult_AutoAllocProcess.FailureAndRetry($"비정상 상태: Kai={kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_03");
+
             default:
                 Debug.WriteLine($"  → [{insungState}/?] 미정의 Kai 상태: {kaiState}");
                 return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_999");
@@ -2240,42 +2228,29 @@ public partial class InsungsAct_RcptRegPage
     {
         switch (kaiState)
         {
-            case "접수":
-                Debug.WriteLine($"  → [완료/접수] 비정상 - Kai는 접수인데 Insung은 완료");
-                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (접수 → 완료)");
-                break;
-
-            case "배차":
-                Debug.WriteLine($"  → [완료/배차] 정상 상태 - 배송 완료");
-                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (배차 → 완료)");
-                break;
-
             case "운행":
-                Debug.WriteLine($"  → [완료/운행] 비정상 - Kai는 운행인데 Insung은 완료");
-                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (운행 → 완료)");
-                break;
-
-            case "완료":
-                Debug.WriteLine($"  → [완료/완료] 정상 상태 - 이미 완료됨");
-                break;
-
-            case "취소":
-                Debug.WriteLine($"  → [완료/취소] 비정상 - Kai는 취소인데 Insung은 완료");
-                break;
+                return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
 
             default:
-                Debug.WriteLine($"  → [완료/?] 미정의 Kai 상태: {kaiState}");
-                break;
+                Debug.WriteLine($"  → [완료/{kaiState}] 미정의 Kai 상태: {kaiState}");
+                return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=완료", "InsungOrderManage_완료Async_999");
         }
+    }
 
-        // 타이머 리셋
-        if (item.RunStartTime != null)
+    /// <summary>
+    /// Insung "대기" 상태 처리 - Kai 상태별 로깅
+    /// </summary>
+    private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_대기Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        switch (kaiState)
         {
-            Debug.WriteLine($"  → 타이머 리셋 (완료 상태)");
-            item.RunStartTime = null;
-        }
+            case "대기":
+                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
 
-        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+            default:
+                Debug.WriteLine($"  → [대기/{kaiState}] 미정의 Kai 상태: {kaiState}");
+                return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=대기", "InsungOrderManage_대기Async_999");
+        }
     }
 
     /// <summary>
@@ -2285,44 +2260,13 @@ public partial class InsungsAct_RcptRegPage
     {
         switch (kaiState)
         {
-            case "접수":
-                Debug.WriteLine($"  → [취소/접수] 인성에서 주문 취소됨");
-                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (접수 → 취소)");
-                Debug.WriteLine($"  → TODO: 다른 앱 취소 (Insung2, 화물24시, 원콜)");
-                break;
-
-            case "배차":
-                Debug.WriteLine($"  → [취소/배차] 인성에서 주문 취소됨 (배차 후 취소)");
-                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (배차 → 취소)");
-                Debug.WriteLine($"  → TODO: 다른 앱 취소 (Insung2, 화물24시, 원콜)");
-                break;
-
-            case "운행":
-                Debug.WriteLine($"  → [취소/운행] 비정상 - Kai는 운행인데 Insung은 취소");
-                Debug.WriteLine($"  → TODO: Kai DB 업데이트 (운행 → 취소)");
-                break;
-
-            case "완료":
-                Debug.WriteLine($"  → [취소/완료] 비정상 - Kai는 완료인데 Insung은 취소");
-                break;
-
             case "취소":
-                Debug.WriteLine($"  → [취소/취소] 정상 상태 - 이미 취소됨");
-                break;
+                return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
 
             default:
-                Debug.WriteLine($"  → [취소/?] 미정의 Kai 상태: {kaiState}");
-                break;
+                Debug.WriteLine($"  → [취소/{kaiState}] 미정의 Kai 상태: {kaiState}");
+                return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=취소", "InsungOrderManage_취소Async_999");
         }
-
-        // 타이머 리셋
-        if (item.RunStartTime != null)
-        {
-            Debug.WriteLine($"  → 타이머 리셋 (취소 상태)");
-            item.RunStartTime = null;
-        }
-
-        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
     }
     #endregion
 }

@@ -257,6 +257,7 @@ public class QueueController
     /// </summary>
     private void UpdateOrRemoveInQueue(Queue<AutoAllocModel> queue, string networkName, long keyCode, TbOrder newOrder, PostgService_Common_OrderState newStateFlag)
     {
+        bool found = false;
         var tempList = new List<AutoAllocModel>();
 
         // 큐에서 모든 항목 꺼내기
@@ -266,6 +267,8 @@ public class QueueController
 
             if (item.NewOrder.KeyCode == keyCode)
             {
+                found = true;
+
                 // 이 큐에 있어야 하는 주문인가?
                 if (ShouldBeInQueue(newOrder, networkName))
                 {
@@ -285,6 +288,15 @@ public class QueueController
             {
                 tempList.Add(item);
             }
+        }
+
+        // 큐에 없었는데 분류 규칙에 맞으면 새로 생성
+        if (!found && ShouldBeInQueue(newOrder, networkName))
+        {
+            var newItem = new AutoAllocModel(newOrder);
+            newItem.StateFlag = newStateFlag;
+            tempList.Add(newItem);
+            Debug.WriteLine($"[AutoAllocQueue] 신규 생성: {networkName}, KeyCode={keyCode}, StateFlag={newStateFlag}");
         }
 
         // 모든 항목 다시 큐에 넣기
