@@ -144,4 +144,19 @@ public class CommonResult_AutoAllocDatagrid : StdResult_Error
     {
     }
 }
+
+/// <summary>
+/// 고객 검색 타입 결과
+/// </summary>
+public class CommonResult_SearchType
+{
+    public CEnum_CustSearchCount resultType { get; }
+    public IntPtr hWndResult { get; }
+
+    public CommonResult_SearchType(CEnum_CustSearchCount resultType, IntPtr hWndResult)
+    {
+        this.resultType = resultType;
+        this.hWndResult = hWndResult;
+    }
+}
 #nullable enable

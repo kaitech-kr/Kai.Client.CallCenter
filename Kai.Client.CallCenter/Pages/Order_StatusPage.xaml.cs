@@ -798,19 +798,19 @@ public partial class Order_StatusPage : Page
 
     #region From Insungs
     /// <summary>
-    /// 인성 운행 상태 40초 경과 - 기사 확정 처리
-    /// 1. Kai DB 업데이트 (접수 → 배차)
+    /// 인성1 접수/배차 → 운행 처리 (40초 경과 시)
+    /// 1. Kai DB 업데이트 (접수 → 운행)
     /// 2. 배차중인 다른 앱 선별
     /// 3. 다른 앱 취소 처리
     /// </summary>
     /// <param name="item">AutoAllocModel (기사전번 포함)</param>
     /// <param name="ctrl">취소 토큰</param>
     /// <returns>CommonResult_AutoAllocProcess</returns>
-    public async Task<CommonResult_AutoAllocProcess> ProcessDriverConfirmed40SecAsync(AutoAllocModel item, CancelTokenControl ctrl)
+    public async Task<CommonResult_AutoAllocProcess> Insung01배차To운행Async(AutoAllocModel item, CancelTokenControl ctrl)
     {
         try
         {
-            Debug.WriteLine($" ----------------[ProcessDriverConfirmed40Sec] 시작 - KeyCode={item.KeyCode}");
+            Debug.WriteLine($" ----------------[Insung01배차To운행] 시작 - KeyCode={item.KeyCode}");
             Debug.WriteLine($"  ===== 기사 정보 =====");
             Debug.WriteLine($"    주문상태: '{item.NewOrder.OrderState}'");
             Debug.WriteLine($"    기사번호: '{item.NewOrder.DriverId}'");
@@ -830,7 +830,7 @@ public partial class Order_StatusPage : Page
                 Debug.WriteLine($"  → [DB 업데이트 실패] nResult={resultUpdate.nResult}, Err={resultUpdate.sErr}, Pos={resultUpdate.sPos}");
                 return CommonResult_AutoAllocProcess.FailureAndRetry(
                     $"Kai DB 업데이트 실패: {resultUpdate.sErr}",
-                    $"ProcessDriverConfirmed40Sec_UpdateFail_{resultUpdate.sPos}");
+                    $"Insung01배차To운행_UpdateFail_{resultUpdate.sPos}");
             }
 
             Debug.WriteLine($"  → [DB 업데이트 성공] nResult={resultUpdate.nResult}");
@@ -849,8 +849,61 @@ public partial class Order_StatusPage : Page
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[ProcessDriverConfirmed40Sec] 예외: {ex.Message}");
-            return CommonResult_AutoAllocProcess.FailureAndRetry($"40초 처리 예외: {ex.Message}", "ProcessDriverConfirmed40Sec_Exception");
+            Debug.WriteLine($"[Insung01배차To운행] 예외: {ex.Message}");
+            return CommonResult_AutoAllocProcess.FailureAndRetry($"40초 처리 예외: {ex.Message}", "Insung01배차To운행_Exception");
+        }
+    }
+
+    /// <summary>
+    /// 인성1 운행 → 완료 처리
+    /// 1. Kai DB 업데이트 (운행 → 완료)
+    /// 2. 타이머 리셋
+    /// 3. 큐에서 제거 (SuccessAndComplete)
+    /// </summary>
+    /// <param name="item">AutoAllocModel</param>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <returns>CommonResult_AutoAllocProcess</returns>
+    public async Task<CommonResult_AutoAllocProcess> Insung01운행To완료Async(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine($" ----------------[Insung01운행To완료] 시작 - KeyCode={item.KeyCode}");
+            Debug.WriteLine($"  현재 Kai 상태: '{item.NewOrder.OrderState}' → 완료");
+
+            // 1. Kai DB 업데이트 (운행 → 완료)
+            Debug.WriteLine($"  → [DB 업데이트] 시작: KeyCode={item.KeyCode}");
+
+            string originalState = item.NewOrder.OrderState;
+            item.NewOrder.OrderState = "완료";
+
+            StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+
+            if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
+            {
+                Debug.WriteLine($"  → [DB 업데이트 실패] nResult={resultUpdate.nResult}, Err={resultUpdate.sErr}, Pos={resultUpdate.sPos}");
+                item.NewOrder.OrderState = originalState; // 원복
+                return CommonResult_AutoAllocProcess.FailureAndRetry(
+                    $"Kai DB 업데이트 실패: {resultUpdate.sErr}",
+                    $"Insung01운행To완료_UpdateFail_{resultUpdate.sPos}");
+            }
+
+            Debug.WriteLine($"  → [DB 업데이트 성공] {originalState} → 완료");
+
+            // 2. 타이머 리셋 (혹시 남아있을 경우)
+            if (item.RunStartTime != null)
+            {
+                Debug.WriteLine($"  → 타이머 리셋");
+                item.RunStartTime = null;
+            }
+
+            // 3. 큐에서 제거 (완료 처리)
+            Debug.WriteLine($"  → [완료] 큐에서 제거 (완료 처리 성공: {originalState} → 완료)");
+            return CommonResult_AutoAllocProcess.SuccessAndComplete();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[Insung01운행To완료] 예외: {ex.Message}");
+            return CommonResult_AutoAllocProcess.FailureAndRetry($"완료 처리 예외: {ex.Message}", "Insung01운행To완료_Exception");
         }
     }
 
