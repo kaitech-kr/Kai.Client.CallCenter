@@ -308,6 +308,11 @@ public class InsungsInfo_File
     public Draw.Point 접수등록Wnd_수정버튼그룹_ptChkRel접수상태 { get; set; } = new Draw.Point(889, 508); // Check Point {X=889,Y=408}
     public Draw.Point 접수등록Wnd_수정버튼그룹_ptChkRel저장 { get; set; } = new Draw.Point(889, 563); // Check Point {X=889,Y=476}
 
+    // 버튼들 - 완료 상태 팝업 (완료 상태일 때 버튼 레이아웃)
+    public Draw.Point 접수등록Wnd_완료상태_ptChkRel닫기 { get; set; } = new Draw.Point(889, 679); // TODO: 실제 좌표 확인 필요
+    public Draw.Point 접수등록Wnd_완료상태_ptChkRel주문취소 { get; set; } = new Draw.Point(889, 408); // 저장 위치를 취소로 사용
+    public Draw.Point 접수등록Wnd_완료상태_ptChkRel저장 { get; set; } = new Draw.Point(889, 476); // TODO: 실제 좌표 확인 필요
+
     // 공용 콤보박스 내부 행 클릭 포인트
     public Draw.Point[] 접수등록Wnd_Common_ptComboBox = new Draw.Point[]
     {

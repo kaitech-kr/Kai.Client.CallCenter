@@ -1938,11 +1938,6 @@ public partial class InsungsAct_RcptRegPage
         string kaiState = item.NewOrder.OrderState;
         string isState = dgInfo.sStatus;
 
-        //Debug.WriteLine($"[{m_Context.AppName}] CheckIsOrderAsync_AssumeKaiUpdated 호출됨");
-        //Debug.WriteLine($"  - KeyCode: {item.KeyCode}, Insung1: {item.NewOrder.Insung1 ?? "(없음)"}");
-        //Debug.WriteLine($"  - Kai 상태: {kaiState}, IS 상태: {isState}");
-        //Debug.WriteLine($"  - DG Index: {dgInfo.nIndex}");
-
         // 상태가 같은 경우: 필드만 업데이트
         if (kaiState == isState) return await UpdateOrderSameStateAsync(item, dgInfo, ctrl);
         // 상태가 다른 경우: 필드 업데이트 + 상태 전환

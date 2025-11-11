@@ -54,8 +54,8 @@ public class InsungsInfo_Mem
     public class RcptWnd_Common
     {
         // Header
-        public string Header_sOrderNo;  // Text
-        public string Header_sOrderStatus;  // Text
+        //public IntPtr Header_hWnd오더번호;  // Handle
+        public IntPtr Header_hWnd오더상태;  // Handle
 
         // 의뢰자
         public long 의뢰자_l고객번호;  // long
@@ -210,6 +210,9 @@ public class InsungsInfo_Mem
 
         protected void SetWndHandles(IntPtr TopWnd_hWnd, InsungsInfo_File fInfo)
         {
+            // Header
+            Header_hWnd오더상태 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_Header_ptChkRel오더상태);
+
             // 의뢰지
             의뢰자_hWnd의뢰자Top = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel의뢰자);
             의뢰자_hWnd고객명 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_의뢰자_ptChkRel고객명);
@@ -346,6 +349,25 @@ public class InsungsInfo_Mem
             Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_ptChkRel저장);
 
             base.SetWndHandles(TopWnd_hWnd, fInfo);
+        }
+    }
+
+    /// <summary>
+    /// 접수등록 완료 상태 팝업 (완료 상태일 때 버튼 레이아웃)
+    /// </summary>
+    public class RcptWnd_Completed
+    {
+        public IntPtr TopWnd_hWnd;
+        public IntPtr Btn_hWnd주문취소;
+        public IntPtr Btn_hWnd저장;
+        public IntPtr Btn_hWnd닫기;
+
+        public RcptWnd_Completed(IntPtr hWnd, InsungsInfo_File fInfo)
+        {
+            TopWnd_hWnd = hWnd;
+            Btn_hWnd주문취소 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_ptChkRel주문취소);
+            Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_ptChkRel저장);
+            Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_ptChkRel닫기);
         }
     }
 

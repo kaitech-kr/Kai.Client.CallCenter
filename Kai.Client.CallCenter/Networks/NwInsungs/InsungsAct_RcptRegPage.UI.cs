@@ -1628,13 +1628,35 @@ public partial class InsungsAct_RcptRegPage
                     return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
                 }
 
+                // 상태 버튼 클릭 전 텍스트 확인
+                string beforeState = Std32Window.GetWindowCaption(wnd.Header_hWnd오더상태)?.Trim() ?? "";
+                Debug.WriteLine($"[{m_Context.AppName}] 상태 버튼 클릭 전 Header_hWnd오더상태: '{beforeState}' (핸들: {wnd.Header_hWnd오더상태:X})");
+
                 await Std32Mouse_Post.MousePostAsync_ClickLeft_Center(hWndStateBtn);
                 Debug.WriteLine($"[{m_Context.AppName}] 상태 버튼 클릭 완료: {wantState}");
 
+                // 2-7-1. 상태 변경 확인 (폴링 방식: 100회 * 50ms = 5초)
+                string currentState = "";
+                for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
+                {
+                    await Task.Delay(CommonVars.c_nWaitShort, ctrl.Token);
+                    currentState = Std32Window.GetWindowCaption(wnd.Header_hWnd오더상태)?.Trim() ?? "";
+                    if (currentState == wantState) break;
+                }
+                Debug.WriteLine($"[{m_Context.AppName}] 폴링 완료: 현재='{currentState}', 목표='{wantState}'");
+
+                if (currentState != wantState)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 상태 변경 실패: 현재={currentState}, 목표={wantState}");
+                    await CloseEditPopupAsync(wnd, shouldSave: false, ctrl);
+                    Debug.WriteLine($"[{m_Context.AppName}] 상태 변경 실패로 팝업 닫음 (KeyCode: {item.KeyCode})");
+                    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+                }
+
+                Debug.WriteLine($"[{m_Context.AppName}] 상태 변경 확인 완료: {wantState}");
+
                 // 상태 버튼 클릭은 항상 변경건으로 취급 (백업 로직: nChanged = 101~104)
                 changeCount상태 = 1;
-
-                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
             }
 
             int totalChangeCount = changeCount + changeCount출발 + changeCount도착 + changeCount우측 + changeCount요금 + changeCount메모 + changeCount상태;
@@ -1715,17 +1737,33 @@ public partial class InsungsAct_RcptRegPage
 
             Debug.WriteLine($"[{m_Context.AppName}] 팝업 열기 성공");
 
-            // 2. 상태 버튼 클릭
+            // 2. 상태 버튼 클릭 (현재 상태가 완료면 RcptWnd_Completed 사용)
             Debug.WriteLine($"[{m_Context.AppName}] 2단계: 상태 버튼 클릭 (목표 상태: {wantState})");
+            Debug.WriteLine($"[{m_Context.AppName}] 현재 인성 상태: '{dgInfo.sStatus}'");
 
-            IntPtr hWndStateBtn = wantState switch
+            IntPtr hWndStateBtn;
+            bool isCompletedState = dgInfo.sStatus?.StartsWith("완료") == true;
+
+            if (isCompletedState)
             {
-                "접수" => wnd.Btn_hWnd접수상태,
-                "완료" => wnd.Btn_hWnd처리완료,
-                "대기" => wnd.Btn_hWnd대기,
-                "취소" => wnd.Btn_hWnd주문취소,
-                _ => IntPtr.Zero
-            };
+                // 완료 상태 → RcptWnd_Completed 사용
+                Debug.WriteLine($"[{m_Context.AppName}] 완료 상태 감지 → RcptWnd_Completed 사용");
+                var wndCompleted = new InsungsInfo_Mem.RcptWnd_Completed(wnd.TopWnd_hWnd, m_FileInfo);
+                hWndStateBtn = wndCompleted.Btn_hWnd주문취소;
+            }
+            else
+            {
+                // 그 외 상태 → 일반 수정 팝업
+                Debug.WriteLine($"[{m_Context.AppName}] 일반 상태 → RcptWnd_Edit 사용");
+                hWndStateBtn = wantState switch
+                {
+                    "접수" => wnd.Btn_hWnd접수상태,
+                    "완료" => wnd.Btn_hWnd처리완료,
+                    "대기" => wnd.Btn_hWnd대기,
+                    "취소" => wnd.Btn_hWnd주문취소,
+                    _ => IntPtr.Zero
+                };
+            }
 
             if (hWndStateBtn == IntPtr.Zero)
             {
@@ -1737,11 +1775,73 @@ public partial class InsungsAct_RcptRegPage
             await Std32Mouse_Post.MousePostAsync_ClickLeft_Center(hWndStateBtn);
             Debug.WriteLine($"[{m_Context.AppName}] 상태 버튼 클릭 완료: {wantState}");
 
-            await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+            // 2-1. 상태 변경 확인 (폴링 방식: 100회 * 50ms = 5초)
+            string currentState = "";
+            for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
+            {
+                await Task.Delay(CommonVars.c_nWaitShort, ctrl.Token);
+                currentState = Std32Window.GetWindowCaption(wnd.Header_hWnd오더상태)?.Trim() ?? "";
+                if (currentState == wantState) break;
+            }
+            Debug.WriteLine($"[{m_Context.AppName}] 폴링 완료: 현재='{currentState}', 목표='{wantState}'");
+
+            if (currentState != wantState)
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 상태 변경 실패: 현재={currentState}, 목표={wantState}");
+                await CloseEditPopupAsync(wnd, shouldSave: false, ctrl);
+
+                if (attempt < repeatCount - 1)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 재시도 ({attempt + 2}/{repeatCount})");
+                    continue;
+                }
+                else
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 모든 재시도 실패");
+                    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+                }
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] 상태 변경 확인 완료: {wantState}");
 
             // 3. 팝업 닫기 (상태 버튼을 눌렀으므로 항상 저장)
             Debug.WriteLine($"[{m_Context.AppName}] 3단계: 팝업 닫기 시도 (저장)");
-            bool closed = await CloseEditPopupAsync(wnd, shouldSave: true, ctrl);
+
+            bool closed;
+            if (isCompletedState)
+            {
+                // 완료 상태일 때는 RcptWnd_Completed의 저장 버튼 클릭
+                var wndCompleted = new InsungsInfo_Mem.RcptWnd_Completed(wnd.TopWnd_hWnd, m_FileInfo);
+                Debug.WriteLine($"[{m_Context.AppName}] 완료 상태 팝업 저장 시작");
+                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+                closed = await ClickNWaitWindowChangedAsync_OrFind확인창(wndCompleted.Btn_hWnd저장, wnd.TopWnd_hWnd, ctrl);
+
+                if (!closed)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 저장 실패 (확인창 나타남) - 확인창 닫기 후 팝업 닫기 시도");
+                    bool confirmClosed = await CloseConfirmWindowAsync(ctrl);
+                    if (confirmClosed)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] 확인창 닫기 성공");
+                    }
+                    await Task.Delay(CommonVars.c_nWaitShort, ctrl.Token);
+                    closed = await ClickNWaitWindowChangedAsync(wndCompleted.Btn_hWnd닫기, wnd.TopWnd_hWnd, ctrl);
+                    if (!closed)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] 완료 상태 팝업 닫기 실패 - 재시도 필요");
+                        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 완료 상태 팝업 저장 성공 - 팝업 닫힘");
+                }
+            }
+            else
+            {
+                // 일반 상태일 때는 기존 CloseEditPopupAsync 사용
+                closed = await CloseEditPopupAsync(wnd, shouldSave: true, ctrl);
+            }
 
             if (!closed)
             {

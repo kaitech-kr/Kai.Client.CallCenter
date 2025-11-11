@@ -2,7 +2,6 @@ using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.MVVM.ViewModels;
 using Kai.Client.CallCenter.MVVM.ViewServices;
-//using Kai.Client.CallCenter.Networks.NwInsungs;
 using Kai.Client.CallCenter.Windows;
 using Kai.Common.NetDll_WpfCtrl.NetUtils;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;

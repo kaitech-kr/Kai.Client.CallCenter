@@ -1,0 +1,53 @@
+-----------------[NwInsung01] AutoAllocAsync 시작 - Count=1--------------------------
+[NwInsung01] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=144, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=144, StateFlag=Existed_WithSeqno, SeqNo=273975554, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=1, tot=1, listCreated=0, listEtcGroup=1
+[TbText HIT] OfrStr_ComplexCharSetAsync: '완료' (4ms)
+[INSUNG1] 페이지 1, y=5, status=완료
+[INSUNG1] UpdateOrderStateOnlyAsync 시작
+  - wantState: '취소'
+  - useRepeat: False (반복 횟수: 1)
+[INSUNG1] 1단계: 팝업 열기 시도 (시도 1/1)
+[INSUNG1] 팝업 열기 시도: rowIndex=3, selIndex=5, ptRel={X=256,Y=123}
+[INSUNG1] 더블클릭 실행 (시도 1/10)
+[INSUNG1] 팝업창 찾음: hWnd=160950, 닫기버튼=닫   기
+(ESC)
+[INSUNG1] RcptWnd_Edit 생성 완료
+[INSUNG1] 팝업 열기 성공
+[INSUNG1] 2단계: 상태 버튼 클릭 (목표 상태: 취소)
+[INSUNG1] 현재 인성 상태: '완료'
+[INSUNG1] 완료 상태 감지 → RcptWnd_Completed 사용
+'.NET TP Wait' (14128) 스레드가 종료되었습니다(코드: 0 (0x0)).
+[INSUNG1] 상태 버튼 클릭 완료: 취소
+=== Window_Closing 시작 ===
+SrGlobalClient 재접속 중지 플래그 설정
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Net.Http.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+SignalR OnClosedAsync called
+[INSUNG1] 폴링 완료: 현재='', 목표='취소'
+[INSUNG1] 상태 변경 실패: 현재=, 목표=취소
+[INSUNG1] 변경내용이 없습니다 - 닫기 버튼 클릭
+[INSUNG1] 닫기 버튼 핸들: 150DAA, 팝업 핸들: 160950
+[INSUNG1] ClickNWaitWindowChangedAsync 호출 전
+[INSUNG1] ClickNWaitWindowChangedAsync 시작: hWndClick=150DAA, hWndOrg=160950
+[INSUNG1] 버튼 클릭 시도 1/3 - 클릭 전
+[INSUNG1] 버튼 클릭 완료 1/3
+[INSUNG1] 윈도우 닫힘 확인 (시도 1, 대기 0ms)
+[INSUNG1] ClickNWaitWindowChangedAsync 호출 후: bClosed=True
+[INSUNG1] 닫기 성공 - 팝업 닫힘
+[INSUNG1] 모든 재시도 실패
+[INSUNG1] 처리 완료 (재적재): seqno=273975554, 기존 StateFlag=Existed_WithSeqno → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=144, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+-----------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=18281ms, Delay=0ms
