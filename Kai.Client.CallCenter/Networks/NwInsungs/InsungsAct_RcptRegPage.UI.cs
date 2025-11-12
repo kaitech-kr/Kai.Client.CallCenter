@@ -1491,12 +1491,12 @@ public partial class InsungsAct_RcptRegPage
     /// <summary>
     /// 팝업 내 주문 업데이트 실행 (핵심 로직)
     /// </summary>
-    private async Task<CommonResult_AutoAllocProcess> UpdateOrderInPopupAsync(
+    private async Task<CommonResult_AutoAllocProcess> UpdateOrderWidelyAsync(
         string wantState, AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, bool useRepeat, CancelTokenControl ctrl)
     {
         int repeatCount = useRepeat ? CommonVars.c_nRepeatNormal : 1;
 
-        Debug.WriteLine($"[{m_Context.AppName}] UpdateOrderInPopupAsync 시작");
+        Debug.WriteLine($"[{m_Context.AppName}] UpdateOrderWidelyAsync 시작");
         Debug.WriteLine($"  - wantState: '{wantState}' (비어있으면 상태 버튼 안 누름)");
         Debug.WriteLine($"  - useRepeat: {useRepeat} (반복 횟수: {repeatCount})");
 

@@ -170,7 +170,7 @@ public partial class MainWnd : Window
         #region Pointer
         s_MainWnd = this;
         s_hWndMain = new WindowInteropHelper(this).Handle;
-        TblockConnGlobal.Text = s_SrGClient.m_sLoginSignalR; // 메인윈도가 생성전이므로 생성후에 처리 
+        TblockConnGlobal.Text = s_SrGClient.m_sLoginSignalR; // 메인윈도가 생성전이므로 생성후에 처리
         #endregion
 
         #region 실행
@@ -203,7 +203,6 @@ public partial class MainWnd : Window
         // Master 모드일 때만 초기화
         if (IsMasterMode)
         {
-            Debug.WriteLine("[MainWnd] Master 모드 - MasterModeManager 초기화 시작");
             m_MasterManager = new MasterModeManager();
             StdResult_Status result = await m_MasterManager.InitializeAsync();
 

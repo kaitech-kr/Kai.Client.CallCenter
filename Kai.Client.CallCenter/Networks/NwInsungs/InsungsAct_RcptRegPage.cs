@@ -1958,11 +1958,11 @@ public partial class InsungsAct_RcptRegPage
         switch (dgInfo.sStatus)
         {
             case "대기":  // 외부 변경 없음 → 1번만
-                return await UpdateOrderInPopupAsync("", item, dgInfo, false, ctrl);
+                return await UpdateOrderWidelyAsync("", item, dgInfo, false, ctrl);
 
             case "접수": // 외부 변경 가능 → 10번 재시도
             case "배차":
-                return await UpdateOrderInPopupAsync("", item, dgInfo, true, ctrl);
+                return await UpdateOrderWidelyAsync("", item, dgInfo, true, ctrl);
 
             case "취소":
             case "완료":
@@ -2048,7 +2048,7 @@ public partial class InsungsAct_RcptRegPage
         }
 
         // 팝업 열기 → 필드 업데이트 → 상태 전환 → 저장/닫기
-        return await UpdateOrderInPopupAsync(wantState, item, dgInfo, useRepeat, ctrl);
+        return await UpdateOrderWidelyAsync(wantState, item, dgInfo, useRepeat, ctrl);
     }
     #endregion
 

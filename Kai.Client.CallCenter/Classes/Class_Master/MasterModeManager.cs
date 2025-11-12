@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.FrmDll_WpfCtrl;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
@@ -127,11 +128,15 @@ public class MasterModeManager : IDisposable
             // ShowLoading
             NetLoadingWnd.ShowLoading(s_MainWnd, "가상모니터를 생성중 입니다.");
 
+            // 커서 위치 백업 (가상모니터 생성 시 Windows가 자동으로 마우스를 이동시키는 것을 방지)
+            var cursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
+
             int nOldCount = s_Screens.m_ListMonitorInfo.Count;
 
             StdResult_Bool resultBool = await FrmVirtualMonitor.MakeVirtualMonitorAsync();
             if (!resultBool.bResult)
             {
+                Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);  // 커서 복원
                 NetLoadingWnd.HideLoading();
                 return new StdResult_Status(StdResult.Fail, "가상모니터 생성실패", "MasterModeManager/InitializeAsync_01");
             }
@@ -158,6 +163,7 @@ public class MasterModeManager : IDisposable
             int nNewCount = s_Screens.m_ListMonitorInfo.Count;
             if (s_Screens.m_VirtualMonitor == null)  // 개수가 아닌 m_VirtualMonitor로 체크
             {
+                Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);  // 커서 복원
                 NetLoadingWnd.HideLoading();
                 return new StdResult_Status(StdResult.Fail,
                     $"가상모니터 생성실패: s_Screens.m_VirtualMonitor == null (전: {nOldCount}개, 후: {nNewCount}개)",
@@ -167,6 +173,7 @@ public class MasterModeManager : IDisposable
             // Check Virtual Monitor Resolution
             if (!FrmVirtualMonitor.AdjustVirtualMonitorPosAndSize(s_Screens))
             {
+                Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);  // 커서 복원
                 NetLoadingWnd.HideLoading();
                 return new StdResult_Status(StdResult.Fail, "가상모니터 해상도 조정실패", "MasterModeManager/InitializeAsync_03");
             }
@@ -183,6 +190,7 @@ public class MasterModeManager : IDisposable
 
             if (listNew.Count != 1)
             {
+                Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);  // 커서 복원
                 NetLoadingWnd.HideLoading();
                 return new StdResult_Status(StdResult.Fail, "가상모니터 생성실패", "MasterModeManager/InitializeAsync_04");
             }
@@ -190,6 +198,9 @@ public class MasterModeManager : IDisposable
             lastX += (1920);
             s_Screens.ChangePosition(listNew[0].DeviceName, lastX, 1080);
             await s_Screens.MonitorInfosToListAsync();
+
+            // 커서 위치 복원
+            Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);
 
             NetLoadingWnd.HideLoading();
 
@@ -204,8 +215,8 @@ public class MasterModeManager : IDisposable
         // WorkingMonitor 설정 - 가상모니터가 있다는 전제하에 설정 (신규 생성 or 기존 사용 모두 여기서 설정)
         if (s_Screens.m_VirtualMonitor != null)
         {
-            s_Screens.m_WorkingMonitor = s_Screens.m_ListMonitorInfo[1];  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
-            //s_Screens.m_WorkingMonitor = s_Screens.m_VirtualMonitor;  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
+            //s_Screens.m_WorkingMonitor = s_Screens.m_ListMonitorInfo[1];  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
+            s_Screens.m_WorkingMonitor = s_Screens.m_VirtualMonitor;  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
             Debug.WriteLine($"[MasterModeManager] m_WorkingMonitor 설정 완료: {s_Screens.m_WorkingMonitor}");
         }
         else
