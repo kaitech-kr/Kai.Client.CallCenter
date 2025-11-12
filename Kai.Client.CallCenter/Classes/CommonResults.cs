@@ -129,7 +129,7 @@ public class CommonResult_AutoAllocDatagrid : StdResult_Error
     public int nIndex { get; set; } = -1;
     public string sStatus { get; set; }
     public bool bInvertRgb { get; set; } = false;
-    public Draw.Bitmap? BmpPage { get; set; } = null;
+    public Draw.Bitmap BmpPage { get; set; } = null;
 
     public CommonResult_AutoAllocDatagrid() : base() { }
     public CommonResult_AutoAllocDatagrid(int index, string status) : base()
@@ -137,7 +137,7 @@ public class CommonResult_AutoAllocDatagrid : StdResult_Error
         this.nIndex = index;
         this.sStatus = status;
     }
-    public CommonResult_AutoAllocDatagrid(int index, string status, bool invertRgb, Draw.Bitmap? bmpPage) : base()
+    public CommonResult_AutoAllocDatagrid(int index, string status, bool invertRgb, Draw.Bitmap bmpPage) : base()
     {
         this.nIndex = index;
         this.sStatus = status;

@@ -1,13 +1,21 @@
 using System.IO;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using Draw = System.Drawing;
+using System.Windows.Media;
 
 using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.Networks.NwInsungs;
+using Kai.Client.CallCenter.Windows;
+using Kai.Client.CallCenter.OfrWorks;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
@@ -36,6 +44,13 @@ public class NwInsung02 : IExternalApp
     /// Context 읽기 전용 접근
     /// </summary>
     public InsungContext Context => m_Context;
+    #endregion
+
+    #region AutoAlloc Variables
+    /// <summary>
+    /// 자동배차 할일 없음 카운터 (60회마다 조회버튼 클릭)
+    /// </summary>
+    private long m_lRestCount = 0;
     #endregion
 
     #region Dispose
@@ -78,15 +93,6 @@ public class NwInsung02 : IExternalApp
                 Debug.WriteLine($"[NwInsung02] FileInfo 로드 실패: {resultErr.sErrNPos}");
                 return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, "NwInsung02/InitializeAsync_01");
             }
-
-            //// FileInfo 로드 확인 (테스트용)
-            //Debug.WriteLine($"[NwInsung02] ===== FileInfo 로드 확인 =====");
-            //Debug.WriteLine($"  App_sPredictFolder: {m_Context.FileInfo.App_sPredictFolder}");
-            //Debug.WriteLine($"  App_sExeFileName: {m_Context.FileInfo.App_sExeFileName}");
-            //Debug.WriteLine($"  Splash_TopWnd_sWndName: {m_Context.FileInfo.Splash_TopWnd_sWndName}");
-            //Debug.WriteLine($"  Splash_IdWnd_ptChk: {m_Context.FileInfo.Splash_IdWnd_ptChk}");
-            //Debug.WriteLine($"  Main_TopWnd_sWndNameReduct: {m_Context.FileInfo.Main_TopWnd_sWndNameReduct}");
-            //Debug.WriteLine($"[NwInsung02] ================================");
 
             // 2. 앱 경로 확인
             if (string.IsNullOrEmpty(s_AppPath))
@@ -134,7 +140,7 @@ public class NwInsung02 : IExternalApp
                 Debug.WriteLine($"[NwInsung02] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
                 return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung02/InitializeAsync_06");
             }
-            Debug.WriteLine($"[NwInsung02] RcptRegPage 초기화 완료");
+            //Debug.WriteLine($"[NwInsung02] RcptRegPage 초기화 완료");
 
             Debug.WriteLine("[NwInsung02] InitializeAsync 완료");
             return new StdResult_Status(StdResult.Success);
@@ -240,7 +246,7 @@ public class NwInsung02 : IExternalApp
                 // Context의 FileInfo에 덮어씌우기
                 m_Context.FileInfo = fileInfo;
 
-                Debug.WriteLine($"[NwInsung02] FileInfo 파일 로드 완료: {sFilePath}");
+                Debug.WriteLine($"[{APP_NAME}] FileInfo 파일 로드 완료: {sFilePath}");
                 return null; // 성공
             }
             catch (Exception ex)
@@ -255,59 +261,49 @@ public class NwInsung02 : IExternalApp
     /// <summary>
     /// Context.FileInfo를 JSON 파일로 저장 (테스트/디버깅용)
     /// </summary>
-//     private void WriteInfoToFile_AtFirst()
-//     {
-//         try
-//         {
-//             // 이미 Context.FileInfo가 초기화되어 있으므로 그대로 사용
-//             InsungsInfo_File info = m_Context.FileInfo;
+    private void WriteInfoToFile_AtFirst()
+    {
+        try
+        {
+            // 이미 Context.FileInfo가 초기화되어 있으므로 그대로 사용
+            InsungsInfo_File info = m_Context.FileInfo;
 
-//             // TODO: 필요시 기본값 설정 (현재는 InsungsInfo_File 생성자에서 설정됨)
-//             // 예: info.App_sPredictFolder = @"C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN";
+            // TODO: 필요시 기본값 설정 (현재는 InsungsInfo_File 생성자에서 설정됨)
+            // 예: info.App_sPredictFolder = @"C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션";
 
-//             // JSON 직렬화
-//             string json = JsonConvert.SerializeObject(info, Formatting.Indented);
-//             string sFilePath = Path.Combine(s_sDataDir, INFO_FILE_NAME);
+            // JSON 직렬화
+            string json = JsonConvert.SerializeObject(info, Formatting.Indented);
+            string sFilePath = Path.Combine(s_sDataDir, INFO_FILE_NAME);
 
-//             // Data 폴더 생성 (없을 경우)
-//             string dataDir = Path.GetDirectoryName(sFilePath);
-//             if (!Directory.Exists(dataDir))
-//             {
-//                 Directory.CreateDirectory(dataDir);
-//             }
+            // Data 폴더 생성 (없을 경우)
+            string dataDir = Path.GetDirectoryName(sFilePath);
+            if (!Directory.Exists(dataDir))
+            {
+                Directory.CreateDirectory(dataDir);
+            }
 
-//             // 파일 저장
-//             using (StreamWriter writer = new StreamWriter(sFilePath))
-//             {
-//                 writer.Write(json);
-//             }
+            // 파일 저장
+            using (StreamWriter writer = new StreamWriter(sFilePath))
+            {
+                writer.Write(json);
+            }
 
-//             Debug.WriteLine($"[NwInsung02] FileInfo 파일 저장 완료: {sFilePath}");
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.WriteLine($"[NwInsung02] FileInfo 파일 저장 실패: {ex.Message}");
-//         }
-//     }
+            Debug.WriteLine($"[{APP_NAME}] FileInfo 파일 저장 완료: {sFilePath}");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{APP_NAME}] FileInfo 파일 저장 실패: {ex.Message}");
+        }
+    }
     #endregion
 
     #region 생성자
     public NwInsung02()
     {
-        Debug.WriteLine($"[NwInsung02] 생성자 호출 --------------------------------------------------------");
-        //Debug.WriteLine($"  APP_NAME = {APP_NAME}");
-        //Debug.WriteLine($"  s_Id = {s_Id}");
-        //Debug.WriteLine($"  s_Pw = {s_Pw}");
-        //Debug.WriteLine($"  s_Use = {s_Use}");
-        //Debug.WriteLine($"  s_AppPath = {s_AppPath}");
+        Debug.WriteLine($"[NwInsung02] 생성자 호출: Id={s_Id}, Use={s_Use} --------------------------------------------------------");
 
         // Context 생성
         m_Context = new InsungContext(APP_NAME, s_Id, s_Pw);
-
-        Debug.WriteLine($"[NwInsung02] Context 생성 완료:");
-        //Debug.WriteLine($"  m_Context.AppName = {m_Context.AppName}");
-        //Debug.WriteLine($"  m_Context.Id = {m_Context.Id}");
-        //Debug.WriteLine($"  m_Context.Pw = {m_Context.Pw}");
 
         // AppAct 생성
         m_Context.AppAct = new InsungsAct_App(m_Context);
@@ -317,6 +313,8 @@ public class NwInsung02 : IExternalApp
 
         // RcptRegPageAct 생성
         m_Context.RcptRegPageAct = new InsungsAct_RcptRegPage(m_Context);
+
+        Debug.WriteLine($"[NwInsung02] Context 생성 완료: AppName={m_Context.AppName}");
     }
     #endregion
 }

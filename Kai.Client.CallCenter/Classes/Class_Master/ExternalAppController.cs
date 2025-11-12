@@ -77,15 +77,73 @@ public class ExternalAppController : IDisposable
     public bool IsAutoAllocRunning => m_TaskAutoAlloc != null && !m_TaskAutoAlloc.IsCompleted;
     #endregion
 
-    #region 생성자
+    #region 기본
     public ExternalAppController()
     {
         Debug.WriteLine("[ExternalAppController] 생성자 호출");
         // QueueManager는 static으로 자동 초기화됨
     }
+
+    /// <summary>
+    /// 리소스 정리
+    /// </summary>
+    public async Task ShutdownAsync()
+    {
+        try
+        {
+            Debug.WriteLine("[ExternalAppController] Shutdown 시작");
+
+            // SignalR 연결 끊김 이벤트 구독 해제
+            SrGlobalClient.SrGlobalClient_ClosedEvent -= OnSignalRDisconnected;
+            Debug.WriteLine("[ExternalAppController] SignalR 연결 끊김 이벤트 구독 해제 완료");
+
+            // AutoAlloc 루프 중단
+            if (m_CtrlCancelToken != null)
+            {
+                m_CtrlCancelToken.Cancel();
+            }
+
+            // Task 완료 대기
+            if (m_TaskAutoAlloc != null)
+            {
+                try
+                {
+                    await m_TaskAutoAlloc;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[ExternalAppController] AutoAlloc Task 대기 중 예외 (무시): {ex.Message}");
+                }
+                m_TaskAutoAlloc = null;
+            }
+
+            // 리스트의 모든 앱 종료
+            foreach (var app in m_ListApps)
+            {
+                try
+                {
+                    Debug.WriteLine($"[ExternalAppController] {app.AppName} 종료 중...");
+                    app.Shutdown();
+                    app.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[ExternalAppController] {app.AppName} 종료 실패 (무시): {ex.Message}");
+                }
+            }
+
+            m_ListApps.Clear();
+
+            Debug.WriteLine("[ExternalAppController] Shutdown 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[ExternalAppController] Shutdown 실패: {ex.Message}");
+        }
+    }
     #endregion
 
-    #region Public Methods
+    #region 초기화
     /// <summary>
     /// 외부 앱들 초기화
     /// </summary>
@@ -107,16 +165,16 @@ public class ExternalAppController : IDisposable
                 Debug.WriteLine("[ExternalAppController] Insung01 사용 안함 (s_Use=false)");
             }
 
-            //if (NwInsung02.s_Use)
-            //{
-            //    Debug.WriteLine($"[ExternalAppController] Insung02 생성: Id={NwInsung02.s_Id}");
-            //    Insung02 = new NwInsung02();
-            //    m_ListApps.Add(Insung02);
-            //}
-            //else
-            //{
-            //    Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
-            //}
+            if (NwInsung02.s_Use)
+            {
+                Debug.WriteLine($"[ExternalAppController] Insung02 생성: Id={NwInsung02.s_Id}");
+                Insung02 = new NwInsung02();
+                m_ListApps.Add(Insung02);
+            }
+            else
+            {
+                Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
+            }
 
             // if (NwCargo24.s_Use)
             // {
@@ -158,6 +216,199 @@ public class ExternalAppController : IDisposable
     }
 
     /// <summary>
+    /// 새로 생성된 주문 추가 (자동배차 대상으로 등록)
+    /// SignalR OnOrderCreated에서 호출
+    /// </summary>
+    /// <param name="order">새로 생성된 주문</param>
+    public void AddNewOrder(TbOrder order)
+    {
+        if (order == null)
+        {
+            Debug.WriteLine("[ExternalAppController] 추가할 주문이 null입니다.");
+            return;
+        }
+
+        Debug.WriteLine($"[ExternalAppController] 새 주문 추가: KeyCode={order.KeyCode}");
+
+        // 4개 외부앱별로 분류하여 큐에 적재 (Created 상태)
+        ClassifyAndEnqueueOrder(order, isNewOrder: true);
+
+        // 큐 상태 출력
+        QueueManager.PrintQueueStatus();
+    }
+
+    /// <summary>
+    /// 주문 업데이트 알림 (자동배차 시스템에 변경 사항 전달)
+    /// SignalR OnOrderUpdated에서 호출
+    /// </summary>
+    /// <param name="changedFlag">변경 플래그</param>
+    /// <param name="newOrder">새로운 주문 정보</param>
+    /// <param name="oldOrder">이전 주문 정보</param>
+    /// <param name="seqNo">시퀀스 번호</param>
+    public void UpdateOrder(PostgService_Common_OrderState changedFlag, TbOrder newOrder, TbOrder oldOrder, int seqNo)
+    {
+        if (newOrder == null)
+        {
+            Debug.WriteLine("[ExternalAppController] 업데이트할 주문이 null입니다.");
+            return;
+        }
+
+        Debug.WriteLine($"[ExternalAppController] ===== 주문 업데이트 =====");
+        Debug.WriteLine($"  KeyCode: {newOrder.KeyCode}");
+        Debug.WriteLine($"  ChangedFlag: {changedFlag}");
+        Debug.WriteLine($"  SeqNo: {seqNo}");
+
+        // 변경 내용 상세 로깅
+        if (oldOrder != null)
+        {
+            if (oldOrder.StartDongBasic != newOrder.StartDongBasic)
+                Debug.WriteLine($"  출발지 변경: {oldOrder.StartDongBasic} → {newOrder.StartDongBasic}");
+
+            if (oldOrder.FeeBasic != newOrder.FeeBasic)
+                Debug.WriteLine($"  요금 변경: {oldOrder.FeeBasic} → {newOrder.FeeBasic}");
+
+            if (oldOrder.CallCustFrom != newOrder.CallCustFrom)
+                Debug.WriteLine($"  접수처 변경: {oldOrder.CallCustFrom} → {newOrder.CallCustFrom}");
+        }
+
+        Debug.WriteLine($"[ExternalAppController] =========================================");
+
+        // ✅ 모든 큐에서 주문 업데이트 또는 제거 (인스턴스 재사용)
+        // - 분류 규칙에 맞으면: 기존 AutoAllocModel의 NewOrder, StateFlag만 업데이트
+        // - 분류 규칙에 안 맞으면: 큐에서 제거
+        // - 기존 인스턴스 재사용으로 RunStartTime, LastDriverNo 등 유지됨
+        QueueManager.UpdateOrRemoveInQueues(newOrder.KeyCode, newOrder, changedFlag);
+    }
+
+    /// <summary>
+    /// 네트워크별 SeqNo 필드 가져오기
+    /// </summary>
+    private string GetSeqNoByNetwork(TbOrder order, string networkName)
+    {
+        return networkName switch
+        {
+            StdConst_Network.INSUNG1 => order.Insung1,
+            StdConst_Network.INSUNG2 => order.Insung2,
+            StdConst_Network.CARGO24 => order.Cargo24,
+            StdConst_Network.ONECALL => order.Onecall,
+            _ => null
+        };
+    }
+
+
+    #endregion
+
+    #region 자동배차
+    /// <summary>
+    /// 자동배차 무한 루프 (private)
+    /// </summary>
+    private async Task AutoAllocLoopAsync()
+    {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        const int nMinWorkingMiliSec = 5000; // 최소 ~초
+
+        Debug.WriteLine("[ExternalAppController] AutoAllocLoopAsync 시작");
+
+        for (m_lAutoAllocCount = 1; ; m_lAutoAllocCount++)
+        {
+            try
+            {
+                stopwatch.Restart();
+
+                // ✅ 원칙 2: 리스트 활용 (확장 가능)
+                foreach (var app in m_ListApps)
+                {
+                    // ✅ 원칙 1: 각 앱 처리 전 Cancel/Pause 체크
+                    await m_CtrlCancelToken.WaitIfPausedOrCancelledAsync();
+
+                    try
+                    {
+                        var result = await app.AutoAllocAsync(m_lAutoAllocCount, m_CtrlCancelToken);
+
+                        // ✅ 원칙 3: 결과 처리
+                        switch (result.Result)
+                        {
+                            case StdResult.Success:
+                                // 성공 - 계속 진행
+                                break;
+
+                            case StdResult.Skip:
+                                // 스킵 - 계속 진행
+                                break;
+
+                            case StdResult.Retry:
+                                // 재시도 - 로그만 출력하고 계속
+                                Debug.WriteLine($"[ExternalAppController] {app.AppName} AutoAlloc 재시도 필요: {result.sErrNPos}");
+                                break;
+
+                            case StdResult.Fail:
+                                // 실패 - 에러 메시지 출력 후 루프 탈출
+                                ErrMsgBox($"[ExternalAppController] {app.AppName} AutoAlloc 실패 - 루프 중단: {result.sErrNPos}");
+                                return;
+
+                            default:
+                                ErrMsgBox($"[ExternalAppController] {app.AppName} 알 수 없는 결과: {result.Result}");
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrMsgBox($"[ExternalAppController] {app.AppName} AutoAlloc 예외: {ex.Message}");
+                        // 예외 발생해도 다음 앱 계속 진행
+                    }
+                }
+
+                stopwatch.Stop();
+
+                // Delay 보정 (최소 5초 유지)
+                int nDelay = stopwatch.ElapsedMilliseconds < nMinWorkingMiliSec ? nMinWorkingMiliSec - (int)stopwatch.ElapsedMilliseconds : 0;
+
+                if (nDelay > 0)
+                {
+                    // ✅ 원칙 4: Task.Delay에 Token 전달
+                    await Task.Delay(nDelay, m_CtrlCancelToken.Token);
+                }
+
+                Debug.WriteLine($"-----------[ExternalAppController] AutoAlloc [{m_lAutoAllocCount}] 완료 - Elapsed={stopwatch.ElapsedMilliseconds}ms, Delay={nDelay}ms");
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("[ExternalAppController] AutoAllocLoopAsync 취소됨");
+                return;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ExternalAppController] AutoAllocLoopAsync 예외: {ex.Message}");
+                // 예외 발생해도 루프 계속 (로깅만 하고 진행)
+            }
+        }
+    }
+
+    /// <summary>
+    /// 자동배차 중지
+    /// </summary>
+    public async Task StopAutoAllocAsync()
+    {
+        Debug.WriteLine("[ExternalAppController] 자동배차 중지 요청");
+        m_CtrlCancelToken.Cancel();
+
+        if (m_TaskAutoAlloc != null)
+        {
+            try
+            {
+                await m_TaskAutoAlloc;
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.WriteLine("[ExternalAppController] 자동배차 정상 취소됨");
+            }
+        }
+
+        m_TaskAutoAlloc = null;
+        Debug.WriteLine("[ExternalAppController] 자동배차 중지 완료");
+    }
+
+    /// <summary>
     /// 기존 주문 목록 로드 (자동배차 대상으로 등록)
     /// 4개 외부앱별로 분류하여 큐에 적재
     /// </summary>
@@ -180,41 +431,6 @@ public class ExternalAppController : IDisposable
 
         // 큐 상태 출력
         QueueManager.PrintQueueStatus();
-    }
-
-    /// <summary>
-    /// 주문이 속할 큐 목록 반환 (분류 로직 기반)
-    /// </summary>
-    private List<string> GetTargetQueues(TbOrder order)
-    {
-        var queues = new List<string>();
-
-        // 차량 타입 판단
-        bool isMotorcycle = order.CarType == "오토";
-        bool isFlex = order.CarType == "플렉스";
-        bool isLargeTruck = order.CarType == "트럭" && order.CarWeight != "1t" && order.CarWeight != "1.4t";
-
-        bool isForInsung = !isLargeTruck;
-        bool isForCargo24Onecall = !isMotorcycle && !isFlex;
-
-        // 인성1, 인성2
-        if (isForInsung)
-        {
-            if (order.CallCustFrom != StdConst_Network.INSUNG2)
-                queues.Add(StdConst_Network.INSUNG1);
-
-            if (order.CallCustFrom != StdConst_Network.INSUNG1)
-                queues.Add(StdConst_Network.INSUNG2);
-        }
-
-        // 화물24시, 원콜
-        if (isForCargo24Onecall)
-        {
-            queues.Add(StdConst_Network.CARGO24);
-            queues.Add(StdConst_Network.ONECALL);
-        }
-
-        return queues;
     }
 
     /// <summary>
@@ -305,84 +521,41 @@ public class ExternalAppController : IDisposable
     }
 
     /// <summary>
-    /// 네트워크별 SeqNo 필드 가져오기
+    /// 주문이 속할 큐 목록 반환 (분류 로직 기반)
     /// </summary>
-    private string GetSeqNoByNetwork(TbOrder order, string networkName)
-    {
-        return networkName switch
-        {
-            StdConst_Network.INSUNG1 => order.Insung1,
-            StdConst_Network.INSUNG2 => order.Insung2,
-            StdConst_Network.CARGO24 => order.Cargo24,
-            StdConst_Network.ONECALL => order.Onecall,
-            _ => null
-        };
-    }
+    //private List<string> GetTargetQueues(TbOrder order)
+    //{
+    //    var queues = new List<string>();
 
-    /// <summary>
-    /// 새로 생성된 주문 추가 (자동배차 대상으로 등록)
-    /// SignalR OnOrderCreated에서 호출
-    /// </summary>
-    /// <param name="order">새로 생성된 주문</param>
-    public void AddNewOrder(TbOrder order)
-    {
-        if (order == null)
-        {
-            Debug.WriteLine("[ExternalAppController] 추가할 주문이 null입니다.");
-            return;
-        }
+    //    // 차량 타입 판단
+    //    bool isMotorcycle = order.CarType == "오토";
+    //    bool isFlex = order.CarType == "플렉스";
+    //    bool isLargeTruck = order.CarType == "트럭" && order.CarWeight != "1t" && order.CarWeight != "1.4t";
 
-        Debug.WriteLine($"[ExternalAppController] 새 주문 추가: KeyCode={order.KeyCode}");
+    //    bool isForInsung = !isLargeTruck;
+    //    bool isForCargo24Onecall = !isMotorcycle && !isFlex;
 
-        // 4개 외부앱별로 분류하여 큐에 적재 (Created 상태)
-        ClassifyAndEnqueueOrder(order, isNewOrder: true);
+    //    // 인성1, 인성2
+    //    if (isForInsung)
+    //    {
+    //        if (order.CallCustFrom != StdConst_Network.INSUNG2)
+    //            queues.Add(StdConst_Network.INSUNG1);
 
-        // 큐 상태 출력
-        QueueManager.PrintQueueStatus();
-    }
+    //        if (order.CallCustFrom != StdConst_Network.INSUNG1)
+    //            queues.Add(StdConst_Network.INSUNG2);
+    //    }
 
-    /// <summary>
-    /// 주문 업데이트 알림 (자동배차 시스템에 변경 사항 전달)
-    /// SignalR OnOrderUpdated에서 호출
-    /// </summary>
-    /// <param name="changedFlag">변경 플래그</param>
-    /// <param name="newOrder">새로운 주문 정보</param>
-    /// <param name="oldOrder">이전 주문 정보</param>
-    /// <param name="seqNo">시퀀스 번호</param>
-    public void UpdateOrder(PostgService_Common_OrderState changedFlag, TbOrder newOrder, TbOrder oldOrder, int seqNo)
-    {
-        if (newOrder == null)
-        {
-            Debug.WriteLine("[ExternalAppController] 업데이트할 주문이 null입니다.");
-            return;
-        }
+    //    // 화물24시, 원콜
+    //    if (isForCargo24Onecall)
+    //    {
+    //        queues.Add(StdConst_Network.CARGO24);
+    //        queues.Add(StdConst_Network.ONECALL);
+    //    }
 
-        Debug.WriteLine($"[ExternalAppController] ===== 주문 업데이트 =====");
-        Debug.WriteLine($"  KeyCode: {newOrder.KeyCode}");
-        Debug.WriteLine($"  ChangedFlag: {changedFlag}");
-        Debug.WriteLine($"  SeqNo: {seqNo}");
+    //    return queues;
+    //}
 
-        // 변경 내용 상세 로깅
-        if (oldOrder != null)
-        {
-            if (oldOrder.StartDongBasic != newOrder.StartDongBasic)
-                Debug.WriteLine($"  출발지 변경: {oldOrder.StartDongBasic} → {newOrder.StartDongBasic}");
-
-            if (oldOrder.FeeBasic != newOrder.FeeBasic)
-                Debug.WriteLine($"  요금 변경: {oldOrder.FeeBasic} → {newOrder.FeeBasic}");
-
-            if (oldOrder.CallCustFrom != newOrder.CallCustFrom)
-                Debug.WriteLine($"  접수처 변경: {oldOrder.CallCustFrom} → {newOrder.CallCustFrom}");
-        }
-
-        Debug.WriteLine($"[ExternalAppController] =========================================");
-
-        // ✅ 모든 큐에서 주문 업데이트 또는 제거 (인스턴스 재사용)
-        // - 분류 규칙에 맞으면: 기존 AutoAllocModel의 NewOrder, StateFlag만 업데이트
-        // - 분류 규칙에 안 맞으면: 큐에서 제거
-        // - 기존 인스턴스 재사용으로 RunStartTime, LastDriverNo 등 유지됨
-        QueueManager.UpdateOrRemoveInQueues(newOrder.KeyCode, newOrder, changedFlag);
-    }
+    #endregion
 
     #region 자동배차 제어
     /// <summary>
@@ -418,115 +591,6 @@ public class ExternalAppController : IDisposable
         Debug.WriteLine("[ExternalAppController] 자동배차 재개");
         m_CtrlCancelToken.Resume();
     }
-
-    /// <summary>
-    /// 자동배차 중지
-    /// </summary>
-    public async Task StopAutoAllocAsync()
-    {
-        Debug.WriteLine("[ExternalAppController] 자동배차 중지 요청");
-        m_CtrlCancelToken.Cancel();
-
-        if (m_TaskAutoAlloc != null)
-        {
-            try
-            {
-                await m_TaskAutoAlloc;
-            }
-            catch (OperationCanceledException)
-            {
-                Debug.WriteLine("[ExternalAppController] 자동배차 정상 취소됨");
-            }
-        }
-
-        m_TaskAutoAlloc = null;
-        Debug.WriteLine("[ExternalAppController] 자동배차 중지 완료");
-    }
-
-    /// <summary>
-    /// 자동배차 무한 루프 (private)
-    /// </summary>
-    private async Task AutoAllocLoopAsync()
-    {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        const int nMinWorkingMiliSec = 5000; // 최소 ~초
-
-        Debug.WriteLine("[ExternalAppController] AutoAllocLoopAsync 시작");
-
-        for (m_lAutoAllocCount = 1; ; m_lAutoAllocCount++)
-        {
-            try
-            {
-                stopwatch.Restart();
-
-                // ✅ 원칙 2: 리스트 활용 (확장 가능)
-                foreach (var app in m_ListApps)
-                {
-                    // ✅ 원칙 1: 각 앱 처리 전 Cancel/Pause 체크
-                    await m_CtrlCancelToken.WaitIfPausedOrCancelledAsync();
-
-                    try
-                    {
-                        var result = await app.AutoAllocAsync(m_lAutoAllocCount, m_CtrlCancelToken);
-
-                        // ✅ 원칙 3: 결과 처리
-                        switch (result.Result)
-                        {
-                            case StdResult.Success:
-                                // 성공 - 계속 진행
-                                break;
-
-                            case StdResult.Skip:
-                                // 스킵 - 계속 진행
-                                break;
-
-                            case StdResult.Retry:
-                                // 재시도 - 로그만 출력하고 계속
-                                Debug.WriteLine($"[ExternalAppController] {app.AppName} AutoAlloc 재시도 필요: {result.sErrNPos}");
-                                break;
-
-                            case StdResult.Fail:
-                                // 실패 - 에러 메시지 출력 후 루프 탈출
-                                ErrMsgBox($"[ExternalAppController] {app.AppName} AutoAlloc 실패 - 루프 중단: {result.sErrNPos}");
-                                return;
-
-                            default:
-                                ErrMsgBox($"[ExternalAppController] {app.AppName} 알 수 없는 결과: {result.Result}");
-                                break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrMsgBox($"[ExternalAppController] {app.AppName} AutoAlloc 예외: {ex.Message}");
-                        // 예외 발생해도 다음 앱 계속 진행
-                    }
-                }
-
-                stopwatch.Stop();
-
-                // Delay 보정 (최소 5초 유지)
-                int nDelay = stopwatch.ElapsedMilliseconds < nMinWorkingMiliSec ? nMinWorkingMiliSec - (int)stopwatch.ElapsedMilliseconds : 0;
-
-                if (nDelay > 0)
-                {
-                    // ✅ 원칙 4: Task.Delay에 Token 전달
-                    await Task.Delay(nDelay, m_CtrlCancelToken.Token);
-                }
-
-                Debug.WriteLine($"-----------[ExternalAppController] AutoAlloc [{m_lAutoAllocCount}] 완료 - Elapsed={stopwatch.ElapsedMilliseconds}ms, Delay={nDelay}ms");
-            }
-            catch (OperationCanceledException)
-            {
-                Debug.WriteLine("[ExternalAppController] AutoAllocLoopAsync 취소됨");
-                return;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[ExternalAppController] AutoAllocLoopAsync 예외: {ex.Message}");
-                // 예외 발생해도 루프 계속 (로깅만 하고 진행)
-            }
-        }
-    }
     #endregion
 
     #region SignalR 연결 끊김 처리
@@ -550,65 +614,6 @@ public class ExternalAppController : IDisposable
         {
             ErrMsgBox($"SignalR 서버 연결이 끊겼습니다.\n\n자동배차를 일시정지합니다.\n\n에러: {e.e?.Message ?? "알 수 없는 오류"}");
         });
-    }
-    #endregion
-
-    /// <summary>
-    /// 리소스 정리
-    /// </summary>
-    public async Task ShutdownAsync()
-    {
-        try
-        {
-            Debug.WriteLine("[ExternalAppController] Shutdown 시작");
-
-            // SignalR 연결 끊김 이벤트 구독 해제
-            SrGlobalClient.SrGlobalClient_ClosedEvent -= OnSignalRDisconnected;
-            Debug.WriteLine("[ExternalAppController] SignalR 연결 끊김 이벤트 구독 해제 완료");
-
-            // AutoAlloc 루프 중단
-            if (m_CtrlCancelToken != null)
-            {
-                m_CtrlCancelToken.Cancel();
-            }
-
-            // Task 완료 대기
-            if (m_TaskAutoAlloc != null)
-            {
-                try
-                {
-                    await m_TaskAutoAlloc;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"[ExternalAppController] AutoAlloc Task 대기 중 예외 (무시): {ex.Message}");
-                }
-                m_TaskAutoAlloc = null;
-            }
-
-            // 리스트의 모든 앱 종료
-            foreach (var app in m_ListApps)
-            {
-                try
-                {
-                    Debug.WriteLine($"[ExternalAppController] {app.AppName} 종료 중...");
-                    app.Shutdown();
-                    app.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"[ExternalAppController] {app.AppName} 종료 실패 (무시): {ex.Message}");
-                }
-            }
-
-            m_ListApps.Clear();
-
-            Debug.WriteLine("[ExternalAppController] Shutdown 완료");
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[ExternalAppController] Shutdown 실패: {ex.Message}");
-        }
     }
     #endregion
 }

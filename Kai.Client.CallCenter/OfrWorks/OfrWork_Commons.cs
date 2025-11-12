@@ -255,9 +255,9 @@ public class OfrWork_Common
     /// <summary>
     /// TbChar/TbCharBackup에서 문자 검색
     /// </summary>
-    private static async Task<string?> SelectCharByBasicAsync(int width, int height, string hexString)
+    private static async Task<string> SelectCharByBasicAsync(int width, int height, string hexString)
     {
-        string? character = null;
+        string character = null;
         if (s_bUseTbCharBackup)
         {
             PgResult_TbCharBackup result = await PgService_TbCharBackup.SelectRowByBasicAsync(width, height, hexString);
@@ -333,7 +333,7 @@ public class OfrWork_Common
                 if (modelChar == null)
                     return new StdResult_String($"문자{i + 1} 분석 실패", "OfrStr_SeqCharAsync_04");
 
-                string? character = await SelectCharByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
+                string character = await SelectCharByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
                 if (character == null)
                 {
                     if (bEdit && s_bDebugMode)
@@ -1141,10 +1141,10 @@ public class OfrWork_Common
         for (int i = 0; i < c_nRepeatShort; i++)
         {
             byteMaxBrightness = OfrService.GetMaxBrightness_FromColorBitmapRectFast(bmpOrg, rcRelSpare);
-            Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step1: MaxBrightness={byteMaxBrightness}, rcRelSpare={rcRelSpare}");
+            //Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step1: MaxBrightness={byteMaxBrightness}, rcRelSpare={rcRelSpare}");
             byteMaxBrightness -= 1; // 밝기 조정(약간 어둡게)
             rcForeground = OfrService.GetForeGroundDrawRectangle_FromColorBitmapRectFast(bmpOrg, rcRelSpare, byteMaxBrightness, 0);
-            Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step1: rcForeground={rcForeground}");
+            //Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step1: rcForeground={rcForeground}");
             if (rcForeground != StdUtil.s_rcDrawEmpty) break;
 
             await Task.Delay(c_nWaitNormal);
@@ -1160,18 +1160,18 @@ public class OfrWork_Common
         // 3. 평균 밝기 기반으로 이미지 분석
         byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpExact);
         OfrModel_BitmapAnalysis info = OfrService.GetBitmapAnalysisFast(bmpExact, byteAvgBrightness);
-        Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step2: AvgBrightness={byteAvgBrightness}, Size={info.nWidth}x{info.nHeight}, trueRate={info.trueRate}");
+        //Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step2: AvgBrightness={byteAvgBrightness}, Size={info.nWidth}x{info.nHeight}, trueRate={info.trueRate}");
 
         // 4. DB 검색 (정보가 있을 것 같으면)
         if (info.trueRate != 0 && info.trueRate != 1)
         {
             PgResult_TbText resultTb = await PgService_TbText.SelectRowByBasicAsync(info.nWidth, info.nHeight, info.sHexArray);
-            Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step3: DB 검색 결과={resultTb.tbText?.Text ?? "null"}");
+            //Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step3: DB 검색 결과={resultTb.tbText?.Text ?? "null"}");
             if (resultTb.tbText != null) return new OfrResult_TbText(resultTb.tbText, info);
         }
 
         // 5. DB에 없음 - 분석 정보는 반환
-        Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step4: DB에 없음 (trueRate={info.trueRate})");
+        //Debug.WriteLine($"[OfrWork_Common] Dual Brightness Step4: DB에 없음 (trueRate={info.trueRate})");
         return new OfrResult_TbText(info, null, "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync_02");
     }
 

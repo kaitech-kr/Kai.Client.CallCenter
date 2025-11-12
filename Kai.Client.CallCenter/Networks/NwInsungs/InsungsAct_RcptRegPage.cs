@@ -476,12 +476,12 @@ public partial class InsungsAct_RcptRegPage
             Debug.WriteLine($"[InsungsAct_RcptRegPage] SetDG오더RectsAsync 시작");
 
             // 재시도 루프 (goto 대신 for 사용)
-            for (int retry = 0; retry < c_nRepeatShort; retry++)
+            for (int retry = 1; retry <= c_nRepeatShort; retry++)
             {
                 // 중간 재시도에서는 메시지박스 표시 안 함, 마지막 재시도에서만 표시
-                bool bShowMsgBox = (retry >= c_nRepeatShort) && bMsgBox;
+                bool bShowMsgBox = (retry == c_nRepeatShort) && bMsgBox;
 
-                if (retry > 0)
+                if (retry > 1)
                 {
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] Datagrid 재시도 {retry}/{c_nRepeatShort}");
                     await Task.Delay(500); // 재시도 전 대기
@@ -494,7 +494,7 @@ public partial class InsungsAct_RcptRegPage
 
                 if (bmpDG == null)
                 {
-                    if (retry < c_nRepeatShort)
+                    if (retry != c_nRepeatShort)
                     {
                         Debug.WriteLine($"[InsungsAct_RcptRegPage] DG오더 캡처 실패 (재시도 {retry}/{c_nRepeatShort})");
                         await Task.Delay(200);
@@ -519,7 +519,7 @@ public partial class InsungsAct_RcptRegPage
                 if (minBrightness == 255) // 검출 실패
                 {
                     bmpDG?.Dispose();
-                    if (retry < c_nRepeatShort)
+                    if (retry != c_nRepeatShort)
                     {
                         Debug.WriteLine($"[InsungsAct_RcptRegPage] 헤더 행 최소 밝기 검출 실패 (재시도 {retry}/{c_nRepeatShort})");
                         await Task.Delay(200);
@@ -541,7 +541,7 @@ public partial class InsungsAct_RcptRegPage
                 if (boolArr == null || boolArr.Length == 0)
                 {
                     bmpDG?.Dispose();
-                    if (retry < c_nRepeatShort)
+                    if (retry != c_nRepeatShort)
                     {
                         Debug.WriteLine($"[InsungsAct_RcptRegPage] Bool 배열 생성 실패 (재시도 {retry}/{c_nRepeatShort})");
                         await Task.Delay(200);
@@ -561,7 +561,7 @@ public partial class InsungsAct_RcptRegPage
                 if (listLW == null || listLW.Count == 0)
                 {
                     bmpDG?.Dispose();
-                    if (retry < c_nRepeatShort)
+                    if (retry != c_nRepeatShort)
                     {
                         Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼 경계 검출 실패 (재시도 {retry}/{c_nRepeatShort})");
                         await Task.Delay(200);
@@ -611,7 +611,7 @@ public partial class InsungsAct_RcptRegPage
                         Debug.WriteLine($"[InsungsAct_RcptRegPage] InitDG오더Async 실패: {initResult.sErr}");
 
                         // 최대 재시도 횟수 도달 시에만 에러 반환
-                        if (retry >= c_nRepeatShort)
+                        if (retry == c_nRepeatShort)
                         {
                             return CommonFuncs_StdResult.ErrMsgResult_Error(
                                 $"[{m_Context.AppName}/RcptRegPage]컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개\n상세: {initResult.sErr}\n(재시도 {c_nRepeatShort}회 초과)",
@@ -733,7 +733,7 @@ public partial class InsungsAct_RcptRegPage
                         Debug.WriteLine($"[InsungsAct_RcptRegPage] InitDG오더Async 실패: {initResult.sErr}");
 
                         // 최대 재시도 횟수 도달 시에만 에러 반환 (메시지박스 표시)
-                        if (retry >= c_nRepeatShort)
+                        if (retry == c_nRepeatShort)
                         {
                             bmpDG?.Dispose();
                             return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -1048,6 +1048,7 @@ public partial class InsungsAct_RcptRegPage
             for (int iteration = 0; iteration < 15; iteration++)
             {
                 // 2-1. 헤더 캡처 및 컬럼 경계 검출
+                await Task.Delay(CommonVars.c_nWaitShort);
                 var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
                 if (bmpHeader == null)
                 {
@@ -1127,13 +1128,10 @@ public partial class InsungsAct_RcptRegPage
 
             try
             {
-            for (int widthIter = 0; widthIter < 10; widthIter++)
+            for (int widthIter = 0; widthIter < 5; widthIter++)
             {
-                // 첫 번째 반복 시 캡처 전 안정화 대기
-                if (widthIter == 0)
-                {
-                    await Task.Delay(CommonVars.c_nWaitLong);
-                }
+                // 매 반복 시 캡처 전 안정화 대기
+                await Task.Delay(CommonVars.c_nWaitShort);
 
                 // 1. 캡처 및 경계선 검출
                 var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
@@ -1235,6 +1233,7 @@ public partial class InsungsAct_RcptRegPage
                 Debug.WriteLine($"[InitDG오더] Step 2-끝-{widthIter + 1}. {columns}개 컬럼 폭 조정 완료");
 
                 // 5. 폭 조정 후 다시 캡처하여 원하는 컬럼 개수 확인
+                await Task.Delay(CommonVars.c_nWaitShort);
                 var (bmpHeader2, listLW2, columns2) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
                 if (bmpHeader2 == null)
                 {
@@ -1288,6 +1287,7 @@ public partial class InsungsAct_RcptRegPage
             Debug.WriteLine("[InitDG오더] Step 2-끝: 반복 루프 종료");
             {
                 // 최종 확인을 위해 다시 캡처 및 컬럼 검출
+                await Task.Delay(CommonVars.c_nWaitShort);
                 var (bmpCheck, listLW, checkColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
                 if (bmpCheck == null)
                 {
@@ -1323,7 +1323,7 @@ public partial class InsungsAct_RcptRegPage
 
                 if (checkMatchedCount < m_ReceiptDgHeaderInfos.Length)
                 {
-                    string errorMsg = $"[InitDG오더] Step 2-끝: 10회 반복 후에도 목표 컬럼 획득 실패\n\n";
+                    string errorMsg = $"[InitDG오더] Step 2-끝: 5회 반복 후에도 목표 컬럼 획득 실패\n\n";
                     errorMsg += $"획득 컬럼: {checkMatchedCount}/{m_ReceiptDgHeaderInfos.Length}\n";
                     errorMsg += $"누락 컬럼({checkMissingColumns.Count}): {string.Join(", ", checkMissingColumns)}\n\n";
                     errorMsg += $"현재 검출된 컬럼({checkColumns}): {string.Join(", ", checkTexts.Where(t => !string.IsNullOrEmpty(t)))}";
@@ -1346,6 +1346,9 @@ public partial class InsungsAct_RcptRegPage
 
             for (int x = 0; x < m_ReceiptDgHeaderInfos.Length; x++)
             {
+                // 매 반복 시 캡처 전 안정화 대기
+                await Task.Delay(CommonVars.c_nWaitShort);
+
                 //Debug.WriteLine($"[InitDG오더] 3-{x+1}. 목표 컬럼: [{x}]{m_ReceiptDgHeaderInfos[x].sName}");
 
                 // 3-1. 헤더 캡처 및 컬럼 경계 검출
@@ -1449,6 +1452,7 @@ public partial class InsungsAct_RcptRegPage
 
             // [확인용] Step 3 완료 후 컬럼 개수 확인
             {
+                await Task.Delay(CommonVars.c_nWaitShort);
                 var (bmpCheck, _, checkColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
                 if (bmpCheck != null)
                 {
@@ -1462,6 +1466,9 @@ public partial class InsungsAct_RcptRegPage
 
             for (int x = 0; x < m_ReceiptDgHeaderInfos.Length; x++)
             {
+                // 매 반복 시 캡처 전 안정화 대기
+                await Task.Delay(CommonVars.c_nWaitShort);
+
                 Debug.WriteLine($"[InitDG오더] 4-{x+1}. 컬럼 너비 조정 시작: [{x}]{m_ReceiptDgHeaderInfos[x].sName}");
 
                 // 4-1. 헤더 캡처 및 컬럼 경계 검출
@@ -1500,6 +1507,7 @@ public partial class InsungsAct_RcptRegPage
                 await Task.Delay(150);
 
                 // [확인용] 조정 후 컬럼 개수 확인
+                await Task.Delay(CommonVars.c_nWaitShort);
                 var (bmpAfter, _, afterColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
                 if (bmpAfter != null)
                 {
@@ -1520,6 +1528,7 @@ public partial class InsungsAct_RcptRegPage
             {
                 Debug.WriteLine("[InitDG오더] Step 4 완료 후 최종 확인 시작");
 
+                await Task.Delay(CommonVars.c_nWaitShort);
                 var (bmpFinal, listLW, finalColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
                 if (bmpFinal != null)
                 {
@@ -1950,7 +1959,6 @@ public partial class InsungsAct_RcptRegPage
     private async Task<CommonResult_AutoAllocProcess> UpdateOrderSameStateAsync(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     {
         string isState = dgInfo.sStatus;
-        bool useRepeat;
 
         // 인성 앱 특성: 상태가 변경되면 저장 안 됨 → 같은 상태 버튼 클릭 필요
         // 대기/취소: 외부에서 상태 변경 불가 → 반복 불필요

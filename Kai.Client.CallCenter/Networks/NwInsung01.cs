@@ -140,7 +140,7 @@ public class NwInsung01 : IExternalApp
                 Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
                 return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, "NwInsung01/InitializeAsync_06");
             }
-            Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 완료");
+            //Debug.WriteLine($"[NwInsung01] RcptRegPage 초기화 완료");
 
             Debug.WriteLine("[NwInsung01] InitializeAsync 완료");
             return new StdResult_Status(StdResult.Success);
@@ -726,7 +726,7 @@ public class NwInsung01 : IExternalApp
                 // Context의 FileInfo에 덮어씌우기
                 m_Context.FileInfo = fileInfo;
 
-                Debug.WriteLine($"[NwInsung01] FileInfo 파일 로드 완료: {sFilePath}");
+                Debug.WriteLine($"[{APP_NAME}] FileInfo 파일 로드 완료: {sFilePath}");
                 return null; // 성공
             }
             catch (Exception ex)
@@ -768,11 +768,11 @@ public class NwInsung01 : IExternalApp
                 writer.Write(json);
             }
 
-            Debug.WriteLine($"[NwInsung01] FileInfo 파일 저장 완료: {sFilePath}");
+            Debug.WriteLine($"[{APP_NAME}] FileInfo 파일 저장 완료: {sFilePath}");
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[NwInsung01] FileInfo 파일 저장 실패: {ex.Message}");
+            Debug.WriteLine($"[{APP_NAME}] FileInfo 파일 저장 실패: {ex.Message}");
         }
     }
     #endregion

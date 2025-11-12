@@ -672,7 +672,7 @@ public partial class InsungsAct_RcptRegPage
     /// - CancelToken 완전 지원
     /// - 입력 검증 및 예외 처리 포함
     /// </summary>
-    private async Task<StdResult_Status> WriteAndVerifyEditBoxAsync(IntPtr hWnd, string expectedValue, string fieldName, CancelTokenControl ctrl, Func<string, string>? normalizeFunc = null)
+    private async Task<StdResult_Status> WriteAndVerifyEditBoxAsync(IntPtr hWnd, string expectedValue, string fieldName, CancelTokenControl ctrl, Func<string, string> normalizeFunc = null)
     {
         try
         {

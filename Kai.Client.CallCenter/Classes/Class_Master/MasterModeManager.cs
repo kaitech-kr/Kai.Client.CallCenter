@@ -215,8 +215,8 @@ public class MasterModeManager : IDisposable
         // WorkingMonitor 설정 - 가상모니터가 있다는 전제하에 설정 (신규 생성 or 기존 사용 모두 여기서 설정)
         if (s_Screens.m_VirtualMonitor != null)
         {
-            //s_Screens.m_WorkingMonitor = s_Screens.m_ListMonitorInfo[1];  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
-            s_Screens.m_WorkingMonitor = s_Screens.m_VirtualMonitor;  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
+            s_Screens.m_WorkingMonitor = s_Screens.m_ListMonitorInfo[1];  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
+            //s_Screens.m_WorkingMonitor = s_Screens.m_VirtualMonitor;  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
             Debug.WriteLine($"[MasterModeManager] m_WorkingMonitor 설정 완료: {s_Screens.m_WorkingMonitor}");
         }
         else
