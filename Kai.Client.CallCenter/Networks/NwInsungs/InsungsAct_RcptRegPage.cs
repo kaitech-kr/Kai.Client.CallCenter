@@ -949,12 +949,13 @@ public partial class InsungsAct_RcptRegPage
             await Std32Mouse_Post.MousePostAsync_ClickRight(m_RcptPage.DG오더_hWnd);
             //Debug.WriteLine("[InitDG오더] 1-1. 우클릭 완료");
 
-            // 1-2. Context 메뉴 대기 (100회 폴링, 2초)
+            // 1-2. Context 메뉴 대기 (100회 폴링, 2초) - 프로세스 ID로 구분
             IntPtr hWndMenu = IntPtr.Zero;
             for (int i = 0; i < 100; i++)
             {
                 await Task.Delay(20);
                 hWndMenu = Std32Window.FindMainWindow_StartsWith(
+                    m_Context.MemInfo.Splash.TopWnd_uProcessId,
                     m_FileInfo.Main_AnyMenu_sClassName,
                     m_FileInfo.Main_AnyMenu_sWndName);
                 if (hWndMenu != IntPtr.Zero) break;
@@ -970,45 +971,40 @@ public partial class InsungsAct_RcptRegPage
             //Debug.WriteLine($"[InitDG오더] 1-2. Context 메뉴 찾음: {hWndMenu:X}");
 
             // 1-3. "접수화면초기화" 메뉴 클릭 (2개 서브메뉴 중 위쪽, 좌클릭)
-            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12);
-            //Debug.WriteLine("[InitDG오더] 1-3. 접수화면초기화 메뉴 클릭 완료");
+            // 첫 번째 시도: DOWN-UP 간 딜레이 50ms
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12, 50);
 
-            // 1-4. 확인 다이얼로그 대기 (10회 폴링, 1초)
+            // 1-4. 확인 다이얼로그 대기 (첫 번째 시도) - 프로세스 ID로 구분
             IntPtr hWndDialog = IntPtr.Zero;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
             {
-                await Task.Delay(100);
-                hWndDialog = Std32Window.FindWindow("#32770", "확인");
+                await Task.Delay(CommonVars.c_nWaitShort);
+                hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
                 if (hWndDialog != IntPtr.Zero)
                 {
-                    // "예(&Y)" 버튼 찾기
-                    IntPtr hWndBtn = Std32Window.FindWindowEx(
-                        hWndDialog, IntPtr.Zero, "Button", "예(&Y)");
-                    if (hWndBtn != IntPtr.Zero)
-                    {
-                        //Debug.WriteLine("[InitDG오더] 1-4. '예' 버튼 클릭");
-                        // 10회 재시도 (기존 로직과 동일)
-                        for (int j = 0; j < 10; j++)
-                        {
-                            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn);
-                            await Task.Delay(50);
+                    break;
+                }
+            }
 
-                            // 다이얼로그가 사라졌는지 확인
-                            if (Std32Window.FindWindow("#32770", "확인") == IntPtr.Zero)
-                                break;
-                        }
-                        break;
-                    }
-                    else
+            // 확인창이 안 뜨면 두 번째 시도
+            if (hWndDialog == IntPtr.Zero)
+            {
+                Debug.WriteLine($"[InitDG오더] MousePost 첫 번째 실패, DOWN-UP 100ms 딜레이로 재시도");
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12, 100);
+
+                // 다시 확인 다이얼로그 대기
+                for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
+                {
+                    await Task.Delay(CommonVars.c_nWaitShort);
+                    hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
+                    if (hWndDialog != IntPtr.Zero)
                     {
-                        return CommonFuncs_StdResult.ErrMsgResult_Error(
-                            "[InitDG오더]'예' 버튼 찾기 실패",
-                            "InsungsAct_RcptRegPage/InitDG오더Async_02",
-                            bWrite, true);
+                        break;
                     }
                 }
             }
 
+            // 확인창이 안 뜨면 에러
             if (hWndDialog == IntPtr.Zero)
             {
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -1016,11 +1012,30 @@ public partial class InsungsAct_RcptRegPage
                     "InsungsAct_RcptRegPage/InitDG오더Async_03", bWrite, true);
             }
 
-            // 1-5. 확인 다이얼로그 사라질 때까지 대기 (10회 폴링, 1초)
-            for (int i = 0; i < 10; i++)
+            Debug.WriteLine($"[InitDG오더] 확인 다이얼로그 찾음: {hWndDialog:X}");
+
+            // "예(&Y)" 버튼 찾기
+            IntPtr hWndBtn = Std32Window.FindWindowEx(
+                hWndDialog, IntPtr.Zero, "Button", "예(&Y)");
+            if (hWndBtn == IntPtr.Zero)
             {
-                await Task.Delay(100);
-                hWndDialog = Std32Window.FindWindow("#32770", "확인");
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    "[InitDG오더]'예' 버튼 찾기 실패",
+                    "InsungsAct_RcptRegPage/InitDG오더Async_02",
+                    bWrite, true);
+            }
+
+            Debug.WriteLine($"[InitDG오더] '예' 버튼 찾음: {hWndBtn:X}, PostMessage 방식으로 클릭");
+
+            // PostMessage 방식 사용 (인성1, 인성2 공통)
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn, 5, 5, 50);
+            await Task.Delay(200);
+
+            // 1-5. 확인 다이얼로그 사라질 때까지 대기 - 프로세스 ID로 구분
+            for (int i = 0; i < CommonVars.c_nRepeatMany; i++)
+            {
+                await Task.Delay(CommonVars.c_nWaitShort);
+                hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
                 if (hWndDialog == IntPtr.Zero) break;
             }
 
@@ -1045,10 +1060,10 @@ public partial class InsungsAct_RcptRegPage
 
             try
             {
-            for (int iteration = 0; iteration < 15; iteration++)
+            for (int iteration = 0; iteration < 10; iteration++)
             {
                 // 2-1. 헤더 캡처 및 컬럼 경계 검출
-                await Task.Delay(CommonVars.c_nWaitShort);
+                await Task.Delay(CommonVars.c_nWaitNormal);
                 var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
                 if (bmpHeader == null)
                 {
@@ -1128,10 +1143,10 @@ public partial class InsungsAct_RcptRegPage
 
             try
             {
-            for (int widthIter = 0; widthIter < 5; widthIter++)
+            for (int widthIter = 0; widthIter < 10; widthIter++)
             {
                 // 매 반복 시 캡처 전 안정화 대기
-                await Task.Delay(CommonVars.c_nWaitShort);
+                await Task.Delay(CommonVars.c_nWaitNormal);
 
                 // 1. 캡처 및 경계선 검출
                 var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
@@ -1180,6 +1195,25 @@ public partial class InsungsAct_RcptRegPage
                 if (removedCount > 0)
                 {
                     Debug.WriteLine($"[InitDG오더] Step 2-끝-{widthIter + 1}. {removedCount}개 불필요 컬럼 제거 완료");
+
+                    // 컬럼 제거 후 화면 안정화 대기
+                    await Task.Delay(CommonVars.c_nWaitLong);
+
+                    // 컬럼 제거 후 다시 캡처 및 경계선 검출
+                    bmpHeader.Dispose();
+                    var result = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                    bmpHeader = result.bmpHeader;
+                    listLW = result.listLW;
+                    columns = result.columns;
+
+                    if (bmpHeader == null)
+                    {
+                        return new StdResult_Error("컬럼 제거 후 재캡처 실패", "InsungsAct_RcptRegPage/InitDG오더Async_Step2End_01b");
+                    }
+
+                    // 텍스트 재인식
+                    texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, gab, height, true);
+                    Debug.WriteLine($"[InitDG오더] Step 2-끝-{widthIter + 1}. 재캡처 후 컬럼 수: {columns}");
                 }
 
                 // 4. 폭 조정

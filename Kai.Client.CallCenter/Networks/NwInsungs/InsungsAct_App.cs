@@ -240,7 +240,7 @@ public class InsungsAct_App
                 {
                     Thread.Sleep(100);
 
-                    hWndMapSDK = Std32Window.FindWindow("#32770", "");
+                    hWndMapSDK = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "");
                     if (hWndMapSDK != IntPtr.Zero)
                     {
                         hWndBtn = Std32Window.FindWindowEx(hWndMapSDK, IntPtr.Zero, "Button", "확인");
@@ -253,7 +253,7 @@ public class InsungsAct_App
                         }
                     }
 
-                    hWndTmp = StdWin32.FindWindow("#32770", "확인");
+                    hWndTmp = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
                     if (hWndTmp != IntPtr.Zero)
                     {
                         hWndBtn = StdWin32.FindWindowEx(hWndTmp, IntPtr.Zero, "Button", "확인");
@@ -277,7 +277,7 @@ public class InsungsAct_App
                                             Thread ttt = new Thread(async () =>
                                             {
                                                 Thread.Sleep(100);
-                                                hWndTmp = StdWin32.FindWindow("#32770", "확인");
+                                                hWndTmp = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
                                                 if (hWndTmp != IntPtr.Zero)
                                                 {
                                                     hWndBtn = StdWin32.FindWindowEx(hWndTmp, IntPtr.Zero, "Button", "확인");
