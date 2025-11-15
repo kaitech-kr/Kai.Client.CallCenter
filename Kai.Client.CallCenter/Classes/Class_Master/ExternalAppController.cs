@@ -460,15 +460,16 @@ public class ExternalAppController : IDisposable
         // 인성1, 인성2: 오토, 플렉스, 다마, 라보, 밴, 트럭(~1.4t)
         if (isForInsung)
         {
-            // 인성1: 인성2 신용업체 무조건 제외 (현금/신용 무관)
-            // 이유: 결제 방법이 도중에 변경되어도 회계 일관성 유지
-            if (order.CallCustFrom != StdConst_Network.INSUNG2)
+            // 인성1리스트 대상 - 의뢰자가 인성2신용업체가 아닌 퀵오더
+            // TODO: 향후 FeeType을 CustTradeType(업체 거래타입)으로 변경 예정
+            if (!(order.CallCustFrom == StdConst_Network.INSUNG2 && order.FeeType == "신용"))
             {
                 EnqueueToApp(order, StdConst_Network.INSUNG1, stateFlag, isNewOrder);
             }
 
-            // 인성2: 인성1 신용업체 무조건 제외 (현금/신용 무관)
-            if (order.CallCustFrom != StdConst_Network.INSUNG1)
+            // 인성2리스트 대상 - 의뢰자가 인성1신용업체가 아닌 퀵오더
+            // TODO: 향후 FeeType을 CustTradeType(업체 거래타입)으로 변경 예정
+            if (!(order.CallCustFrom == StdConst_Network.INSUNG1 && order.FeeType == "신용"))
             {
                 EnqueueToApp(order, StdConst_Network.INSUNG2, stateFlag, isNewOrder);
             }

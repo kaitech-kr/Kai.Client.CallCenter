@@ -1372,10 +1372,15 @@ public partial class InsungsAct_RcptRegPage
                         return new StdResult_Status(StdResult.Fail, "Kai DB에 없는 주문입니다");
                     }
 
-                    if (!string.IsNullOrEmpty(item.NewOrder.Insung1))
+                    // AppName에 따라 Insung1 또는 Insung2 체크
+                    string existingSeqno = m_Context.AppName == StdConst_Network.INSUNG1
+                        ? item.NewOrder.Insung1
+                        : item.NewOrder.Insung2;
+
+                    if (!string.IsNullOrEmpty(existingSeqno))
                     {
-                        Debug.WriteLine($"[{m_Context.AppName}] 이미 등록된 주문번호: {item.NewOrder.Insung1}");
-                        return new StdResult_Status(StdResult.Skip, "이미 Insung1 번호가 등록되어 있습니다");
+                        Debug.WriteLine($"[{m_Context.AppName}] 이미 등록된 주문번호: {existingSeqno}");
+                        return new StdResult_Status(StdResult.Skip, $"이미 {m_Context.AppName} 번호가 등록되어 있습니다");
                     }
 
                     if (s_SrGClient == null || !s_SrGClient.m_bLoginSignalR)
@@ -1384,8 +1389,12 @@ public partial class InsungsAct_RcptRegPage
                         return new StdResult_Status(StdResult.Fail, "서버 연결이 끊어졌습니다");
                     }
 
-                    // 4-2. 업데이트 실행 (Request ID 사용)
-                    item.NewOrder.Insung1 = resultSeqno.strResult;
+                    // 4-2. 업데이트 실행 (Request ID 사용) - AppName에 따라 분기
+                    if (m_Context.AppName == StdConst_Network.INSUNG1)
+                        item.NewOrder.Insung1 = resultSeqno.strResult;
+                    else
+                        item.NewOrder.Insung2 = resultSeqno.strResult;
+
                     StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
 
                     if (resultUpdate.nResult < 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
@@ -1394,7 +1403,7 @@ public partial class InsungsAct_RcptRegPage
                         return new StdResult_Status(StdResult.Fail, $"Kai DB 업데이트 실패: {resultUpdate.sErr}");
                     }
 
-                    Debug.WriteLine($"[{m_Context.AppName}] Kai DB 업데이트 성공 - Insung1: {resultSeqno.strResult}");
+                    Debug.WriteLine($"[{m_Context.AppName}] Kai DB 업데이트 성공 - {m_Context.AppName}: {resultSeqno.strResult}");
 
                     return new StdResult_Status(StdResult.Success, $"{btnName} 완료 (Seqno: {resultSeqno.strResult})");
                 }

@@ -1927,7 +1927,6 @@ public partial class InsungsAct_RcptRegPage
 
     #endregion
 
-
     #region 자동배차 - Kai신규 관련함수들
     /// <summary>
     /// 신규 주문 등록 확인 (Kai에만 존재, 인성에 없음)
@@ -2135,6 +2134,7 @@ public partial class InsungsAct_RcptRegPage
     /// <summary>
     /// Insung "접수" 또는 "배차" 상태 처리 - Kai 상태별 로깅
     /// </summary>
+#pragma warning disable CS1998 // async method lacks await
     private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_접수Or배차Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     {
         string insungState = dgInfo.sStatus;
@@ -2151,6 +2151,7 @@ public partial class InsungsAct_RcptRegPage
                 return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_999");
         }
     }
+#pragma warning restore CS1998
 
     /// <summary>
     /// Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
@@ -2277,6 +2278,7 @@ public partial class InsungsAct_RcptRegPage
     /// <summary>
     /// Insung "대기" 상태 처리 - Kai 상태별 로깅
     /// </summary>
+#pragma warning disable CS1998 // async method lacks await
     private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_대기Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     {
         switch (kaiState)
@@ -2289,10 +2291,12 @@ public partial class InsungsAct_RcptRegPage
                 return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=대기", "InsungOrderManage_대기Async_999");
         }
     }
+#pragma warning restore CS1998
 
     /// <summary>
     /// Insung "취소" 상태 처리 - Kai 상태별 로깅
     /// </summary>
+#pragma warning disable CS1998 // async method lacks await
     private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_취소Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     {
         switch (kaiState)
@@ -2305,6 +2309,7 @@ public partial class InsungsAct_RcptRegPage
                 return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=취소", "InsungOrderManage_취소Async_999");
         }
     }
+#pragma warning restore CS1998
     #endregion
 }
 #nullable enable

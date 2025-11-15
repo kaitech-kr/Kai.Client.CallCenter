@@ -63,6 +63,19 @@ public class QueueController
             _ => throw new ArgumentException($"Unknown network: {networkName}")
         };
     }
+
+    /// <summary>
+    /// 큐에서 특정 KeyCode의 최신 AutoAllocModel 찾기 (Race condition 방지용)
+    /// 큐를 순회하여 해당 KeyCode가 있으면 반환 (원본 참조)
+    /// </summary>
+    /// <param name="networkName">네트워크 이름</param>
+    /// <param name="keyCode">찾을 주문의 KeyCode</param>
+    /// <returns>찾은 AutoAllocModel, 없으면 null</returns>
+    public AutoAllocModel FindLatestInQueue(string networkName, long keyCode)
+    {
+        var queue = GetQueue(networkName);
+        return queue.FirstOrDefault(item => item.NewOrder.KeyCode == keyCode);
+    }
     #endregion
 
     #region 큐 적재
@@ -311,7 +324,27 @@ public class QueueController
     /// </summary>
     private bool ShouldBeInQueue(TbOrder order, string networkName)
     {
-        // 차량 타입 판단
+        // ✅ 1단계: 이미 등록된 주문은 해당 네트워크 큐에만 포함
+        // - 이미 seqno가 있으면 그 큐에만 남아야 함 (상태 업데이트/취소 처리용)
+        // - 다른 큐로 이동하면 안 됨!
+        switch (networkName)
+        {
+            case StdConst_Network.INSUNG1:
+                if (!string.IsNullOrEmpty(order.Insung1)) return true;  // 인성1 등록됨
+                break;
+            case StdConst_Network.INSUNG2:
+                if (!string.IsNullOrEmpty(order.Insung2)) return true;  // 인성2 등록됨
+                break;
+            case StdConst_Network.CARGO24:
+                if (!string.IsNullOrEmpty(order.Cargo24)) return true;  // Cargo24 등록됨
+                break;
+            case StdConst_Network.ONECALL:
+                if (!string.IsNullOrEmpty(order.Onecall)) return true;  // Onecall 등록됨
+                break;
+        }
+
+        // ✅ 2단계: 미등록 주문은 기존 분류 로직 적용
+        // - 차량 타입과 CallCustFrom으로 판단
         bool isMotorcycle = order.CarType == "오토";
         bool isFlex = order.CarType == "플렉스";
         bool isLargeTruck = order.CarType == "트럭" && order.CarWeight != "1t" && order.CarWeight != "1.4t";
