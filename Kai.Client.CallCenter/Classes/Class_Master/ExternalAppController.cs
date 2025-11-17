@@ -50,7 +50,7 @@ public class ExternalAppController : IDisposable
     // 개별 참조 (필요시 직접 접근용)
     public NwInsung01 Insung01 { get; private set; }
     public NwInsung02 Insung02 { get; private set; }
-    // public NwCargo24 Cargo24 { get; private set; }
+    public NwCargo24 Cargo24 { get; private set; }
     // public NwOnecall Onecall { get; private set; }
 
     // 리스트로 관리 (반복 처리용)
@@ -154,33 +154,39 @@ public class ExternalAppController : IDisposable
             Debug.WriteLine("[ExternalAppController] InitializeAsync 시작");
 
             // 1. 앱 인스턴스 생성 (s_Use가 true인 것만)
-            if (NwInsung01.s_Use)
+            //if (NwInsung01.s_Use)
+            //{
+            //    Debug.WriteLine($"[ExternalAppController] Insung01 생성: Id={NwInsung01.s_Id}");
+            //    Insung01 = new NwInsung01();
+            //    m_ListApps.Add(Insung01);
+            //}
+            //else
+            //{
+            //    Debug.WriteLine("[ExternalAppController] Insung01 사용 안함 (s_Use=false)");
+            //}
+
+            //if (NwInsung02.s_Use)
+            //{
+            //    Debug.WriteLine($"[ExternalAppController] Insung02 생성: Id={NwInsung02.s_Id}");
+            //    Insung02 = new NwInsung02();
+            //    m_ListApps.Add(Insung02);
+            //}
+            //else
+            //{
+            //    Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
+            //}
+
+            if (NwCargo24.s_Use)
             {
-                Debug.WriteLine($"[ExternalAppController] Insung01 생성: Id={NwInsung01.s_Id}");
-                Insung01 = new NwInsung01();
-                m_ListApps.Add(Insung01);
+                Debug.WriteLine($"[ExternalAppController] Cargo24 생성: Id={NwCargo24.s_Id}");
+                Cargo24 = new NwCargo24();
+                m_ListApps.Add(Cargo24);
             }
             else
             {
-                Debug.WriteLine("[ExternalAppController] Insung01 사용 안함 (s_Use=false)");
+                Debug.WriteLine("[ExternalAppController] Cargo24 사용 안함 (s_Use=false)");
             }
 
-            if (NwInsung02.s_Use)
-            {
-                Debug.WriteLine($"[ExternalAppController] Insung02 생성: Id={NwInsung02.s_Id}");
-                Insung02 = new NwInsung02();
-                m_ListApps.Add(Insung02);
-            }
-            else
-            {
-                Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
-            }
-
-            // if (NwCargo24.s_Use)
-            // {
-            //     Cargo24 = new NwCargo24();
-            //     m_ListApps.Add(Cargo24);
-            // }
             // if (NwOnecall.s_Use)
             // {
             //     Onecall = new NwOnecall();

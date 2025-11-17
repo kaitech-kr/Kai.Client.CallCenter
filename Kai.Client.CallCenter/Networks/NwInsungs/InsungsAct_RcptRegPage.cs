@@ -163,11 +163,11 @@ public partial class InsungsAct_RcptRegPage
 
             // 1. 바메뉴 클릭 - 접수등록 페이지 열기
             await m_Context.MainWndAct.ClickAsync접수등록();
-            await Task.Delay(500); // 페이지가 열릴 때까지 대기
+            await Task.Delay(c_nWaitVeryLong); // 페이지가 열릴 때까지 대기
             Debug.WriteLine($"[InsungsAct_RcptRegPage] 접수등록 바메뉴 클릭 완료");
 
             // 2. TopWnd 찾기 - MdiClient의 자식으로 "접수현황" 찾기
-            for (int i = 0; i < 100; i++) // 10초 동안 대기
+            for (int i = 0; i < c_nRepeatVeryMany; i++) // 10초 동안 대기
             {
                 m_RcptPage.TopWnd_hWnd = Std32Window.FindWindowEx(
                     m_Main.WndInfo_MdiClient.hWnd,
@@ -177,7 +177,7 @@ public partial class InsungsAct_RcptRegPage
                 );
 
                 if (m_RcptPage.TopWnd_hWnd != IntPtr.Zero) break;
-                await Task.Delay(100);
+                await Task.Delay(c_nWaitNormal);
             }
 
             if (m_RcptPage.TopWnd_hWnd == IntPtr.Zero)
@@ -303,7 +303,7 @@ public partial class InsungsAct_RcptRegPage
 
             // 4-5. StatusBtn Down 상태 OFR 확인 (전체버튼 클릭 후 나머지 버튼들 상태 확인)
             // 전체버튼 클릭 성공 후 100ms 딜레이
-            await Task.Delay(100);
+            await Task.Delay(c_nWaitNormal);
 
             // 4-5-1. 접수버튼 Down 상태 대기
             StdResult_NulBool resultWait접수 = await OfrWork_Common.OfrWaitUntilImageAppearsAsync(
@@ -484,7 +484,7 @@ public partial class InsungsAct_RcptRegPage
                 if (retry > 1)
                 {
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] Datagrid 재시도 {retry}/{c_nRepeatShort}");
-                    await Task.Delay(500); // 재시도 전 대기
+                    await Task.Delay(c_nWaitVeryLong); // 재시도 전 대기
                 }
 
                 // 1. Datagrid 비트맵 캡처 (MainWnd 기준 상대좌표로 캡처)
@@ -1049,7 +1049,7 @@ public partial class InsungsAct_RcptRegPage
             //Debug.WriteLine("[InitDG오더] 1-5. 접수화면초기화 완료");
 
             // 1-6. 초기화 반영 대기
-            await Task.Delay(500);
+            await Task.Delay(c_nWaitVeryLong);
 
             // Step 2: 불필요한 컬럼을 우측으로 이동 (15회 반복)
             Debug.WriteLine("[InitDG오더] Step 2: 불필요한 컬럼 우측 이동 시작");
@@ -1103,7 +1103,7 @@ public partial class InsungsAct_RcptRegPage
                         await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
                             m_RcptPage.DG오더_hWnd, ptCenter, -50, false);
 
-                        await Task.Delay(50);
+                        await Task.Delay(c_nWaitShort);
                     }
                 }
 
@@ -1188,7 +1188,7 @@ public partial class InsungsAct_RcptRegPage
                         await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
                             m_RcptPage.DG오더_hWnd, ptCenter, -50, false);
 
-                        await Task.Delay(50);
+                        await Task.Delay(c_nWaitShort);
                     }
                 }
 
@@ -1259,7 +1259,7 @@ public partial class InsungsAct_RcptRegPage
                     await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
                         m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
 
-                    await Task.Delay(100);
+                    await Task.Delay(c_nWaitNormal);
 
                 }
 
@@ -1662,13 +1662,13 @@ public partial class InsungsAct_RcptRegPage
 
                 // 1-1. Context 메뉴 → "접수화면초기화" 클릭
                 await Std32Mouse_Post.MousePostAsync_ClickRight(m_RcptPage.DG오더_hWnd);
-                await Task.Delay(100);
+                await Task.Delay(c_nWaitNormal);
 
                 // Context 메뉴 대기 (원하는 결과가 나올 때까지 폴링)
                 IntPtr hWndMenu = IntPtr.Zero;
-                for (int i = 0; i < 100; i++) // 2초 대기
+                for (int i = 0; i < c_nRepeatVeryMany; i++) // 2초 대기
                 {
-                    await Task.Delay(20);
+                    await Task.Delay(c_nWaitUltraShort);
                     hWndMenu = Std32Window.FindMainWindow_StartsWith(
                         m_FileInfo.Main_AnyMenu_sClassName,
                         m_FileInfo.Main_AnyMenu_sWndName
@@ -1686,15 +1686,15 @@ public partial class InsungsAct_RcptRegPage
 
                 // "접수화면초기화" 메뉴 클릭 (2개 서브메뉴 중 위쪽)
                 await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12);
-                await Task.Delay(100);
+                await Task.Delay(c_nWaitNormal);
 
                 // 확인 다이얼로그 대기 (원하는 결과가 나올 때까지 폴링)
                 IntPtr hWndDialog = IntPtr.Zero;
                 bool dialogHandled = false;
 
-                for (int i = 0; i < 10; i++) // 1초 대기
+                for (int i = 0; i < c_nRepeatNormal; i++) // 1초 대기
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(c_nWaitNormal);
                     hWndDialog = Std32Window.FindWindow("#32770", "확인");
                     if (hWndDialog != IntPtr.Zero)
                     {
@@ -1717,9 +1717,9 @@ public partial class InsungsAct_RcptRegPage
                 }
 
                 // 확인 다이얼로그 사라질 때까지 대기 (원하는 결과가 나올 때까지 폴링)
-                for (int i = 0; i < 10; i++) // 1초 대기
+                for (int i = 0; i < c_nRepeatNormal; i++) // 1초 대기
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(c_nWaitNormal);
                     hWndDialog = Std32Window.FindWindow("#32770", "확인");
                     if (hWndDialog == IntPtr.Zero) break;
                 }
@@ -1732,7 +1732,7 @@ public partial class InsungsAct_RcptRegPage
 
                 Debug.WriteLine($"[InitDG오더Async] 접수화면초기화 완료");
                 initSuccess = true;
-                await Task.Delay(500); // 초기화 반영 대기
+                await Task.Delay(c_nWaitVeryLong); // 초기화 반영 대기
                 break; // 성공 시 탈출
             }
 

@@ -76,8 +76,16 @@ public class CommonFuncs : CommonVars
 
         Debug.WriteLine($"[CommonFuncs] Insung02 설정 로드: Use={NwInsung02.s_Use}, Id={NwInsung02.s_Id}, AppPath={NwInsung02.s_AppPath} -----------------------");
 
+        // Cargo24 설정 로드
+        string sUseCargo24 = JsonFileManager.GetValue("ExternalApps:Cargo24:Use");
+        NwCargo24.s_Use = StdConvert.StringToBool(sUseCargo24);
+        NwCargo24.s_Id = JsonFileManager.GetValue("ExternalApps:Cargo24:Id");
+        NwCargo24.s_Pw = JsonFileManager.GetValue("ExternalApps:Cargo24:Pw");
+        NwCargo24.s_AppPath = JsonFileManager.GetValue("ExternalApps:Cargo24:AppPath");
+
+        Debug.WriteLine($"[CommonFuncs] Cargo24 설정 로드: Use={NwCargo24.s_Use}, Id={NwCargo24.s_Id}, AppPath={NwCargo24.s_AppPath} -----------------------");
+
         // TODO: 나중에 다른 앱들도 추가
-        // NwCargo24.s_Use = StdConvert.StringToBool(JsonFileManager.GetValue("ExternalApps:Cargo24:Use"));
         // NwOnecall.s_Use = StdConvert.StringToBool(JsonFileManager.GetValue("ExternalApps:Onecall:Use"));
     }
 

@@ -107,10 +107,10 @@ public class InsungsAct_App
         // 300초(5분) 동안 대기
         for (int i = 0; i < 3000; i++)
         {
-            await Task.Delay(100);
+            await Task.Delay(c_nWaitNormal);
             if (bClosed) break;
         }
-        await Task.Delay(100);
+        await Task.Delay(c_nWaitNormal);
 
         // 프로세스가 종료되지 않았으면 에러
         if (!bClosed) return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -138,10 +138,10 @@ public class InsungsAct_App
         try
         {
             // 1. 스플래시 윈도우 찾기 (10초 대기)
-            for (int i = 0; i < 100; i++) // 10초 동안
+            for (int i = 0; i < c_nRepeatVeryMany; i++) // 10초 동안
             {
                 m_Context.MemInfo.Splash.TopWnd_hWnd = StdWin32.FindWindow(null, m_Context.FileInfo.Splash_TopWnd_sWndName);
-                await Task.Delay(100); // 무조건 대기
+                await Task.Delay(c_nWaitNormal); // 무조건 대기
                 if (m_Context.MemInfo.Splash.TopWnd_hWnd != IntPtr.Zero) break;
             }
 
@@ -161,11 +161,11 @@ public class InsungsAct_App
             StdWin32.MoveWindow(m_Context.MemInfo.Splash.TopWnd_hWnd, rcNew.X, rcNew.Y, rcNew.Width, rcNew.Height, true);
 
             // 위치 이동 확인 (10초 대기)
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < c_nRepeatVeryMany; i++)
             {
                 hWndTmp = Std32Window.GetWndHandle_FromAbsDrawPos(rcNew.X, rcNew.Y);
                 if (hWndTmp != IntPtr.Zero && hWndTmp == m_Context.MemInfo.Splash.TopWnd_hWnd) break;
-                await Task.Delay(100);
+                await Task.Delay(c_nWaitNormal);
             }
 
             if (hWndTmp != m_Context.MemInfo.Splash.TopWnd_hWnd)
@@ -236,9 +236,9 @@ public class InsungsAct_App
                 IntPtr hWndMapSDK = IntPtr.Zero;
                 IntPtr hWndBtn = IntPtr.Zero;
 
-                for (int i = 0; i < 100; i++) // 10초 동안
+                for (int i = 0; i < c_nRepeatVeryMany; i++) // 10초 동안
                 {
-                    Thread.Sleep(100);
+                    Thread.Sleep(c_nWaitNormal);
 
                     hWndMapSDK = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "");
                     if (hWndMapSDK != IntPtr.Zero)
@@ -265,7 +265,7 @@ public class InsungsAct_App
                             {
                                 for (int i = 0; i < 15; i++) // 1.5초 동안
                                 {
-                                    Thread.Sleep(100);
+                                    Thread.Sleep(c_nWaitNormal);
                                     hWndTmp = StdWin32.FindWindow(null, "비밀번호변경");
                                     if (hWndTmp != IntPtr.Zero)
                                     {
@@ -276,7 +276,7 @@ public class InsungsAct_App
 
                                             Thread ttt = new Thread(async () =>
                                             {
-                                                Thread.Sleep(100);
+                                                Thread.Sleep(c_nWaitNormal);
                                                 hWndTmp = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
                                                 if (hWndTmp != IntPtr.Zero)
                                                 {
@@ -309,7 +309,7 @@ public class InsungsAct_App
 
                 for (int i = 0; i < 100; i++) // 5초 동안
                 {
-                    Thread.Sleep(50);
+                    Thread.Sleep(c_nWaitShort);
 
                     hWndTmp2 = StdWin32.FindWindow(null, "오토바이 신규기사 범죄이력 조회 업데이트 안내");
                     if (hWndTmp2 != IntPtr.Zero)
@@ -331,7 +331,7 @@ public class InsungsAct_App
         {
             StdWin32.BlockInput(false); // BlockInput 해제
             // TopMost 해제는 나중에 추가
-            await Task.Delay(100);
+            await Task.Delay(c_nWaitNormal);
         }
     }
     #endregion
@@ -446,11 +446,11 @@ public class InsungsAct_App
 
                 // 5초 동안 죽은거 확인
                 bool bShow = true;
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < c_nRepeatMany; i++)
                 {
                     bShow = Std32Window.IsWindowVisible(m_Context.MemInfo.Splash.TopWnd_hWnd);
                     if (!bShow) break;
-                    Thread.Sleep(100);
+                    Thread.Sleep(c_nWaitNormal);
                 }
 
                 if (bShow)

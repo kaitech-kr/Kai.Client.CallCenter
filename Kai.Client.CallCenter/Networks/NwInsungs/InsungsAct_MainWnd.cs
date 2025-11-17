@@ -62,7 +62,7 @@ public class InsungsAct_MainWnd
                         null, m_FileInfo.Main_TopWnd_sWndNameReduct);
                 });
 
-                await Task.Delay(100);
+                await Task.Delay(c_nWaitNormal);
                 if (m_Main.TopWnd_hWnd != IntPtr.Zero) break;
             }
 
@@ -86,9 +86,9 @@ public class InsungsAct_MainWnd
             IntPtr hWndMulti = IntPtr.Zero;
             IntPtr hWndMain = m_Main.TopWnd_hWnd;
 
-            for (int i = 0; i < 100; i++) // 10초 동안 Explorer Wnd 찾기
+            for (int i = 0; i < c_nRepeatVeryMany; i++) // 10초 동안 Explorer Wnd 찾기
             {
-                Thread.Sleep(100); // 무조건 대기
+                Thread.Sleep(c_nWaitNormal); // 무조건 대기
                 now = DateTime.Now;
                 gab = now - last;
                 if (gab.TotalSeconds > 3) break; // 3초 이상 지나면
@@ -114,7 +114,7 @@ public class InsungsAct_MainWnd
                 }
 
                 // 중복접속창이 뜨면 닫는다
-                await Task.Delay(100);
+                await Task.Delay(c_nWaitNormal);
                 hWndMulti = Std32Window.FindMainWindow(m_MemInfo.Splash.TopWnd_uProcessId, "#32770", "");
                 if (hWndMulti != IntPtr.Zero)
                 {
@@ -145,7 +145,7 @@ public class InsungsAct_MainWnd
             {
                 hWndFind = Std32Window.GetParentWndHandle_FromAbsDrawPt(ptTarget);
                 if (hWndFind == m_Main.TopWnd_hWnd) break;
-                Thread.Sleep(100);
+                Thread.Sleep(c_nWaitNormal);
             }
 
             if (hWndFind != m_Main.TopWnd_hWnd)
@@ -156,7 +156,7 @@ public class InsungsAct_MainWnd
                     $"[{m_Context.AppName}/MainWnd]이동실패: {m_Main.TopWnd_hWnd:X}, {hWndFind:X}, {ptTarget}, {capMain}, {capFind}",
                     "InsungsAct_MainWnd/InitializeAsync_03", bWrite, bMsgBox);
             }
-            await Task.Delay(500);
+            await Task.Delay(c_nWaitVeryLong);
             Debug.WriteLine($"[InsungsAct_MainWnd] 메인 윈도우 이동 및 최대화 완료");
 
             // 6. 차일드 윈도우 정보 수집
