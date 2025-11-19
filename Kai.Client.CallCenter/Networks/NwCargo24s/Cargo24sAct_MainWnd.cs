@@ -137,13 +137,6 @@ public class Cargo24sAct_MainWnd
             }
             Debug.WriteLine($"[Cargo24sAct_MainWnd] 차일드 윈도우 개수: {m_Main.FirstLayer_ChildWnds.Count}");
 
-            // Debug: 모든 차일드 윈도우 정보 출력
-            for (int i = 0; i < m_Main.FirstLayer_ChildWnds.Count; i++)
-            {
-                var wnd = m_Main.FirstLayer_ChildWnds[i];
-                Debug.WriteLine($"[Cargo24sAct_MainWnd] Child[{i}]: className={wnd.className}, rcRel={wnd.rcRel}");
-            }
-
             // 6. MainMenu 찾기 - Rect으로 찾기
             m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
                 x => x.rcRel == m_FileInfo.Main_MainMenu_rcRel);

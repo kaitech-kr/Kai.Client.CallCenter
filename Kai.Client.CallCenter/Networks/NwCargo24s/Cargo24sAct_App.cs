@@ -251,75 +251,208 @@ public class Cargo24sAct_App
                 StdWin32.PostMessage(mMain.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, StdCommon32.SC_CLOSE, 0); // 닫기
                 Debug.WriteLine($"[Cargo24sAct_App] MainWindow 닫기 메시지 전송");
 
-                // 3초 동안 확인 다이아로그 찾음
+                // 1초 동안 확인 다이아로그 찾음 (타임아웃 단축)
                 IntPtr hWndDlg = IntPtr.Zero;
                 IntPtr hWndBtn = IntPtr.Zero;
 
-                for (int i = 0; i < 30; i++)
+                for (int i = 0; i < c_nRepeatNormal; i++)
                 {
                     hWndDlg = Std32Window.FindMainWindow(mSplash.TopWnd_uProcessId, "TMessageForm", "Confirm");
-                    Thread.Sleep(100);
+                    if (hWndDlg == IntPtr.Zero)
+                    {
+                        hWndDlg = Std32Window.FindWindow("TMessageForm", "Confirm");
+                    }
+                    Thread.Sleep(c_nWaitNormal);
                     if (hWndDlg != IntPtr.Zero) break;
                 }
 
                 if (hWndDlg == IntPtr.Zero)
                 {
-                    return new StdResult_Error($"[{m_Context.AppName}/Close] 종료 다이아로그 찾기 실패", "Cargo24sAct_App/Close_01");
+                    Debug.WriteLine($"[Cargo24sAct_App] 종료 확인창 없음 - 메인 윈도우가 바로 닫히는지 체크");
+
+                    // 확인창 없이 바로 닫힐 수도 있음 - 메인 윈도우 닫힘 체크
+                    for (int i = 0; i < c_nRepeatMany; i++)
+                    {
+                        if (!Std32Window.IsWindowVisible(mMain.TopWnd_hWnd))
+                        {
+                            Debug.WriteLine($"[Cargo24sAct_App] MainWindow 바로 종료 확인됨");
+                            return null;
+                        }
+                        Thread.Sleep(c_nWaitShort);
+                    }
+
+                    Debug.WriteLine($"[Cargo24sAct_App] 메인 윈도우도 안 닫힘 - 프로세스 강제 종료");
+                    // 프로세스 강제 종료
+                    try
+                    {
+                        var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
+                        process.Kill();
+                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
+                        return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_01");
+                    }
                 }
 
                 Debug.WriteLine($"[Cargo24sAct_App] 종료 다이아로그 찾음: {hWndDlg}");
 
-                for (int i = 0; i < 30; i++)
+                // 확인창의 프로세스 ID 확인
+                uint dlgProcessId = 0;
+                StdWin32.GetWindowThreadProcessId(hWndDlg, out dlgProcessId);
+                Debug.WriteLine($"[Cargo24sAct_App] 확인창 프로세스 ID: {dlgProcessId}, Cargo24 프로세스 ID: {mSplash.TopWnd_uProcessId}");
+
+                if (dlgProcessId != mSplash.TopWnd_uProcessId)
+                {
+                    Debug.WriteLine($"[Cargo24sAct_App] 경고: 확인창의 프로세스 ID가 다릅니다! 다시 찾기 시도");
+                    // 다른 프로그램의 윈도우를 찾은 것이므로, 다시 프로세스 ID로만 찾기
+                    hWndDlg = IntPtr.Zero;
+                    for (int i = 0; i < c_nRepeatNormal; i++)
+                    {
+                        hWndDlg = Std32Window.FindMainWindow(mSplash.TopWnd_uProcessId, "TMessageForm", null); // Title 없이 찾기
+                        if (hWndDlg != IntPtr.Zero)
+                        {
+                            string title = Std32Window.GetWindowText(hWndDlg);
+                            Debug.WriteLine($"[Cargo24sAct_App] 확인창 재발견 (시도 {i + 1}/{c_nRepeatNormal}): {hWndDlg:X}, Title: {title}");
+                            break;
+                        }
+                        Thread.Sleep(c_nWaitNormal);
+                    }
+
+                    if (hWndDlg == IntPtr.Zero)
+                    {
+                        Debug.WriteLine($"[Cargo24sAct_App] 확인창 재발견 실패 - 프로세스 강제 종료");
+                        try
+                        {
+                            var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
+                            process.Kill();
+                            Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
+                            return null;
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
+                            return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_01_2");
+                        }
+                    }
+                }
+
+                // YES 버튼 찾기
+                Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 찾기 시작");
+                for (int i = 0; i < 5; i++)
                 {
                     hWndBtn = Std32Window.FindWindowEx(hWndDlg, IntPtr.Zero, "TButton", "&Yes");
-                    Thread.Sleep(100);
-                    if (hWndBtn != IntPtr.Zero) break;
+                    if (hWndBtn != IntPtr.Zero)
+                    {
+                        Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 찾음 (시도 {i + 1}/5): {hWndBtn:X}");
+                        break;
+                    }
+                    Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 못 찾음 (시도 {i + 1}/5)");
+                    Thread.Sleep(c_nWaitNormal);
                 }
 
                 if (hWndBtn == IntPtr.Zero)
                 {
-                    return new StdResult_Error(
-                        $"[{m_Context.AppName}/Close] 종료 다이아로그 - YES버튼 찾기 실패",
-                        "Cargo24sAct_App/Close_02");
+                    Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 찾기 실패 - 프로세스 강제 종료");
+                    try
+                    {
+                        var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
+                        process.Kill();
+                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
+                        return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_02");
+                    }
                 }
 
-                Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 찾음: {hWndBtn}");
+                // YES 버튼 클릭
+                IntPtr lParam = StdUtil.MakeIntPtrLParam(3, 3);
+                StdWin32.PostMessage(hWndBtn, StdCommon32.WM_LBUTTONDOWN, 1, lParam);
+                Thread.Sleep(c_nWaitUltraShort);
+                StdWin32.PostMessage(hWndBtn, StdCommon32.WM_LBUTTONUP, 0, lParam);
+                Thread.Sleep(c_nWaitUltraShort);
+                Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 클릭 완료");
 
-                Thread.Sleep(100);
-                Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn).GetAwaiter().GetResult();
+                // 1. 먼저 확인창이 닫히는지 체크 (2초)
+                bool bDialogClosed = false;
+                for (int i = 0; i < 20; i++)
+                {
+                    if (!Std32Window.IsWindowVisible(hWndDlg))
+                    {
+                        Debug.WriteLine($"[Cargo24sAct_App] 확인창 닫힘 확인");
+                        bDialogClosed = true;
+                        break;
+                    }
+                    Thread.Sleep(c_nWaitNormal);
+                }
 
-                for (int i = 0; i < 30; i++) // 윈도가 없어지는지 체크
+                if (!bDialogClosed)
+                {
+                    Debug.WriteLine($"[Cargo24sAct_App] 확인창이 안 닫힘 - 프로세스 강제 종료");
+                    try
+                    {
+                        var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
+                        process.Kill();
+                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
+                        return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_03");
+                    }
+                }
+
+                // 2. 그 다음 메인 윈도우가 닫히는지 체크 (2초)
+                for (int i = 0; i < 20; i++)
                 {
                     if (!Std32Window.IsWindowVisible(mMain.TopWnd_hWnd))
                     {
                         Debug.WriteLine($"[Cargo24sAct_App] MainWindow 종료 확인됨");
                         return null;
                     }
-                    Thread.Sleep(100);
+                    Thread.Sleep(c_nWaitNormal);
                 }
 
-                return new StdResult_Error($"[{m_Context.AppName}/Close] 메인윈도 종료실패: {mMain.TopWnd_hWnd:X}", "Cargo24sAct_App/Close_03");
+                Debug.WriteLine($"[Cargo24sAct_App] MainWindow가 안 닫힘 - 프로세스 강제 종료");
+                try
+                {
+                    var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
+                    process.Kill();
+                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
+                    return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_04");
+                }
             }
 
             // SplashWnd가 Null이 아니면
             if (mSplash.TopWnd_hWnd != IntPtr.Zero)
             {
-                // Close Insung - 필요하다면 Process를 죽이는 방법도 있음(화물24시 같이)
+                // Close Cargo24 - 필요하다면 Process를 죽이는 방법도 있음
                 Std32Window.PostCloseTwiceWindow(m_MemInfo.Splash.TopWnd_hWnd);
                 Debug.WriteLine($"[Cargo24sAct_App] SplashWindow 닫기 메시지 전송");
 
                 // 5초 동안 죽은거 확인..
                 bool bShow = true;
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < c_nRepeatMany; i++)
                 {
                     bShow = Std32Window.IsWindowVisible(m_MemInfo.Splash.TopWnd_hWnd);
                     if (!bShow) break;
-                    Thread.Sleep(100);
+                    Thread.Sleep(c_nWaitNormal);
                 }
 
                 if (bShow)
                 {
-                    return new StdResult_Error($"[{m_Context.AppName}/Close]스플래쉬윈도 종료실패", "Cargo24sAct_App/Close_04");
+                    return new StdResult_Error($"[{m_Context.AppName}/Close]스플래쉬윈도 종료실패", "Cargo24sAct_App/Close_05");
                 }
 
                 Debug.WriteLine($"[Cargo24sAct_App] SplashWindow 종료 확인됨");

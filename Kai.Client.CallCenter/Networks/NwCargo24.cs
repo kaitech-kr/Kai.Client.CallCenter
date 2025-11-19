@@ -100,8 +100,30 @@ public class NwCargo24 : IExternalApp
 
     public void Shutdown()
     {
-        Debug.WriteLine($"[{AppName}] Shutdown 호출");
-        // TODO: 앱 종료 로직 구현
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 시작");
+
+            // AppAct.CloseAsync() 호출 - Cargo24 앱 종료
+            if (m_Context?.AppAct != null)
+            {
+                StdResult_Error resultClose = m_Context.AppAct.Close();
+                if (resultClose != null)
+                {
+                    Debug.WriteLine($"[{AppName}] Close 실패: {resultClose.sErrNPos}");
+                }
+                else
+                {
+                    Debug.WriteLine($"[{AppName}] Close 성공");
+                }
+            }
+
+            Debug.WriteLine($"[{AppName}] Shutdown 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 예외 발생: {ex.Message}");
+        }
     }
     #endregion
 
