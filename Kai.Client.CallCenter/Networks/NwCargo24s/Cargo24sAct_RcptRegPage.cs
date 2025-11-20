@@ -9,6 +9,7 @@ using Kai.Common.NetDll_WpfCtrl.NetOFR;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Windows;
+using Kai.Client.CallCenter.OfrWorks;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks.NwCargo24s;
@@ -49,6 +50,33 @@ public class Cargo24sAct_RcptRegPage
         new NwCommon_DgColumnHeader() { sName = "차량종류", bOfrSeq = false, nWidth = 60 },
         new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 150 },
     };
+
+    #region Constants
+    /// <summary>
+    /// 컬럼 너비 허용 오차 (픽셀)
+    /// </summary>
+    private const int COLUMN_WIDTH_TOLERANCE = 1;
+
+    // 헤더/캡처 관련
+    private const int HEADER_HEIGHT = 30;
+    private const int TARGET_ROW = 2;
+    private const int HEADER_GAB = 7;
+    private const int OFR_HEIGHT = 20;
+    private const int MIN_COLUMN_WIDTH = 30;
+    private const int BRIGHTNESS_OFFSET = 2;
+
+    // 재시도/대기 관련
+    private const int MAX_RETRY = 3;
+    private const int DELAY_AFTER_INIT = 1000;
+    private const int DELAY_AFTER_DRAG = 150;
+    private const int DELAY_RETRY = 500;
+    private const int DELAY_DIALOG_CHECK = 50;
+
+    // Step 2 특수 컬럼 처리
+    private const int SPECIAL_COL_START = 24;
+    private const int SPECIAL_COL_END = 26;
+    private const int SPECIAL_COL_OFFSET = 30;
+    #endregion
     #endregion
 
     #region Context Reference
@@ -230,7 +258,6 @@ public class Cargo24sAct_RcptRegPage
         IntPtr hWndMain = m_Main.TopWnd_hWnd;
         string sTmp = string.Empty;
         Draw.Bitmap bmpDG = null;
-        bool bOverlayCreated = false;
 
         try
         {
@@ -256,77 +283,145 @@ public class Cargo24sAct_RcptRegPage
             m_RcptPage.DG오더_AbsRect = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
             Debug.WriteLine($"[Cargo24sAct_RcptRegPage] Datagrid AbsRect: {m_RcptPage.DG오더_AbsRect}");
 
-            // Step 4-1: 헤더 영역만 캡처 (Datagrid 핸들 + Datagrid 기준 상대좌표)
-            Draw.Rectangle rcHeaderInDG = new Draw.Rectangle(0, 0, m_RcptPage.DG오더_AbsRect.Width, m_FileInfo.접수등록Page_DG오더_headerHeight);
-
-            // [디버깅] 캡처 영역 시각화 (DG 핸들 기준 오버레이 + DG 기준 상대좌표)
-            if (bEdit)
+            // 평가 및 재시도 루프
+            for (int retry = 1; retry <= MAX_RETRY; retry++)
             {
-                TransparantWnd.CreateOverlay(m_RcptPage.DG오더_hWnd);
-                bOverlayCreated = true;
-                TransparantWnd.DrawBoxAsync(rcHeaderInDG, Colors.Red, 1);
+                // Step 4-1: 헤더 영역만 캡처
+                Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, m_RcptPage.DG오더_AbsRect.Width, HEADER_HEIGHT);
+                bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
+
+                if (bmpDG == null)
+                {
+                    return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 영역 캡처 실패", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_03", bWrite, bMsgBox);
+                }
+                Debug.WriteLine($"[Cargo24/SetDG오더] 헤더 영역 캡처 성공: {bmpDG.Width}x{bmpDG.Height}");
+
+                // Step 4-2: 헤더에서 최대 밝기 검출 (배경 밝기)
+                byte maxBrightness = OfrService.GetMaxBrightnessAtRow_FromColorBitmapFast(bmpDG, TARGET_ROW);
+                if (maxBrightness == 0)
+                {
+                    bmpDG?.Dispose();
+                    return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 행 최대 밝기 검출 실패: targetRow={TARGET_ROW}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_04", bWrite, bMsgBox);
+                }
+
+                maxBrightness -= BRIGHTNESS_OFFSET; // 배경보다 약간 어두운 것을 경계로 인식
+
+                // Step 4-3: Bool 배열 생성 및 컬럼 경계 검출
+                bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, TARGET_ROW, maxBrightness, 2);
+                if (boolArr == null || boolArr.Length == 0)
+                {
+                    bmpDG?.Dispose();
+                    return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]Bool 배열 생성 실패: targetRow={TARGET_ROW}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_05", bWrite, bMsgBox);
+                }
+
+                // 4-3-2. 컬럼 경계 리스트 추출
+                List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, maxBrightness);
+                if (listLW == null || listLW.Count == 0)
+                {
+                    bmpDG?.Dispose();
+                    return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]컬럼 경계 검출 실패: 검출된 리스트 수=0", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_06", bWrite, bMsgBox);
+                }
+
+                // 4-3-3. 마지막 항목 제거 (오른쪽 끝 경계)
+                if (listLW.Count >= 1)
+                {
+                    listLW.RemoveAt(listLW.Count - 1);
+                }
+
+                int columns = listLW.Count;
+
+                // 평가 1: 컬럼 개수 확인 (최소 개수 이상이어야 함)
+                if (columns < m_ReceiptDgHeaderInfos.Length)
+                {
+                    Debug.WriteLine($"[Cargo24/SetDG오더] 컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {retry}/{MAX_RETRY})");
+
+                    bmpDG?.Dispose();
+
+                    StdResult_Error initResult = await InitDG오더Async(
+                        CEnum_DgValidationIssue.InvalidColumnCount,
+                        bEdit, bWrite, bMsgBox: false);
+
+                    if (initResult != null)
+                    {
+                        // 사용자 취소 시 즉시 종료 (강제종료)
+                        if (initResult.sErr.Contains("사용자 취소"))
+                        {
+                            return initResult;
+                        }
+
+                        if (retry == MAX_RETRY)
+                        {
+                            return CommonFuncs_StdResult.ErrMsgResult_Error(
+                                $"[{m_Context.AppName}/SetDG오더]컬럼 개수 부족: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개\n상세: {initResult.sErr}\n(재시도 {MAX_RETRY}회 초과)",
+                                "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_07", bWrite, bMsgBox);
+                        }
+                    }
+
+                    await Task.Delay(DELAY_RETRY);
+                    continue; // 재시도
+                }
+
+                // 평가 2: 컬럼 헤더 OFR (처음 22개만)
+                Debug.WriteLine($"[Cargo24/SetDG오더] 평가 2: 컬럼 헤더 OFR 시작");
+                string[] columnTexts = new string[m_ReceiptDgHeaderInfos.Length];
+
+                for (int i = 1; i < m_ReceiptDgHeaderInfos.Length; i++)
+                {
+                    Draw.Rectangle rcTmp = new Draw.Rectangle(
+                        listLW[i].nLeft, TARGET_ROW, listLW[i].nWidth, OFR_HEIGHT);
+
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
+                        bmpDG, rcTmp, bInvertRgb: false, bEdit: false);
+
+                    columnTexts[i] = result?.strResult ?? string.Empty;
+                }
+
+                // 평가 3: Datagrid 상태 검증 (순서/너비)
+                Debug.WriteLine($"[Cargo24/SetDG오더] 평가 3: Datagrid 상태 검증 시작");
+                CEnum_DgValidationIssue validationIssues = ValidateDatagridState(columnTexts, listLW);
+
+                if (validationIssues != CEnum_DgValidationIssue.None)
+                {
+                    Debug.WriteLine($"[Cargo24/SetDG오더] Datagrid 상태 검증 실패: {validationIssues} (재시도 {retry}/{MAX_RETRY})");
+
+                    bmpDG?.Dispose();
+
+                    StdResult_Error initResult = await InitDG오더Async(
+                        validationIssues,
+                        bEdit, bWrite, bMsgBox: false);
+
+                    if (initResult != null)
+                    {
+                        if (initResult.sErr.Contains("사용자 취소"))
+                        {
+                            return initResult;
+                        }
+
+                        if (retry == MAX_RETRY)
+                        {
+                            return CommonFuncs_StdResult.ErrMsgResult_Error(
+                                $"[{m_Context.AppName}/SetDG오더]Datagrid 상태 검증 실패: {validationIssues}\n상세: {initResult.sErr}\n(재시도 {MAX_RETRY}회 초과)",
+                                "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_Validation", bWrite, bMsgBox);
+                        }
+                    }
+
+                    await Task.Delay(DELAY_RETRY);
+                    continue; // 재시도
+                }
+
+                // 모든 평가 통과 - 성공
+                bmpDG?.Dispose();
+
+                // TODO: Step 5 - Cell 좌표 배열 생성
+
+                Debug.WriteLine($"[Cargo24/SetDG오더] SetDG오더RectsAsync 완료");
+                return null; // 성공
             }
 
-            bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeaderInDG);
-            if (bmpDG == null)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 영역 캡처 실패: rcHeaderInDG={rcHeaderInDG}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_03", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[Cargo24sAct_RcptRegPage] 헤더 영역 캡처 성공: {bmpDG.Width}x{bmpDG.Height}");
-
-            // Step 4-2: 헤더 상단 여백에서 최소 밝기 검출
-            const int headerGab = 7; // 헤더 상단 여백
-            int targetRow = headerGab; // 텍스트가 없는 Y 위치 (경계선만 검출)
-
-            byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpDG, targetRow);
-            if (minBrightness == 255) // 검출 실패
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 행 최소 밝기 검출 실패: targetRow={targetRow}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_04", bWrite, bMsgBox);
-            }
-
-            minBrightness -= 2; // 경계를 더 정확히 잡기 위해 어둡게 조정 (경계선이 어두우므로)
-            Debug.WriteLine($"[Cargo24sAct_RcptRegPage] 헤더 행 최소 밝기 검출: targetRow={targetRow}, minBrightness={minBrightness}");
-
-            // Step 4-3: Bool 배열 생성 및 컬럼 경계 검출
-            // 4-3-1. Bool 배열 생성 (true=검은색, false=흰색)
-            bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, targetRow, minBrightness, 2); // 마진 2픽셀
-            if (boolArr == null || boolArr.Length == 0)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]Bool 배열 생성 실패: targetRow={targetRow}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_05", bWrite, bMsgBox);
-            }
-            Debug.WriteLine($"[Cargo24sAct_RcptRegPage] Bool 배열 생성 완료: Length={boolArr.Length}");
-
-            // 4-3-2. 컬럼 경계 리스트 추출
-            List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
-            if (listLW == null || listLW.Count == 0)
-            {
-                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]컬럼 경계 검출 실패: 검출된 리스트 수=0", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_06", bWrite, bMsgBox);
-            }
-
-            // 4-3-3. 첫 번째와 마지막 항목 제거 (테두리 명도 + 오른쪽 끝 경계)
-            if (listLW.Count >= 2)
-            {
-                listLW.RemoveAt(0); // 첫 번째 제거 (테두리 명도 섞임)
-                listLW.RemoveAt(listLW.Count - 1); // 마지막 제거 (오른쪽 끝 경계)
-                Debug.WriteLine($"[Cargo24sAct_RcptRegPage] 첫/마지막 항목 제거 완료");
-            }
-
-            int columns = listLW.Count; // 제거 후 남은 개수 = 실제 컬럼 개수
-            Debug.WriteLine($"[Cargo24sAct_RcptRegPage] 컬럼 경계 검출 완료: 실제 컬럼={columns}개");
-
-            // [디버깅] listLW 첫 3개 값 출력
-            string debugInfo = "[디버깅] listLW 첫 3개:\n";
-            for (int dbg = 0; dbg < Math.Min(3, listLW.Count); dbg++)
-            {
-                debugInfo += $"  [{dbg}] Left={listLW[dbg].nLeft}, Width={listLW[dbg].nWidth}\n";
-            }
-            Debug.WriteLine(debugInfo);
-
-            // TODO: Step 4-4 - 컬럼 헤더 OFR
-            // TODO: Step 5 - Cell 좌표 배열 생성
-
-            Debug.WriteLine($"[Cargo24sAct_RcptRegPage] SetDG오더RectsAsync 완료 (Step 3 + Step 4-1,2,3)");
-            return null; // 성공
+            // 최대 재시도 초과
+            return CommonFuncs_StdResult.ErrMsgResult_Error(
+                $"[{m_Context.AppName}/SetDG오더]Datagrid 초기화 실패 (재시도 {MAX_RETRY}회 초과)",
+                "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_MaxRetry", bWrite, bMsgBox);
         }
         catch (Exception ex)
         {
@@ -336,10 +431,291 @@ public class Cargo24sAct_RcptRegPage
         {
             // 리소스 정리
             bmpDG?.Dispose();
-            if (bOverlayCreated)
+        }
+    }
+
+    /// <summary>
+    /// Datagrid 강제 초기화 (원래대로 버튼 → 컬럼 조정 → 순서 저장)
+    /// </summary>
+    public async Task<StdResult_Error> InitDG오더Async(CEnum_DgValidationIssue issues, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    {
+        Draw.Bitmap? bmpHeader = null;
+
+        try
+        {
+            Debug.WriteLine($"[Cargo24/InitDG오더] InitDG오더Async 시작: issues={issues}");
+
+            // Step 1: "원래대로" 버튼 클릭 (초기화)
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 1: 원래대로 버튼 클릭");
+
+            if (m_RcptPage.리스트항목_hWnd원래대로 == IntPtr.Zero)
             {
-                TransparantWnd.DeleteOverlay();
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    $"[{m_Context.AppName}/InitDG오더]원래대로 버튼 핸들 없음",
+                    "Cargo24sAct_RcptRegPage/InitDG오더Async_01", bWrite, bMsgBox);
             }
+
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.리스트항목_hWnd원래대로);
+            await Task.Delay(DELAY_AFTER_INIT); // 초기화 반영 대기
+
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 1 완료: 원래대로 버튼 클릭됨");
+
+            // Step 2: 불필요한 컬럼 제거 (수직 드래그)
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 2: 불필요한 컬럼 제거 시작");
+
+            // 2-1. 헤더 캡처 및 컬럼 경계 검출
+            Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, m_RcptPage.DG오더_AbsRect.Width, HEADER_HEIGHT);
+            bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
+            if (bmpHeader == null)
+            {
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    $"[{m_Context.AppName}/InitDG오더]헤더 캡처 실패",
+                    "Cargo24sAct_RcptRegPage/InitDG오더Async_Step2_01", bWrite, bMsgBox);
+            }
+
+            byte maxBrightness = OfrService.GetMaxBrightnessAtRow_FromColorBitmapFast(bmpHeader, TARGET_ROW);
+            maxBrightness -= BRIGHTNESS_OFFSET;
+
+            bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, TARGET_ROW, maxBrightness, 2);
+            List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, maxBrightness);
+
+            // 마지막 경계는 제외 (백업 패턴)
+            int columns = listLW.Count - 1;
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 2. 현재 컬럼 수: {columns}");
+
+            // 2-2. 우측에서 좌측으로 모든 컬럼 폭 줄이기 (백업: 한 번에 최대한 줄여서 39개 보이게)
+            for (int x = columns; x > 1; x--)
+            {
+                Draw.Point ptStart = new Draw.Point(listLW[x].nLeft, HEADER_GAB);
+                Draw.Point ptEnd = new Draw.Point(listLW[x - 1].nLeft + MIN_COLUMN_WIDTH, ptStart.Y);
+                if (x >= SPECIAL_COL_START && x <= SPECIAL_COL_END) ptEnd.X += SPECIAL_COL_OFFSET;
+
+                int dx = ptEnd.X - ptStart.X;
+                Debug.WriteLine($"[Cargo24/InitDG오더] Step 2. 컬럼[{x}] 드래그: {ptStart.X} → {ptEnd.X} (dx={dx})");
+
+                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
+                    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                await Task.Delay(DELAY_AFTER_DRAG);
+            }
+
+            bmpHeader?.Dispose();
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 2 완료");
+
+            // Step 3: 컬럼 원하는 위치로 이동
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 3: 컬럼 위치 이동 시작");
+
+            string[] orgColArr = (string[])m_FileInfo.접수등록Page_DG오더_colOrgTexts.Clone(); // 복사본 사용
+
+            for (int x = 1; x < m_ReceiptDgHeaderInfos.Length; x++)
+            {
+                // 3-1. 매번 헤더 캡처 및 컬럼 경계 재검출
+                bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
+                if (bmpHeader == null)
+                {
+                    return CommonFuncs_StdResult.ErrMsgResult_Error(
+                        $"[{m_Context.AppName}/InitDG오더]Step3 헤더 캡처 실패",
+                        "Cargo24sAct_RcptRegPage/InitDG오더Async_Step3_01", bWrite, bMsgBox);
+                }
+
+                boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, TARGET_ROW, maxBrightness, 2);
+                listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, maxBrightness);
+                columns = listLW.Count - 1;
+                bmpHeader?.Dispose();
+
+                // 3-2. orgColArr에서 원하는 컬럼 위치 찾기
+                int find = orgColArr
+                    .Select((value, idx) => new { value, idx })
+                    .Where(z => z.value == m_ReceiptDgHeaderInfos[x].sName)
+                    .Select(z => z.idx)
+                    .DefaultIfEmpty(-1)
+                    .First();
+
+                if (find < 0)
+                {
+                    return CommonFuncs_StdResult.ErrMsgResult_Error(
+                        $"[{m_Context.AppName}/InitDG오더]컬럼[{x}] '{m_ReceiptDgHeaderInfos[x].sName}' 못찾음",
+                        "Cargo24sAct_RcptRegPage/InitDG오더Async_Step3_02", bWrite, bMsgBox);
+                }
+
+                if (find == x) continue; // 같은 위치면 패스
+
+                Debug.WriteLine($"[Cargo24/InitDG오더] Step 3. 컬럼[{x}] '{m_ReceiptDgHeaderInfos[x].sName}': {find} → {x}");
+
+                // 3-3. 드래그 (find 위치 → x 위치)
+                Draw.Point ptStart = new Draw.Point(listLW[find].nLeft + 10, HEADER_GAB);
+                Draw.Point ptEnd = new Draw.Point(listLW[x].nLeft + 10, ptStart.Y);
+                int dx = ptEnd.X - ptStart.X;
+
+                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
+                    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+
+                // 3-4. orgColArr 배열 업데이트 (컬럼 밀기)
+                string temp = orgColArr[find];
+                for (int m = find; m > x; m--) orgColArr[m] = orgColArr[m - 1];
+                orgColArr[x] = temp;
+
+                await Task.Delay(DELAY_AFTER_DRAG);
+            }
+
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 3 완료: 컬럼 위치 이동됨");
+
+            // Step 4: 컬럼 원하는 폭으로 확장
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 4: 컬럼 폭 조정 시작");
+
+            // 4-1. 현재 컬럼 경계 재검출
+            bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
+            if (bmpHeader == null)
+            {
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    $"[{m_Context.AppName}/InitDG오더]Step4 헤더 캡처 실패",
+                    "Cargo24sAct_RcptRegPage/InitDG오더Async_Step4_01", bWrite, bMsgBox);
+            }
+
+            boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, TARGET_ROW, maxBrightness, BRIGHTNESS_OFFSET);
+            listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, maxBrightness);
+            columns = listLW.Count - 1;
+            bmpHeader?.Dispose();
+
+            // 4-2. 뒤에서 앞으로 원하는 폭으로 확장 (백업: 재검출 없음)
+            for (int x = m_ReceiptDgHeaderInfos.Length - 1; x > 0; x--)
+            {
+                Draw.Point ptStart = new Draw.Point(listLW[x + 1].nLeft, HEADER_GAB);
+                int dx = m_ReceiptDgHeaderInfos[x].nWidth - listLW[x].nWidth;
+
+                Debug.WriteLine($"[Cargo24/InitDG오더] Step 4. 컬럼[{x}] '{m_ReceiptDgHeaderInfos[x].sName}': 폭 {listLW[x].nWidth} → {m_ReceiptDgHeaderInfos[x].nWidth} (dx={dx})");
+
+                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
+                    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                await Task.Delay(DELAY_AFTER_DRAG);
+            }
+
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 4 완료: 컬럼 폭 조정됨");
+
+            // 확인작업: 컬럼 수 및 텍스트 검증 (백업 패턴)
+            Debug.WriteLine($"[Cargo24/InitDG오더] 확인작업 시작");
+
+            bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
+            if (bmpHeader == null)
+            {
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    $"[{m_Context.AppName}/InitDG오더]확인작업 헤더 캡처 실패", "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_01", bWrite, bMsgBox);
+            }
+
+            boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, TARGET_ROW, maxBrightness, BRIGHTNESS_OFFSET);
+            listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, maxBrightness);
+            columns = listLW.Count - 1;
+
+            // 컬럼 수 확인
+            if (m_ReceiptDgHeaderInfos.Length > columns)
+            {
+                bmpHeader?.Dispose();
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    $"[{m_Context.AppName}/InitDG오더]컬럼 수 부족: 예상={m_ReceiptDgHeaderInfos.Length}, 검출={columns}",
+                    "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_02", bWrite, bMsgBox);
+            }
+
+            // OFR로 각 컬럼 텍스트 검증
+            for (int x = 1; x < m_ReceiptDgHeaderInfos.Length; x++)
+            {
+                Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[x].nLeft, HEADER_GAB, listLW[x].nWidth, OFR_HEIGHT);
+
+                var resultChSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
+                    bmpHeader, rcTmp, bInvertRgb: false, bEdit: false);
+
+                if (string.IsNullOrEmpty(resultChSet.strResult))
+                {
+                    bmpHeader?.Dispose();
+                    return CommonFuncs_StdResult.ErrMsgResult_Error(
+                        $"[{m_Context.AppName}/InitDG오더]컬럼[{x}] OFR 실패: {resultChSet.sErr}", "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_03", bWrite, bMsgBox);
+                }
+
+                if (resultChSet.strResult != m_ReceiptDgHeaderInfos[x].sName)
+                {
+                    bmpHeader?.Dispose();
+                    return CommonFuncs_StdResult.ErrMsgResult_Error(
+                        $"[{m_Context.AppName}/InitDG오더]컬럼[{x}] 불일치: 예상={m_ReceiptDgHeaderInfos[x].sName}, 검출={resultChSet.strResult}",
+                        "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_04", bWrite, bMsgBox);
+                }
+
+                Debug.WriteLine($"[Cargo24/InitDG오더] 확인: 컬럼[{x}] '{resultChSet.strResult}' OK");
+            }
+
+            bmpHeader?.Dispose();
+            Debug.WriteLine($"[Cargo24/InitDG오더] 확인작업 완료");
+
+            // Step 5: 순서 저장
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 5: 순서 저장 시작");
+
+            const string Dlg저장확인_sClassName = "TMessageForm";
+            const string Dlg저장확인_sWndName1 = "Information";
+            const string Dlg저장확인_sWndName2 = "Cargo24";
+            const string Btn저장확인_sClassName = "TButton";
+            const string Btn저장확인_sWndName = "OK";
+
+            // 5-1. 순서 저장 버튼 클릭
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.리스트항목_hWnd순서저장);
+
+            // 5-2. 대화상자 찾기 및 OK 클릭
+            IntPtr hWndDlg = IntPtr.Zero;
+            IntPtr hWndBtn = IntPtr.Zero;
+
+            for (int i = 0; i < 50; i++)
+            {
+                await Task.Delay(DELAY_DIALOG_CHECK);
+
+                hWndDlg = StdWin32.FindWindow(Dlg저장확인_sClassName, Dlg저장확인_sWndName1);
+                if (hWndDlg == IntPtr.Zero)
+                {
+                    hWndDlg = StdWin32.FindWindow(Dlg저장확인_sClassName, Dlg저장확인_sWndName2);
+                }
+
+                if (hWndDlg != IntPtr.Zero)
+                {
+                    await Task.Delay(DELAY_DIALOG_CHECK);
+
+                    hWndBtn = StdWin32.FindWindowEx(hWndDlg, IntPtr.Zero, Btn저장확인_sClassName, Btn저장확인_sWndName);
+                    if (hWndBtn == IntPtr.Zero) break;
+
+                    Debug.WriteLine($"[Cargo24/InitDG오더] Step 5. 저장 대화상자 찾음: {hWndDlg:X}, 버튼: {hWndBtn:X}");
+
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn);
+
+                    // 대화상자 사라질때까지 대기
+                    for (int j = 0; j < 50; j++)
+                    {
+                        await Task.Delay(DELAY_DIALOG_CHECK);
+                        if (!StdWin32.IsWindow(hWndDlg)) break;
+                    }
+
+                    if (!StdWin32.IsWindow(hWndDlg)) break;
+                }
+            }
+
+            if (hWndDlg == IntPtr.Zero)
+            {
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    $"[{m_Context.AppName}/InitDG오더]저장 대화상자 못찾음", "Cargo24sAct_RcptRegPage/InitDG오더Async_Step5_01", bWrite, bMsgBox);
+            }
+
+            if (StdWin32.IsWindow(hWndDlg))
+            {
+                return CommonFuncs_StdResult.ErrMsgResult_Error(
+                    $"[{m_Context.AppName}/InitDG오더]저장 대화상자 사라지지 않음", "Cargo24sAct_RcptRegPage/InitDG오더Async_Step5_02", bWrite, bMsgBox);
+            }
+
+            Debug.WriteLine($"[Cargo24/InitDG오더] Step 5 완료: 순서 저장됨");
+
+            Debug.WriteLine($"[Cargo24/InitDG오더] InitDG오더Async 완료 (Step 1~5)");
+            return null; // 성공
+        }
+        catch (Exception ex)
+        {
+            return CommonFuncs_StdResult.ErrMsgResult_Error(
+                $"[{m_Context.AppName}/InitDG오더]예외발생: {ex.Message}", "Cargo24sAct_RcptRegPage/InitDG오더Async_999", bWrite, bMsgBox);
+        }
+        finally
+        {
+            bmpHeader?.Dispose();
         }
     }
     #endregion
@@ -348,7 +724,8 @@ public class Cargo24sAct_RcptRegPage
     /// <summary>
     /// StatusBtn 찾기 헬퍼 메서드 (인성 패턴 참고)
     /// </summary>
-    private async Task<(IntPtr hWnd, StdResult_Error error)> FindStatusButtonAsync(string buttonName, Draw.Point checkPoint, string errorCode, bool bWrite, bool bMsgBox, bool withTextValidation = true)
+    private async Task<(IntPtr hWnd, StdResult_Error error)> FindStatusButtonAsync(
+        string buttonName, Draw.Point checkPoint, string errorCode, bool bWrite, bool bMsgBox, bool withTextValidation = true)
     {
         for (int i = 0; i < c_nRepeatVeryMany; i++)
         {
@@ -380,6 +757,57 @@ public class Cargo24sAct_RcptRegPage
             $"[{m_Context.AppName}/RcptRegPage]{buttonName}버튼 찾기실패: {checkPoint}",
             errorCode, bWrite, bMsgBox);
         return (IntPtr.Zero, error);
+    }
+
+    /// <summary>
+    /// Datagrid 상태 검증 (컬럼 순서, 너비 확인)
+    /// </summary>
+    /// <param name="columnTexts">OFR로 읽어온 컬럼 헤더 텍스트 배열</param>
+    /// <param name="listLW">컬럼 Left/Width 리스트</param>
+    /// <returns>검증 이슈 플래그 (None이면 정상)</returns>
+    private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
+    {
+        CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
+
+        // 각 컬럼 검증 (1부터 시작 - 0은 미사용)
+        for (int x = 1; x < m_ReceiptDgHeaderInfos.Length; x++)
+        {
+            string columnText = columnTexts[x];
+
+            // 1. 컬럼명이 m_ReceiptDgHeaderInfos에 존재하는지
+            int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
+
+            if (index < 0)
+            {
+                issues |= CEnum_DgValidationIssue.InvalidColumn;
+                Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}'");
+                continue;
+            }
+
+            // 2. 컬럼 순서가 맞는지
+            if (index != x)
+            {
+                issues |= CEnum_DgValidationIssue.WrongOrder;
+                Debug.WriteLine($"[ValidateDatagridState] 순서 불일치[{x}]: '{columnText}' (예상 위치={index})");
+            }
+
+            // 3. 컬럼 너비가 맞는지
+            int actualWidth = listLW[x].nWidth;
+            int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
+            int widthDiff = Math.Abs(actualWidth - expectedWidth);
+
+            if (widthDiff > COLUMN_WIDTH_TOLERANCE)
+            {
+                issues |= CEnum_DgValidationIssue.WrongWidth;
+            }
+        }
+
+        if (issues == CEnum_DgValidationIssue.None)
+        {
+            Debug.WriteLine($"[ValidateDatagridState] Datagrid 상태 정상");
+        }
+
+        return issues;
     }
     #endregion
 

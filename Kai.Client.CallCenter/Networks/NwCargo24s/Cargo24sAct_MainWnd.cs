@@ -127,9 +127,39 @@ public class Cargo24sAct_MainWnd
             await Task.Delay(c_nWaitVeryLong); // 500ms
             Debug.WriteLine($"[Cargo24sAct_MainWnd] 메인 윈도우 이동 및 최대화 완료");
 
-            // 5. 차일드 윈도우 정보 수집
-            m_Main.FirstLayer_ChildWnds = Std32Window.GetChildWindows_FirstLayer(m_Main.TopWnd_hWnd);
-            if (m_Main.FirstLayer_ChildWnds.Count == 0)
+            // 5. 차일드 윈도우 정보 수집 및 메뉴 찾기 (5초 대기)
+            for (int i = 0; i < 50; i++)
+            {
+                m_Main.FirstLayer_ChildWnds = Std32Window.GetChildWindows_FirstLayer(m_Main.TopWnd_hWnd);
+
+                if (m_Main.FirstLayer_ChildWnds.Count > 0)
+                {
+                    // MainMenu 찾기 - Rect으로 찾기
+                    m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
+                        x => x.rcRel == m_FileInfo.Main_MainMenu_rcRel);
+
+                    // BarMenu 찾기 - ClassName으로 찾기
+                    m_Main.WndInfo_BarMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
+                        x => x.className == m_FileInfo.Main_BarMenu_ClassName);
+
+                    // MdiClient 찾기 - ClassName으로 찾기
+                    m_Main.WndInfo_MdiClient = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
+                        x => x.className == m_FileInfo.Main_MdiClient_ClassName);
+
+                    // 모두 찾으면 탈출
+                    if (m_Main.WndInfo_MainMenu != null &&
+                        m_Main.WndInfo_BarMenu != null &&
+                        m_Main.WndInfo_MdiClient != null)
+                    {
+                        break;
+                    }
+                }
+
+                await Task.Delay(c_nWaitNormal);
+            }
+
+            // 개별 에러 체크
+            if (m_Main.FirstLayer_ChildWnds == null || m_Main.FirstLayer_ChildWnds.Count == 0)
             {
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
                     $"[{m_Context.AppName}/MainWnd]자식윈도 못찾음",
@@ -137,9 +167,6 @@ public class Cargo24sAct_MainWnd
             }
             Debug.WriteLine($"[Cargo24sAct_MainWnd] 차일드 윈도우 개수: {m_Main.FirstLayer_ChildWnds.Count}");
 
-            // 6. MainMenu 찾기 - Rect으로 찾기
-            m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
-                x => x.rcRel == m_FileInfo.Main_MainMenu_rcRel);
             if (m_Main.WndInfo_MainMenu == null)
             {
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -147,9 +174,6 @@ public class Cargo24sAct_MainWnd
                     "Cargo24sAct_MainWnd/InitializeAsync_04", bWrite, bMsgBox);
             }
 
-            // 7. BarMenu 찾기 - ClassName으로 찾기
-            m_Main.WndInfo_BarMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
-                x => x.className == m_FileInfo.Main_BarMenu_ClassName);
             if (m_Main.WndInfo_BarMenu == null)
             {
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -157,9 +181,6 @@ public class Cargo24sAct_MainWnd
                     "Cargo24sAct_MainWnd/InitializeAsync_05", bWrite, bMsgBox);
             }
 
-            // 8. MdiClient 찾기 - ClassName으로 찾기
-            m_Main.WndInfo_MdiClient = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
-                x => x.className == m_FileInfo.Main_MdiClient_ClassName);
             if (m_Main.WndInfo_MdiClient == null)
             {
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
