@@ -1,0 +1,152 @@
+﻿using Draw = System.Drawing;
+
+using Kai.Common.StdDll_Common.StdWin32;
+
+namespace Kai.Client.CallCenter.Networks.NwOnecalls;
+#nullable disable
+public class OnecallInfo_Mem
+{
+    #region 1개만 있고 사용빈도가 있는 Wnd, Page는 미리 할당한다 - 편의성
+    public List<string> DelWndNames = new List<string> // 삭제된 윈도우 이름들
+    {
+        //"]님으로 부터의 메세지",
+    };
+    public SplashWnd Splash = null;
+    public MainWnd Main = null;
+    public RcptRegPage RcptPage = null;
+    //public RcptRegWnd RcptWnd = null;
+
+    public OnecallInfo_Mem()
+    {
+        Splash = new SplashWnd();
+        Main = new MainWnd();
+        RcptPage = new RcptRegPage();
+    }
+    #endregion
+
+    #region SplashWnd
+    public class SplashWnd
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
+        public uint TopWnd_uProcessId = 0; // ProcessId
+        public uint TopWnd_uThreadId = 0;  // ThreadId
+
+        // Sons
+        public IntPtr IdWnd_hWnd;  // hWnd
+        public IntPtr PwWnd_hWnd;  // hWnd 
+    }
+    #endregion
+
+    #region MainWnd
+    public class MainWnd
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
+
+        // Sons
+        //public IntPtr CloseBtn_hWnd; // hWnd
+
+        // ListSonWnd
+        public List<StdCommon32_WndInfo> FirstLayer_ChildWnds;
+        public StdCommon32_WndInfo WndInfo_MainMenu;
+        public StdCommon32_WndInfo WndInfo_BarMenu;
+        public StdCommon32_WndInfo WndInfo_MdiClient;
+    }
+    #endregion
+
+
+    #region 접수(화물)등록Page
+    public class RcptRegPage
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
+
+        // 접수영역
+        public IntPtr 접수영역_hWnd;  // hWnd
+        public IntPtr 접수영역_확장버튼_hWnd;  // hWnd - ExpandBtn
+
+        // 검색영역
+        public IntPtr 검색영역_hWnd;  // hWnd
+
+        // Datagrid
+        public IntPtr DG오더_hWnd;  // hWnd
+        public Draw.Rectangle[,] DG오더_rcRelLargeCells;
+        public Draw.Point[] DG오더_ptRelChkLargeRows;
+        public Draw.Rectangle[,] DG오더_rcRelSmallCells;
+        public Draw.Point[] DG오더_ptRelChkSmallRows;
+
+        //// CommandBtns GroupBox
+        //public IntPtr CmdBtn_hWnd신규;
+        //public IntPtr CmdBtn_hWnd조회;
+
+        //// Datagrid
+        //public IntPtr DG오더_hWnd;
+        //public Draw.Rectangle DG오더_AbsRect;
+        //public Draw.Rectangle[,] DG오더_rcRelCells;
+        //public Draw.Point[] DG오더_ptRelChkRows;
+        ////public string[] DG오더_ColumnTexts;
+        //public int DG오더_nBackgroundBright = 0;
+
+
+        //// DateFrom
+    }
+    #endregion
+
+    //#region 접수등록Page
+    //// TopWnd
+    //public IntPtr 접수등록Page_TopWnd_hWnd;  // hWnd 
+    ////public Draw.Rectangle 접수등록Page_TopWnd_rcAbs; // Bound
+
+    //// ListSonWnd
+    ////public List<StdCommon32_WndInfo> 접수등록Page_WndInfoList;
+    ////public StdCommon32_WndInfo 접수등록Page_WndInfo_CmdBtnGroupBox;
+
+    //// StatusBtn 
+    ////public IntPtr 접수등록Page_StatusBtn_hWnd접수;
+    ////public IntPtr 접수등록Page_StatusBtn_hWnd운행;
+    ////public IntPtr 접수등록Page_StatusBtn_hWnd취소;
+    ////public IntPtr 접수등록Page_StatusBtn_hWnd완료;
+    ////public IntPtr 접수등록Page_StatusBtn_hWnd정산;
+    ////public IntPtr 접수등록Page_StatusBtn_hWnd전체;
+
+    //// CommandBtns GroupBox
+    //public IntPtr 접수등록Page_CmdBtn_hWnd신규;
+    ////public IntPtr 접수등록Page_CmdBtn_hWnd조회;
+
+    //// Datagrid
+    //public IntPtr 접수등록Page_DG오더_hWnd;
+    //public Draw.Rectangle 접수등록Page_DG오더_AbsRect;
+    //public Draw.Rectangle 접수등록Page_DG오더_RelRect;
+    //public Draw.Rectangle[,] 접수등록Page_DG오더_RelChildRects;
+    ////public string[] 접수등록Page_DG오더_ColumnTexts;
+    //public NwCommon_DgColumnHeader[] 접수등록Page_DG오더_ColumnInfos;
+    //public Draw.Point[] 접수등록Page_DG오더_RelChkRows;
+    ////public Draw.Point 접수등록Page_DG오더_ChkRelPt_Select;
+    ////public Draw.Color 접수등록Page_DG오더_ChkColor_Select;
+    //#endregion
+
+    #region 접수(화물)등록Wnd
+    public class RcptRegWnd
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd 
+
+        public RcptRegWnd(IntPtr hWnd)
+        {
+            TopWnd_hWnd = hWnd;
+        }
+    }
+    #endregion
+
+
+    #region 다수 있는 클래스
+    public class OrderBasic
+    {
+        public int nTernNo = 0; // TernNo
+        public string sStatus = string.Empty; // 상태
+        //public string sSeqNo = string.Empty; // SeqNo
+    }
+    #endregion
+}
+#nullable enable
