@@ -51,7 +51,7 @@ public class ExternalAppController : IDisposable
     public NwInsung01 Insung01 { get; private set; }
     public NwInsung02 Insung02 { get; private set; }
     public NwCargo24 Cargo24 { get; private set; }
-    // public NwOnecall Onecall { get; private set; }
+    public NwOnecall Onecall { get; private set; }
 
     // 리스트로 관리 (반복 처리용)
     private List<IExternalApp> m_ListApps = new List<IExternalApp>();
@@ -176,22 +176,27 @@ public class ExternalAppController : IDisposable
             //    Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
             //}
 
-            if (NwCargo24.s_Use)
+            //if (NwCargo24.s_Use)
+            //{
+            //    Debug.WriteLine($"[ExternalAppController] Cargo24 생성: Id={NwCargo24.s_Id}");
+            //    Cargo24 = new NwCargo24();
+            //    m_ListApps.Add(Cargo24);
+            //}
+            //else
+            //{
+            //    Debug.WriteLine("[ExternalAppController] Cargo24 사용 안함 (s_Use=false)");
+            //}
+
+            if (NwOnecall.s_Use)
             {
-                Debug.WriteLine($"[ExternalAppController] Cargo24 생성: Id={NwCargo24.s_Id}");
-                Cargo24 = new NwCargo24();
-                m_ListApps.Add(Cargo24);
+                Debug.WriteLine($"[ExternalAppController] Onecall 생성: Id={NwOnecall.s_Id}");
+                Onecall = new NwOnecall();
+                m_ListApps.Add(Onecall);
             }
             else
             {
-                Debug.WriteLine("[ExternalAppController] Cargo24 사용 안함 (s_Use=false)");
+                Debug.WriteLine("[ExternalAppController] Onecall 사용 안함 (s_Use=false)");
             }
-
-            // if (NwOnecall.s_Use)
-            // {
-            //     Onecall = new NwOnecall();
-            //     m_ListApps.Add(Onecall);
-            // }
 
             Debug.WriteLine($"[ExternalAppController] 생성된 앱 개수: {m_ListApps.Count}");
 

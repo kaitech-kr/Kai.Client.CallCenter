@@ -85,8 +85,14 @@ public class CommonFuncs : CommonVars
 
         Debug.WriteLine($"[CommonFuncs] Cargo24 설정 로드: Use={NwCargo24.s_Use}, Id={NwCargo24.s_Id}, AppPath={NwCargo24.s_AppPath} -----------------------");
 
-        // TODO: 나중에 다른 앱들도 추가
-        // NwOnecall.s_Use = StdConvert.StringToBool(JsonFileManager.GetValue("ExternalApps:Onecall:Use"));
+        // Onecall 설정 로드
+        string sUseOnecall = JsonFileManager.GetValue("ExternalApps:Onecall:Use");
+        NwOnecall.s_Use = StdConvert.StringToBool(sUseOnecall);
+        NwOnecall.s_Id = JsonFileManager.GetValue("ExternalApps:Onecall:Id");
+        NwOnecall.s_Pw = JsonFileManager.GetValue("ExternalApps:Onecall:Pw");
+        NwOnecall.s_AppPath = JsonFileManager.GetValue("ExternalApps:Onecall:AppPath");
+
+        Debug.WriteLine($"[CommonFuncs] Onecall 설정 로드: Use={NwOnecall.s_Use}, Id={NwOnecall.s_Id}, AppPath={NwOnecall.s_AppPath} -----------------------");
     }
 
     private static bool InitListChars()

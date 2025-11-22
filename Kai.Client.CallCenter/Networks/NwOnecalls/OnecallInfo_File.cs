@@ -39,15 +39,15 @@ public class OnecallInfo_File
     public string Main_MdiClient_ClassName = "WindowsForms10.MDICLIENT.app.0.34f5582_r7_ad1"; // ClassName
     #endregion
 
-    #region 접수등록Page
+    #region 접수등록Page - 도킹상태 접수등록Page_TopWnd 기준
     // TopWnd
     //public string 접수등록Page_TopWnd_sClassName = "WindowsForms10.Window.8.app.0.34f5582_r7_ad1"; // ClassName
     public string 접수등록Page_TopWnd_sWndName = "화물등록";   // WndName
 
     // 접수 Section
-    public Draw.Rectangle 접수등록Page_접수영역_rcChkRel = new Draw.Rectangle(0, 0, 1916, 374); // Check Point rcRel: {X=0,Y=0,Width=1916,Height=374}
+    public Draw.Rectangle 접수등록Page_접수영역_rcChkRel = new Draw.Rectangle(0, 0, 1916, 400); // Check Point rcRel: {X=0,Y=0,Width=1916,Height=400}
 
-    public Draw.Point 접수등록Page_접수Btn항목초기화_ptRelL = new Draw.Point(1084, 344); // {X=1084,Y=344}
+    public Draw.Point 접수등록Page_접수Btn목록초기화_ptRelL = new Draw.Point(1084, 374); // 접수등록Page(화물등록) 기준
 
     // 검색 Section
     public string 접수등록Page_검색영역_sWndName = "검색"; // Check Text
@@ -56,7 +56,7 @@ public class OnecallInfo_File
 
 
     // Datagrid Section
-    public Draw.Rectangle 접수등록Page_DG오더_rcRelFirst = new Draw.Rectangle(0, 410, 1916, 500); // Check PointrcRel: {X=0,Y=410,Width=1916,Height=500}
+    public Draw.Rectangle 접수등록Page_DG오더_rcRelFirst = new Draw.Rectangle(0, 436, 1916, 474); // Check Point rcRel: {X=0,Y=436,Width=1916,Height=474}
     public int 접수등록Page_DG오더_nExpandedHeight = 874; // ExpandBtn Width
 
     //// 접수 Datagrid

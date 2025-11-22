@@ -1060,7 +1060,7 @@ public partial class InsungsAct_RcptRegPage
 
             try
             {
-            for (int iteration = 0; iteration < 10; iteration++)
+            for (int iteration = 0; iteration < 5; iteration++)
             {
                 // 2-1. 헤더 캡처 및 컬럼 경계 검출
                 await Task.Delay(CommonVars.c_nWaitNormal);
@@ -1143,7 +1143,7 @@ public partial class InsungsAct_RcptRegPage
 
             try
             {
-            for (int widthIter = 0; widthIter < 10; widthIter++)
+            for (int widthIter = 0; widthIter < 5; widthIter++)
             {
                 // 매 반복 시 캡처 전 안정화 대기
                 await Task.Delay(CommonVars.c_nWaitNormal);
