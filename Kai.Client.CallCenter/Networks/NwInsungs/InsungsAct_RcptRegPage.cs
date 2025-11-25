@@ -465,7 +465,7 @@ public partial class InsungsAct_RcptRegPage
 
     /// <summary>
     /// Datagrid 상세 영역 설정 (컬럼 헤더 읽기 + RelChildRects 계산 + 상태 검증)
-    /// 상태가 올바르지 않으면 InitDG오더Async 호출 후 재시도
+    /// 원콜 방식: DG오더_hWnd 기준 헤더 영역만 캡처
     /// </summary>
     private async Task<StdResult_Error> SetDG오더RectsAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
     {
@@ -475,22 +475,23 @@ public partial class InsungsAct_RcptRegPage
         {
             Debug.WriteLine($"[InsungsAct_RcptRegPage] SetDG오더RectsAsync 시작");
 
-            // 재시도 루프 (goto 대신 for 사용)
+            // 재시도 루프
             for (int retry = 1; retry <= c_nRepeatShort; retry++)
             {
-                // 중간 재시도에서는 메시지박스 표시 안 함, 마지막 재시도에서만 표시
                 bool bShowMsgBox = (retry == c_nRepeatShort) && bMsgBox;
 
                 if (retry > 1)
                 {
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] Datagrid 재시도 {retry}/{c_nRepeatShort}");
-                    await Task.Delay(c_nWaitVeryLong); // 재시도 전 대기
+                    await Task.Delay(c_nWaitVeryLong);
                 }
 
-                // 1. Datagrid 비트맵 캡처 (MainWnd 기준 상대좌표로 캡처)
-                bmpDG = OfrService.CaptureScreenRect_InWndHandle(
-                    m_Main.TopWnd_hWnd,
-                    m_FileInfo.접수등록Page_DG오더_rcRel);
+                // 1. DG오더_hWnd 기준으로 헤더 영역만 캡처
+                Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
+                int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
+                Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, headerHeight);
+
+                bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
 
                 if (bmpDG == null)
                 {
@@ -498,346 +499,160 @@ public partial class InsungsAct_RcptRegPage
                     {
                         Debug.WriteLine($"[InsungsAct_RcptRegPage] DG오더 캡처 실패 (재시도 {retry}/{c_nRepeatShort})");
                         await Task.Delay(200);
-                        continue; // 재시도
+                        continue;
                     }
                     return CommonFuncs_StdResult.ErrMsgResult_Error(
-                        $"[{m_Context.AppName}/RcptRegPage]DG오더 캡처 실패: rcRel={m_FileInfo.접수등록Page_DG오더_rcRel}",
+                        $"[{m_Context.AppName}/RcptRegPage]DG오더 캡처 실패",
                         "InsungsAct_RcptRegPage/SetDG오더RectsAsync_01", bWrite, bShowMsgBox);
                 }
 
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] DG오더 캡처 성공: {bmpDG.Width}x{bmpDG.Height}");
 
-                // 2. 컬럼 경계 검출
-                // 2-1. 헤더 상단 여백(텍스트 없는 영역)에서 최소 밝기 검출
-                const int headerGab = 7; // 헤더 상단 여백
-                int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
-                int targetRow = headerGab; // 텍스트가 없는 Y 위치 (경계선만 검출)
+                // 2. 컬럼 경계 검출 (상단 여백 중간에서 검출)
+                const int headerGab = 7;
+                int textHeight = headerHeight - (headerGab * 2);
+                int targetRow = headerGab / 2;  // 상단 여백 중간 (3)
 
-                byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(
-                    bmpDG, targetRow);
+                byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpDG, targetRow);
 
-                if (minBrightness == 255) // 검출 실패
+                if (minBrightness == 255)
                 {
-                    bmpDG?.Dispose();
-                    if (retry != c_nRepeatShort)
-                    {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 헤더 행 최소 밝기 검출 실패 (재시도 {retry}/{c_nRepeatShort})");
-                        await Task.Delay(200);
-                        continue; // 재시도
-                    }
                     return CommonFuncs_StdResult.ErrMsgResult_Error(
-                        $"[{m_Context.AppName}/RcptRegPage]헤더 행 최소 밝기 검출 실패: targetRow={targetRow}",
-                        "InsungsAct_RcptRegPage/SetDG오더RectsAsync_02", bWrite, bShowMsgBox);
+                        $"[{m_Context.AppName}/RcptRegPage]최소 밝기 검출 실패",
+                        "InsungsAct_RcptRegPage/SetDG오더RectsAsync_02", bWrite, bMsgBox);
                 }
 
-                minBrightness += 2; // 확실한 경계를 위해 약간 밝게 조정 (백업 파일 방식)
+                minBrightness += 2;
 
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 헤더 행 최소 밝기 검출: targetRow={targetRow}, minBrightness={minBrightness}");
-
-                // 2-2. Bool 배열 생성 (true=검은색, false=흰색)
-                bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(
-                    bmpDG, targetRow, minBrightness, 2); // 마진 2픽셀 (백업 파일 방식)
+                // 2-2. Bool 배열 생성
+                bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, targetRow, minBrightness, 2);
 
                 if (boolArr == null || boolArr.Length == 0)
                 {
-                    bmpDG?.Dispose();
-                    if (retry != c_nRepeatShort)
-                    {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] Bool 배열 생성 실패 (재시도 {retry}/{c_nRepeatShort})");
-                        await Task.Delay(200);
-                        continue; // 재시도
-                    }
                     return CommonFuncs_StdResult.ErrMsgResult_Error(
-                        $"[{m_Context.AppName}/RcptRegPage]Bool 배열 생성 실패: targetRow={targetRow}",
-                        "InsungsAct_RcptRegPage/SetDG오더RectsAsync_03", bWrite, bShowMsgBox);
+                        $"[{m_Context.AppName}/RcptRegPage]Bool 배열 생성 실패",
+                        "InsungsAct_RcptRegPage/SetDG오더RectsAsync_03", bWrite, bMsgBox);
                 }
-
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] Bool 배열 생성 완료: Length={boolArr.Length}");
 
                 // 2-3. 컬럼 경계 리스트 추출
-                List<OfrModel_LeftWidth> listLW =
-                    OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
+                List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
 
-                if (listLW == null || listLW.Count == 0)
+                if (listLW == null || listLW.Count < 2)
                 {
-                    bmpDG?.Dispose();
-                    if (retry != c_nRepeatShort)
-                    {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼 경계 검출 실패 (재시도 {retry}/{c_nRepeatShort})");
-                        await Task.Delay(200);
-                        continue; // 재시도
-                    }
                     return CommonFuncs_StdResult.ErrMsgResult_Error(
-                        $"[{m_Context.AppName}/RcptRegPage]컬럼 경계 검출 실패: 검출된 리스트 수=0",
-                        "InsungsAct_RcptRegPage/SetDG오더RectsAsync_04", bWrite, bShowMsgBox);
+                        $"[{m_Context.AppName}/RcptRegPage]컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}",
+                        "InsungsAct_RcptRegPage/SetDG오더RectsAsync_04", bWrite, bMsgBox);
                 }
 
-                // 첫 번째와 마지막 항목 제거 (테두리 명도 + 오른쪽 끝 경계)
-                if (listLW.Count >= 2)
-                {
-                    listLW.RemoveAt(0); // 첫 번째 제거 (테두리 명도 섞임)
-                    listLW.RemoveAt(listLW.Count - 1); // 마지막 제거 (오른쪽 끝 경계)
-                    Debug.WriteLine($"[InsungsAct_RcptRegPage] 첫/마지막 항목 제거 완료");
-                }
+                // 마지막 항목 제거 (오른쪽 끝 경계)
+                listLW.RemoveAt(listLW.Count - 1);
 
-                int columns = listLW.Count; // 제거 후 남은 개수 = 실제 컬럼 개수
+                int columns = listLW.Count;
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼 검출: {columns}개 (목표: {m_ReceiptDgHeaderInfos.Length}개)");
 
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼 경계 검출 완료: 실제 컬럼={columns}");
-
-                // [디버깅] listLW 첫 3개 값 출력
-                string debugInfo = "[디버깅] listLW 첫 3개:\n";
-                for (int dbg = 0; dbg < Math.Min(3, listLW.Count); dbg++)
-                {
-                    debugInfo += $"[{dbg}] Left={listLW[dbg].nLeft}, Width={listLW[dbg].nWidth}\n";
-                }
-                Debug.WriteLine(debugInfo);
-
-                // 컬럼 개수가 원하는 개수가 아니면 즉시 InitDG오더Async 호출하여 강제 초기화
+                // 컬럼 개수 확인
                 if (columns != m_ReceiptDgHeaderInfos.Length)
                 {
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {retry}/{c_nRepeatShort})");
 
                     bmpDG?.Dispose();
 
-                    // InitDG오더Async 호출하여 Datagrid 강제 초기화
                     StdResult_Error initResult = await InitDG오더Async(
                         CEnum_DgValidationIssue.InvalidColumnCount,
-                        bEdit, bWrite,
-                        bMsgBox: false  // 중간 에러는 메시지박스 표시 안 함
-                    );
+                        bEdit, bWrite, bMsgBox: false);
 
                     if (initResult != null)
                     {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] InitDG오더Async 실패: {initResult.sErr}");
-
-                        // 최대 재시도 횟수 도달 시에만 에러 반환
                         if (retry == c_nRepeatShort)
                         {
                             return CommonFuncs_StdResult.ErrMsgResult_Error(
-                                $"[{m_Context.AppName}/RcptRegPage]컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개\n상세: {initResult.sErr}\n(재시도 {c_nRepeatShort}회 초과)",
+                                $"[{m_Context.AppName}/RcptRegPage]컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {c_nRepeatShort}회 초과)",
                                 "InsungsAct_RcptRegPage/SetDG오더RectsAsync_05", bWrite, bShowMsgBox);
                         }
                     }
 
                     await Task.Delay(200);
-                    continue; // 재시도
+                    continue;
                 }
 
-                // 3. 컬럼 헤더 OFR 인식 (전체 컬럼)
-                m_RcptPage.DG오더_ColumnTexts = new string[listLW.Count];
+                // 3. 컬럼 헤더 OFR (원콜 방식: OfrStr_ComplexCharSetAsync 사용)
+                m_RcptPage.DG오더_ColumnTexts = new string[columns];
 
-                for (int i = 0; i < listLW.Count; i++)
+                for (int i = 0; i < columns; i++)
                 {
-                    try
-                    {
-                        // 3-1. 컬럼 헤더 영역 Rectangle 생성 (테두리 제외 - 텍스트 영역만)
-                        Draw.Rectangle rcColHeader = new Draw.Rectangle(
-                            listLW[i].nLeft,
-                            headerGab,                                  // 상단 여백만큼 아래
-                            listLW[i].nWidth,
-                            headerHeight - (headerGab * 2)              // 상하 여백 제외
-                        );
+                    Draw.Rectangle rcColHeader = new Draw.Rectangle(
+                        listLW[i].nLeft, headerGab, listLW[i].nWidth, textHeight);
 
-                        //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] 헤더 영역: {rcColHeader}");
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
+                        bmpDG, rcColHeader, bInvertRgb: false, bEdit: false);
 
-                        // 3-2. 컬럼 헤더 비트맵 추출
-                        Draw.Bitmap bmpColHeader = OfrService.GetBitmapInBitmapFast(
-                            bmpDG, rcColHeader
-                        );
-
-                        if (bmpColHeader == null)
-                        {
-                            //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] 비트맵 추출 실패");
-                            m_RcptPage.DG오더_ColumnTexts[i] = null;
-                            continue;
-                        }
-
-                        // 3-3. 평균 밝기 계산
-                        byte avgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpColHeader);
-
-                        // 3-4. 전경 영역 추출
-                        Draw.Rectangle? rcForeground = OfrService.GetForeGroundDrawRectangle_FromColorBitmapFast(
-                            bmpColHeader, avgBrightness, 0
-                        );
-
-                        if (rcForeground == null || rcForeground.Value.Width < 1 || rcForeground.Value.Height < 1)
-                        {
-                            //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] 전경 영역 추출 실패");
-                            bmpColHeader?.Dispose();
-                            m_RcptPage.DG오더_ColumnTexts[i] = null;
-                            continue;
-                        }
-
-                        // 3-5. Exact 비트맵 추출
-                        Draw.Bitmap bmpExact = OfrService.GetBitmapInBitmapFast(
-                            bmpColHeader, rcForeground.Value
-                        );
-                        bmpColHeader?.Dispose();
-
-                        if (bmpExact == null)
-                        {
-                            //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] Exact 비트맵 추출 실패");
-                            m_RcptPage.DG오더_ColumnTexts[i] = null;
-                            continue;
-                        }
-
-                        // 3-6. TEXT OFR 수행 - OfrStr_ComplexCharSetAsync (범용 함수 - 한글/영문/숫자 모두 처리)
-                        // bmpExact는 이미 전경 영역만 추출된 상태, rcSpare는 전체 영역
-                        StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit);
-
-                        bmpExact?.Dispose();
-
-                        // 3-7. 결과 저장
-                        if (result != null && !string.IsNullOrEmpty(result.strResult))
-                        {
-                            m_RcptPage.DG오더_ColumnTexts[i] = result.strResult;
-                            //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 성공: '{m_RcptPage.DG오더_ColumnTexts[i]}'");
-                        }
-                        else
-                        {
-                            m_RcptPage.DG오더_ColumnTexts[i] = null;
-                            //Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 실패: {result?.sErr}");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼[{i}] OFR 예외: {ex.Message}");
-                        m_RcptPage.DG오더_ColumnTexts[i] = null;
-                    }
+                    m_RcptPage.DG오더_ColumnTexts[i] = result?.strResult ?? string.Empty;
                 }
 
-                // 3-8. 컬럼 헤더 OFR 결과 요약
-                int successCount = m_RcptPage.DG오더_ColumnTexts.Count(t => !string.IsNullOrEmpty(t));
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 컬럼 헤더 OFR 완료: 성공={successCount}/{listLW.Count}");
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] OFR 완료: {string.Join(", ", m_RcptPage.DG오더_ColumnTexts)}");
 
-                // 3-9. Datagrid 상태 검증
-                Debug.WriteLine("[SetDG오더RectsAsync] Datagrid 상태 검증 시작");
-                Debug.WriteLine($"[SetDG오더RectsAsync] 검출 컬럼({listLW.Count}): {string.Join(", ", m_RcptPage.DG오더_ColumnTexts.Where(t => !string.IsNullOrEmpty(t)))}");
-
+                // 4. Datagrid 상태 검증
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] Datagrid 상태 검증 시작");
                 CEnum_DgValidationIssue validationIssues = ValidateDatagridState(m_RcptPage.DG오더_ColumnTexts, listLW);
 
                 if (validationIssues != CEnum_DgValidationIssue.None)
                 {
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] Datagrid 상태 검증 실패: {validationIssues} (재시도 {retry}/{c_nRepeatShort})");
 
-                    // InitDG오더Async 호출하여 Datagrid 강제 초기화
-                    // 중간 단계에서는 메시지박스 표시 안 함 (조용히 재시도)
-                    StdResult_Error initResult = await InitDG오더Async(
-                        validationIssues,
-                        bEdit, bWrite,
-                        bMsgBox: false  // 중간 에러는 메시지박스 표시 안 함
-                    );
+                    bmpDG?.Dispose();
+
+                    StdResult_Error initResult = await InitDG오더Async(validationIssues, bEdit, bWrite, bMsgBox: false);
 
                     if (initResult != null)
                     {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] InitDG오더Async 실패: {initResult.sErr}");
-
-                        // 최대 재시도 횟수 도달 시에만 에러 반환 (메시지박스 표시)
                         if (retry == c_nRepeatShort)
                         {
-                            bmpDG?.Dispose();
                             return CommonFuncs_StdResult.ErrMsgResult_Error(
-                                $"[{m_Context.AppName}/RcptRegPage]Datagrid 초기화 실패: {validationIssues}\n상세: {initResult.sErr}\n(재시도 {c_nRepeatShort}회 초과)",
+                                $"[{m_Context.AppName}/RcptRegPage]Datagrid 상태 검증 실패: {validationIssues} (재시도 {c_nRepeatShort}회 초과)",
                                 "InsungsAct_RcptRegPage/SetDG오더RectsAsync_Validation", bWrite, bShowMsgBox);
                         }
                     }
 
-                    bmpDG?.Dispose(); // 재시도 전 비트맵 해제
-                    bmpDG = null;
-                    continue; // 재시도
+                    await Task.Delay(200);
+                    continue;
                 }
 
-                // 검증 성공 - 계속 진행
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] Datagrid 상태 검증 성공");
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] 모든 컬럼 검증 완료!");
 
-                // 4. RelChildRects 계산
-                // 4-1. 행 정보 계산 (Header + EmptyRow + DataRows)
-                List<Kai.Common.NetDll_WpfCtrl.NetOFR.OfrModel_TopHeight> listTH =
-                    new List<Kai.Common.NetDll_WpfCtrl.NetOFR.OfrModel_TopHeight>();
+                // 5. RelChildRects 생성
+                bmpDG?.Dispose();
+                bmpDG = null;
 
-                int curRowTop = 0;
-                int dataRowHeight = m_FileInfo.접수등록Page_DG오더_dataRowHeight - 2; // 실제 텍스트 영역 높이 (테두리 제외)
+                int rows = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+                int rowHeight = m_FileInfo.접수등록Page_DG오더_dataRowHeight;
 
-                // 4-1-1. 헤더 행
-                listTH.Add(new Kai.Common.NetDll_WpfCtrl.NetOFR.OfrModel_TopHeight(
-                    curRowTop + headerGab,
-                    headerHeight - (headerGab * 2)
-                ));
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] 헤더 행 추가: Top={curRowTop + headerGab}, Height={headerHeight - (headerGab * 2)}");
-
-                // 4-1-2. Empty Row
-                curRowTop += m_FileInfo.접수등록Page_DG오더_headerHeight;
-                listTH.Add(new Kai.Common.NetDll_WpfCtrl.NetOFR.OfrModel_TopHeight(
-                    curRowTop + 1,
-                    dataRowHeight
-                ));
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] Empty Row 추가: Top={curRowTop + 1}, Height={dataRowHeight}");
-
-                // 4-1-3. Data Rows
-                curRowTop += m_FileInfo.접수등록Page_DG오더_emptyRowHeight;
-                for (int i = 0; i < InsungsInfo_File.접수등록Page_DG오더_dataRowCount; i++)
-                {
-                    listTH.Add(new Kai.Common.NetDll_WpfCtrl.NetOFR.OfrModel_TopHeight(
-                        curRowTop + 1,
-                        dataRowHeight
-                    ));
-                    curRowTop += m_FileInfo.접수등록Page_DG오더_dataRowHeight;
-                }
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] Data Rows 추가 완료: 총 {InsungsInfo_File.접수등록Page_DG오더_dataRowCount}개");
-
-                // 4-2. RelChildRects 2차원 배열 생성 [열, 행]
-                int rows = listTH.Count;
                 m_RcptPage.DG오더_RelChildRects = new Draw.Rectangle[columns, rows];
 
-                Draw.Rectangle rcDG_Rel = m_FileInfo.접수등록Page_DG오더_rcRel; // MainWnd 기준 상대좌표 (참고용)
-
-                // Left offset: 첫 번째 컬럼의 Left 값을 빼서 0 기준으로 조정
-                int leftOffset = listLW[0].nLeft;
-                Debug.WriteLine($"[InsungsAct_RcptRegPage] Left offset 적용: {leftOffset}");
-
-                // RelChildRects를 DG 기준 좌표로 저장 (rcDG_Rel을 더하지 않음)
-                // 셀 영역 조정:
-                // - 로우(Top, Height): 헤더(y=0)는 Top 그대로/Height -1, 데이터(y>=1)는 Top -1/Height -1
-                // - 셀(Left, Width): 첫 셀(x=0)은 Left +2, 나머지(x>0)는 Left +1, 모든 셀 Width -1
-                for (int y = 0; y < rows; y++)
+                for (int col = 0; col < columns; col++)
                 {
-                    for (int x = 0; x < columns; x++)
+                    for (int row = 0; row < rows; row++)
                     {
-                        int baseLeft = listLW[x].nLeft - leftOffset;  // offset 적용
-                        int adjustedLeft = (x == 0) ? baseLeft + 2 : baseLeft + 1;  // 첫 셀 +2, 나머지 +1
-                        int adjustedTop = (y == 0) ? listTH[y].nTop : listTH[y].nTop - 1;  // 헤더는 그대로, 데이터는 -1
-                        int adjustedWidth = listLW[x].nWidth - 1;  // 모든 셀 Width -1
-                        int adjustedHeight = listTH[y].nHeight - 1;  // 모든 행 Height -1
+                        int cellY = headerHeight + (row * rowHeight);
 
-                        m_RcptPage.DG오더_RelChildRects[x, y] = new Draw.Rectangle(
-                            adjustedLeft,
-                            adjustedTop,
-                            adjustedWidth,
-                            adjustedHeight
+                        m_RcptPage.DG오더_RelChildRects[col, row] = new Draw.Rectangle(
+                            listLW[col].nLeft + 1,
+                            cellY,
+                            listLW[col].nWidth - 2,
+                            rowHeight
                         );
                     }
                 }
 
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] RelChildRects 생성 완료: {columns}열 x {rows}행");
 
-                // 4-3. Background Brightness 계산 (첫 번째 데이터 행의 한 점에서 측정)
-                if (rows >= 2)
-                {
-                    // Empty Row의 샘플 포인트 (DG 기준 좌표, 비트맵도 DG 기준)
-                    Draw.Point ptSampleRel = StdUtil.GetDrawPoint(m_RcptPage.DG오더_RelChildRects[0, 1], 8, 8);
+                // 6. Background Brightness 계산 (데이터그리드 중심 위치)
+                m_RcptPage.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(m_RcptPage.DG오더_hWnd);
+                Debug.WriteLine($"[InsungsAct_RcptRegPage] Background Brightness: {m_RcptPage.DG오더_nBackgroundBright}");
 
-                    m_RcptPage.DG오더_nBackgroundBright = OfrService.GetPixelBrightness(bmpDG, ptSampleRel);
-
-                    Debug.WriteLine($"[InsungsAct_RcptRegPage] Background Brightness: {m_RcptPage.DG오더_nBackgroundBright} (샘플 위치: {ptSampleRel})");
-                }
-
-                // 모든 처리 완료 - 루프 탈출
                 Debug.WriteLine($"[InsungsAct_RcptRegPage] SetDG오더RectsAsync 완료");
                 break;
+            }
 
-            } // for (retry) 끝
-
-            // 성공
             return null;
         }
         catch (Exception ex)
@@ -848,7 +663,6 @@ public partial class InsungsAct_RcptRegPage
         }
         finally
         {
-            // 리소스 정리
             bmpDG?.Dispose();
         }
     }
@@ -861,59 +675,37 @@ public partial class InsungsAct_RcptRegPage
     /// <summary>
     /// 헤더 캡처 및 컬럼 경계 검출 헬퍼
     /// </summary>
-    private (Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns) CaptureAndDetectColumnBoundaries(Draw.Rectangle rcHeader, int gab)
+    private (Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns) CaptureAndDetectColumnBoundaries(Draw.Rectangle rcHeader, int targetRow)
     {
         Draw.Bitmap bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
         if (bmpHeader == null) return (null, null, 0);
 
-        byte byteMinBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpHeader, gab);
-        byteMinBrightness += 2;
-        bool[] resultArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, gab, byteMinBrightness, 2);
-        List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(resultArr, byteMinBrightness);
-        int columns = listLW.Count - 1;
+        byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpHeader, targetRow);
+        minBrightness += 2;
 
+        bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, targetRow, minBrightness, 2);
+        List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
+
+        if (listLW == null || listLW.Count < 2)
+            return (bmpHeader, listLW, 0);
+
+        int columns = listLW.Count - 1;
         return (bmpHeader, listLW, columns);
     }
 
     /// <summary>
     /// 모든 컬럼 OFR 헬퍼
     /// </summary>
-    private async Task<string[]> OfrAllColumnsAsync(Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns, int gab, int height, bool bEdit)
+    private async Task<string[]> OfrAllColumnsAsync(Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns, int gab, int height, bool bEdit = false)
     {
         string[] texts = new string[columns];
 
         for (int x = 0; x < columns; x++)
         {
             Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
-            Draw.Bitmap bmpColHeader = OfrService.GetBitmapInBitmapFast(bmpHeader, rcColHeader);
-            if (bmpColHeader == null)
-            {
-                texts[x] = null;
-                continue;
-            }
 
-            byte avgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpColHeader);
-            Draw.Rectangle? rcForeground = OfrService.GetForeGroundDrawRectangle_FromColorBitmapFast(
-                bmpColHeader, avgBrightness, 0);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bEdit: bEdit);
 
-            if (rcForeground == null || rcForeground.Value.Width < 1)
-            {
-                bmpColHeader?.Dispose();
-                texts[x] = null;
-                continue;
-            }
-
-            Draw.Bitmap bmpExact = OfrService.GetBitmapInBitmapFast(bmpColHeader, rcForeground.Value);
-            bmpColHeader?.Dispose();
-
-            if (bmpExact == null)
-            {
-                texts[x] = null;
-                continue;
-            }
-
-            StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit);
-            bmpExact?.Dispose();
             texts[x] = result?.strResult;
         }
 
@@ -1054,8 +846,10 @@ public partial class InsungsAct_RcptRegPage
             // Step 2: 불필요한 컬럼을 우측으로 이동 (15회 반복)
             Debug.WriteLine("[InitDG오더] Step 2: 불필요한 컬럼 우측 이동 시작");
 
-            const int gab = 7;      // 헤더에서 텍스트 추출할 y 위치
-            const int height = 18;  // 헤더 텍스트 높이
+            int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
+            const int headerGab = 7;
+            int textHeight = headerHeight - (headerGab * 2);
+            int targetRow = headerGab / 2;  // 상단 여백 중간 (3)
             const int center = 15;     // 대충 가운데
 
             try
@@ -1064,7 +858,7 @@ public partial class InsungsAct_RcptRegPage
             {
                 // 2-1. 헤더 캡처 및 컬럼 경계 검출
                 await Task.Delay(CommonVars.c_nWaitNormal);
-                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader == null)
                 {
                     return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -1073,11 +867,11 @@ public partial class InsungsAct_RcptRegPage
                 }
 
                 // 2-2. 각 컬럼 텍스트 인식
-                string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, gab, height, bEdit);
+                string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, bEdit);
                 Draw.Rectangle[] rcHeaders = new Draw.Rectangle[columns];
                 for (int x = 0; x < columns; x++)
                 {
-                    rcHeaders[x] = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
+                    rcHeaders[x] = new Draw.Rectangle(listLW[x].nLeft, headerGab, listLW[x].nWidth, textHeight);
                 }
 
                 // 2-4. 우측에서 좌측으로 검사하여 불필요한 컬럼 제거
@@ -1149,7 +943,7 @@ public partial class InsungsAct_RcptRegPage
                 await Task.Delay(CommonVars.c_nWaitNormal);
 
                 // 1. 캡처 및 경계선 검출
-                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader == null)
                 {
                     return new StdResult_Error("헤더 캡쳐 실패", "InsungsAct_RcptRegPage/InitDG오더Async_Step2End_01");
@@ -1158,11 +952,11 @@ public partial class InsungsAct_RcptRegPage
                 Debug.WriteLine($"[InitDG오더] Step 2-끝-{widthIter + 1}. 현재 컬럼 수: {columns}, 목표: {m_ReceiptDgHeaderInfos.Length}");
 
                 // 2. 모든 컬럼 텍스트 인식
-                string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, gab, height, true);
+                string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, true);
                 Draw.Rectangle[] rcHeaders = new Draw.Rectangle[columns];
                 for (int x = 0; x < columns; x++)
                 {
-                    rcHeaders[x] = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
+                    rcHeaders[x] = new Draw.Rectangle(listLW[x].nLeft, headerGab, listLW[x].nWidth, textHeight);
                     Debug.WriteLine($"[InitDG오더] Step 2-끝-{widthIter + 1}. 컬럼[{x}] 인식: '{texts[x]}'");
                 }
 
@@ -1201,7 +995,7 @@ public partial class InsungsAct_RcptRegPage
 
                     // 컬럼 제거 후 다시 캡처 및 경계선 검출
                     bmpHeader.Dispose();
-                    var result = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                    var result = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                     bmpHeader = result.bmpHeader;
                     listLW = result.listLW;
                     columns = result.columns;
@@ -1212,7 +1006,7 @@ public partial class InsungsAct_RcptRegPage
                     }
 
                     // 텍스트 재인식
-                    texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, gab, height, true);
+                    texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, true);
                     Debug.WriteLine($"[InitDG오더] Step 2-끝-{widthIter + 1}. 재캡처 후 컬럼 수: {columns}");
                 }
 
@@ -1268,13 +1062,13 @@ public partial class InsungsAct_RcptRegPage
 
                 // 5. 폭 조정 후 다시 캡처하여 원하는 컬럼 개수 확인
                 await Task.Delay(CommonVars.c_nWaitShort);
-                var (bmpHeader2, listLW2, columns2) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpHeader2, listLW2, columns2) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader2 == null)
                 {
                     return new StdResult_Error("폭 조정 후 헤더 캡쳐 실패", "InsungsAct_RcptRegPage/InitDG오더Async_Step2End_02");
                 }
 
-                string[] texts2 = await OfrAllColumnsAsync(bmpHeader2, listLW2, columns2, gab, height, true);
+                string[] texts2 = await OfrAllColumnsAsync(bmpHeader2, listLW2, columns2, headerGab, textHeight, true);
 
                 // 원하는 컬럼 개수 확인
                 int matchedCount = 0;
@@ -1322,14 +1116,14 @@ public partial class InsungsAct_RcptRegPage
             {
                 // 최종 확인을 위해 다시 캡처 및 컬럼 검출
                 await Task.Delay(CommonVars.c_nWaitShort);
-                var (bmpCheck, listLW, checkColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpCheck, listLW, checkColumns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpCheck == null)
                 {
                     return new StdResult_Error("Step 2-끝 검증 캡처 실패", "InsungsAct_RcptRegPage/InitDG오더Async_Step2End_Check");
                 }
 
                 // OFR로 컬럼명 확인
-                string[] checkTexts = await OfrAllColumnsAsync(bmpCheck, listLW, checkColumns, gab, height, true);
+                string[] checkTexts = await OfrAllColumnsAsync(bmpCheck, listLW, checkColumns, headerGab, textHeight, true);
                 bmpCheck.Dispose();
 
                 // 원하는 컬럼 개수 확인
@@ -1386,7 +1180,7 @@ public partial class InsungsAct_RcptRegPage
                 //Debug.WriteLine($"[InitDG오더] 3-{x+1}. 목표 컬럼: [{x}]{m_ReceiptDgHeaderInfos[x].sName}");
 
                 // 3-1. 헤더 캡처 및 컬럼 경계 검출
-                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader == null)
                 {
                     return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -1410,7 +1204,7 @@ public partial class InsungsAct_RcptRegPage
                 for (int tx = 0; tx < columns; tx++)
                 {
                     Draw.Rectangle rcColHeader = new Draw.Rectangle(
-                        listLW[tx].nLeft, gab, listLW[tx].nWidth, height);
+                        listLW[tx].nLeft, headerGab, listLW[tx].nWidth, textHeight);
 
                     // OFR 인식 (Step 2-3과 동일)
                     Draw.Bitmap bmpColHeader = OfrService.GetBitmapInBitmapFast(
@@ -1468,9 +1262,9 @@ public partial class InsungsAct_RcptRegPage
                     //Debug.WriteLine($"[InitDG오더] 3-{x+1}. 이동: [{index}] → [{x}]");
 
                     Draw.Rectangle rcStart = new Draw.Rectangle(
-                        listLW[index].nLeft, gab, listLW[index].nWidth, height);
+                        listLW[index].nLeft, headerGab, listLW[index].nWidth, textHeight);
                     Draw.Rectangle rcTarget = new Draw.Rectangle(
-                        listLW[x].nLeft, gab, listLW[x].nWidth, height);
+                        listLW[x].nLeft, headerGab, listLW[x].nWidth, textHeight);
 
                     Draw.Point ptStart = StdUtil.GetCenterDrawPoint(rcStart);
                     Draw.Point ptTarget = new Draw.Point(rcTarget.Left, ptStart.Y);
@@ -1487,7 +1281,7 @@ public partial class InsungsAct_RcptRegPage
             // [확인용] Step 3 완료 후 컬럼 개수 확인
             {
                 await Task.Delay(CommonVars.c_nWaitShort);
-                var (bmpCheck, _, checkColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpCheck, _, checkColumns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpCheck != null)
                 {
                     Debug.WriteLine($"[InitDG오더] Step 3 완료 후 검출 컬럼 수: {checkColumns}");
@@ -1506,7 +1300,7 @@ public partial class InsungsAct_RcptRegPage
                 Debug.WriteLine($"[InitDG오더] 4-{x+1}. 컬럼 너비 조정 시작: [{x}]{m_ReceiptDgHeaderInfos[x].sName}");
 
                 // 4-1. 헤더 캡처 및 컬럼 경계 검출
-                var (bmpHeader, listLW, currentColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpHeader, listLW, currentColumns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader == null)
                 {
                     return CommonFuncs_StdResult.ErrMsgResult_Error(
@@ -1532,7 +1326,7 @@ public partial class InsungsAct_RcptRegPage
                 Debug.WriteLine($"[InitDG오더] 4-{x+1}. 너비 조정: {currentWidth}px → {targetWidth}px (dx={dx})");
 
                 // 4-4. 컬럼 오른쪽 경계를 dx만큼 드래그
-                Draw.Point ptStart = new Draw.Point(listLW[x]._nRight + 1, gab);
+                Draw.Point ptStart = new Draw.Point(listLW[x]._nRight + 1, headerGab);
                 Draw.Point ptTarget = new Draw.Point(ptStart.X + dx, ptStart.Y);
 
                 await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(
@@ -1542,7 +1336,7 @@ public partial class InsungsAct_RcptRegPage
 
                 // [확인용] 조정 후 컬럼 개수 확인
                 await Task.Delay(CommonVars.c_nWaitShort);
-                var (bmpAfter, _, afterColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpAfter, _, afterColumns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpAfter != null)
                 {
                     Debug.WriteLine($"[InitDG오더] 4-{x+1}. 조정 후 검출 컬럼 수: {afterColumns}");
@@ -1563,13 +1357,13 @@ public partial class InsungsAct_RcptRegPage
                 Debug.WriteLine("[InitDG오더] Step 4 완료 후 최종 확인 시작");
 
                 await Task.Delay(CommonVars.c_nWaitShort);
-                var (bmpFinal, listLW, finalColumns) = CaptureAndDetectColumnBoundaries(rcHeader, gab);
+                var (bmpFinal, listLW, finalColumns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpFinal != null)
                 {
                     Debug.WriteLine($"[InitDG오더] 최종 컬럼 수: {finalColumns}");
 
                     // 각 컬럼 OFR 확인
-                    string[] finalTexts = await OfrAllColumnsAsync(bmpFinal, listLW, finalColumns, gab, height, bEdit);
+                    string[] finalTexts = await OfrAllColumnsAsync(bmpFinal, listLW, finalColumns, headerGab, textHeight, bEdit);
 
                     // 최종 컬럼 출력
                     Debug.WriteLine($"[InitDG오더] 최종 컬럼 목록({finalColumns}): {string.Join(", ", finalTexts.Where(t => !string.IsNullOrEmpty(t)))}");

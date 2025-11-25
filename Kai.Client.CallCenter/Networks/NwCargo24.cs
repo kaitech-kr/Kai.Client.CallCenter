@@ -1,9 +1,11 @@
 using System.Diagnostics;
 
 using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Client.CallCenter.Networks.NwCargo24s;
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable
@@ -92,10 +94,34 @@ public class NwCargo24 : IExternalApp
 
     public async Task<StdResult_Status> AutoAllocAsync(long lAllocCount, CancelTokenControl ctrl)
     {
-        // TODO: 화물24시 자동배차 로직 구현
-        Debug.WriteLine($"[{AppName}] AutoAllocAsync 호출됨 (미구현): Count={lAllocCount}");
-        await Task.Delay(100); // 임시
-        return new StdResult_Status(StdResult.Success, string.Empty, $"{AppName}/AutoAllocAsync");
+        try
+        {
+            Debug.WriteLine($"\n-----------------[{AppName}] AutoAllocAsync 시작 - Count={lAllocCount}--------------------------");
+
+            // Cancel/Pause 체크 - Region 2 진입 전
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
+            #region 1. 사전작업
+            // TopMost 설정 - 화물24시 메인 창을 최상위로
+            await Std32Window.SetWindowTopMostAndReleaseAsync(m_Context.MemInfo.Main.TopWnd_hWnd, CommonVars.c_nWaitShort);
+            Debug.WriteLine($"[{AppName}] TopMost 설정 완료");
+            #endregion
+
+            // TODO: 나머지 자동배차 로직 구현
+            await Task.Delay(1000); // 임시
+
+            return new StdResult_Status(StdResult.Success, string.Empty, $"{AppName}/AutoAllocAsync");
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.WriteLine($"[{AppName}] AutoAllocAsync 취소됨");
+            return new StdResult_Status(StdResult.Skip, "작업 취소됨", $"{AppName}/AutoAllocAsync_Cancel");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] AutoAllocAsync 예외 발생: {ex.Message}");
+            return new StdResult_Status(StdResult.Fail, $"예외 발생: {ex.Message}", $"{AppName}/AutoAllocAsync_999");
+        }
     }
 
     public void Shutdown()

@@ -107,7 +107,13 @@ public class MasterModeManager : IDisposable
             // 가상모니터 제거
             if (s_Screens?.m_VirtualMonitor != null)
             {
+                // 커서 위치 백업 (가상모니터 제거 시 Windows가 자동으로 마우스를 이동시키는 것을 방지)
+                var cursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
+
                 FrmVirtualMonitor.DeleteVirtualMonitor();
+
+                // 커서 위치 복원
+                Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);
             }
 
             Debug.WriteLine("[MasterModeManager] Shutdown 완료");

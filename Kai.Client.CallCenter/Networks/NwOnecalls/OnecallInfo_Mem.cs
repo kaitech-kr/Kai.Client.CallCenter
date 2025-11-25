@@ -86,7 +86,8 @@ public class OnecallInfo_Mem
         //public Draw.Rectangle[,] DG오더_rcRelCells;
         //public Draw.Point[] DG오더_ptRelChkRows;
         ////public string[] DG오더_ColumnTexts;
-        //public int DG오더_nBackgroundBright = 0;
+        public Draw.Rectangle[,] DG오더_RelChildRects;
+        public int DG오더_nBackgroundBright = 0;
 
 
         //// DateFrom

@@ -44,7 +44,7 @@ public class OnecallAct_RcptRegPage
         new NwCommon_DgColumnHeader() { sName = "차주전화", bOfrSeq = true, nWidth = 135 },
         new NwCommon_DgColumnHeader() { sName = "담당자번호", bOfrSeq = true, nWidth = 135 },
         new NwCommon_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 130 },
-        new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 120 },
+        new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 170 },
         new NwCommon_DgColumnHeader() { sName = "인수증", bOfrSeq = false, nWidth = 60 },
         new NwCommon_DgColumnHeader() { sName = "상차일", bOfrSeq = true, nWidth = 70 },
         new NwCommon_DgColumnHeader() { sName = "하차일", bOfrSeq = true, nWidth = 70 },
@@ -180,7 +180,8 @@ public class OnecallAct_RcptRegPage
             {
                 // 1. DG 헤더 캡처
                 Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWnd);
-                Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, fInfo.접수등록Page_DG오더_headerHeight);
+                int headerHeight = fInfo.접수등록Page_DG오더_headerHeight;
+                Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, headerHeight);
                 bmpDG = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWnd, rcHeader);
                 if (bmpDG == null)
                     return new StdResult_Error($"[{AppName}] DG 캡처 실패", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_01");
@@ -204,18 +205,8 @@ public class OnecallAct_RcptRegPage
                 if (listLW == null || listLW.Count < 2)
                     return new StdResult_Error($"[{AppName}] 컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_04");
 
-                // [디버그] listLW 검출 결과 확인
-                string debugMsg = $"listLW 검출: {listLW.Count}개, 캡처폭={rcHeader.Width}\n";
-                for (int dbg = 0; dbg < Math.Min(3, listLW.Count); dbg++)
-                {
-                    debugMsg += $"[{dbg}] Left={listLW[dbg].nLeft}, Width={listLW[dbg].nWidth}\n";
-                }
-                debugMsg += $"마지막[{listLW.Count - 1}] Left={listLW[listLW.Count - 1].nLeft}, Width={listLW[listLW.Count - 1].nWidth}, Right={listLW[listLW.Count - 1].nLeft + listLW[listLW.Count - 1].nWidth}";
-                System.Windows.MessageBox.Show(debugMsg, "검출 결과");
-
                 // 마지막 항목 제거 (오른쪽 끝 경계)
-                if (listLW.Count >= 1)
-                    listLW.RemoveAt(listLW.Count - 1);
+                listLW.RemoveAt(listLW.Count - 1);
 
                 columns = listLW.Count;
                 Debug.WriteLine($"[{AppName}] 컬럼 검출: {columns}개 (목표: {m_ReceiptDgHeaderInfos.Length}개)");
@@ -224,7 +215,6 @@ public class OnecallAct_RcptRegPage
                 if (columns < m_ReceiptDgHeaderInfos.Length)
                 {
                     Debug.WriteLine($"[{AppName}] 컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {retry}/{MAX_RETRY})");
-                    System.Windows.MessageBox.Show($"컬럼 개수 부족: {columns}개 (목표: {m_ReceiptDgHeaderInfos.Length}개)\n재시도 {retry}/{MAX_RETRY}", "확인 필요");
 
                     bmpDG?.Dispose();
                     bmpDG = null;
@@ -289,14 +279,12 @@ public class OnecallAct_RcptRegPage
 
                 // 모든 평가 통과
                 Debug.WriteLine($"[{AppName}] 모든 컬럼 검증 완료!");
-                System.Windows.MessageBox.Show($"[{AppName}] 원하는 컬럼을 모두 찾았습니다.", "성공", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
 
                 // Cell Rect 배열 생성
                 bmpDG?.Dispose();
                 bmpDG = null;
 
                 int rowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
-                int headerHeight = fInfo.접수등록Page_DG오더_headerHeight;
                 int rowHeight = fInfo.접수등록Page_DG오더_dataRowHeight;
 
                 mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[rowCount, columns];
@@ -325,6 +313,11 @@ public class OnecallAct_RcptRegPage
                 }
 
                 Debug.WriteLine($"[{AppName}] Rect 배열 생성 완료: {rowCount}행 x {columns}열");
+
+                // Background Brightness 계산 (데이터그리드 중심 위치)
+                mRcpt.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(mRcpt.DG오더_hWnd);
+                Debug.WriteLine($"[{AppName}] Background Brightness: {mRcpt.DG오더_nBackgroundBright}");
+
                 Debug.WriteLine($"[{AppName}] SetDG오더LargeRectsAsync 완료");
                 return null; // 성공
             }

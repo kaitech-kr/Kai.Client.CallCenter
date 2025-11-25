@@ -19,8 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루�
 		..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt = ..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt
 		Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt = Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt
 		..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt = ..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt
-		임시.cs = 임시.cs
 		보관.cs = 보관.cs
+		임시.cs = 임시.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kai.Common.FrmDll_FormCtrl", "..\..\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl.csproj", "{EE2FC8AB-3639-4181-A164-0352D30EE9DB}"

@@ -1,318 +1,109 @@
-'Kai.Client.CallCenter.exe'(CoreCLR: DefaultDomain): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.CoreLib.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Client.CallCenter.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationFramework.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\WindowsBase.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Xaml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'c:\program files\microsoft visual studio\2022\community\common7\ide\commonextensions\microsoft\hotreload\Microsoft.Extensions.DotNetDeltaApplier.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.IO.Pipes.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Console.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.InteropServices.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Overlapped.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.AccessControl.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Principal.Windows.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Claims.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Loader.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\PrivateAssemblies\Runtime\Microsoft.VisualStudio.Debugger.Runtime.NetCoreApp.dll'을(를) 로드했습니다. 
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\netstandard.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.ThreadPool.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.IO.Packaging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Concurrent.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TraceSource.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Uri.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.RegularExpressions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Memory.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\DirectWriteForwarder.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Debug.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.CompilerServices.VisualC.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.Win32.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.Win32.Registry.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.NonGeneric.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Specialized.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Thread.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Configuration.ConfigurationManager.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Xml.ReaderWriter.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Xml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebClient.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encoding.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.TypeConverter.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ObjectModel.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Controls.Ribbon.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\WindowsFormsIntegration.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Common.StdDll_Common.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\UIAutomationTypes.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Requests.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebHeaderCollection.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Process.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationFramework.Aero2.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationFramework.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\UIAutomationProvider.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationCore.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationFramework-SystemXml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'c:\program files\microsoft visual studio\2022\community\common7\ide\commonextensions\microsoft\xamldiagnostics\Core\x64\Microsoft.VisualStudio.DesignTools.WpfTap.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Tracing.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Tasks.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.DataContractSerialization.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Xml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Resources.ResourceManager.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Emit.ILGeneration.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Emit.Lightweight.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Server.Main.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Common.FrmDll_WpfCtrl.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\mscorlib.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Common.NetDll_WpfCtrl.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.SignalR.Client.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-예외 발생: 'System.IO.IOException'(System.Console.dll)
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-[CommonFuncs] LoadExternalAppsConfig 실행
-[CommonFuncs] sUse 확인: 'True'
-[CommonFuncs] Insung01 설정 로드: Use=True, Id=동신MSI-S, AppPath=C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe -----------------------
-[CommonFuncs] Insung02 설정 로드: Use=True, Id=디에스MSI-S, AppPath=C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션\WooriNetWorkUpdater.exe -----------------------
-[CommonFuncs] Cargo24 설정 로드: Use=True, Id=10003, AppPath=C:\Cargo24\Cargo24.exe -----------------------
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Common.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.DependencyInjection.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.SignalR.Client.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Drawing.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Common.FrmDll_FormCtrl.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Forms.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Drawing.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-HubConnection 생성 중...
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Logging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-Monitor: \\.\DISPLAY1, String: Intel(R) UHD Graphics
-  Flags - Primary: True, Virtual: False
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Protocols.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: False, HasUSBMobile: False
-Monitor: \\.\DISPLAY5, String: NVIDIA GeForce RTX 4060 Laptop GPU
-  Flags - Primary: False, Virtual: False
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: False, HasUSBMobile: False
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Logging.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-Monitor: \\.\DISPLAY6, String: NVIDIA GeForce RTX 4060 Laptop GPU
-  Flags - Primary: False, Virtual: False
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: False, HasUSBMobile: False
-Monitor: \\.\DISPLAY85, String: USB Mobile Monitor Virtual Display
-  Flags - Primary: False, Virtual: True
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Options.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: True, HasUSBMobile: True
-  >>> Virtual Monitor SET: \\.\DISPLAY85
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Connections.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Http.Connections.Common.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.Http.Connections.Client.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.DependencyInjection.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encodings.Web.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Intrinsics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Numerics.Vectors.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Cryptography.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationUI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Channels.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationUI.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Features.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\System.IO.Pipelines.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Http.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebSockets.Client.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebSockets.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.DiagnosticSource.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Security.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Sockets.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NameResolution.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=W-bjGrLRDh-WLKYQztd4Ig *****
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-***** 로그인 요청 완료 *****
-***** 로그인 성공! 재시도 횟수 초기화 *****
-boolEventArgs=Kai.Common.StdDll_Common.StdDelegate+BoolEventArgs
-System.Windows.Data Error: 40 : BindingExpression path error: 'm_sConnSignalR' property not found on 'object' ''SrLocalClient' (HashCode=51134510)'. BindingExpression:Path=m_sConnSignalR; DataItem='SrLocalClient' (HashCode=51134510); target element is 'TextBlock' (Name='TblockConnLocal'); target property is 'Text' (type 'String')
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Python.Runtime.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.Expressions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.CSharp.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Emit.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): '__Python_Runtime_Generated_Assembly0'을(를) 로드했습니다. 
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.EventBasedAsync.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ReachFramework.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Forms.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Tools.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.Identity.UI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Mvc.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Http.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Http.Features.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Mvc.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Routing.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Razor.Runtime.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Mvc.RazorPages.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Mvc.Razor.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Html.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Mvc.ViewFeatures.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.Annotations.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Razor.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Authorization.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Metadata.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Configuration.UserSecrets.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NetworkInformation.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Immutable.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Numerics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Hosting.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Identity.Stores.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Identity.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Relational.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Data.Common.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Transactions.Local.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Server.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Endpoints.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Web.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Forms.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Authorization.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\System.Drawing.Common.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\System.Private.Windows.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Resources.Writer.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\Accessibility.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Formatters.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'Anonymously Hosted DynamicMethods Assembly'을(를) 로드했습니다. 
-예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
-예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
-예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
-예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
-34260 스레드가 종료되었습니다(코드: 0 (0x0)).
-HubConnection 생성 중...
-연결 시도시작...
-HubConn.StartAsync() 호출...
-SignalR 연결 성공
-33024 스레드가 종료되었습니다(코드: 0 (0x0)).
-Monitor: \\.\DISPLAY1, String: Intel(R) UHD Graphics
-  Flags - Primary: True, Virtual: False
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: False, HasUSBMobile: False
-Monitor: \\.\DISPLAY5, String: NVIDIA GeForce RTX 4060 Laptop GPU
-  Flags - Primary: False, Virtual: False
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: False, HasUSBMobile: False
-Monitor: \\.\DISPLAY6, String: NVIDIA GeForce RTX 4060 Laptop GPU
-  Flags - Primary: False, Virtual: False
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: False, HasUSBMobile: False
-Monitor: \\.\DISPLAY85, String: USB Mobile Monitor Virtual Display
-  Flags - Primary: False, Virtual: True
-  Virtual Detection - Mirror: False, Remote: False, HasVirtual: True, HasUSBMobile: True
-  >>> Virtual Monitor SET: \\.\DISPLAY85
-[MasterModeManager] 가상모니터가 이미 존재합니다.
-[MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
-[MasterModeManager] ExternalAppController 초기화 시작
-[ExternalAppController] 생성자 호출
-[ExternalAppController] InitializeAsync 시작
-[ExternalAppController] Cargo24 생성: Id=10003
-[CARGO24] 생성자 호출
-[Cargo24sAct_App] 생성자 호출: AppName=CARGO24
-[ExternalAppController] 생성된 앱 개수: 1
-[ExternalAppController] CARGO24 초기화 중...
-[CARGO24] InitializeAsync 시작: Id=10003
-[CARGO24] UpdaterWorkAsync 호출...
-[Cargo24sAct_App] UpdaterWork 시작: Path=C:\Cargo24\Cargo24.exe
-[Cargo24sAct_App] Updater 프로세스 시작됨: PID=33936
-[Cargo24sAct_App] UpdaterWork 완료: SplashWnd=1053172
-[CARGO24] UpdaterWorkAsync 성공
-[CARGO24] SplashWorkAsync 호출...
-[Cargo24sAct_App] SplashWork 시작
-[Cargo24sAct_App] 스플래시 윈도우 확인: 1053172
-[Cargo24sAct_App] 스플래시 윈도우 중앙 이동 완료
-[Cargo24sAct_App] ThreadId=23956, ProcessId=33936
-[Cargo24sAct_App] 아이디 입력창 찾음: 1248424
-[Cargo24sAct_App] 비밀번호 입력창 찾음: 2361490
-[Cargo24sAct_App] 로그인 처리 완료
-[CARGO24] SplashWorkAsync 성공
-[Cargo24sAct_MainWnd] 생성자 호출: AppName=CARGO24
-[CARGO24] MainWndAct 생성 완료
-[CARGO24] InitializeAsync 호출...
-[Cargo24sAct_MainWnd] 초기화 시작
-[Cargo24sAct_MainWnd] 메인 윈도우 찾음: 659572
-[Cargo24sAct_MainWnd] TopMost 설정 및 해제 완료
-[Cargo24sAct_MainWnd] 메인 윈도우 이동 및 최대화 완료
-[Cargo24sAct_MainWnd] 차일드 윈도우 개수: 11
-[Cargo24sAct_MainWnd] Child[0]: className=TNotifierWindow, rcRel={X=8,Y=51,Width=0,Height=0}
-[Cargo24sAct_MainWnd] Child[1]: className=TThemeNotifierWindow, rcRel={X=8,Y=51,Width=0,Height=0}
-[Cargo24sAct_MainWnd] Child[2]: className=TThemeNotifierWindow, rcRel={X=8,Y=51,Width=0,Height=0}
-[Cargo24sAct_MainWnd] Child[3]: className=TThemeNotifierWindow, rcRel={X=8,Y=51,Width=0,Height=0}
-[Cargo24sAct_MainWnd] Child[4]: className=TNotifierWindow, rcRel={X=8,Y=51,Width=0,Height=0}
-[Cargo24sAct_MainWnd] Child[5]: className=TAdvColumnGrid, rcRel={X=558,Y=169,Width=330,Height=187}
-[Cargo24sAct_MainWnd] Child[6]: className=TRzStatusBar, rcRel={X=8,Y=1021,Width=1920,Height=19}
-[Cargo24sAct_MainWnd] Child[7]: className=TPanel, rcRel={X=575,Y=419,Width=226,Height=137}
-[Cargo24sAct_MainWnd] Child[8]: className=TAdvPanel, rcRel={X=8,Y=51,Width=1920,Height=27}
-[Cargo24sAct_MainWnd] Child[9]: className=TMemo, rcRel={X=272,Y=208,Width=265,Height=121}
-[Cargo24sAct_MainWnd] Child[10]: className=MDIClient, rcRel={X=8,Y=78,Width=1920,Height=943}
-[Cargo24sAct_MainWnd] MainMenu, BarMenu, MdiClient 찾기 완료
-[Cargo24sAct_MainWnd] 초기화 완료
-[CARGO24] InitializeAsync 성공
-[Cargo24sAct_RcptRegPage] 생성자 호출: AppName=CARGO24
-[CARGO24] RcptRegPageAct 생성 완료
-[Cargo24sAct_RcptRegPage] 초기화 시작
-[Cargo24sAct_RcptRegPage] TopWnd 찾기 시작: ClassName=TfrmCargoOrder, WndName=오더접수관리
-[Cargo24sAct_RcptRegPage] TopWnd 찾음: 3F0A46 (시도 1/100)
-[Cargo24sAct_RcptRegPage] 접수등록Page 찾기 성공: 3F0A46
-[Cargo24sAct_RcptRegPage] 팝업 처리 시작
-[Cargo24sAct_RcptRegPage] 안내문 팝업 없음 - 스킵 (정상)
-[Cargo24sAct_RcptRegPage] 팝업 처리 완료 (Handled=False)
-[Cargo24sAct_RcptRegPage] 초기화 완료
-[CARGO24] RcptRegPage InitializeAsync 성공
-[CARGO24] InitializeAsync 완료
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
-[ExternalAppController] InitializeAsync 완료
-[MasterModeManager] ExternalAppController 초기화 완료
-[MainWnd] Master 모드 초기화 완료
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Xceed.Wpf.Toolkit.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-[MakeExistedAutoAlloc] 로드할 기존 주문이 없습니다.
-[ExternalAppController] 자동배차 시작
-[ExternalAppController] AutoAllocLoopAsync 시작
-[CARGO24] AutoAllocAsync 호출됨 (미구현): Count=1
------------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=103ms, Delay=4897ms
-[CARGO24] AutoAllocAsync 호출됨 (미구현): Count=2
------------[ExternalAppController] AutoAlloc [2] 완료 - Elapsed=103ms, Delay=4897ms
-[CARGO24] AutoAllocAsync 호출됨 (미구현): Count=3
-=== Window_Closing 시작 ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
------------[ExternalAppController] AutoAlloc [3] 완료 - Elapsed=101ms, Delay=4899ms
-[CARGO24] AutoAllocAsync 호출됨 (미구현): Count=4
-SrGlobalClient 종료 완료
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
-SrLocalClient 종료 완료
-[MainWnd] MasterModeManager 정리 시작
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시작
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 해제 완료
-[CancelTokenControl] Cancel 호출됨
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
-[ExternalAppController] AutoAllocLoopAsync 취소됨
-[ExternalAppController] CARGO24 종료 중...
-[CARGO24] Shutdown 시작
-[Cargo24sAct_App] Close 시작
-[Cargo24sAct_App] MainWindow 닫기 메시지 전송
-[Cargo24sAct_App] 종료 다이아로그 찾음: 2755350
-[Cargo24sAct_App] YES 버튼 찾음: 1182884
-21160 스레드가 종료되었습니다(코드: 0 (0x0)).
-'.NET TP Worker' (28236) 스레드가 종료되었습니다(코드: 0 (0x0)).
-'.NET TP Worker' (27304) 스레드가 종료되었습니다(코드: 0 (0x0)).
-'.NET TP Worker' (24608) 스레드가 종료되었습니다(코드: 0 (0x0)).
-'.NET TP Worker' (24672) 스레드가 종료되었습니다(코드: 0 (0x0)).
-'.NET TP Worker' (19652) 스레드가 종료되었습니다(코드: 0 (0x0)).
+=============================================================================
+[작업 로그] Kai.Client.CallCenter
+=============================================================================
+
+## 2025-11-25 작업 기록
+
+### 완료된 작업
+
+1. **Cargo24s SetDG오더RectsAsync 완료**
+   - RelChildRects 생성 로직 추가 (Cargo24sAct_RcptRegPage.cs:415-451)
+   - Background Brightness 계산 추가
+   - 패턴: ONECALL, INSUNG과 동일하게 통일
+
+2. **MasterModeManager 커서 백업/복원 추가**
+   - ShutdownAsync()에 커서 백업/복원 로직 추가 (MasterModeManager.cs:110-116)
+   - 가상모니터 제거 시 Windows가 마우스를 자동 이동시키는 것 방지
+   - InitializeAsync()와 대칭 구조로 통일
+
+3. **자동배차 함수 리팩토링 (테스트용)**
+   - NwOnecall.cs: AutoAllocAsync 인성 패턴 적용
+   - NwCargo24.cs: AutoAllocAsync 인성 패턴 적용
+   - InsungAutoAllocBase.cs: 테스트용 1000ms delay 추가
+   - 패턴: #region 1. 사전작업 (TopMost 설정) + Task.Delay(1000)
+   - 모든 네트워크 앱(인성/원콜/화물24시) 통일
+
+---
+
+## 다음 작업 계획
+
+### 1. TbChar 작업 테스트 (우선순위: 높음)
+   - 완료된 TbChar 기능 테스트
+   - 검증 항목:
+     * 문자 전송 기능
+     * 문자 수신 기능
+     * 에러 처리
+     * 로그 기록
+
+### 2. 화물24시(Cargo24) 자동배차 구현 (우선순위: 높음)
+   - 참조: InsungAutoAllocBase.cs 패턴
+   - 구현 항목:
+     * #region 2. Local Variables 초기화
+       - 큐에서 주문 리스트 가져오기
+       - StateFlag별 리스트 분류
+     * #region 3. Check Datagrid
+       - Datagrid 윈도우 존재 확인
+     * #region 4. Created Order 처리
+       - 신규 접수 주문 처리
+     * #region 5. 기존 주문 처리
+       - Datagrid 페이지별 순회
+       - OFR 및 상태 확인
+       - 자동배차 실행
+
+### 3. 원콜(Onecall) 자동배차 구현 (우선순위: 높음)
+   - 참조: InsungAutoAllocBase.cs 패턴
+   - 화물24시와 동일한 구조로 구현
+   - 원콜 특화 로직 추가 필요 시 반영
+
+### 4. 추가 검토 사항
+   - AutoAllocAsync 에러 처리 보완
+   - 성능 최적화 (필요 시)
+   - 로그 메시지 통일
+
+---
+
+## 기술 메모
+
+### Context 구조
+- OnecallContext: MemInfo.Main.TopWnd_hWnd
+- Cargo24Context: MemInfo.Main.TopWnd_hWnd
+- InsungContext: MemInfo.Main.TopWnd_hWnd
+
+### 공통 상수 (CommonVars)
+- c_nWaitShort: 짧은 대기 시간
+- c_nWaitLong: 긴 대기 시간
+- c_nRepeatShort: 짧은 재시도 횟수
+- c_nRepeatNormal: 일반 재시도 횟수
+
+### 자동배차 패턴
+```csharp
+#region 1. 사전작업
+await Std32Window.SetWindowTopMostAndReleaseAsync(hWnd, c_nWaitShort);
+#endregion
+
+#region 2. Local Variables 초기화
+// 큐에서 주문 가져오기
+// StateFlag별 분류
+#endregion
+
+#region 3. Check Datagrid
+// Datagrid 존재 확인
+#endregion
+
+#region 4. Created Order 처리
+// 신규 접수 처리
+#endregion
+
+#region 5. 기존 주문 처리
+// 페이지별 순회 및 처리
+#endregion
+```
+
+---
+
+## 빌드 상태
+- 최근 빌드: 성공
+- 경고: 46개 (unreachable code 경고 포함, 테스트용이므로 무시)
+- 오류: 0개
+
+=============================================================================

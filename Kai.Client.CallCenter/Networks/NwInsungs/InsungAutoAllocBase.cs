@@ -251,7 +251,12 @@ public abstract class InsungAutoAllocBase : IExternalApp
             Debug.WriteLine($"[{APP_NAME}] TopMost 설정 완료");
             #endregion
 
-            #region 2. Local Variables 초기화
+            // TODO: 나머지 자동배차 로직 구현
+            await Task.Delay(1000, ctrl.Token); // 임시 테스트
+
+            return new StdResult_Status(StdResult.Success);
+
+            #region 2. Local Variables 초기화 (테스트용 주석처리)
             // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)
             string queueName = GetQueueName();
             List<AutoAllocModel> listFromController = ExternalAppController.QueueManager.DequeueAllToList(queueName);

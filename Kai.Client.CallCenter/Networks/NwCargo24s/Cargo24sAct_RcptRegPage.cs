@@ -412,7 +412,40 @@ public class Cargo24sAct_RcptRegPage
                 // 모든 평가 통과 - 성공
                 bmpDG?.Dispose();
 
-                // TODO: Step 5 - Cell 좌표 배열 생성
+                // Step 5 - Cell 좌표 배열 생성
+                int rowCount = m_FileInfo.접수등록Page_DG오더_rowCount;
+                int rowHeight = m_FileInfo.접수등록Page_DG오더_rowHeight;
+
+                m_RcptPage.DG오더_rcRelCells = new Draw.Rectangle[rowCount, columns];
+                m_RcptPage.DG오더_ptRelChkRows = new Draw.Point[rowCount];
+
+                for (int row = 0; row < rowCount; row++)
+                {
+                    int cellY = HEADER_HEIGHT + (row * rowHeight);
+
+                    // Row check point (첫번째 컬럼 중앙)
+                    m_RcptPage.DG오더_ptRelChkRows[row] = new Draw.Point(
+                        listLW[0].nLeft + (listLW[0].nWidth / 2),
+                        cellY + (rowHeight / 2)
+                    );
+
+                    // Cell rects (경계에서 계산하여 미세조정 적용)
+                    for (int col = 0; col < columns; col++)
+                    {
+                        m_RcptPage.DG오더_rcRelCells[row, col] = new Draw.Rectangle(
+                            listLW[col].nLeft + 1,
+                            cellY,
+                            listLW[col].nWidth - 2,
+                            rowHeight
+                        );
+                    }
+                }
+
+                Debug.WriteLine($"[Cargo24/SetDG오더] Rect 배열 생성 완료: {rowCount}행 x {columns}열");
+
+                // Background Brightness 계산 (데이터그리드 중심 위치)
+                m_RcptPage.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(m_RcptPage.DG오더_hWnd);
+                Debug.WriteLine($"[Cargo24/SetDG오더] Background Brightness: {m_RcptPage.DG오더_nBackgroundBright}");
 
                 Debug.WriteLine($"[Cargo24/SetDG오더] SetDG오더RectsAsync 완료");
                 return null; // 성공
