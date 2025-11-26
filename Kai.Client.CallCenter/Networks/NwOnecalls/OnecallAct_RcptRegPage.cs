@@ -165,7 +165,7 @@ public class OnecallAct_RcptRegPage
     /// <summary>
     /// Datagrid 확장 후 Cell Rect 배열 계산 (36행)
     /// </summary>
-    private async Task<StdResult_Error> SetDG오더LargeRectsAsync()
+    private async Task<StdResult_Error> SetDG오더LargeRectsAsync(bool bEdit = true)
     {
         Draw.Bitmap bmpDG = null;
         List<OfrModel_LeftWidth> listLW = null;
@@ -247,7 +247,7 @@ public class OnecallAct_RcptRegPage
                         listLW[i].nLeft, headerGab, listLW[i].nWidth, textHeight);
 
                     var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                        bmpDG, rcTmp, bInvertRgb: false, bEdit: false);
+                        bmpDG, rcTmp, bInvertRgb: false, bEdit: bEdit);
 
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }

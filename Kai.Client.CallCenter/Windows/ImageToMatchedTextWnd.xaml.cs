@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
 using Draw = System.Drawing;
 using Wnd = System.Windows;
 
@@ -25,6 +26,7 @@ public partial class ImageToMatchedTextWnd : Window
     #region Variables
     public StdResult_Bool resultBool = null;
     public OfrResult_TbText Result = null;
+    private string m_sWantedStr = null;
     #endregion
 
     #region Basic
@@ -49,13 +51,14 @@ public partial class ImageToMatchedTextWnd : Window
     /// <summary>
     /// OfrModel_BitmapAnalysis를 받는 생성자
     /// </summary>
-    public ImageToMatchedTextWnd(string sPos, OfrModel_BitmapAnalysis analyText)
+    public ImageToMatchedTextWnd(string sPos, OfrModel_BitmapAnalysis analyText, string sWantedStr = null)
     {
         InitializeComponent();
 
         this.Topmost = true;
         this.TBoxPos.Text = sPos;
         this.Result = new OfrResult_TbText(null, analyText);
+        this.m_sWantedStr = sWantedStr;
 
         if (Result != null && Result.analyText != null && Result.analyText.bmpExact != null)
         {
@@ -66,7 +69,11 @@ public partial class ImageToMatchedTextWnd : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-         Debug.WriteLine("[ImageToMatchedTextWnd] Window_Loaded 시작");
+        Debug.WriteLine("[ImageToMatchedTextWnd] Window_Loaded 시작");
+
+        // 커서 명시적으로 표시
+        Mouse.OverrideCursor = null;
+        this.Cursor = Cursors.Arrow;
 
         // 분석 정보 표시
         OfrModel_BitmapAnalysis analyText = Result?.analyText;
@@ -95,6 +102,11 @@ public partial class ImageToMatchedTextWnd : Window
             TBoxShow.Text = tbText.Text;
             Debug.WriteLine($"[ImageToMatchedTextWnd] DB 정보 로드: Text={tbText.Text}");
         }
+        else if (!string.IsNullOrEmpty(m_sWantedStr))
+        {
+            TBoxShow.Text = m_sWantedStr;
+            Debug.WriteLine($"[ImageToMatchedTextWnd] 목표 텍스트 설정: {m_sWantedStr}");
+        }
 
         // 이미지 영역에 사각형 오버레이 추가
         if (ImgDisplay.Source != null)
@@ -113,6 +125,9 @@ public partial class ImageToMatchedTextWnd : Window
             OverlayCanvas.Children.Add(rect);
             Debug.WriteLine($"[ImageToMatchedTextWnd] 오버레이 사각형 추가: {ImgDisplay.ActualWidth}x{ImgDisplay.ActualHeight}");
         }
+
+        // TBoxSave에 포커스 및 캐럿 표시
+        TBoxSave.Focus();
     }
     #endregion
 
@@ -161,6 +176,11 @@ public partial class ImageToMatchedTextWnd : Window
 
                     savedHexStrings.Add(analysis.sHexArray);
 
+                    // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                    var existingResult = await PgService_TbText.SelectRowByBasicAsync(analysis.nWidth, analysis.nHeight, analysis.sHexArray);
+                    if (existingResult?.tbText != null)
+                        continue; // 이미 존재하면 건너뛰기
+
                     TbText newTbText = new TbText
                     {
                         Text = TBoxSave.Text,
@@ -204,7 +224,7 @@ public partial class ImageToMatchedTextWnd : Window
 
                 TBoxShow.Text = tbText.Text;
 
-                ErrMsgBox($"DB 저장 성공: {tbText.Text} ({savedCount}개 threshold)", "ImageToMatchedTextWnd/BtnExex_Click");
+                Close();
             }
             else
             {

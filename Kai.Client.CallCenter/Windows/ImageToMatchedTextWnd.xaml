@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
         mc:Ignorable="d"
-        Title="ImageToMatchedTextWnd" Height="820" Width="1200"  
+        Title="ImageToMatchedTextWnd" Height="820" Width="1200"
         WindowStartupLocation="CenterScreen"
+        Cursor="Arrow"
         Loaded="Window_Loaded">
 
     <Grid>

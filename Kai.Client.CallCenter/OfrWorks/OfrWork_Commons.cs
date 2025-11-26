@@ -28,11 +28,6 @@ public class OfrWork_Common
 {
     #region Config
     /// <summary>
-    /// TbChar 대규모 입력 작업 완료 시 false로 변경
-    /// </summary>
-    private static bool s_bUseTbCharBackup = true;  // false = TbChar 검색/저장, true = TbCharBackup 검색/저장
-
-    /// <summary>
     /// 텍스트 캐시 최대 크기 (하루 업무량 기준)
     /// </summary>
     private const int MAX_TEXT_CACHE_SIZE = 20000;
@@ -81,13 +76,13 @@ public class OfrWork_Common
         s_TextCache[cacheKey] = text;
     }
 
-    private static async Task SaveToTbCharBackup(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string charValue)
+    private static async Task SaveToTbChar(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string charValue)
     {
-        // 명도별(60~254)로 TbCharBackup 저장
+        // 명도별(60~254)로 TbChar 저장
         Draw.Bitmap bmpChar = OfrService.GetBitmapInBitmapFast(bmpSource, rcChar);
         if (bmpChar == null)
         {
-            Debug.WriteLine($"[TbCharBackup 저장 실패] 비트맵 추출 실패");
+            Debug.WriteLine($"[TbChar 저장 실패] 비트맵 추출 실패");
             return;
         }
 
@@ -108,7 +103,12 @@ public class OfrWork_Common
 
                 savedHexStrings.Add(analysis.sHexArray);
 
-                TbCharBackup newChar = new TbCharBackup
+                // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                var existingResult = await PgService_TbChar.SelectRowByBasicAsync(analysis.nWidth, analysis.nHeight, analysis.sHexArray);
+                if (existingResult?.tbChar != null)
+                    continue;
+
+                TbChar newChar = new TbChar
                 {
                     Character = charValue,
                     Width = analysis.nWidth,
@@ -117,7 +117,7 @@ public class OfrWork_Common
                     Threshold = threshold
                 };
 
-                StdResult_Long saveResult = await PgService_TbCharBackup.InsertRowAsync(newChar);
+                StdResult_Long saveResult = await PgService_TbChar.InsertRowAsync(newChar);
                 if (saveResult.lResult > 0)
                 {
                     savedCount++;
@@ -127,30 +127,46 @@ public class OfrWork_Common
 
         bmpChar.Dispose();
 
-        Debug.WriteLine($"[TbCharBackup 저장 완료] '{charValue}' ({savedCount}개 명도, 고유={savedHexStrings.Count}개)");
+        Debug.WriteLine($"[TbChar 저장 완료] '{charValue}' ({savedCount}개 명도, 고유={savedHexStrings.Count}개)");
     }
 
+    /// <summary>
+    /// TbCharFail에 인식 실패 문자 저장 (중복 체크 포함)
+    /// </summary>
     private static async Task SaveToTbCharFail(OfrModel_BitmapAnalysis modelChar, string failMark)
     {
-        // TbCharFail에 저장 (인식 실패 기록)
-        TbCharFail newCharFail = new TbCharFail
+        try
         {
-            Character = failMark,
-            Width = modelChar.nWidth,
-            Height = modelChar.nHeight,
-            HexStrValue = modelChar.sHexArray,
-            Threshold = modelChar.threshold,
-            Searched = 1
-        };
+            // DB에 이미 존재하는지 확인 (중복 방지)
+            var existingResult = await PgService_TbCharFail.SelectRowByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
+            if (existingResult?.tbCharFail != null)
+                return; // 이미 존재하면 저장 안 함
 
-        StdResult_Long saveResult = await PgService_TbCharFail.InsertRowAsync(newCharFail);
-        if (saveResult.lResult > 0)
-        {
-            Debug.WriteLine($"[TbCharFail 저장 성공] '{failMark}' ({modelChar.nWidth}x{modelChar.nHeight})");
+            // TbCharFail에 저장 (인식 실패 기록)
+            TbCharFail newCharFail = new TbCharFail
+            {
+                Character = failMark,
+                Width = modelChar.nWidth,
+                Height = modelChar.nHeight,
+                HexStrValue = modelChar.sHexArray,
+                Threshold = modelChar.threshold,
+                Searched = 1,
+                CreatedAt = DateTime.Now
+            };
+
+            StdResult_Long saveResult = await PgService_TbCharFail.InsertRowAsync(newCharFail);
+            if (saveResult.lResult > 0)
+            {
+                Debug.WriteLine($"[TbCharFail 저장 성공] '{failMark}' ({modelChar.nWidth}x{modelChar.nHeight})");
+            }
+            else
+            {
+                Debug.WriteLine($"[TbCharFail 저장 실패] {saveResult.sErr}");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[TbCharFail 저장 실패] {saveResult.sErr}");
+            Debug.WriteLine($"[TbCharFail 저장 예외] {ex.Message}");
         }
     }
 
@@ -217,7 +233,7 @@ public class OfrWork_Common
     /// Exact Bitmap에서 TbText를 찾는 함수 (개선된 버전 - 중첩 루프 제거)
     /// 주의: 이 함수는 반복하지 않습니다. 호출하는 측에서 반복 캡처+분석을 수행하세요.
     /// </summary>
-    public static async Task<OfrResult_TbText> OfrImage_ExactDrawRelRectAsync(Draw.Bitmap bmpExact, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    public static async Task<OfrResult_TbText> OfrImage_ExactDrawRelRectAsync(Draw.Bitmap bmpExact, bool bEdit = true, bool bWrite = true, bool bMsgBox = true, string sWantedStr = null)
     {
         // Get Basic Hex Info (한 번만 분석)
         byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpExact);
@@ -232,18 +248,31 @@ public class OfrWork_Common
         PgResult_TbText resultText = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
 
         if (resultText != null && resultText.tbText != null && resultText.tbText.Text != null)
+        {
+            // Searched가 10보다 작으면 1 증가하여 업데이트
+            if (resultText.tbText.Searched < 10)
+            {
+                resultText.tbText.Searched++;
+                _ = PgService_TbText.UpdateRowAsync(resultText.tbText);
+            }
             return new OfrResult_TbText(resultText.tbText, analyText);
+        }
 
         // Debug 모드에서 수동 입력 다이얼로그 표시
         if (bEdit && s_bDebugMode)
         {
-            ImageToMatchedTextWnd wnd = new ImageToMatchedTextWnd("OfrWork_Common/OfrImage_ExactDrawRelRectAsync_02", analyText);
+            ImageToMatchedTextWnd wnd = new ImageToMatchedTextWnd("OfrWork_Common/OfrImage_ExactDrawRelRectAsync_02", analyText, sWantedStr);
             wnd.ShowDialog();
 
             if (wnd.resultBool != null && wnd.resultBool.bResult)
             {
-                Debug.WriteLine($"[OfrWork_Common] 수동 입력 완료: {wnd.Result?.tbText?.Text}");
-                return wnd.Result;
+                // DB 저장 성공 - DB에서 다시 찾기
+                resultText = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                if (resultText != null && resultText.tbText != null && resultText.tbText.Text != null)
+                {
+                    Debug.WriteLine($"[OfrWork_Common] 수동 입력 후 DB 재조회 성공: {resultText.tbText.Text}");
+                    return new OfrResult_TbText(resultText.tbText, analyText);
+                }
             }
         }
 
@@ -253,23 +282,22 @@ public class OfrWork_Common
     }
 
     /// <summary>
-    /// TbChar/TbCharBackup에서 문자 검색
+    /// TbChar에서 문자 검색 (검색 성공 시 Searched 카운트 증가)
     /// </summary>
     private static async Task<string> SelectCharByBasicAsync(int width, int height, string hexString)
     {
-        string character = null;
-        if (s_bUseTbCharBackup)
+        PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
+        if (result?.tbChar != null)
         {
-            PgResult_TbCharBackup result = await PgService_TbCharBackup.SelectRowByBasicAsync(width, height, hexString);
-            character = result?.tbCharBackup?.Character;
+            // Searched가 10보다 작으면 1 증가하여 업데이트
+            if (result.tbChar.Searched < 10)
+            {
+                result.tbChar.Searched++;
+                _ = PgService_TbChar.UpdateRowAsync(result.tbChar);
+            }
+            return result.tbChar.Character;
         }
-        else
-        {
-            PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
-            character = result?.tbChar?.Character;
-        }
-
-        return character;
+        return null;
     }
 
     /// <summary>
@@ -340,6 +368,9 @@ public class OfrWork_Common
                 {
                     sb.Append("☒");
                     hasFailure = true;
+
+                    // TbCharFail에 저장 (비동기, 대기 안 함)
+                    _ = SaveToTbCharFail(modelChar, "☒");
                 }
                 else
                 {
@@ -357,9 +388,9 @@ public class OfrWork_Common
                 // RightSliding용 델리게이트 생성
                 OfrCharSearchDelegate searchFunc = async (int width, int height, string hexString) =>
                 {
-                    PgResult_TbCharBackup result = await PgService_TbCharBackup.SelectRowByBasicAsync(width, height, hexString);
-                    if (result?.tbCharBackup != null && !string.IsNullOrEmpty(result.tbCharBackup.Character) && result.tbCharBackup.Character.Length == 1)
-                        return new OfrCharSearchResult(result.tbCharBackup.Character[0], width, height);
+                    PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
+                    if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character) && result.tbChar.Character.Length == 1)
+                        return new OfrCharSearchResult(result.tbChar.Character[0], width, height);
                     return new OfrCharSearchResult();
                 };
 
@@ -372,7 +403,7 @@ public class OfrWork_Common
                         string manualChar = await ShowImageToCharDialog(bmpFail, rcFail, "RightSliding 실패");
                         if (!string.IsNullOrEmpty(manualChar))
                         {
-                            await SaveToTbCharBackup(bmpFail, rcFail, manualChar);
+                            await SaveToTbChar(bmpFail, rcFail, manualChar);
                         }
                         return manualChar;
                     };
@@ -495,6 +526,13 @@ public class OfrWork_Common
 
             if (findResult != null && findResult.tbText != null && !string.IsNullOrEmpty(findResult.tbText.Text))
             {
+                // Searched가 10보다 작으면 1 증가하여 업데이트
+                if (findResult.tbText.Searched < 10)
+                {
+                    findResult.tbText.Searched++;
+                    _ = PgService_TbText.UpdateRowAsync(findResult.tbText);
+                }
+
                 // TbText HIT → 캐시에 저장
                 string resultText = findResult.tbText.Text;
                 SaveTextCache(analyText, resultText);
@@ -544,17 +582,23 @@ public class OfrWork_Common
                 if (!string.IsNullOrEmpty(startEndResult))
                 {
                     SaveTextCache(analyText, startEndResult);
-                    TbText newTbText = new TbText
+
+                    // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                    var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                    if (existingResult?.tbText == null)
                     {
-                        Text = startEndResult,
-                        Width = analyText.nWidth,
-                        Height = analyText.nHeight,
-                        HexStrValue = analyText.sHexArray,
-                        Threshold = 0,
-                        Searched = 1,
-                        Reserved = ""
-                    };
-                    await PgService_TbText.InsertRowAsync(newTbText);
+                        TbText newTbText = new TbText
+                        {
+                            Text = startEndResult,
+                            Width = analyText.nWidth,
+                            Height = analyText.nHeight,
+                            HexStrValue = analyText.sHexArray,
+                            Threshold = 0,
+                            Searched = 1,
+                            Reserved = ""
+                        };
+                        await PgService_TbText.InsertRowAsync(newTbText);
+                    }
                     bmpFore.Dispose();
                     sw.Stop();
                     Debug.WriteLine($"[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: '{startEndResult}' ({sw.ElapsedMilliseconds}ms)");
@@ -567,9 +611,9 @@ public class OfrWork_Common
             // ========================================
             OfrCharSearchDelegate searchFunc = async (int width, int height, string hexString) =>
             {
-                PgResult_TbCharBackup charResult = await PgService_TbCharBackup.SelectRowByBasicAsync(width, height, hexString);
-                if (charResult?.tbCharBackup != null && !string.IsNullOrEmpty(charResult.tbCharBackup.Character) && charResult.tbCharBackup.Character.Length == 1)
-                    return new OfrCharSearchResult(charResult.tbCharBackup.Character[0], width, height);
+                PgResult_TbChar charResult = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
+                if (charResult?.tbChar != null && !string.IsNullOrEmpty(charResult.tbChar.Character) && charResult.tbChar.Character.Length == 1)
+                    return new OfrCharSearchResult(charResult.tbChar.Character[0], width, height);
                 return new OfrCharSearchResult();
             };
 
@@ -683,16 +727,21 @@ public class OfrWork_Common
                                         OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpFore, rcChar, avgBright2);
                                         if (model != null)
                                         {
-                                            TbCharBackup newChar = new TbCharBackup
+                                            // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                                            var existingChar = await PgService_TbChar.SelectRowByBasicAsync(model.nWidth, model.nHeight, model.sHexArray);
+                                            if (existingChar?.tbChar == null)
                                             {
-                                                Character = manualInput,
-                                                Width = model.nWidth,
-                                                Height = model.nHeight,
-                                                HexStrValue = model.sHexArray,
-                                                Threshold = 0,
-                                                Searched = 1
-                                            };
-                                            await PgService_TbCharBackup.InsertRowAsync(newChar);
+                                                TbChar newChar = new TbChar
+                                                {
+                                                    Character = manualInput,
+                                                    Width = model.nWidth,
+                                                    Height = model.nHeight,
+                                                    HexStrValue = model.sHexArray,
+                                                    Threshold = 0,
+                                                    Searched = 1
+                                                };
+                                                await PgService_TbChar.InsertRowAsync(newChar);
+                                            }
                                         }
 
                                         results[currentIdx] = manualInput;
@@ -743,17 +792,23 @@ public class OfrWork_Common
                 if (!string.IsNullOrEmpty(finalResult) && !finalResult.Contains('☒'))
                 {
                     SaveTextCache(analyText, finalResult);
-                    TbText newTbText = new TbText
+
+                    // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                    var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                    if (existingResult?.tbText == null)
                     {
-                        Text = finalResult,
-                        Width = analyText.nWidth,
-                        Height = analyText.nHeight,
-                        HexStrValue = analyText.sHexArray,
-                        Threshold = 0,
-                        Searched = 1,
-                        Reserved = ""
-                    };
-                    await PgService_TbText.InsertRowAsync(newTbText);
+                        TbText newTbText = new TbText
+                        {
+                            Text = finalResult,
+                            Width = analyText.nWidth,
+                            Height = analyText.nHeight,
+                            HexStrValue = analyText.sHexArray,
+                            Threshold = 0,
+                            Searched = 1,
+                            Reserved = ""
+                        };
+                        await PgService_TbText.InsertRowAsync(newTbText);
+                    }
                 }
 
                 bmpFore.Dispose();
@@ -789,22 +844,26 @@ public class OfrWork_Common
                 {
                     SaveTextCache(analyText, resultText);
 
-                    // TbText 저장
-                    TbText newTbText = new TbText
+                    // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                    var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                    if (existingResult?.tbText == null)
                     {
-                        Text = resultText,
-                        Width = analyText.nWidth,
-                        Height = analyText.nHeight,
-                        HexStrValue = analyText.sHexArray,
-                        Threshold = 0,
-                        Searched = 1,
-                        Reserved = ""
-                    };
+                        TbText newTbText = new TbText
+                        {
+                            Text = resultText,
+                            Width = analyText.nWidth,
+                            Height = analyText.nHeight,
+                            HexStrValue = analyText.sHexArray,
+                            Threshold = 0,
+                            Searched = 1,
+                            Reserved = ""
+                        };
 
-                    StdResult_Long saveResult = await PgService_TbText.InsertRowAsync(newTbText);
-                    if (saveResult.lResult > 0)
-                    {
-                        Debug.WriteLine($"[OfrStr_ComplexCharSetAsync] TbText 저장 성공: {resultText}");
+                        StdResult_Long saveResult = await PgService_TbText.InsertRowAsync(newTbText);
+                        if (saveResult.lResult > 0)
+                        {
+                            Debug.WriteLine($"[OfrStr_ComplexCharSetAsync] TbText 저장 성공: {resultText}");
+                        }
                     }
                 }
 
@@ -880,12 +939,12 @@ public class OfrWork_Common
                 if (model == null) continue;
 
                 // DB 검색
-                PgResult_TbCharBackup result = await PgService_TbCharBackup.SelectRowByBasicAsync(
+                PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(
                     model.nWidth, model.nHeight, model.sHexArray);
 
-                if (result?.tbCharBackup != null && !string.IsNullOrEmpty(result.tbCharBackup.Character))
+                if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character))
                 {
-                    foundChar = result.tbCharBackup.Character;
+                    foundChar = result.tbChar.Character;
                     consumed = len;
                     break;
                 }
@@ -944,16 +1003,16 @@ public class OfrWork_Common
                         if (model == null) continue;
 
                         // DB 검색
-                        PgResult_TbCharBackup result = await PgService_TbCharBackup.SelectRowByBasicAsync(
+                        PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(
                             model.nWidth, model.nHeight, model.sHexArray);
 
-                        if (result?.tbCharBackup != null && !string.IsNullOrEmpty(result.tbCharBackup.Character))
+                        if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character))
                         {
                             // 백트래킹 성공
-                            Debug.WriteLine($"[백트래킹 성공] x={x}, len={len}, char='{result.tbCharBackup.Character}'");
+                            Debug.WriteLine($"[백트래킹 성공] x={x}, len={len}, char='{result.tbChar.Character}'");
                             for (int i = x; i <= endIdx; i++)
                                 processed[i] = true;
-                            results[x] = result.tbCharBackup.Character;
+                            results[x] = result.tbChar.Character;
 
                             // 나머지 우측 영역은 처리 안 된 상태로 유지 (다음 반복에서 처리)
                             break;
@@ -1083,16 +1142,16 @@ public class OfrWork_Common
     //    // Stage 2-4: RightSliding 알고리즘으로 fallback
     //    //Debug.WriteLine($"[OfrWork_Common] Stage 1 실패. Stage 2-4 (RightSliding) 시작");
 
-    //    // 1. 델리게이트 함수 생성 (TbCharBackup 단일 문자 검색용 - TbChar rebuilding 중)
+    //    // 1. 델리게이트 함수 생성 (TbChar 단일 문자 검색용 - TbChar rebuilding 중)
     //    OfrCharSearchDelegate searchFunc = async (int width, int height, string hexString) =>
     //    {
-    //        PgResult_TbCharBackup charResult = await PgService_TbCharBackup.SelectRowByBasicAsync(width, height, hexString);
+    //        PgResult_TbChar charResult = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
 
-    //        if (charResult != null && charResult.tbCharBackup != null &&
-    //            !string.IsNullOrEmpty(charResult.tbCharBackup.Character) &&
-    //            charResult.tbCharBackup.Character.Length == 1)
+    //        if (charResult != null && charResult.tbChar != null &&
+    //            !string.IsNullOrEmpty(charResult.tbChar.Character) &&
+    //            charResult.tbChar.Character.Length == 1)
     //        {
-    //            return new OfrCharSearchResult(charResult.tbCharBackup.Character[0], width, height);
+    //            return new OfrCharSearchResult(charResult.tbChar.Character[0], width, height);
     //        }
 
     //        return new OfrCharSearchResult(); // Found=false
@@ -1149,7 +1208,7 @@ public class OfrWork_Common
     /// <summary>
     /// 단음소(숫자/영문) 전용 OFR 핵심 함수 (Core) - 전경,배경 방식
     /// - Stage 1 (TbText 전체 매칭) - bUseTbTextStage1=true일 때만 수행
-    /// - Stage 2 (전경/배경 방식으로 문자 영역 추출 + TbCharBackup 검색)
+    /// - Stage 2 (전경/배경 방식으로 문자 영역 추출 + TbChar 검색)
     /// - 성공 시 TbText 저장
     /// </summary>
     /// <param name="bmpOrg">원본 비트맵</param>
@@ -1214,7 +1273,7 @@ public class OfrWork_Common
     //             //Debug.WriteLine($"[OfrStr_SeqCharCore] Stage 1 실패, Stage 2 시작");
     //         }
 
-    //         // Stage 2: 전경/배경 방식으로 문자 영역 추출 + TbCharBackup 검색
+    //         // Stage 2: 전경/배경 방식으로 문자 영역 추출 + TbChar 검색
     //         // Step 1: rcSpare 영역 추출 및 평균 밝기 계산
     //         Draw.Bitmap bmpSpare = OfrService.GetBitmapInBitmapFast(bmpOrg, rcSpare);
     //         if (bmpSpare == null)
@@ -1255,7 +1314,7 @@ public class OfrWork_Common
 
     //         Debug.WriteLine($"[OfrStr_SeqCharCore] Step 3: 문자 영역 수={listStartEnd.Count}");
 
-    //         // Step 4-5: 각 문자 영역마다 TbCharBackup에서 검색
+    //         // Step 4-5: 각 문자 영역마다 TbChar에서 검색
     //         string sResult = "";
     //         const int nMaxCountFind = 10; // Searched 카운트 업데이트 임계값
 
@@ -1295,27 +1354,27 @@ public class OfrWork_Common
     //                 continue;
     //             }
 
-    //             // TbCharBackup에서 검색
-    //             PgResult_TbCharBackup resultBackup =
-    //                 await PgService_TbCharBackup.SelectRowByBasicAsync(analyChar.nWidth, analyChar.nHeight, analyChar.sHexArray);
+    //             // TbChar에서 검색
+    //             PgResult_TbChar resultBackup =
+    //                 await PgService_TbChar.SelectRowByBasicAsync(analyChar.nWidth, analyChar.nHeight, analyChar.sHexArray);
 
-    //             if (resultBackup != null && resultBackup.tbCharBackup != null &&
-    //                 !string.IsNullOrEmpty(resultBackup.tbCharBackup.Character))
+    //             if (resultBackup != null && resultBackup.tbChar != null &&
+    //                 !string.IsNullOrEmpty(resultBackup.tbChar.Character))
     //             {
     //                 // 찾음!
-    //                 sResult += resultBackup.tbCharBackup.Character;
-    //                 Debug.WriteLine($"[OfrStr_SeqCharCore] 문자[{i}] 인식 성공: {resultBackup.tbCharBackup.Character}");
+    //                 sResult += resultBackup.tbChar.Character;
+    //                 Debug.WriteLine($"[OfrStr_SeqCharCore] 문자[{i}] 인식 성공: {resultBackup.tbChar.Character}");
 
     //                 // Searched 카운트 업데이트
-    //                 if (nMaxCountFind < resultBackup.tbCharBackup.Searched)
+    //                 if (nMaxCountFind < resultBackup.tbChar.Searched)
     //                 {
-    //                     resultBackup.tbCharBackup.Searched += 1;
-    //                     await PgService_TbCharBackup.UpdateRowAsync(resultBackup.tbCharBackup);
+    //                     resultBackup.tbChar.Searched += 1;
+    //                     await PgService_TbChar.UpdateRowAsync(resultBackup.tbChar);
     //                 }
     //             }
     //             else
     //             {
-    //                 // Step 6: TbCharBackup에서 못 찾으면 - Debug 모드에서 다이얼로그 표시
+    //                 // Step 6: TbChar에서 못 찾으면 - Debug 모드에서 다이얼로그 표시
     //                 if (s_bDebugMode && bEdit)
     //                 {
     //                     // TODO: ImageToCharWnd 다이얼로그 통합 (필요 시)
@@ -1367,7 +1426,7 @@ public class OfrWork_Common
     /// <summary>
     /// 반복되는 단음소 단어 인식 함수 (예: "No", "OK" 등 컬럼 헤더)
     /// - Stage 1: TbText에서 전체 문자열 캐싱 검색 (빠름)
-    /// - Stage 2: 실패 시 전경/배경 방식으로 문자 분리 + TbCharBackup 검색
+    /// - Stage 2: 실패 시 전경/배경 방식으로 문자 분리 + TbChar 검색
     /// - 성공 시 TbText에 자동 저장하여 다음번엔 Stage 1에서 찾음
     /// </summary>
     /// <param name="bmpOrg">원본 비트맵</param>
@@ -1389,7 +1448,7 @@ public class OfrWork_Common
     /// <summary>
     /// 가변 단음소 문자열 인식 함수 (예: 전화번호, 주문번호 등)
     /// - Stage 1 스킵 (TbText 캐싱 사용 안 함)
-    /// - 전경/배경 방식으로 문자 분리 + TbCharBackup 검색
+    /// - 전경/배경 방식으로 문자 분리 + TbChar 검색
     /// - 성공 시 TbText에 저장 (다음번에 동일 값이면 Stage 1에서 찾음)
     /// </summary>
     /// <param name="bmpOrg">원본 비트맵</param>

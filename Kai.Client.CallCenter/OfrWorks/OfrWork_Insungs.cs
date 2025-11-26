@@ -32,7 +32,7 @@ public class OfrWork_Insungs : OfrWork_Common
 
             bmpOrg = OfrService.CaptureScreenRect_InWndHandle(hWnd, offset);
             // 마지막 시도에만 bEdit, bWrite, bMsgBox 활성화
-            result = await OfrWork_Common.OfrImage_ExactDrawRelRectAsync(bmpOrg, bLastAttempt && bEdit, bLastAttempt && bWrite, bLastAttempt && bMsgBox);
+            result = await OfrWork_Common.OfrImage_ExactDrawRelRectAsync(bmpOrg, bLastAttempt && bEdit, bLastAttempt && bWrite, bLastAttempt && bMsgBox, sWantedStr);
 
             if (result._sResult != null && result._sResult == sWantedStr)
             {

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
         mc:Ignorable="d"
         Title="ImageToCharWnd" Height="330" Width="420" WindowStartupLocation="CenterScreen"
+        Cursor="Arrow"
         Loaded="Window_Loaded">
     <Grid Margin="15">
         <Grid.RowDefinitions>

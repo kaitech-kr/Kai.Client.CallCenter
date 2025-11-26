@@ -371,7 +371,7 @@ public class Cargo24sAct_RcptRegPage
                         listLW[i].nLeft, TARGET_ROW, listLW[i].nWidth, OFR_HEIGHT);
 
                     var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                        bmpDG, rcTmp, bInvertRgb: false, bEdit: false);
+                        bmpDG, rcTmp, bInvertRgb: false, bEdit: bEdit);
 
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }
@@ -653,7 +653,7 @@ public class Cargo24sAct_RcptRegPage
                 Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[x].nLeft, HEADER_GAB, listLW[x].nWidth, OFR_HEIGHT);
 
                 var resultChSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                    bmpHeader, rcTmp, bInvertRgb: false, bEdit: false);
+                    bmpHeader, rcTmp, bInvertRgb: false, bEdit: bEdit);
 
                 if (string.IsNullOrEmpty(resultChSet.strResult))
                 {

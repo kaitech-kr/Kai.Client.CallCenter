@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Draw = System.Drawing;
@@ -8,6 +9,7 @@ using Draw = System.Drawing;
 using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Results;
 
@@ -43,6 +45,15 @@ public partial class ImageToCharWnd : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+        Debug.WriteLine("[ImageToCharWnd] Window_Loaded 시작");
+
+        // 외부 입력 차단 해제 (OFR 처리 중 BlockInput이 활성화 상태일 수 있음)
+        StdWin32.BlockInput(false);
+
+        // 커서 명시적으로 표시
+        Mouse.OverrideCursor = null;
+        this.Cursor = Cursors.Arrow;
+
         // 이미지 표시
         DisplayBitmaps();
 
@@ -50,7 +61,7 @@ public partial class ImageToCharWnd : Window
         if (!string.IsNullOrEmpty(_failReason))
             LabelReason.Content = $"인식 실패: {_failReason}";
 
-        // 포커스
+        // 포커스 및 캐럿 표시
         TBoxChar.Focus();
     }
     #endregion
@@ -112,13 +123,32 @@ public partial class ImageToCharWnd : Window
     {
         try
         {
-            // 1. ImgString: 전체 비트맵 표시 (문맥 제공)
+            // 1. ImgString: 전체 비트맵 표시 (문맥 제공) + 문자 영역 표시
             if (_bmpSource != null)
             {
-                Draw.Bitmap bmpString = ScaleBitmap(_bmpSource, 360, 80);
+                // 전체 비트맵 복사 후 문자 영역에 빨간 사각형 그리기
+                Draw.Bitmap bmpWithRect = new Draw.Bitmap(_bmpSource);
+                if (_rcChar != Draw.Rectangle.Empty)
+                {
+                    using (Draw.Graphics g = Draw.Graphics.FromImage(bmpWithRect))
+                    using (Draw.Pen pen = new Draw.Pen(Draw.Color.Red, 1))
+                    {
+                        // 문자 영역 주변에 사각형 그리기 (1픽셀 바깥쪽)
+                        Draw.Rectangle rcDraw = new Draw.Rectangle(
+                            Math.Max(0, _rcChar.X - 1),
+                            Math.Max(0, _rcChar.Y - 1),
+                            Math.Min(_rcChar.Width + 2, bmpWithRect.Width - _rcChar.X),
+                            Math.Min(_rcChar.Height + 2, bmpWithRect.Height - _rcChar.Y));
+                        g.DrawRectangle(pen, rcDraw);
+                    }
+                }
+
+                Draw.Bitmap bmpString = ScaleBitmap(bmpWithRect, 360, 80);
                 ImgString.Source = OfrService.ConvertBitmap_ToBitmapImage(bmpString);
-                if (bmpString != _bmpSource)
+
+                if (bmpString != bmpWithRect)
                     bmpString.Dispose();
+                bmpWithRect.Dispose();
             }
 
             // 2. ImgChar: 개별 문자만 확대 표시
