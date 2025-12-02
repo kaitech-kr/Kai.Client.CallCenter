@@ -1,10 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
-using System.Drawing;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Collections.Concurrent;
-using Microsoft.AspNetCore.Mvc;
 using Draw = System.Drawing;
 using Wnd = System.Windows;
 using Medias = System.Windows.Media;
@@ -12,7 +9,7 @@ using Medias = System.Windows.Media;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Results;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Services;
@@ -31,6 +28,13 @@ public class OfrWork_Common
     /// 텍스트 캐시 최대 크기 (하루 업무량 기준)
     /// </summary>
     private const int MAX_TEXT_CACHE_SIZE = 20000;
+
+    /// <summary>
+    /// 문자 분리용 평균 밝기 가중치 (안티앨리어싱 대응)
+    /// - 0.9: 기본값 (흰배경+검정글씨)
+    /// - 0.7: 회색배경 등 안티앨리어싱이 강한 경우
+    /// </summary>
+    private const double WEIGHT_AVG_BRIGHTNESS = 0.7;
 
     /// <summary>
     /// 텍스트 캐시 (전체 텍스트용) - Key: "{width}x{height}_{hexArray}", Value: Text
@@ -95,7 +99,8 @@ public class OfrWork_Common
         {
             OfrModel_BitmapAnalysis analysis = OfrService.GetBitmapAnalysisFast(bmpChar, threshold);
 
-            if (analysis != null && analysis.sHexArray != null && analysis.trueRate > 0 && analysis.trueRate < 1)
+            // trueRate > 0: 전부 흰색(0)만 제외, 작은 문자도 저장 가능
+            if (analysis != null && analysis.sHexArray != null && analysis.trueRate > 0)
             {
                 // 중복된 HexString은 건너뛰기
                 if (savedHexStrings.Contains(analysis.sHexArray))
@@ -131,42 +136,41 @@ public class OfrWork_Common
     }
 
     /// <summary>
-    /// TbCharFail에 인식 실패 문자 저장 (중복 체크 포함)
+    /// TbTextFail에 인식 실패 텍스트 저장 (중복 체크 포함)
     /// </summary>
-    private static async Task SaveToTbCharFail(OfrModel_BitmapAnalysis modelChar, string failMark)
+    private static async Task SaveToTbTextFail(OfrModel_BitmapAnalysis modelText, string failReason)
     {
         try
         {
             // DB에 이미 존재하는지 확인 (중복 방지)
-            var existingResult = await PgService_TbCharFail.SelectRowByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
-            if (existingResult?.tbCharFail != null)
+            var existingResult = await PgService_TbTextFail.SelectRowByBasicAsync(modelText.nWidth, modelText.nHeight, modelText.sHexArray);
+            if (existingResult?.tbTextFail != null)
                 return; // 이미 존재하면 저장 안 함
 
-            // TbCharFail에 저장 (인식 실패 기록)
-            TbCharFail newCharFail = new TbCharFail
+            // TbTextFail에 저장 (인식 실패 기록)
+            TbTextFail newTextFail = new TbTextFail
             {
-                Character = failMark,
-                Width = modelChar.nWidth,
-                Height = modelChar.nHeight,
-                HexStrValue = modelChar.sHexArray,
-                Threshold = modelChar.threshold,
-                Searched = 1,
-                CreatedAt = DateTime.Now
+                Text = null,
+                Width = modelText.nWidth,
+                Height = modelText.nHeight,
+                HexStrValue = modelText.sHexArray,
+                Threshold = modelText.threshold,
+                Searched = 1
             };
 
-            StdResult_Long saveResult = await PgService_TbCharFail.InsertRowAsync(newCharFail);
+            StdResult_Long saveResult = await PgService_TbTextFail.InsertRowAsync(newTextFail);
             if (saveResult.lResult > 0)
             {
-                Debug.WriteLine($"[TbCharFail 저장 성공] '{failMark}' ({modelChar.nWidth}x{modelChar.nHeight})");
+                Debug.WriteLine($"[TbTextFail 저장 성공] '{failReason}' ({modelText.nWidth}x{modelText.nHeight})");
             }
             else
             {
-                Debug.WriteLine($"[TbCharFail 저장 실패] {saveResult.sErr}");
+                Debug.WriteLine($"[TbTextFail 저장 실패] {saveResult.sErr}");
             }
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[TbCharFail 저장 예외] {ex.Message}");
+            Debug.WriteLine($"[TbTextFail 저장 예외] {ex.Message}");
         }
     }
 
@@ -307,7 +311,7 @@ public class OfrWork_Common
     /// <param name="bmpSource">원본 비트맵</param>
     /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
     /// <returns>인식 결과</returns>
-    public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpSource, bool bEdit = true)
+    public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpSource, double weightBrightness, bool bEdit = true)
     {
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -327,7 +331,7 @@ public class OfrWork_Common
             if (bmpFore == null)
                 return new StdResult_String("전경 비트맵 추출 실패", "OfrStr_SeqCharAsync_01_2");
 
-            byte avgBright2 = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpFore);
+            byte avgBright2 = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpFore, weightBrightness);
             OfrModel_BitmapAnalysis analyText = OfrService.GetBitmapAnalysisFast(bmpFore, avgBright2);
             bmpFore.Dispose();
 
@@ -345,47 +349,62 @@ public class OfrWork_Common
             // ========================================
             // 2. 캐시 MISS → 전경/배경 방식으로 문자 분리
             // ========================================
-            List<OfrModel_StartEnd> charList = OfrService.GetStartEndList_FromColorBitmap(bmpSource, avgBright, rcFore);
+            List<OfrModel_StartEnd> charList = OfrService.GetStartEndList_FromColorBitmap(bmpSource, avgBright2, rcFore);
             if (charList == null || charList.Count == 0)
                 return new StdResult_String("문자 분리 실패", "OfrStr_SeqCharAsync_02");
 
-            StringBuilder sb = new StringBuilder();
-            bool hasFailure = false;
+            int charCount = charList.Count;
+            string[] results = new string[charCount];
+            bool[] processed = new bool[charCount];
 
-            for (int i = 0; i < charList.Count; i++)
+            for (int i = 0; i < charCount; i++)
             {
-                StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(bmpSource, avgBright, rcFore, charList, i, i);
+                StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(bmpSource, avgBright2, rcFore, charList, i, i);
                 if (rcIndex == null)
                     return new StdResult_String($"문자{i + 1} 영역 실패", "OfrStr_SeqCharAsync_03");
 
                 Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
-                OfrModel_BitmapAnalysis modelChar = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright);
+                OfrModel_BitmapAnalysis modelChar = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright2);
                 if (modelChar == null)
                     return new StdResult_String($"문자{i + 1} 분석 실패", "OfrStr_SeqCharAsync_04");
 
                 string character = await SelectCharByBasicAsync(modelChar.nWidth, modelChar.nHeight, modelChar.sHexArray);
-                if (character == null)
+                if (character != null)
                 {
-                    sb.Append("☒");
-                    hasFailure = true;
-
-                    // TbCharFail에 저장 (비동기, 대기 안 함)
-                    _ = SaveToTbCharFail(modelChar, "☒");
-                }
-                else
-                {
-                    sb.Append(character);
+                    results[i] = character;
+                    processed[i] = true;
                 }
             }
 
             // ========================================
-            // 3. 실패한 문자가 있으면 RightSliding 시도
+            // 3. 미처리 영역에 RightSliding 시도
             // ========================================
-            string resultText = sb.ToString();
+            bool hasUnprocessed = processed.Any(p => !p);
 
-            if (hasFailure)
+            if (hasUnprocessed)
             {
-                // RightSliding용 델리게이트 생성
+                // 미처리 그룹 계산
+                List<(int start, int end)> unprocessedGroups = new List<(int, int)>();
+                int groupStart = -1;
+                for (int i = 0; i < charCount; i++)
+                {
+                    if (!processed[i])
+                    {
+                        if (groupStart == -1) groupStart = i;
+                    }
+                    else
+                    {
+                        if (groupStart != -1)
+                        {
+                            unprocessedGroups.Add((groupStart, i - 1));
+                            groupStart = -1;
+                        }
+                    }
+                }
+                if (groupStart != -1)
+                    unprocessedGroups.Add((groupStart, charCount - 1));
+
+                // RightSliding용 델리게이트
                 OfrCharSearchDelegate searchFunc = async (int width, int height, string hexString) =>
                 {
                     PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
@@ -394,43 +413,134 @@ public class OfrWork_Common
                     return new OfrCharSearchResult();
                 };
 
-                // 실패 시 대화상자 (디버그 모드에서만)
-                OfrCharFailDelegate failFunc = null;
-                if (bEdit && s_bDebugMode)
+                // 각 미처리 그룹에 RightSliding 수행
+                foreach (var group in unprocessedGroups)
                 {
-                    failFunc = async (Draw.Bitmap bmpFail, Draw.Rectangle rcFail) =>
+                    StdConst_IndexRect rcGroup = OfrService.GetIndexRect_FromColorBitmapByIndex(
+                        bmpSource, avgBright2, rcFore, charList, group.start, group.end);
+                    if (rcGroup == null) continue;
+
+                    Draw.Rectangle rcGroupRect = rcGroup.GetDrawRectangle();
+                    Draw.Bitmap bmpGroup = OfrService.GetBitmapInBitmapFast(bmpSource, rcGroupRect);
+                    if (bmpGroup == null) continue;
+
+                    OfrResult_Recognition groupResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpGroup, searchFunc, null, avgBright2);
+                    bmpGroup.Dispose();
+
+                    if (groupResult != null && !string.IsNullOrEmpty(groupResult.strResult) && !groupResult.strResult.Contains('☒'))
                     {
-                        string manualChar = await ShowImageToCharDialog(bmpFail, rcFail, "RightSliding 실패");
-                        if (!string.IsNullOrEmpty(manualChar))
-                        {
-                            await SaveToTbChar(bmpFail, rcFail, manualChar);
-                        }
-                        return manualChar;
-                    };
+                        results[group.start] = groupResult.strResult;
+                        for (int i = group.start; i <= group.end; i++)
+                            processed[i] = true;
+                        Debug.WriteLine($"[RightSliding 성공] 그룹[{group.start}~{group.end}]: '{groupResult.strResult}'");
+                    }
+                    groupResult?.SourceBitmap?.Dispose();
                 }
 
-                // 전경 영역에 RightSliding 수행
-                Draw.Bitmap bmpFore2 = OfrService.GetBitmapInBitmapFast(bmpSource, rcFore);
-                if (bmpFore2 != null)
+                // ========================================
+                // 4. 여전히 미처리인 영역 → 대화상자 (디버그 모드)
+                // ========================================
+                unprocessedGroups.Clear();
+                groupStart = -1;
+                for (int i = 0; i < charCount; i++)
                 {
-                    OfrResult_Recognition rsResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpFore2, searchFunc, failFunc);
-                    bmpFore2.Dispose();
-
-                    if (rsResult != null && !string.IsNullOrEmpty(rsResult.strResult) && !rsResult.strResult.Contains('☒'))
+                    if (!processed[i])
                     {
-                        resultText = rsResult.strResult;
-                        Debug.WriteLine($"[RightSliding 성공] OfrStr_SeqCharAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms)");
+                        if (groupStart == -1) groupStart = i;
+                    }
+                    else
+                    {
+                        if (groupStart != -1)
+                        {
+                            unprocessedGroups.Add((groupStart, i - 1));
+                            groupStart = -1;
+                        }
+                    }
+                }
+                if (groupStart != -1)
+                    unprocessedGroups.Add((groupStart, charCount - 1));
+
+                if (unprocessedGroups.Count > 0 && bEdit && s_bDebugMode)
+                {
+                    Debug.WriteLine($"[미처리 그룹] {unprocessedGroups.Count}개 → 대화상자 호출");
+
+                    foreach (var group in unprocessedGroups)
+                    {
+                        for (int i = group.start; i <= group.end; i++)
+                        {
+                            if (processed[i]) continue;
+
+                            StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(
+                                bmpSource, avgBright2, rcFore, charList, i, i);
+                            if (rcIndex == null)
+                            {
+                                results[i] = "☒";
+                                processed[i] = true;
+                                continue;
+                            }
+
+                            Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
+                            Draw.Bitmap bmpChar = OfrService.GetBitmapInBitmapFast(bmpSource, rcChar);
+                            if (bmpChar == null)
+                            {
+                                results[i] = "☒";
+                                processed[i] = true;
+                                continue;
+                            }
+
+                            Debug.WriteLine($"[단음소 실패] rcChar={rcChar}, bmpSource={bmpSource.Width}x{bmpSource.Height}");
+                            bmpSource.Save($"C:\\Users\\gsqui\\OneDrive\\사진\\스크린샷\\test_bmpSource_{i}.png");
+                            bmpChar.Save($"C:\\Users\\gsqui\\OneDrive\\사진\\스크린샷\\test_bmpChar_{i}.png");
+                            string manualChar = await ShowImageToCharDialog(bmpSource, rcChar, "단음소 실패");
+                            if (!string.IsNullOrEmpty(manualChar))
+                            {
+                                await SaveToTbChar(bmpChar, new Draw.Rectangle(0, 0, bmpChar.Width, bmpChar.Height), manualChar);
+                                results[i] = manualChar;
+                            }
+                            else
+                            {
+                                results[i] = "☒";
+                            }
+                            processed[i] = true;
+                            bmpChar.Dispose();
+                        }
+                    }
+                }
+                else if (unprocessedGroups.Count > 0)
+                {
+                    foreach (var group in unprocessedGroups)
+                    {
+                        for (int i = group.start; i <= group.end; i++)
+                        {
+                            if (!processed[i])
+                            {
+                                results[i] = "☒";
+                                processed[i] = true;
+                            }
+                        }
                     }
                 }
             }
+
+            // 결과 조합
+            StringBuilder sbFinal = new StringBuilder();
+            for (int i = 0; i < charCount; i++)
+            {
+                if (!string.IsNullOrEmpty(results[i]))
+                    sbFinal.Append(results[i]);
+            }
+            string resultText = sbFinal.ToString();
 
             if (string.IsNullOrEmpty(resultText) || resultText.Length == 0)
                 return new StdResult_String("인식 문자 없음", "OfrStr_SeqCharAsync_06");
 
             // ========================================
-            // 4. 성공 → 텍스트 캐시에 저장
+            // 4. 성공 → 텍스트 캐시에 저장 (☒ 없을 때만)
             // ========================================
-            SaveTextCache(analyText, resultText);
+            if (!resultText.Contains('☒'))
+            {
+                SaveTextCache(analyText, resultText);
+            }
 
             sw.Stop();
             // Debug.WriteLine($"[Cache MISS] OfrStr_SeqCharAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
@@ -454,7 +564,7 @@ public class OfrWork_Common
     /// <param name="bInvertRgb">RGB 반전 여부</param>
     /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
     /// <returns>인식 결과</returns>
-    public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpPage, Draw.Rectangle rect, bool bInvertRgb, bool bEdit = true)
+    public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpPage, Draw.Rectangle rect, bool bInvertRgb, double weightBrightness, bool bEdit = true)
     {
         Draw.Bitmap bmpCell = null;
 
@@ -474,7 +584,7 @@ public class OfrWork_Common
             }
 
             // 3. 기존 오버로드 호출
-            return await OfrStr_SeqCharAsync(bmpCell, bEdit);
+            return await OfrStr_SeqCharAsync(bmpCell, weightBrightness, bEdit);
         }
         finally
         {
@@ -482,7 +592,7 @@ public class OfrWork_Common
         }
     }
 
-    public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(Draw.Bitmap bmpSource, bool bEdit = true)
+    public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(Draw.Bitmap bmpSource, bool bEdit = true, int maxCharCount = 0)
     {
         Stopwatch sw = Stopwatch.StartNew();
 
@@ -501,7 +611,7 @@ public class OfrWork_Common
             if (bmpFore == null)
                 return new StdResult_String("전경 비트맵 추출 실패", "OfrStr_ComplexCharSetAsync_01_2");
 
-            byte avgBright2 = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpFore);
+            byte avgBright2 = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpFore, WEIGHT_AVG_BRIGHTNESS);
             OfrModel_BitmapAnalysis analyText = OfrService.GetBitmapAnalysisFast(bmpFore, avgBright2);
 
             if (analyText == null || string.IsNullOrEmpty(analyText.sHexArray) || analyText.trueRate == 0 || analyText.trueRate == 1)
@@ -539,7 +649,7 @@ public class OfrWork_Common
                 bmpFore.Dispose();
 
                 sw.Stop();
-                Debug.WriteLine($"[TbText HIT] OfrStr_ComplexCharSetAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms)");
+                //Debug.WriteLine($"[TbText HIT] OfrStr_ComplexCharSetAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms)");
                 return new StdResult_String(resultText);
             }
 
@@ -640,6 +750,11 @@ public class OfrWork_Common
                 if (groupStart != -1)
                     unprocessedGroups.Add((groupStart, processed.Length - 1));
 
+                // 미처리 그룹 로그
+                Debug.WriteLine($"[미처리 그룹] 총 {unprocessedGroups.Count}개: {string.Join(", ", unprocessedGroups.Select(g => $"[{g.start}~{g.end}]"))}");
+                for (int i = 0; i < processed.Length; i++)
+                    Debug.WriteLine($"  processed[{i}]={processed[i]}, result={results[i] ?? "null"}");
+
                 // 각 미처리 그룹에 대해 RightSliding 수행
                 foreach (var group in unprocessedGroups)
                 {
@@ -651,7 +766,7 @@ public class OfrWork_Common
                     Draw.Bitmap bmpGroup = OfrService.GetBitmapInBitmapFast(bmpFore, rcGroupRect);
                     if (bmpGroup == null) continue;
 
-                    OfrResult_Recognition groupResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpGroup, searchFunc, null);
+                    OfrResult_Recognition groupResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpGroup, searchFunc, null, avgBright2);
                     bmpGroup.Dispose();
 
                     if (groupResult != null && !string.IsNullOrEmpty(groupResult.strResult) && !groupResult.strResult.Contains('☒'))
@@ -686,6 +801,25 @@ public class OfrWork_Common
                 }
                 if (groupStart != -1)
                     unprocessedGroups.Add((groupStart, processed.Length - 1));
+
+                // maxCharCount > 0이면 좌측부터 N개 문자가 이미 인식됐는지 확인
+                if (maxCharCount > 0 && unprocessedGroups.Count > 0)
+                {
+                    // 현재까지 인식된 결과 합치기 (공백/☒ 제외)
+                    StringBuilder sbTemp = new StringBuilder();
+                    for (int i = 0; i < results.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(results[i]))
+                            sbTemp.Append(results[i]);
+                    }
+                    string tempResult = sbTemp.ToString().Replace(" ", "").Replace("☒", "");
+
+                    // 이미 N개 이상 인식됐으면 미처리 영역 무시 (대화상자 안 띄움)
+                    if (tempResult.Length >= maxCharCount)
+                    {
+                        unprocessedGroups.Clear();
+                    }
+                }
 
                 // 미처리 영역이 있으면 모드별 처리
                 if (unprocessedGroups.Count > 0)
@@ -723,12 +857,17 @@ public class OfrWork_Common
 
                                     if (!string.IsNullOrEmpty(manualInput))
                                     {
-                                        // DB 저장
+                                        // DB 저장 (다음소 영역추출과 동일한 방식으로 HexString 생성)
+                                        Debug.WriteLine($"[TbChar 저장 시도] manualInput='{manualInput}', rcChar={rcChar}, avgBright2={avgBright2}");
+
                                         OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpFore, rcChar, avgBright2);
+
+                                        Debug.WriteLine($"[TbChar] model={(model != null ? $"W={model.nWidth},H={model.nHeight},Hex={model.sHexArray}" : "null")}");
                                         if (model != null)
                                         {
                                             // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
                                             var existingChar = await PgService_TbChar.SelectRowByBasicAsync(model.nWidth, model.nHeight, model.sHexArray);
+                                            Debug.WriteLine($"[TbChar] existingChar={(existingChar?.tbChar != null ? "이미 존재" : "없음")}");
                                             if (existingChar?.tbChar == null)
                                             {
                                                 TbChar newChar = new TbChar
@@ -737,11 +876,16 @@ public class OfrWork_Common
                                                     Width = model.nWidth,
                                                     Height = model.nHeight,
                                                     HexStrValue = model.sHexArray,
-                                                    Threshold = 0,
+                                                    Threshold = avgBright2,
                                                     Searched = 1
                                                 };
-                                                await PgService_TbChar.InsertRowAsync(newChar);
+                                                var insertResult = await PgService_TbChar.InsertRowAsync(newChar);
+                                                Debug.WriteLine($"[TbChar 저장 완료] '{manualInput}' → result={insertResult?.lResult}");
                                             }
+                                        }
+                                        else
+                                        {
+                                            Debug.WriteLine($"[TbChar 저장 실패] model이 null");
                                         }
 
                                         results[currentIdx] = manualInput;
@@ -765,7 +909,7 @@ public class OfrWork_Common
                         }
                         else
                         {
-                            // 데이터 읽기 모드: ☒ 처리
+                            // 편집 모드 + 비디버그 모드: ☒ 처리 + TbCharFail 저장
                             for (int i = group.start; i <= group.end; i++)
                             {
                                 if (!processed[i])
@@ -931,16 +1075,18 @@ public class OfrWork_Common
 
                 Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
 
-                // 최소 너비 체크 (너무 작은 영역은 무시)
-                if (rcChar.Width < 3) continue;
+                // 최소 너비 체크 (너무 작은 영역은 무시) - '1' 같은 좁은 문자 허용
+                if (rcChar.Width < 2) continue;
 
                 OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright);
 
                 if (model == null) continue;
 
                 // DB 검색
+                Debug.WriteLine($"[StartEndList 검색] len={len}, idx={startIdx}~{x}, rcChar={rcChar}, W={model.nWidth},H={model.nHeight},Hex={model.sHexArray}");
                 PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(
                     model.nWidth, model.nHeight, model.sHexArray);
+                Debug.WriteLine($"[StartEndList 검색결과] {(result?.tbChar != null ? $"찾음: '{result.tbChar.Character}'" : "없음")}");
 
                 if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character))
                 {
@@ -954,15 +1100,18 @@ public class OfrWork_Common
             {
                 // 처리된 인덱스 마킹
                 int startIdx = x - consumed + 1;
+                Debug.WriteLine($"[StartEndList 마킹] foundChar='{foundChar}', x={x}, consumed={consumed}, startIdx={startIdx}");
                 for (int i = startIdx; i <= x; i++)
                 {
                     processed[i] = true;
+                    Debug.WriteLine($"  processed[{i}]=true");
                 }
                 results[startIdx] = foundChar; // 시작 인덱스에 결과 저장
                 x -= (consumed - 1); // 소비한 만큼 인덱스 감소
             }
             else
             {
+                Debug.WriteLine($"[StartEndList] x={x}, foundChar=null → 마킹 안 함");
                 // ========================================
                 // 백트래킹: 실패 시 인접 처리된 인덱스 취소 후 재시도
                 // ========================================
@@ -974,6 +1123,15 @@ public class OfrWork_Common
                     while (rightEnd + 1 < count && processed[rightEnd + 1])
                         rightEnd++;
 
+                    // 원래 값 백업
+                    var backupProcessed = new bool[rightEnd - x];
+                    var backupResults = new string[rightEnd - x];
+                    for (int i = x + 1; i <= rightEnd; i++)
+                    {
+                        backupProcessed[i - x - 1] = processed[i];
+                        backupResults[i - x - 1] = results[i];
+                    }
+
                     // 처리 취소
                     for (int i = x + 1; i <= rightEnd; i++)
                     {
@@ -982,6 +1140,7 @@ public class OfrWork_Common
                     }
 
                     // x부터 rightEnd까지 합쳐서 재시도 (최대 3개)
+                    bool backtrackSuccess = false;
                     int totalLen = rightEnd - x + 1;
                     for (int len = Math.Min(3, totalLen); len >= 2; len--)
                     {
@@ -1013,9 +1172,21 @@ public class OfrWork_Common
                             for (int i = x; i <= endIdx; i++)
                                 processed[i] = true;
                             results[x] = result.tbChar.Character;
+                            backtrackSuccess = true;
 
                             // 나머지 우측 영역은 처리 안 된 상태로 유지 (다음 반복에서 처리)
                             break;
+                        }
+                    }
+
+                    // 백트래킹 실패 시 원래 값 복원
+                    if (!backtrackSuccess)
+                    {
+                        Debug.WriteLine($"[백트래킹 실패] x={x}, 원래 값 복원");
+                        for (int i = x + 1; i <= rightEnd; i++)
+                        {
+                            processed[i] = backupProcessed[i - x - 1];
+                            results[i] = backupResults[i - x - 1];
                         }
                     }
                 }
@@ -1032,9 +1203,10 @@ public class OfrWork_Common
     /// <param name="bmpPage">전체 페이지 비트맵</param>
     /// <param name="rect">crop할 영역</param>
     /// <param name="bInvertRgb">RGB 반전 여부</param>
-    /// <param name="ctrl">취소 토큰</param>
+    /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
+    /// <param name="maxCharCount">최대 인식 문자 수 (0=전체, 1=좌측1문자, 2=좌측2문자...)</param>
     /// <returns>인식 결과 (strResult: 인식된 문자열)</returns>
-    public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(Draw.Bitmap bmpPage, Draw.Rectangle rect, bool bInvertRgb, bool bEdit = true)
+    public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(Draw.Bitmap bmpPage, Draw.Rectangle rect, bool bInvertRgb, bool bEdit = true, int maxCharCount = 0)
     {
         Draw.Bitmap bmpCell = null;
 
@@ -1050,11 +1222,29 @@ public class OfrWork_Common
                 Draw.Bitmap bmpOriginal = bmpCell;
                 bmpCell = OfrService.InvertBitmap(bmpOriginal);
                 bmpOriginal.Dispose();
-                //Debug.WriteLine($"[OfrStr_ComplexCharSetAsync] RGB 반전 실행: {bmpCell.Width}x{bmpCell.Height}");
             }
 
-            // 3. 기존 오버로드 호출
-            return await OfrStr_ComplexCharSetAsync(bmpCell, bEdit);
+            // 3. 기존 오버로드 호출 (maxCharCount 전달)
+            var result = await OfrStr_ComplexCharSetAsync(bmpCell, bEdit, maxCharCount);
+
+            // 4. maxCharCount > 0이면 공백/실패마커 제외하고 좌측부터 N개 문자만
+            if (maxCharCount > 0 && !string.IsNullOrEmpty(result.strResult))
+            {
+                // 공백과 실패마커(☒) 제거 후 좌측 N개 문자만
+                string cleaned = result.strResult.Replace(" ", "").Replace("☒", "");
+                if (cleaned.Length >= maxCharCount)
+                {
+                    result.strResult = cleaned.Substring(0, maxCharCount);
+                    result.sErr = null; // 성공으로 처리
+                }
+                else if (cleaned.Length > 0)
+                {
+                    result.strResult = cleaned;
+                    result.sErr = null; // 부분 성공도 성공으로
+                }
+            }
+
+            return result;
         }
         finally
         {
@@ -2647,6 +2837,23 @@ public class OfrWork_Common
         }
 
         return sTmp;
+    }
+    /// <summary>
+    /// EditBox에 텍스트 쓰기 + 화면 갱신 (SetFocus + Write + InvalidateRect + UpdateWindow)
+    /// </summary>
+    public static async Task<StdResult_Bool> WriteEditBox_ToHndleAsyncUpdate(IntPtr hWnd, string sData, int nDelay = 50, int nRepeat = 20)
+    {
+        // 1. 포커스 설정
+        await Std32Window.SetFocusWithForegroundAsync(hWnd);
+
+        // 2. 텍스트 쓰기 (대기+검증 포함)
+        string writtenValue = await WriteEditBox_ToHndleAsyncWait(hWnd, sData, nDelay, nRepeat);
+
+        // 3. 강제 화면 갱신
+        StdWin32.InvalidateRect(hWnd, IntPtr.Zero, true);
+        StdWin32.UpdateWindow(hWnd);
+
+        return new StdResult_Bool(writtenValue == sData);
     }
 
     //[Obsolete("Use WriteEditBox_ToHndleAsync_WithEnterKeyWait")]

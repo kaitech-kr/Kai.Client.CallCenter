@@ -1,19 +1,14 @@
-using System.Diagnostics;
-using Draw = System.Drawing;
-
-using Kai.Common.StdDll_Common;
-using Kai.Common.StdDll_Common.StdWin32;
-using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using Kai.Common.FrmDll_FormCtrl;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
-
-using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
-using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
-
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.OfrWorks;
+using Kai.Client.CallCenter.Windows;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
+using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+using System.Diagnostics;
 using static Kai.Client.CallCenter.Classes.CommonVars;
+using Draw = System.Drawing;
 
 namespace Kai.Client.CallCenter.Networks.NwInsungs;
 
@@ -42,7 +37,7 @@ public partial class InsungsAct_RcptRegPage
                 errorCode, bWrite, bMsgBox);
             return IntPtr.Zero;
         }
-        Debug.WriteLine($"[InsungsAct_RcptRegPage] {controlName}CallCount 찾음: {hWnd:X}");
+        //Debug.WriteLine($"[InsungsAct_RcptRegPage] {controlName}CallCount 찾음: {hWnd:X}");
         error = null;
         return hWnd;
     }
@@ -612,13 +607,13 @@ public partial class InsungsAct_RcptRegPage
                     string text = Std32Window.GetWindowText(hWnd);
                     if (text.Contains(buttonName))
                     {
-                        Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}, 텍스트: {text}");
+                        //Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}, 텍스트: {text}");
                         return (hWnd, null);
                     }
                 }
                 else
                 {
-                    Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}");
+                    //Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}");
                     return (hWnd, null);
                 }
             }
@@ -648,7 +643,7 @@ public partial class InsungsAct_RcptRegPage
                 errorCode, bWrite, bMsgBox);
             return (IntPtr.Zero, error);
         }
-        Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}");
+        //Debug.WriteLine($"[InsungsAct_RcptRegPage] {buttonName}버튼 찾음: {hWnd:X}");
 
         // 2. OFR 이미지 매칭으로 검증
         StdResult_NulBool resultOfr = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(
@@ -683,8 +678,7 @@ public partial class InsungsAct_RcptRegPage
             {
                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} EditBox 핸들이 유효하지 않습니다.");
                 return new StdResult_Status(StdResult.Fail,
-                    $"{fieldName} EditBox를 찾을 수 없습니다.",
-                    "WriteAndVerifyEditBoxAsync_00");
+                    $"{fieldName} EditBox를 찾을 수 없습니다.", "WriteAndVerifyEditBoxAsync_00");
             }
 
             if (expectedValue == null)
@@ -2321,11 +2315,67 @@ public partial class InsungsAct_RcptRegPage
             // 4. 차량종류 (RadioButton - OFR, 트럭은 특별 처리)
             if (order.CarType == "트럭")
             {
-                // 트럭: RadioButton + ComboBox 처리
-                result = await SetGroupCarTypeAsync_트럭(bmpWnd, wnd.우측상단_btns차량종류, order, ctrl);
-                if (result.Result != StdResult.Success)
-                    return (changeCount, new StdResult_Error($"트럭 설정 실패", result.sPos));
-                changeCount++;
+                // 4-1. 트럭 RadioButton 이미 선택되어 있는지 확인
+                StdResult_NulBool resultTruck = await IsChecked차량종류Async(bmpWnd, wnd.우측상단_btns차량종류, "트럭");
+                if (resultTruck.bResult == null)
+                    return (changeCount, new StdResult_Error("차량종류 RadioButton 인식 실패", "Update우측상단영역Async_03_트럭"));
+
+                bool bAlreadyTruck = StdConvert.NullableBoolToBool(resultTruck.bResult);
+                bool bNeedUpdate = true;  // 기본값: 업데이트 필요
+
+                if (bAlreadyTruck)
+                {
+                    // 이미 트럭이면 콤보박스 현재값 OFR로 읽기
+                    // 콤보박스 포커스 제거 (점선 방지)
+                    await Std32Window.SetFocusWithForegroundAsync(wnd.의뢰자_hWnd의뢰자Top);
+                    await Task.Delay(30);
+
+                    // 현재 화면 다시 캡처
+                    Draw.Bitmap bmpCapture = OfrService.CaptureScreenRect_InWndHandle(wnd.TopWnd_hWnd, 0);
+                    if (bmpCapture != null)
+                    {
+                        // 차량톤수 OFR (전체)
+                        var result차량 = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
+                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel차량톤수, false, bEdit: false);
+                        string current차량톤수 = result차량.strResult ?? "";
+
+                        // 트럭상세 OFR (좌측 4문자)
+                        var result트럭 = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
+                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel트럭상세, false, bEdit: false, maxCharCount: 4);
+                        string current트럭상세 = result트럭.strResult ?? "";
+
+                        bmpCapture.Dispose();
+
+                        // 비교: 무게와 상세가 모두 같으면 Skip (트럭상세는 OFR 4문자 기준)
+                        string orderTruckDetail4 = order.TruckDetail?.Length > 4
+                            ? order.TruckDetail.Substring(0, 4)
+                            : order.TruckDetail ?? "";
+                        bNeedUpdate = (order.CarWeight != current차량톤수) || (orderTruckDetail4 != current트럭상세);
+                        Debug.WriteLine($"[{m_Context.AppName}] 트럭 현재값 비교 - 차량톤수: [{current차량톤수}] vs [{order.CarWeight}], 트럭상세: [{current트럭상세}] vs [{orderTruckDetail4}], 변경필요={bNeedUpdate}");
+                    }
+                }
+
+                if (bNeedUpdate)
+                {
+                    if (bAlreadyTruck)
+                    {
+                        // 이미 트럭이면 오토 클릭 먼저 (콤보박스 자동 열림 위해)
+                        Debug.WriteLine($"[{m_Context.AppName}] 이미 트럭 → 오토 클릭 후 트럭 재설정");
+                        int indexOto = GetCarTypeIndex("오토바이");
+                        await SetCheckRadioBtn_InGroupAsync(bmpWnd, wnd.우측상단_btns차량종류, indexOto, ctrl);
+                        await Task.Delay(50);
+                    }
+
+                    // 트럭: RadioButton + ComboBox 처리
+                    result = await SetGroupCarTypeAsync_트럭(bmpWnd, wnd.우측상단_btns차량종류, order, ctrl);
+                    if (result.Result != StdResult.Success)
+                        return (changeCount, new StdResult_Error($"트럭 설정 실패", result.sPos));
+                    changeCount++;
+                }
+                else
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 트럭 설정 Skip (현재값 = 원하는값)");
+                }
             }
             else
             {
@@ -2491,7 +2541,7 @@ public partial class InsungsAct_RcptRegPage
             // 4-1. 기사번호 OFR (단음소)
             Draw.Rectangle rectDriverId = m_FileInfo.접수등록Wnd_기사그룹_rcChkRel기사번호;
             Draw.Bitmap bmpDriverId = OfrService.CaptureScreenRect_InWndHandle(hWndPopup, rectDriverId);
-            StdResult_String resultDriverId = await OfrWork_Common.OfrStr_SeqCharAsync(bmpDriverId);
+            StdResult_String resultDriverId = await OfrWork_Common.OfrStr_SeqCharAsync(bmpDriverId, 0.9); // 영역추출 못할시 가중치조정
             string driverId = resultDriverId.strResult ?? "";
             bmpDriverId?.Dispose();
             Debug.WriteLine($"[{m_Context.AppName}] 기사번호 OFR: '{driverId}'");
@@ -2859,7 +2909,7 @@ public partial class InsungsAct_RcptRegPage
                 issues |= CEnum_DgValidationIssue.WrongWidth;
             }
 
-            Debug.WriteLine($"[ValidateDatagridState] 컬럼 너비[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
+            //Debug.WriteLine($"[ValidateDatagridState] 컬럼 너비[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
         }
 
         if (issues == CEnum_DgValidationIssue.None)
@@ -2892,8 +2942,7 @@ public partial class InsungsAct_RcptRegPage
 
         for (int y = 2; y < rects.GetLength(1); y++)
         {
-            Draw.Point ptCheck = new Draw.Point(rects[0, y].Right, rects[0, y].Top + 6);
-            int nCurBright = OfrService.GetPixelBrightness(bmpPage, ptCheck);
+            int nCurBright = OfrService.GetPixelBrightnessFrmWndHandle(m_RcptPage.DG오더_hWnd, rects[0, y].Right + 1, rects[0, y].Top + 6);
 
             if (nCurBright < nThreshold)
                 nValidRows++;
@@ -2916,7 +2965,7 @@ public partial class InsungsAct_RcptRegPage
     public async Task<StdResult_String> GetRowSeqnoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectSeqno, bool bInvertRgb, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb);
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, 0.9); // 영역추출 못할시 가중치조정
     }
 
     /// <summary>
@@ -2944,7 +2993,7 @@ public partial class InsungsAct_RcptRegPage
     public async Task<StdResult_String> GetRowDriverPhNoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectDriverPhNo, bool bInvertRgb, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectDriverPhNo, bInvertRgb);
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectDriverPhNo, bInvertRgb, 0.9); // 영역추출 못할시 가중치조정
     }
 
     /// <summary>
@@ -2997,7 +3046,7 @@ public partial class InsungsAct_RcptRegPage
             if (bmpNo == null) continue;
 
             // 2. OFR (bEdit=false이면 대화상자 안 띄움)
-            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, bEdit);
+            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, 0.9, bEdit); // 영역추출 못할시 가중치조정
             bmpNo.Dispose();
 
             if (!string.IsNullOrEmpty(resultNo.strResult))
@@ -3029,7 +3078,7 @@ public partial class InsungsAct_RcptRegPage
             await ctrl.WaitIfPausedOrCancelledAsync();
 
             // OFR로 실제 번호 읽기
-            int nActualFirstNum = await ReadFirstRowNumAsync();
+            int nActualFirstNum = await ReadFirstRowNumAsync(bEdit: true);
             //Debug.WriteLine($"[InsungsAct_RcptRegPage] OFR 결과 (시도 {retry + 1}/{nRetryCount}) - 예상={nExpectedFirstNum}, 실제={nActualFirstNum}");
 
             if (nExpectedFirstNum == nActualFirstNum)
@@ -3063,13 +3112,13 @@ public partial class InsungsAct_RcptRegPage
                 Draw.Point ptPage, ptRow;
                 if ((diff > 0 && !bReverse) || (diff < 0 && bReverse))  // 위로
                 {
-                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel스크롤Up;
+                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel페이지Up;
                     ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Up;
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] 스크롤 조정: UP - {pageClicks}페이지 + {rowClicks}로우");
                 }
                 else  // 아래로
                 {
-                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel스크롤Down;
+                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel페이지Down;
                     ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Down;
                     Debug.WriteLine($"[InsungsAct_RcptRegPage] 스크롤 조정: DOWN - {pageClicks}페이지 + {rowClicks}로우");
                 }
@@ -3297,7 +3346,7 @@ public partial class InsungsAct_RcptRegPage
                     }
 
                     // 4. 단음소 OFR (TbCharBackup 사용)
-                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr);
+                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, 0.9); // 영역추출 못할시 가중치조정
 
                     // 5. Seqno 반환
                     if (!string.IsNullOrEmpty(resultSeqno.strResult))
@@ -3392,7 +3441,7 @@ public partial class InsungsAct_RcptRegPage
                     }
 
                     // 4. 단음소 OFR (TbCharBackup 사용)
-                    StdResult_String resultDriverPhNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr);
+                    StdResult_String resultDriverPhNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, 0.9); // 영역추출 못할시 가중치조정
 
                     // 5. 기사전번 반환
                     if (!string.IsNullOrEmpty(resultDriverPhNo.strResult))
@@ -3429,6 +3478,69 @@ public partial class InsungsAct_RcptRegPage
         }
     }
 
+    /// <summary>
+    /// 셀 영역을 화면에 그려서 시각화 (테스트용)
+    /// </summary>
+    private void Test_DrawCellRects(int columns, int rowCount, int startRow = 0)
+    {
+        try
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] Test_DrawCellRects 시작");
+
+            IntPtr hWndDG = m_RcptPage.DG오더_hWnd;
+            if (hWndDG == IntPtr.Zero)
+            {
+                System.Windows.MessageBox.Show("DG오더_hWnd가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
+            if (rects == null)
+            {
+                System.Windows.MessageBox.Show("DG오더_RelChildRects가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] Cell 배열: {columns}열 x {rowCount}행 (startRow={startRow})");
+
+            // TransparantWnd 오버레이 생성
+            TransparantWnd.CreateOverlay(hWndDG);
+            TransparantWnd.ClearBoxes();
+
+            // 데이터 셀 영역만 그리기 (startRow부터)
+            int cellCount = 0;
+            for (int col = 0; col < columns; col++)
+            {
+                for (int row = startRow; row < rowCount; row++)
+                {
+                    Draw.Rectangle rc = rects[col, row];
+                    TransparantWnd.DrawBoxAsync(rc, strokeColor: System.Windows.Media.Colors.Red, thickness: 1);
+                    cellCount++;
+                }
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] {cellCount}개 셀 영역 그리기 완료");
+
+            // MsgBox 표시
+            System.Windows.MessageBox.Show(
+                $"인성 DG오더 셀 영역 테스트\n\n" +
+                $"열: {columns}\n" +
+                $"행: {rowCount}\n" +
+                $"총 셀: {cellCount}개\n\n" +
+                $"확인을 누르면 오버레이가 제거됩니다.",
+                "셀 영역 테스트");
+
+            // 오버레이 삭제
+            TransparantWnd.DeleteOverlay();
+            Debug.WriteLine($"[{m_Context.AppName}] Test_DrawCellRects 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] 예외 발생: {ex.Message}");
+            System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
+    }
     #endregion
 }
 
