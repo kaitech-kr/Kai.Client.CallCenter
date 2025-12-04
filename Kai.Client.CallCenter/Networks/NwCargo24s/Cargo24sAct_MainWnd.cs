@@ -38,7 +38,7 @@ public class Cargo24sAct_MainWnd
     public Cargo24sAct_MainWnd(Cargo24Context context)
     {
         m_Context = context ?? throw new ArgumentNullException(nameof(context));
-        Debug.WriteLine($"[Cargo24sAct_MainWnd] 생성자 호출: AppName={m_Context.AppName}");
+        //Debug.WriteLine($"[Cargo24sAct_MainWnd] 생성자 호출: AppName={m_Context.AppName}");
     }
     #endregion
 

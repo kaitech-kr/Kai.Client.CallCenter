@@ -1,8 +1,12 @@
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Draw = System.Drawing;
 
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
+
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Classes;
 
@@ -241,12 +245,10 @@ public static class Simulation_Mouse
             Std32Cursor.SetCursorPos_RelDrawPt(hWnd, ptClickRel); // 커서 이동
             StdWin32.SendMessage(hWnd, StdWin32.WM_LBUTTONDOWN, 1, (ulong)lParam);
             StdWin32.PostMessage(hWnd, StdWin32.WM_LBUTTONUP, 0, lParam);
-            //SafeBlockInputStop();
 
             await Task.Delay(betweenClickDelay);
 
             // 두 번째 클릭 (DBLCLK 메시지)
-            //SafeBlockInputStart();
             StdWin32.SendMessage(hWnd, StdWin32.WM_LBUTTONDBLCLK, 1, (ulong)lParam);
             StdWin32.PostMessage(hWnd, StdWin32.WM_LBUTTONUP, 0, lParam);
             SafeBlockInputStop();
@@ -257,6 +259,100 @@ public static class Simulation_Mouse
         {
             if (bBkCursor) Std32Cursor.SetCursorPos_AbsDrawPt(ptBk); // 커서 복원
             if (hWndFocusBk != IntPtr.Zero) StdWin32.SetForegroundWindow(hWndFocusBk); // 포커스 복원
+        }
+    }
+    #endregion
+
+    #region Post - Click with Selection Wait
+    /// <summary>
+    /// Post 방식 좌클릭 후 선택 상태 대기 (외부 입력 차단 없음)
+    /// - 첫 행 선택 등 Selection 변화 감지용
+    /// - nOrgBrightness는 미리 계산해서 전달 (매번 계산 방지)
+    /// </summary>
+    /// <param name="hWnd">대상 윈도우 핸들</param>
+    /// <param name="ptRelClick">클릭할 상대 좌표</param>
+    /// <param name="ptRelCheck">선택 체크할 상대 좌표</param>
+    /// <param name="nOrgBrightness">원래 밝기값 (미리 계산해서 전달)</param>
+    /// <param name="nRepeatCount">최대 반복 횟수 (기본 50 = 약 2.5초)</param>
+    /// <param name="nBrightGap">밝기 변화 임계값</param>
+    /// <returns>선택 상태 감지 성공 여부</returns>
+    public static async Task<bool> MousePost_ClickLeft_WaitSelectionAsync(
+        IntPtr hWnd, Draw.Point ptRelClick, Draw.Point ptRelCheck, int nOrgBrightness, int nRepeatCount = 50, int nBrightGap = 10)
+    {
+        try
+        {
+            // 클릭 (Post 방식 - 외부 입력 차단 없음)
+            await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWnd, ptRelClick);
+
+            // 선택 상태 대기 (클릭 직후 바로 체크 → 실패 시 대기 후 재시도)
+            for (int i = 0; i < nRepeatCount; i++)
+            {
+                int curBrightness = OfrService.GetPixelBrightnessFrmWndHandle(hWnd, ptRelCheck);
+
+                if (Math.Abs(curBrightness - nOrgBrightness) > nBrightGap)
+                {
+                    return true;
+                }
+
+                await Task.Delay(50);
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[MousePost_ClickLeft_WaitSelectionAsync] 예외: {ex.Message}");
+            return false;
+        }
+    }
+    #endregion
+
+    #region Send - Set CheckStatus
+    /// <summary>
+    /// 체크박스 상태 설정 (현재 상태 읽고, 다르면 클릭)
+    /// </summary>
+    /// <param name="hWnd">체크박스 핸들</param>
+    /// <param name="targetState">목표 상태 (true=체크, false=해제)</param>
+    /// <param name="nRepeat">클릭 재시도 횟수</param>
+    public static async Task<StdResult_Status> SetCheckBtnStatusAsync(IntPtr hWnd, bool targetState, int nRepeat = c_nRepeatShort)
+    {
+        try
+        {
+            // 1. 현재 상태 읽기
+            uint uCurrentStatus = Std32Msg_Send.GetCheckStatus(hWnd);
+            bool currentState = (uCurrentStatus == StdCommon32.BST_CHECKED);
+
+            // 2. 같으면 바로 성공
+            if (currentState == targetState)
+            {
+                return new StdResult_Status(StdResult.Success);
+            }
+
+            // 3. 다르면 클릭 후 검증 (2중 루프)
+            for (int i = 0; i < nRepeat; i++)
+            {
+                await Std32Mouse_Post.MousePostAsync_ClickLeft_Center(hWnd);
+
+                for (int j = 0; j < c_nRepeatMany; j++)
+                {
+                    await Task.Delay(c_nWaitUltraShort);
+
+                    // 검증
+                    uCurrentStatus = Std32Msg_Send.GetCheckStatus(hWnd);
+                    currentState = (uCurrentStatus == StdCommon32.BST_CHECKED);
+
+                    if (currentState == targetState)
+                    {
+                        return new StdResult_Status(StdResult.Success);
+                    }
+                }
+            }
+
+            return new StdResult_Status(StdResult.Fail, "체크박스 상태 변경 실패", "SetCheckBtnStatusAsync_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "SetCheckBtnStatusAsync_99");
         }
     }
     #endregion

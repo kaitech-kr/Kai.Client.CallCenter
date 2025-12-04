@@ -53,5 +53,16 @@ public enum CEnum_CustSearchCount
     One = 2,    // 검색 결과 1개 (정상)
     Multi = 3   // 검색 결과 복수 (수동 처리 필요)
 }
-#nullable restore
 
+[Flags]
+public enum CEnum_Cg24OrderStatus
+{
+    None = 0,
+    공유 = 1,
+    중요오더 = 2,
+    예약 = 4,
+    긴급 = 8,
+    왕복 = 16,
+    경유 = 32
+}
+#nullable restore

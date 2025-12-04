@@ -36,7 +36,7 @@ public class Cargo24sAct_App
     public Cargo24sAct_App(Cargo24Context context)
     {
         m_Context = context ?? throw new ArgumentNullException(nameof(context));
-        Debug.WriteLine($"[Cargo24sAct_App] 생성자 호출: AppName={m_Context.AppName}");
+        //Debug.WriteLine($"[Cargo24sAct_App] 생성자 호출: AppName={m_Context.AppName}");
     }
     #endregion
 

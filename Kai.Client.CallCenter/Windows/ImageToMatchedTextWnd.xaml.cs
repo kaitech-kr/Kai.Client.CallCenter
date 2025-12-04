@@ -1,10 +1,7 @@
-﻿using System.Linq;
-using System.Windows;
-using System.Collections;
+﻿using System.Windows;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using Draw = System.Drawing;
 using Wnd = System.Windows;
@@ -12,12 +9,10 @@ using Wnd = System.Windows;
 using Kai.Common.StdDll_Common;
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Services;
-
-using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable

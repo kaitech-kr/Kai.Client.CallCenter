@@ -8,10 +8,9 @@ using Wnd = System.Windows;
 
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 
-using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Client.CallCenter.Classes.CommonFuncs;
 using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Services;
 using Kai.Common.StdDll_Common;
@@ -127,7 +126,7 @@ public partial class ImageToCheckState : Window // 고대역폭의 저장이 필
                                   $"Reserved: {tb.Reserved}";
 
                 //MessageBox.Show($"DB 저장 성공: KeyCode={tb.KeyCode}", "성공", MessageBoxButton.OK, MessageBoxImage.Information);
-                //Close();
+                Close();
             }
             else
             {

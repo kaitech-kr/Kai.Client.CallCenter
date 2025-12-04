@@ -22,6 +22,7 @@ public class NwInsung02 : InsungAutoAllocBase
     protected override string APP_NAME => StdConst_Network.INSUNG2;
     protected override string INFO_FILE_NAME => "Insung02_FileInfo.txt";
     protected override bool GetStaticUse() => s_Use;
+    protected override void SetStaticUse(bool value) => s_Use = value;
     protected override string GetStaticId() => s_Id;
     protected override string GetStaticPw() => s_Pw;
     protected override string GetStaticAppPath() => s_AppPath;

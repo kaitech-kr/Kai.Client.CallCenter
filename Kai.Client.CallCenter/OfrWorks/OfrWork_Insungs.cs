@@ -36,7 +36,7 @@ public class OfrWork_Insungs : OfrWork_Common
 
             if (result._sResult != null && result._sResult == sWantedStr)
             {
-                Debug.WriteLine($"[OfrWork_Insungs] OFR 매칭 성공: {sWantedStr} (시도={i}/{c_nRepeatNormal})");
+                //Debug.WriteLine($"[OfrWork_Insungs] OFR 매칭 성공: {sWantedStr} (시도={i}/{c_nRepeatNormal})");
                 return new StdResult_NulBool(true);
             }
 
@@ -44,8 +44,9 @@ public class OfrWork_Insungs : OfrWork_Common
                 await Task.Delay(c_nWaitNormal);
         }
 
-        // 모든 시도 실패
-        Debug.WriteLine($"[OfrWork_Insungs] OFR 매칭 실패: 원하는={sWantedStr}, 실제={result?._sResult}, Err={result?.sErr}");
+        // 모든 시도 실패 - bWrite가 true일 때만 로그 출력 (외부 루프의 최종 실패 시에만)
+        if (bWrite)
+            Debug.WriteLine($"[OfrWork_Insungs] OFR 매칭 실패: 원하는={sWantedStr}, 실제={result?._sResult}, Err={result?.sErr}");
         return new StdResult_NulBool(result?.sErr ?? "알 수 없는 오류", result?.sPos ?? "OfrWork_Insungs/OfrIsMatchedImage_DrawRelRectAsync");
     }
 
@@ -270,7 +271,7 @@ public class OfrWork_Insungs : OfrWork_Common
             // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
             if (s_bDebugMode && bEdit)
             {
-                bool? bDialogResult = await Wnd.Application.Current.Dispatcher.Invoke(async () =>
+                bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
                 {
                     ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgReChkValue_RectInHWndAsync", resultOfr);
                     wnd.ShowDialog();
@@ -322,7 +323,7 @@ public class OfrWork_Insungs : OfrWork_Common
             // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
             if (s_bDebugMode)
             {
-                bool? bDialogResult = await Wnd.Application.Current.Dispatcher.Invoke(async () =>
+                bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
                 {
                     ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgUntilChkValue_RectInHWndAsync", resultOfr);
                     wnd.ShowDialog();
@@ -357,7 +358,7 @@ public class OfrWork_Insungs : OfrWork_Common
             // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
             if (s_bDebugMode && bEdit)
             {
-                bool? bDialogResult = await Wnd.Application.Current.Dispatcher.Invoke(async () =>
+                bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
                 {
                     ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgChkValue_RectInBitmapAsync", resultImg);
                     wnd.ShowDialog();

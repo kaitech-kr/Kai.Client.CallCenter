@@ -61,6 +61,7 @@ public partial class CustMain_RegEditWnd : Window
     /// </summary>
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
+        await Task.CompletedTask;
         // 공용 초기화
         // WindowStartupLocation = WindowStartupLocation.CenterOwner;
         // TBoxRegister.Text = s_CenterCharge.Id;
@@ -120,6 +121,7 @@ public partial class CustMain_RegEditWnd : Window
     /// </summary>
     private async void BtnSave_Click(object sender, RoutedEventArgs e)
     {
+        await Task.CompletedTask;
         // 필수입력 체크
         // if (!ValidateRequiredInputs()) return;
 

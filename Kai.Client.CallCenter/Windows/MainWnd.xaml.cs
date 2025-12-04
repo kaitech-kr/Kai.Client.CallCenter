@@ -381,7 +381,7 @@ public partial class MainWnd : Window
             //이벤트 핸들러를 제거하고 Dispatcher로 다시 Close 호출
             this.Closing -= Window_Closing;
 
-            Dispatcher.BeginInvoke(new Action(() =>
+            _ = Dispatcher.BeginInvoke(new Action(() =>
             {
                 Debug.WriteLine("Dispatcher.BeginInvoke에서 Close() 호출");
                 this.Close();

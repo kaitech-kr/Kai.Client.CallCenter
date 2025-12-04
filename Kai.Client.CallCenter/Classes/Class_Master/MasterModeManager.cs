@@ -3,7 +3,7 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.FrmDll_WpfCtrl;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using static Kai.Common.FrmDll_WpfCtrl.FrmSystemDisplays;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using Kai.Client.CallCenter.Windows;

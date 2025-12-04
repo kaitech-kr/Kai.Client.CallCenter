@@ -2,7 +2,7 @@
 using Draw = System.Drawing;
 
 using Kai.Common.StdDll_Common;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 

@@ -81,7 +81,7 @@ public class OnecallAct_RcptRegPage
     {
         try
         {
-            Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 시작");
+            //Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 시작");
 
             // 1. 접수등록Page 윈도우 찾기 (10초)
             for (int i = 0; i < c_nRepeatVeryMany; i++)
@@ -94,39 +94,39 @@ public class OnecallAct_RcptRegPage
             if (mRcpt.TopWnd_hWnd == IntPtr.Zero)
                 return new StdResult_Error($"[{AppName}] 접수등록Page 찾기실패: {fInfo.접수등록Page_TopWnd_sWndName}", "OnecallAct_RcptRegPage/InitializeAsync_01");
 
-            Debug.WriteLine($"[{AppName}] 접수등록Page 찾음: {mRcpt.TopWnd_hWnd:X}");
+            //Debug.WriteLine($"[{AppName}] 접수등록Page 찾음: {mRcpt.TopWnd_hWnd:X}");
             await Task.Delay(1000); // 윈도우 로드 대기
 
             // 2. 자식윈도우 찾기
             List<StdCommon32_WndInfo> lst = Std32Window.GetChildWindows_FirstLayer(mRcpt.TopWnd_hWnd);
             if (lst.Count == 0)
                 return new StdResult_Error($"[{AppName}] 접수등록Page 자식윈도 찾기실패", "OnecallAct_RcptRegPage/InitializeAsync_02");
-            Debug.WriteLine($"[{AppName}] 접수등록Page 자식윈도 찾음: {lst.Count}개");
-            for (int i = 0; i < lst.Count; i++)
-            {
-                Debug.WriteLine($"  [{i}] rcRel={lst[i].rcRel}, wndName={lst[i].wndName}");
-            }
+            //Debug.WriteLine($"[{AppName}] 접수등록Page 자식윈도 찾음: {lst.Count}개");
+            //for (int i = 0; i < lst.Count; i++)
+            //{
+            //    Debug.WriteLine($"  [{i}] rcRel={lst[i].rcRel}, wndName={lst[i].wndName}");
+            //}
 
             // 3. 접수영역 찾기
             StdCommon32_WndInfo item = lst.FirstOrDefault(x => x.rcRel == fInfo.접수등록Page_접수영역_rcChkRel);
             if (item == null)
                 return new StdResult_Error($"[{AppName}] 접수영역 찾기실패: {fInfo.접수등록Page_접수영역_rcChkRel}", "OnecallAct_RcptRegPage/InitializeAsync_03");
             mRcpt.접수영역_hWnd = item.hWnd;
-            Debug.WriteLine($"[{AppName}] 접수영역 찾음: {mRcpt.접수영역_hWnd:X}");
+            //Debug.WriteLine($"[{AppName}] 접수영역 찾음: {mRcpt.접수영역_hWnd:X}");
 
             // 4. 검색영역 찾기
             item = lst.FirstOrDefault(x => x.wndName == fInfo.접수등록Page_검색영역_sWndName);
             if (item == null)
                 return new StdResult_Error($"[{AppName}] 검색영역 찾기실패: {fInfo.접수등록Page_검색영역_sWndName}", "OnecallAct_RcptRegPage/InitializeAsync_04");
             mRcpt.검색영역_hWnd = item.hWnd;
-            Debug.WriteLine($"[{AppName}] 검색영역 찾음: {mRcpt.검색영역_hWnd:X}");
+            //Debug.WriteLine($"[{AppName}] 검색영역 찾음: {mRcpt.검색영역_hWnd:X}");
 
             // 5. DG오더 찾기
             item = lst.FirstOrDefault(x => x.rcRel == fInfo.접수등록Page_DG오더_rcRelFirst);
             if (item == null)
                 return new StdResult_Error($"[{AppName}] DG오더 찾기실패: {fInfo.접수등록Page_DG오더_rcRelFirst}", "OnecallAct_RcptRegPage/InitializeAsync_05");
             mRcpt.DG오더_hWnd = item.hWnd;
-            Debug.WriteLine($"[{AppName}] DG오더 찾음: {mRcpt.DG오더_hWnd:X}");
+            //Debug.WriteLine($"[{AppName}] DG오더 찾음: {mRcpt.DG오더_hWnd:X}");
 
             // 6. 확장 전 컬럼 검증/초기화
             var resultRects = await SetDG오더LargeRectsAsync();
@@ -286,13 +286,15 @@ public class OnecallAct_RcptRegPage
 
                 int rowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
                 int rowHeight = fInfo.접수등록Page_DG오더_dataRowHeight;
+                int gab = fInfo.접수등록Page_DG오더_dataGab;
+                int dataTextHeight = rowHeight - gab - gab;
 
                 mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[rowCount, columns];
                 mRcpt.DG오더_ptRelChkLargeRows = new Draw.Point[rowCount];
 
                 for (int row = 0; row < rowCount; row++)
                 {
-                    int cellY = headerHeight + (row * rowHeight);
+                    int cellY = headerHeight + (row * rowHeight) - 2;
 
                     // Row check point (첫번째 컬럼 중앙)
                     mRcpt.DG오더_ptRelChkLargeRows[row] = new Draw.Point(
@@ -304,10 +306,10 @@ public class OnecallAct_RcptRegPage
                     for (int col = 0; col < columns; col++)
                     {
                         mRcpt.DG오더_rcRelLargeCells[row, col] = new Draw.Rectangle(
-                            listLW[col].nLeft + 1,
-                            cellY,
-                            listLW[col].nWidth - 2,
-                            rowHeight
+                            listLW[col].nLeft,
+                            cellY + gab,
+                            listLW[col].nWidth,
+                            dataTextHeight
                         );
                     }
                 }
@@ -720,6 +722,75 @@ public class OnecallAct_RcptRegPage
         }
 
         return texts;
+    }
+    #endregion
+
+    #region Test Methods
+    /// <summary>
+    /// DG오더 셀 영역 시각화 테스트
+    /// TransparantWnd를 사용하여 홀수 행 셀 영역을 두께 1로 그리고 MsgBox 표시
+    /// </summary>
+    public void Test_DrawAllCellRects()
+    {
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Test_DrawAllCellRects 시작");
+
+            // 1. DG오더 핸들 체크
+            if (mRcpt.DG오더_hWnd == IntPtr.Zero)
+            {
+                System.Windows.MessageBox.Show("DG오더_hWnd가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            // 2. Cell Rect 배열 체크
+            if (mRcpt.DG오더_rcRelLargeCells == null)
+            {
+                System.Windows.MessageBox.Show("DG오더_rcRelLargeCells가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            int rowCount = mRcpt.DG오더_rcRelLargeCells.GetLength(0);
+            int colCount = mRcpt.DG오더_rcRelLargeCells.GetLength(1);
+            Debug.WriteLine($"[{AppName}] Cell 배열: {rowCount}행 x {colCount}열");
+
+            // 3. TransparantWnd 오버레이 생성 (DG오더 위치 기준)
+            TransparantWnd.CreateOverlay(mRcpt.DG오더_hWnd);
+            TransparantWnd.ClearBoxes();
+
+            // 4. 모든 셀 영역 그리기 (두께 1, 빨간색)
+            int cellCount = 0;
+            for (int row = 0; row < rowCount; row++)
+            {
+                for (int col = 0; col < colCount; col++)
+                {
+                    Draw.Rectangle rc = mRcpt.DG오더_rcRelLargeCells[row, col];
+                    TransparantWnd.DrawBoxAsync(rc, strokeColor: Media.Colors.Red, thickness: 1);
+                    cellCount++;
+                }
+            }
+
+            Debug.WriteLine($"[{AppName}] {cellCount}개 셀 영역 그리기 완료");
+
+            // 5. MsgBox 표시 (확인 후 오버레이 삭제)
+            System.Windows.MessageBox.Show(
+                $"원콜 DG오더 셀 영역 테스트\n\n" +
+                $"행: {rowCount}\n" +
+                $"열: {colCount}\n" +
+                $"총 셀: {cellCount}개\n\n" +
+                $"확인을 누르면 오버레이가 제거됩니다.",
+                "셀 영역 테스트");
+
+            // 6. 오버레이 삭제
+            TransparantWnd.DeleteOverlay();
+            Debug.WriteLine($"[{AppName}] Test_DrawAllCellRects 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] 예외 발생: {ex.Message}");
+            System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
     }
     #endregion
 }

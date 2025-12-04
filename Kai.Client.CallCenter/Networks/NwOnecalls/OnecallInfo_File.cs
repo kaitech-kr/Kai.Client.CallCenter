@@ -66,8 +66,9 @@ public class OnecallInfo_File
     //public string 접수등록Page_DG오더_sClassName = "WindowsForms10.Window.8.app.0.34f5582_r7_ad1"; // Check Window Name
     public int 접수등록Page_DG오더_headerHeight = 30; // HeaderRow Height
     public int 접수등록Page_DG오더_dataRowHeight = 23; // DataRow Height
+    public int 접수등록Page_DG오더_dataGab = 1; // 셀 상하단 gap
     public int 접수등록Page_DG오더_smallRowsCount = 19; // DataRow Count
-    public int 접수등록Page_DG오더_largeRowsCount = 36; // DataRow Count - 일단 오더가 없어서 눈대중으로 
+    public int 접수등록Page_DG오더_largeRowsCount = 34; // DataRow Count
 
     public string[] 접수등록Page_DG오더_colOrgTexts = new string[]
 {

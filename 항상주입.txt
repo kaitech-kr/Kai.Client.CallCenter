@@ -1,0 +1,25 @@
+● ⚠️ 주의사항:
+  1. git checkout, git reset, 파일 삭제 등 되돌릴 수 없는 작업은 절대 허락 없이 실행 금지
+  2. 수정 요청한 파일만 수정, 다른 파일 건드리지 말 것
+  3. "00"가 입력되면 1,2를 답한다.
+
+
+  1. Cargo24sAct_RcptRegPage.UI.cs (삭제됨)
+    - GetValidRowCount
+    - 스크롤/로우셀렉트 함수들
+    - ReadFirstRowNumAsync, GetExpectedFirstRowNum 등
+  2. NwCargo24.cs (이전 세션 작업 내용)
+    - Get상태Async 호출부
+    - CheckIsOrderAsync_AssumeKaiUpdated 호출부
+    - 5-3 구현 코드
+  3. Cargo24sAct_RcptRegPage.cs 수정
+    - Get화물번호Async: private → public
+    - Get상태Async 함수 추가
+    - CheckIsOrderAsync_AssumeKaiUpdated 함수 추가
+
+
+
+  - 370라인: GetValidRowCount 호출
+  - 407라인: Get화물번호Async 호출
+  - 423라인: Get상태Async 호출
+  - 454라인: CheckIsOrderAsync_AssumeKaiUpdated 호출

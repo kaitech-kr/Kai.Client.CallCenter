@@ -40,7 +40,7 @@ public class OnecallAct_App
     {
         try
         {
-            Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 시작: {sPath}");
+            //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 시작: {sPath}");
 
             // 1. 기존 프로세스 종료
             await Application.Current.Dispatcher.InvokeAsync(() =>
@@ -80,7 +80,7 @@ public class OnecallAct_App
             if (!bClosed && mInfo.Splash.TopWnd_hWnd == IntPtr.Zero)
                 return new StdResult_Error($"[{AppName}] 업데이터 (5분안에)종료실패", "OnecallAct_App/UpdaterWorkAsync_02");
 
-            Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 완료");
+            //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 완료");
             return null;
         }
         catch (Exception ex)
@@ -101,7 +101,7 @@ public class OnecallAct_App
 
         try
         {
-            Debug.WriteLine($"[{AppName}] SplashWorkAsync 시작");
+            //Debug.WriteLine($"[{AppName}] SplashWorkAsync 시작");
 
             // 1. Splash 윈도우 확인
             if (mSplash.TopWnd_hWnd == IntPtr.Zero)
@@ -179,7 +179,7 @@ public class OnecallAct_App
             await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndLogin);
             StdWin32.BlockInput(false);
 
-            Debug.WriteLine($"[{AppName}] SplashWorkAsync 완료");
+            //Debug.WriteLine($"[{AppName}] SplashWorkAsync 완료");
         }
         catch (Exception ex)
         {

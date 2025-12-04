@@ -1,730 +1,199 @@
-[Cargo24/SetDG오더] 평가 2: 컬럼 헤더 OFR 시작
-[StartEndList] 음소 개수=2
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 22x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=22,Height=11}, 오른쪽문자영역={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=5
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 49x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=49,Height=11}, 오른쪽문자영역={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=5
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 51x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 매칭] w=11, 문자='간', y1=0, y2=11
-[RightSliding 2단계] 나머지 영역: x=0, width=40
-[RightSliding 2단계] 나머지 영역 크기: 36x11, 비율: 3.27, 단일문자 가능성: False
-[RightSliding 2단계-B] 여러 문자 확실 -> 재귀 RightSliding 호출
-[RightSliding 인식 시작] 이미지 크기: 40x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=36,Height=11}, 오른쪽문자영역={X=23,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=23,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[RightSliding 2단계-B 실패] 재귀 RightSliding 실패
-[RightSliding 인식 완료] 결과: '☒간', 문자 수: 2
-[RightSliding 성능 통계] 총 소요시간=101ms, DB검색 횟수=9회
-  - 비트맵 추출: 0ms
-  - 임계값 계산: 0ms
-  - 전경 영역 추출: 0ms
-  - 비트맵 분석: 0ms
-  - DB 검색 총합: 27ms
-[StartEndList] 음소 개수=3
-  [0] processed=True, result=고
-  [1] processed=True, result=객
-  [2] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 9x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~9
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=9,Height=11}, 오른쪽문자영역={X=0,Y=0,Width=9,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=9,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=5
-  [0] processed=True, result=고
-  [1] processed=True, result=객
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 25x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=19ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=20ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=17ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=25,Height=11}, 오른쪽문자영역={X=12,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=12,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=6
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-  [5] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 50x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=50,Height=11}, 오른쪽문자영역={X=37,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=37,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=5
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 35x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=35,Height=11}, 오른쪽문자영역={X=22,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=22,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=6
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-  [5] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 36x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=36,Height=11}, 오른쪽문자영역={X=23,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=23,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 36x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 매칭] w=10, 문자='료', y1=1, y2=10
-[RightSliding 2단계] 나머지 영역: x=0, width=26
-[RightSliding 2단계] 나머지 영역 크기: 23x11, 비율: 2.09, 단일문자 가능성: False
-[RightSliding 2단계-B] 여러 문자 확실 -> 재귀 RightSliding 호출
-[RightSliding 인식 시작] 이미지 크기: 26x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 매칭] w=4, 문자='가', y1=5, y2=6
-[RightSliding 2단계] 나머지 영역: x=0, width=22
-[RightSliding 2단계] 나머지 영역 크기: 22x11, 비율: 2.00, 단일문자 가능성: False
-[RightSliding 2단계-B] 여러 문자 확실 -> 재귀 RightSliding 호출
-[RightSliding 인식 시작] 이미지 크기: 22x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=8ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=22,Height=11}, 오른쪽문자영역={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[RightSliding 2단계-B 실패] 재귀 RightSliding 실패
-[RightSliding 인식 완료] 결과: '☒가', 문자 수: 2
-[RightSliding 성능 통계] 총 소요시간=76ms, DB검색 횟수=1회
-  - 비트맵 추출: 0ms
-  - 임계값 계산: 0ms
-  - 전경 영역 추출: 0ms
-  - 비트맵 분석: 0ms
-  - DB 검색 총합: 3ms
-[RightSliding 2단계-B 성공] 재귀 RightSliding으로 '☒가' 인식
-[RightSliding 인식 완료] 결과: '☒가료', 문자 수: 3
-[RightSliding 성능 통계] 총 소요시간=133ms, DB검색 횟수=8회
-  - 비트맵 추출: 0ms
-  - 임계값 계산: 0ms
-  - 전경 영역 추출: 0ms
-  - 비트맵 분석: 0ms
-  - DB 검색 총합: 27ms
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 36x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 매칭] w=10, 문자='료', y1=1, y2=10
-[RightSliding 2단계] 나머지 영역: x=0, width=26
-[RightSliding 2단계] 나머지 영역 크기: 23x11, 비율: 2.09, 단일문자 가능성: False
-[RightSliding 2단계-B] 여러 문자 확실 -> 재귀 RightSliding 호출
-[RightSliding 인식 시작] 이미지 크기: 26x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 매칭] w=4, 문자='가', y1=6, y2=7
-[RightSliding 2단계] 나머지 영역: x=0, width=22
-[RightSliding 2단계] 나머지 영역 크기: 22x11, 비율: 2.00, 단일문자 가능성: False
-[RightSliding 2단계-B] 여러 문자 확실 -> 재귀 RightSliding 호출
-[RightSliding 인식 시작] 이미지 크기: 22x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=22,Height=11}, 오른쪽문자영역={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[RightSliding 2단계-B 실패] 재귀 RightSliding 실패
-[RightSliding 인식 완료] 결과: '☒가', 문자 수: 2
-[RightSliding 성능 통계] 총 소요시간=69ms, DB검색 횟수=1회
-  - 비트맵 추출: 0ms
-  - 임계값 계산: 0ms
-  - 전경 영역 추출: 0ms
-  - 비트맵 분석: 0ms
-  - DB 검색 총합: 3ms
-[RightSliding 2단계-B 성공] 재귀 RightSliding으로 '☒가' 인식
-[RightSliding 인식 완료] 결과: '☒가료', 문자 수: 3
-[RightSliding 성능 통계] 총 소요시간=125ms, DB검색 횟수=8회
-  - 비트맵 추출: 0ms
-  - 임계값 계산: 0ms
-  - 전경 영역 추출: 0ms
-  - 비트맵 분석: 0ms
-  - DB 검색 총합: 27ms
-[StartEndList] 음소 개수=2
-  [0] processed=True, result=공
-  [1] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 10x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~10
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=10,Height=11}, 오른쪽문자영역={X=0,Y=0,Width=10,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=10,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 25x9
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~10
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=8ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=25,Height=9}, 오른쪽문자영역={X=14,Y=0,Width=11,Height=9}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=14,Y=0,Width=11,Height=9}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=2
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 22x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=8ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=22,Height=11}, 오른쪽문자영역={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=4
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 49x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=49,Height=11}, 오른쪽문자영역={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=6
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-  [5] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 61x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=61,Height=11}, 오른쪽문자영역={X=48,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=48,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=5
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 49x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=49,Height=11}, 오른쪽문자영역={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=2
-  [0] processed=True, result=톤
-  [1] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 10x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~10
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=8ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=10,Height=11}, 오른쪽문자영역={X=0,Y=0,Width=10,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=10,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 23x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=23,Height=11}, 오른쪽문자영역={X=10,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=10,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=5
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 49x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=49,Height=11}, 오른쪽문자영역={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=5
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-  [4] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 49x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=49,Height=11}, 오른쪽문자영역={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=36,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[StartEndList] 음소 개수=4
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 53x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=53,Height=11}, 오른쪽문자영역={X=40,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=40,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-[Cargo24/SetDG오더] 평가 3: Datagrid 상태 검증 시작
-[ValidateDatagridState] 유효하지 않은 컬럼[1]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[2]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[3]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[4]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[5]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[6]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[7]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[8]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[9]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[10]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[11]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[12]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[13]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[14]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[15]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[16]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[17]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[18]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[19]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[20]: ''
-[ValidateDatagridState] 유효하지 않은 컬럼[21]: ''
-[Cargo24/SetDG오더] Datagrid 상태 검증 실패: InvalidColumn (재시도 3/3)
-[Cargo24/InitDG오더] InitDG오더Async 시작: issues=InvalidColumn
-[Cargo24/InitDG오더] Step 1: 원래대로 버튼 클릭
-[Cargo24/InitDG오더] Step 1 완료: 원래대로 버튼 클릭됨
-[Cargo24/InitDG오더] Step 2: 불필요한 컬럼 제거 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=27
-[Cargo24/InitDG오더] Step 2. 현재 컬럼 수: 26
-[Cargo24/InitDG오더] Step 2. 컬럼[26] 드래그: 1903 → 1873 (dx=-30)
-[Cargo24/InitDG오더] Step 2. 컬럼[25] 드래그: 1813 → 1783 (dx=-30)
-[Cargo24/InitDG오더] Step 2. 컬럼[24] 드래그: 1723 → 1693 (dx=-30)
-[Cargo24/InitDG오더] Step 2. 컬럼[23] 드래그: 1633 → 1593 (dx=-40)
-[Cargo24/InitDG오더] Step 2. 컬럼[22] 드래그: 1563 → 1523 (dx=-40)
-[Cargo24/InitDG오더] Step 2. 컬럼[21] 드래그: 1493 → 1443 (dx=-50)
-[Cargo24/InitDG오더] Step 2. 컬럼[20] 드래그: 1413 → 1333 (dx=-80)
-[Cargo24/InitDG오더] Step 2. 컬럼[19] 드래그: 1303 → 1273 (dx=-30)
-[Cargo24/InitDG오더] Step 2. 컬럼[18] 드래그: 1243 → 1193 (dx=-50)
-[Cargo24/InitDG오더] Step 2. 컬럼[17] 드래그: 1163 → 1133 (dx=-30)
-[Cargo24/InitDG오더] Step 2. 컬럼[16] 드래그: 1103 → 1098 (dx=-5)
-[Cargo24/InitDG오더] Step 2. 컬럼[15] 드래그: 1068 → 1043 (dx=-25)
-[Cargo24/InitDG오더] Step 2. 컬럼[14] 드래그: 1013 → 978 (dx=-35)
-[Cargo24/InitDG오더] Step 2. 컬럼[13] 드래그: 948 → 913 (dx=-35)
-[Cargo24/InitDG오더] Step 2. 컬럼[12] 드래그: 883 → 713 (dx=-170)
-[Cargo24/InitDG오더] Step 2. 컬럼[11] 드래그: 683 → 613 (dx=-70)
-[Cargo24/InitDG오더] Step 2. 컬럼[10] 드래그: 583 → 513 (dx=-70)
-[Cargo24/InitDG오더] Step 2. 컬럼[9] 드래그: 483 → 443 (dx=-40)
-[Cargo24/InitDG오더] Step 2. 컬럼[8] 드래그: 413 → 363 (dx=-50)
-[Cargo24/InitDG오더] Step 2. 컬럼[7] 드래그: 333 → 328 (dx=-5)
-[Cargo24/InitDG오더] Step 2. 컬럼[6] 드래그: 298 → 293 (dx=-5)
-[Cargo24/InitDG오더] Step 2. 컬럼[5] 드래그: 263 → 213 (dx=-50)
-[Cargo24/InitDG오더] Step 2. 컬럼[4] 드래그: 183 → 178 (dx=-5)
-[Cargo24/InitDG오더] Step 2. 컬럼[3] 드래그: 148 → 128 (dx=-20)
-[Cargo24/InitDG오더] Step 2. 컬럼[2] 드래그: 98 → 64 (dx=-34)
-[Cargo24/InitDG오더] Step 2 완료
-[Cargo24/InitDG오더] Step 3: 컬럼 위치 이동 시작
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[1] '상태': 3 → 1
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[3] '처리시간': 4 → 3
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[4] '고객명': 7 → 4
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[5] '고객전화': 8 → 5
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[6] '차주전화': 19 → 6
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[7] '상차지': 10 → 7
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[8] '하차지': 11 → 8
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[9] '운송료': 13 → 9
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[10] '수수료': 14 → 10
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[11] '공유': 12 → 11
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[14] '요금구분': 15 → 14
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[15] '계산서금액': 25 → 15
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[16] '차량톤수': 23 → 16
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[17] '톤수': 18 → 17
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[18] '차종': 19 → 18
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[19] '적재옵션': 22 → 19
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3. 컬럼[20] '차량종류': 23 → 20
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 3 완료: 컬럼 위치 이동됨
-[Cargo24/InitDG오더] Step 4: 컬럼 폭 조정 시작
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=40
-[Cargo24/InitDG오더] Step 4. 컬럼[21] '화물정보': 폭 30 → 150 (dx=120)
-[Cargo24/InitDG오더] Step 4. 컬럼[20] '차량종류': 폭 29 → 60 (dx=31)
-[Cargo24/InitDG오더] Step 4. 컬럼[19] '적재옵션': 폭 29 → 100 (dx=71)
-[Cargo24/InitDG오더] Step 4. 컬럼[18] '차종': 폭 29 → 60 (dx=31)
-[Cargo24/InitDG오더] Step 4. 컬럼[17] '톤수': 폭 29 → 50 (dx=21)
-[Cargo24/InitDG오더] Step 4. 컬럼[16] '차량톤수': 폭 29 → 60 (dx=31)
-[Cargo24/InitDG오더] Step 4. 컬럼[15] '계산서금액': 폭 59 → 70 (dx=11)
-[Cargo24/InitDG오더] Step 4. 컬럼[14] '요금구분': 폭 29 → 60 (dx=31)
-[Cargo24/InitDG오더] Step 4. 컬럼[13] '혼적': 폭 29 → 40 (dx=11)
-[Cargo24/InitDG오더] Step 4. 컬럼[12] 'SMS': 폭 29 → 40 (dx=11)
-[Cargo24/InitDG오더] Step 4. 컬럼[11] '공유': 폭 29 → 40 (dx=11)
-[Cargo24/InitDG오더] Step 4. 컬럼[10] '수수료': 폭 29 → 50 (dx=21)
-[Cargo24/InitDG오더] Step 4. 컬럼[9] '운송료': 폭 29 → 50 (dx=21)
-[Cargo24/InitDG오더] Step 4. 컬럼[8] '하차지': 폭 29 → 100 (dx=71)
-[Cargo24/InitDG오더] Step 4. 컬럼[7] '상차지': 폭 29 → 100 (dx=71)
-[Cargo24/InitDG오더] Step 4. 컬럼[6] '차주전화': 폭 29 → 90 (dx=61)
-[Cargo24/InitDG오더] Step 4. 컬럼[5] '고객전화': 폭 29 → 90 (dx=61)
-[Cargo24/InitDG오더] Step 4. 컬럼[4] '고객명': 폭 29 → 120 (dx=91)
-[Cargo24/InitDG오더] Step 4. 컬럼[3] '처리시간': 폭 29 → 70 (dx=41)
-[Cargo24/InitDG오더] Step 4. 컬럼[2] '화물번호': 폭 29 → 80 (dx=51)
-[Cargo24/InitDG오더] Step 4. 컬럼[1] '상태': 폭 29 → 40 (dx=11)
-[Cargo24/InitDG오더] Step 4 완료: 컬럼 폭 조정됨
-[Cargo24/InitDG오더] 확인작업 시작
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetLeftWidthList_FromBool1Array: 검출된 컬럼 수=28
-[StartEndList] 음소 개수=2
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 22x11
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~13
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=22,Height=11}, 오른쪽문자영역={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=9,Y=0,Width=13,Height=11}
-[RightSliding 1단계 실패]
-sErr: [CARGO24/InitDG오더]컬럼[1] OFR 실패: 인식 실패 (UI 모드), sPos: Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_03
-sErr: [CARGO24/SetDG오더]Datagrid 상태 검증 실패: InvalidColumn
-상세: [CARGO24/InitDG오더]컬럼[1] OFR 실패: 인식 실패 (UI 모드)
-(재시도 3회 초과), sPos: Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_Validation
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-[CARGO24] RcptRegPage InitializeAsync 실패: sErr: [CARGO24/SetDG오더]Datagrid 상태 검증 실패: InvalidColumn
-상세: [CARGO24/InitDG오더]컬럼[1] OFR 실패: 인식 실패 (UI 모드)
-(재시도 3회 초과)
-sPos: Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_Validation
-[ExternalAppController] CARGO24 초기화 실패: sErr: sErr: [CARGO24/SetDG오더]Datagrid 상태 검증 실패: InvalidColumn
-상세: [CARGO24/InitDG오더]컬럼[1] OFR 실패: 인식 실패 (UI 모드)
-(재시도 3회 초과)
-sPos: Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_Validation
-sPos: CARGO24/InitializeAsync_04
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=1--------------------------
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=161, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] Dequeue: KeyCode=160, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 2개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 2
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 2
+[INSUNG1]   [0] KeyCode=161, StateFlag=Existed_NonSeqno, SeqNo=, CarType=트럭, CallCustFrom=INSUNG1, 출발=현북면
+[INSUNG1]   [1] KeyCode=160, StateFlag=Existed_NonSeqno, SeqNo=, CarType=트럭, CallCustFrom=INSUNG1, 출발=현북면
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=1, tot=2, listCreated=2, listEtcGroup=0
+[INSUNG1] Region 4: 신규 주문 처리 시작 (총 2건)
+[INSUNG1]   [2/2] 신규 주문 처리: KeyCode=160, 상태=대기
+[INSUNG1] 신규버튼 클릭 완료 (시도 1/3)
+[INSUNG1] 신규주문 팝업창 열림: 37105C
+[INSUNG1] 1. 의뢰자 정보 입력...
+[INSUNG1] 의뢰자 검색어: "[테스트도착지]/담당"
+[INSUNG1] 고객 검색 Enter 키 전송
+[INSUNG1] 고객검색창 발견: 11A8E, 닫힘 대기 중...
+[INSUNG1] 고객검색창 자동 닫힘 → 단수 고객, 동명 재확인 중...
+[INSUNG1] 고객 검색 성공: 1개 (동명=현북면)
+[INSUNG1] 의뢰자 검색 성공 (1개)
+[INSUNG1] 의뢰자_전화1 입력 성공: "01000000000"
+[INSUNG1] 의뢰자_전화2 입력 성공: ""
+[INSUNG1] 의뢰자_부서 입력 성공: "부서"
+[INSUNG1] 의뢰자_담당 입력 성공: "담당"
+[INSUNG1] 2. 출발지 정보 입력...
+[INSUNG1]   출발지 = 의뢰자: Enter로 자동 입력
+[INSUNG1] 출발지_동명 입력 성공: "현북면"
+[INSUNG1] 출발지_전화1 입력 성공: "01000000000"
+[INSUNG1] 출발지_전화2 입력 성공: ""
+[INSUNG1] 출발지_부서 입력 성공: "부서"
+[INSUNG1] 출발지_담당 입력 성공: "담당"
+[INSUNG1] 출발지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
+[INSUNG1] 3. 도착지 정보 입력...
+[INSUNG1]   도착지 = 의뢰자: Enter로 자동 입력
+[INSUNG1] 도착지_동명 입력 성공: "현북면"
+[INSUNG1] 도착지_전화1 입력 성공: "01000000000"
+[INSUNG1] 도착지_전화2 입력 성공: ""
+[INSUNG1] 도착지_부서 입력 성공: "부서"
+[INSUNG1] 도착지_담당 입력 성공: "담당"
+[INSUNG1] 도착지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
+[INSUNG1] 적요 입력 성공: ""
+[INSUNG1] 4-2. 공유 CheckBox 처리...
+[INSUNG1]   공유: False
+[INSUNG1] 4-3. 요금종류 RadioButton 처리...
+[INSUNG1]   요금종류: 선불
+[INSUNG1] 4-4. 차량종류 RadioButton 처리...
+[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
+[INSUNG1] btns.hWndTop=37105C, btns.hWndMid=360A9C
+[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=1E0ECE
+[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=221424
+[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
+[INSUNG1]   차량무게: 1t
+[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
+[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=1E0ECE, ptCheckAbs={X=2826,Y=396}
+[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: B14B6
+[INSUNG1] 차량무게 ComboBox 열림 감지 (1번째 시도) - 새 Handle: B14B6
+[INSUNG1] 차량무게 ComboBox 항목 선택 완료: index=1
+[INSUNG1] 차량무게 선택 완료 → 트럭상세 ComboBox 열림 대기...
+[INSUNG1] Get트럭상세Index("카고/윙") 결과: indexTruckDetail=1
+[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=트럭상세, itemIndex=1, hWndBefore=221424, ptCheckAbs={X=2899,Y=396}
+[INSUNG1] 트럭상세 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 31A8C
+[INSUNG1] 트럭상세 ComboBox 열림 감지 (1번째 시도) - 새 Handle: 31A8C
+[INSUNG1] 트럭상세 ComboBox 항목 선택 완료: index=1
+[INSUNG1] 트럭 ComboBox 처리 완료
+[INSUNG1]   차량종류: 트럭
+[INSUNG1]   차량무게: 1t
+[INSUNG1]   트럭상세: 카고/윙
+[INSUNG1] 4-5. 배송타입 RadioButton 처리...
+[INSUNG1]   배송타입: 편도
+[INSUNG1] 4-6. 계산서 CheckBox 처리...
+[INSUNG1]   계산서: False
+[INSUNG1] 4-7. 요금 그룹 입력...
+[INSUNG1] 4-8. 오더메모 입력...
+[INSUNG1] 오더메모 입력 성공: "160/"
+[INSUNG1] 입력 성공 → 대기저장 버튼 클릭 시도
+[INSUNG1] ClickNWaitWindowChangedAsync 시작: hWndClick=5D09D4, hWndOrg=37105C
+[INSUNG1] 버튼 클릭 시도 1/3 - 클릭 전
+[INSUNG1] 버튼 클릭 완료 1/3
+[INSUNG1] 윈도우 닫힘 확인 (시도 1, 대기 200ms)
+[INSUNG1] ===== 첫 로우 클릭 시도 1/3 =====
+[INSUNG1] 첫 로우 클릭 완료, 선택 검증 시작
+[INSUNG1] 선택 여부: 선택됨
+[INSUNG1] 첫 로우 선택 검증 성공 (시도 1/3)
+[INSUNG1] 주문번호 OFR - rowIndex=0, yIndex=2, InvertRgb=True
+[INSUNG1] ===== Seqno OFR 시도 1/3 =====
+[INSUNG1] 주문번호 셀 위치 [2, 2]: {X=133,Y=56,Width=77,Height=15}
+[INSUNG1] RGB 반전 완료
+[INSUNG1] Seqno 획득 성공: '274854988' (시도 1/3)
+[INSUNG1] 주문 등록 완료 - Seqno: 274854988
+[SrGlobalClient] RequestId 등록: ba03d4f2-080b-46de-afef-1259270d8b70
+[INSUNG1] Kai DB 업데이트 성공 - INSUNG1: 274854988
+[SrGlobalClient] 자신의 RequestId 감지 - 무시: ba03d4f2-080b-46de-afef-1259270d8b70
+[SrGlobalClient] 로컬 업데이트 감지 - UI 갱신: KeyCode=160, Seq=3
+[INSUNG1]   [2] 신규 주문 등록 성공: 160
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=160, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1]   [1/2] 신규 주문 처리: KeyCode=161, 상태=대기
+[INSUNG1] 신규버튼 클릭 완료 (시도 1/3)
+[INSUNG1] 신규주문 팝업창 열림: 4B0BF6
+[INSUNG1] 1. 의뢰자 정보 입력...
+[INSUNG1] 의뢰자 검색어: "[테스트도착지]/담당"
+[INSUNG1] 고객 검색 Enter 키 전송
+[INSUNG1] 고객검색창 발견: 6F0A26, 닫힘 대기 중...
+[INSUNG1] 고객검색창 자동 닫힘 → 단수 고객, 동명 재확인 중...
+[INSUNG1] 고객 검색 성공: 1개 (동명=현북면)
+[INSUNG1] 의뢰자 검색 성공 (1개)
+[INSUNG1] 의뢰자_전화1 입력 성공: "01000000000"
+[INSUNG1] 의뢰자_전화2 입력 성공: ""
+[INSUNG1] 의뢰자_부서 입력 성공: "부서"
+[INSUNG1] 의뢰자_담당 입력 성공: "담당"
+[INSUNG1] 2. 출발지 정보 입력...
+[INSUNG1]   출발지 = 의뢰자: Enter로 자동 입력
+[INSUNG1] 출발지_동명 입력 성공: "현북면"
+[INSUNG1] 출발지_전화1 입력 성공: "01000000000"
+[INSUNG1] 출발지_전화2 입력 성공: ""
+[INSUNG1] 출발지_부서 입력 성공: "부서"
+[INSUNG1] 출발지_담당 입력 성공: "담당"
+[INSUNG1] 출발지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
+[INSUNG1] 3. 도착지 정보 입력...
+[INSUNG1]   도착지 = 의뢰자: Enter로 자동 입력
+[INSUNG1] 도착지_동명 입력 성공: "현북면"
+[INSUNG1] 도착지_전화1 입력 성공: "01000000000"
+[INSUNG1] 도착지_전화2 입력 성공: ""
+[INSUNG1] 도착지_부서 입력 성공: "부서"
+[INSUNG1] 도착지_담당 입력 성공: "담당"
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+[INSUNG1] 도착지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
+[INSUNG1] 적요 입력 성공: ""
+[INSUNG1] 4-2. 공유 CheckBox 처리...
+[INSUNG1]   공유: False
+[INSUNG1] 4-3. 요금종류 RadioButton 처리...
+[INSUNG1]   요금종류: 선불
+[INSUNG1] 4-4. 차량종류 RadioButton 처리...
+[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
+[INSUNG1] btns.hWndTop=4B0BF6, btns.hWndMid=118C4
+[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=118BE
+[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=118C0
+[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
+[INSUNG1]   차량무게: 1t
+[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
+[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=118BE, ptCheckAbs={X=2826,Y=396}
+[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 31A5A
+[INSUNG1] 차량무게 ComboBox 열림 감지 (1번째 시도) - 새 Handle: 31A5A
+[INSUNG1] 차량무게 ComboBox 항목 선택 완료: index=1
+[INSUNG1] 차량무게 선택 완료 → 트럭상세 ComboBox 열림 대기...
+[INSUNG1] Get트럭상세Index("전체") 결과: indexTruckDetail=0
+[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
+[INSUNG1] btns.hWndTop=4B0BF6, btns.hWndMid=118C4
+[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=118BE
+[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=18153C
+[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
+[INSUNG1]   차량무게: 1t
+[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
+[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=118BE, ptCheckAbs={X=2826,Y=396}
+[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (11번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (21번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (31번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (41번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (51번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (61번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (71번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (81번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (91번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
+[INSUNG1] btns.hWndTop=4B0BF6, btns.hWndMid=118C4
+[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=118BE
+[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=118C0
+[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
+[INSUNG1]   차량무게: 1t
+[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
+[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=118BE, ptCheckAbs={X=2826,Y=396}
+[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (11번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (21번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (31번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (41번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (51번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (61번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (71번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (81번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 차량무게 ComboBox 대기 중... (91번째 시도) - 현재 Handle: 118BE
+[INSUNG1] 입력 실패 → 닫기 버튼으로 창 닫기 시도
+[INSUNG1] 실패 원인: 트럭 설정 실패
+[INSUNG1] ClickNWaitWindowChangedAsync 시작: hWndClick=11800, hWndOrg=4B0BF6
+[INSUNG1] 버튼 클릭 시도 1/3 - 클릭 전
+[INSUNG1] 버튼 클릭 완료 1/3
+[INSUNG1] 윈도우 닫힘 확인 (시도 1, 대기 50ms)
+[INSUNG1] 닫기 버튼으로 창 닫힘 확인 → 입력 실패 결과 반환
+[INSUNG1]   [1] 신규 주문 등록 실패 (치명적): 161 - 트럭 설정 실패
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.TimeoutException'(WindowsBase.dll)
+[Cargo24sAct_App] Updater 프로세스 종료됨
+'[29664] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 4294967295 (0xffffffff)).

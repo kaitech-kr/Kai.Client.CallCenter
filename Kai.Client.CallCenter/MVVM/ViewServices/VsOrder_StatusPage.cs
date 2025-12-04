@@ -3,10 +3,9 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 
 using Kai.Common.StdDll_Common;
-using Kai.Common.FrmDll_FormCtrl;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 
 using Kai.Client.CallCenter.Pages;
 using Kai.Client.CallCenter.MVVM.ViewModels;

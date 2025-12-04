@@ -126,14 +126,17 @@ public class InsungsInfo_File
     public int 접수등록Page_DG오더_headerHeight { get; set; } = 30; // HeaderRow Height
     public int 접수등록Page_DG오더_emptyRowHeight { get; set; } = 25; // EmptyRow Height
     public int 접수등록Page_DG오더_dataRowHeight { get; set; } = 20; // DataRow Height
+    public int 접수등록Page_DG오더_dataGab { get; set; } = 3; // 셀 상하단 gap
     public const int 접수등록Page_DG오더_dataRowCount = 28; // DataRow Count
 
+    // 스크롤 바
     public Draw.Point 접수등록Page_DG오더_ptChkRel수직스크롤M { get; set; } = new Draw.Point(1900, 542); // 스크롤 중간 - MainWnd 기준
-    public Draw.Point 접수등록Page_DG오더_ptClkRel스크롤Down { get; set; } = new Draw.Point(8, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - VScrollBar기준
-    public Draw.Point 접수등록Page_DG오더_ptClkRel스크롤Up { get; set; } = new Draw.Point(8, 20); // 스크롤 업버튼 바로아래 - Page업 스크롤 하기 위해 - VScrollBar기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRel페이지Down { get; set; } = new Draw.Point(8, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - VScrollBar기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRel페이지Up { get; set; } = new Draw.Point(8, 20); // 스크롤 업버튼 바로아래 - Page업 스크롤 하기 위해 - VScrollBar기준
     public Draw.Point 접수등록Page_DG오더_ptClkRel버튼Down { get; set; } = new Draw.Point(8, 607); // 스크롤 다운버튼 바로위 - Row다운 스크롤 하기 위해 - VScrollBar기준
     public Draw.Point 접수등록Page_DG오더_ptClkRel버튼Up { get; set; } = new Draw.Point(8, 6); // 스크롤 업버튼 바로아래 - Row업 스크롤 하기 위해 - VScrollBar기준
 
+    // 로딩패널
     public Draw.Point 접수등록Page_DG오더_ptChkRelPanL { get; set; } = new Draw.Point(950, 359); // {X=984,Y=590}
     public string 접수등록Page_DG오더_sWndPan { get; set; } = "progressPanel1";   // WndName - Reserved
     #endregion 접수(오더)등록Page

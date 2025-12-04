@@ -57,7 +57,7 @@ public class Cargo24Context
     /// <summary>
     /// 접수등록 페이지 제어
     /// </summary>
-    public Cargo24sAct_RcptRegPage? RcptRegPageAct { get; set; } = null;
+    public Cargo24sAct_RcptRegPage RcptRegPageAct { get; set; } = null;
     #endregion
 
     #region 생성자

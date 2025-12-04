@@ -1,29 +1,20 @@
 ﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Media;
 using System.ComponentModel;
-using System.Windows.Threading;
 using Microsoft.AspNetCore.SignalR.Client; // Nuget: Microsoft.AspNetCore.SignalR.Client - v8.0.8
 
 using Kai.Common.StdDll_Common;
-using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetUtils;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
-using static Kai.Common.FrmDll_WpfCtrl.FrmSystemDisplays;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using static Kai.Common.StdDll_Common.StdDelegate;
-using static Kai.Common.StdDll_Common.StdWin32.StdCommon32;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
-using Kai.Client.CallCenter.Networks;
 using Kai.Client.CallCenter.Pages;
-using Kai.Client.CallCenter.Pythons;
-//using Kai.Client.CallCenter.Networks.NwInsungs;
 using Kai.Client.CallCenter.MVVM.ViewServices;
 using static Kai.Client.CallCenter.Classes.CommonVars;
-using static Kai.Client.CallCenter.Pythons.Py309Common;
 
 namespace Kai.Client.CallCenter.Classes;
 #nullable disable

@@ -46,7 +46,7 @@ public class Cargo24sInfo_File
     public string 접수등록Page_TopWnd_sClassName { get; set; } = "TfrmCargoOrder"; // ClassName
     public string 접수등록Page_TopWnd_sWndName { get; set; } = "오더접수관리";   // WndName
 
-    public int 접수등록Page_PushBtn_FocusBright { get; set; } = 233; // Brightness
+    //public int 접수등록Page_PushBtn_FocusBright { get; set; } = 233; // Brightness - 미사용
     public Draw.Point 접수등록Page_SearchRange_ptChkRelFrom { get; set; } = new Draw.Point(340, 140); // Check Point - From Date(임시)
 
     // StatusBtns - For Find
@@ -82,12 +82,13 @@ public class Cargo24sInfo_File
 
     // 접수 Datagrid
     public Draw.Point 접수등록Page_DG오더_ptChkRel { get; set; } = new Draw.Point(300, 547); // Check Point - Center(968, 547) From Loading Panel(rkqus)
-    public Draw.Rectangle 접수등록Page_DG오더_rcRel { get; set; } = new Draw.Rectangle(10, 229, 1916, 637); // Check Point
+    public Draw.Rectangle 접수등록Page_DG오더_rcRel { get; set; } = new Draw.Rectangle(10, 229, 1916, 637);
 
     public string 접수등록Page_DG오더_sClassName { get; set; } = "TRealDBGrid"; // Check Window Name
     public int 접수등록Page_DG오더_headerHeight { get; set; } = 32; // HeaderRow Height
     public int 접수등록Page_DG오더_rowHeight { get; set; } = 23; // DataRow Height
     public int 접수등록Page_DG오더_rowCount { get; set; } = 25; // DataRow Count
+    public int 접수등록Page_DG오더_dataGab { get; set; } = 4; // 셀 상하단 gap
     public string[] 접수등록Page_DG오더_colOrgTexts { get; set; } = new string[]
     {
         "0", "화물번호", "SMS", "상태", "처리시간", "공유", "혼적", "고객명", "고객전화", "상차지",
@@ -95,26 +96,31 @@ public class Cargo24sInfo_File
         "적재옵션", "차량종류", "차량톤수", "차주사업자번호", "게산서발행일", "계산서금액", "도착지연락처", "하차일시", "접수경로", "등록자전화번호",
         "등록자명", "화주명", "차주실적지위", "차주사업자명", "대표자명", "산재보험료차주분", "송금할운임", "산재적용", "상차일"
     };
-    public Draw.Point 접수등록Page_DG오더_ptClkRel스크롤PageDown { get; set; } = new Draw.Point(1905, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - Datagrid기준
-    public Draw.Point 접수등록Page_DG오더_ptClkRel스크롤StepDown { get; set; } = new Draw.Point(1905, 610); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - Datagrid기준
-    public Draw.Point 접수등록Page_DG오더_ptClkRel스크롤Up { get; set; } = new Draw.Point(1905, 16); // 스크롤 업버튼 바로아래 - Page업 스크롤 하기 위해 - Datagrid기준
 
     public Draw.Point 접수등록Page_리스트항목_ptChkRel순서저장 { get; set; } = new Draw.Point(90, 216); // Check Point {X=90,Y=216}
     public string 접수등록Page_리스트항목_sWndName순서저장 { get; set; } = "리스트항목 순서 저장"; // Check Window Name
 
     public Draw.Point 접수등록Page_리스트항목_ptChkRel원래대로 { get; set; } = new Draw.Point(260, 216); // Check Point {X=260,Y=216}
     public string 접수등록Page_리스트항목_sWndName원래대로 { get; set; } = "리스트항목  원래대로"; // Check Window Name
+
+    // 스크롤 바
+    public Draw.Point 접수등록Page_DG오더_ptClkRelL페이지Down { get; set; } = new Draw.Point(1905, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - Datagrid기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRelL페이지Up { get; set; } = new Draw.Point(1905, 17); // 스크롤 업버튼 바로아래 - Page업 스크롤 하기 위해 - Datagrid기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRelL버튼Down { get; set; } = new Draw.Point(1905, 610); // 스크롤 다운버튼 바로위 - Row다운 스크롤 하기 위해 - Datagrid기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRelL버튼Up { get; set; } = new Draw.Point(1905, 7); // 스크롤 업버튼 바로아래 - Row업 스크롤 하기 위해 - Datagrid기준
+
+    // 상태별 갯수박스
+    //public Draw.Rectangle 접수등록Page_rcRelM계_접수 { get; set; } = new Draw.Rectangle(420, 882, 97, 17); // {X=419,Y=880,Width=99,Height=23} - Reserved
+    //public Draw.Rectangle 접수등록Page_rcRelM계_완료 { get; set; } = new Draw.Rectangle(420, 905, 97, 17); // {X=419,Y=903,Width=99,Height=23} - Reserved
+    //public Draw.Rectangle 접수등록Page_rcRelM계_정산 { get; set; } = new Draw.Rectangle(420, 929, 97, 17); // {X=419,Y=926,Width=99,Height=24} - Reserved
+    //public Draw.Rectangle 접수등록Page_rcRelM계_취소 { get; set; } = new Draw.Rectangle(420, 952, 97, 17); // {X=419,Y=950,Width=99,Height=24} - Reserved
+    //public Draw.Rectangle 접수등록Page_rcRelM계_전체 { get; set; } = new Draw.Rectangle(420, 980, 97, 17); // {X=419,Y=974,Width=99,Height=26} - Reserved
     #endregion
 
     #region 접수(화물)등록Wnd
     // TopWnd
     public string 접수등록Wnd_TopWnd_sClassName { get; set; } = "TfrmCargoOrderIns"; // ClassName
     public string 접수등록Wnd_TopWnd_sWndName { get; set; } = "화물등록";   // WndName
-
-    // PushButtons
-    public Draw.Point 접수등록Wnd_CmnBtn_ptRel닫기 { get; set; } = new Draw.Point(1074, 453); // 닫기 버튼
-    public Draw.Point 접수등록Wnd_CmnBtn_ptRel대기저장 { get; set; } = new Draw.Point(1074, 223); // 닫기 버튼
-    public Draw.Point 접수등록Wnd_CmnBtn_ptRel접수저장 { get; set; } = new Draw.Point(1074, 396); // 닫기 버튼
 
     // 의뢰자
     public Draw.Point 접수등록Wnd_의뢰자_ptRel고객명 { get; set; } = new Draw.Point(186, 90); // 의뢰자 이름
@@ -207,7 +213,19 @@ public class Cargo24sInfo_File
     public Draw.Point 접수등록Wnd_하차정보ChkBoxes_ptRel당착내착 { get; set; } = new Draw.Point(598, 456); // 당착/내착
 
     public Draw.Point 접수등록Wnd_추가정보Edit_ptRel { get; set; } = new Draw.Point(770, 488); // 추가정보
-    #endregion
+
+    // 버튼들 - 공용
+    public Draw.Point 접수등록Wnd_CmnBtn_ptRel닫기 { get; set; } = new Draw.Point(1074, 453); // 닫기 버튼
+
+    // 버튼들 - 신규등록 그룹
+    public Draw.Point 접수등록Wnd_CmnBtn_ptRel대기저장 { get; set; } = new Draw.Point(1074, 223); // 대기저장 버튼
+    public Draw.Point 접수등록Wnd_CmnBtn_ptRel접수저장 { get; set; } = new Draw.Point(1074, 396); // 접수저장 버튼
+
+    // 버튼들 - 수정 그룹
+    public Draw.Point 접수등록Wnd_CmnBtn_ptRel배차취소 { get; set; } = new Draw.Point(1074, 180); // 배차취소 버튼 {X=1074,Y=180}
+    public Draw.Point 접수등록Wnd_CmnBtn_ptRel화물취소 { get; set; } = new Draw.Point(1074, 210); // 화물취소 버튼 {X=1074,Y=210}
+    public Draw.Point 접수등록Wnd_CmnBtn_ptRel저장 { get; set; } = new Draw.Point(1074, 398); // 저장 버튼 {X=1074,Y=398}
+    #endregion 
 
     #region 주소/고객 검색창
     // TopWnd
@@ -225,42 +243,5 @@ public class Cargo24sInfo_File
     public Draw.Point 주소검색Wnd_Datagrid_ptRelFirstRow { get; set; } = new Draw.Point(407, 262); // 고객검색결과 Datagrid - First Row
     public Draw.Rectangle 주소검색Wnd_Datagrid_rcRelFirstRow { get; set; } = new Draw.Rectangle(2, 23, 18, 17); // FirstRow/TernNo Datagrid Rectangle
     #endregion
-
-    ////#region 고객등록Page
-    ////// TopWnd
-    ////public string 고객등록Page_TopWnd_sClassName { get; set; } = string.Empty; // ClassName
-    ////public string 고객등록Page_TopWnd_sWndName { get; set; } = string.Empty;   // WndName
-
-    ////// CheckBox - 전체선택
-    ////public string 고객등록Page_ChkBoxTotal_sClassName { get; set; } = string.Empty; // ClassName
-    ////public Draw.Point 고객등록Page_ChkBoxTotal_ptCheckRel { get; set; } = StdUtil.s_ptDrawInvalid; // Check Point
-
-    ////// GroupBox - 사용여부
-    ////public string 고객등록Page_GroupBoxUse_sClassName { get; set; } = string.Empty; // ClassName
-    ////public Draw.Point 고객등록Page_GroupBoxUse_ptCheckRel { get; set; } = StdUtil.s_ptDrawInvalid; // Check Point
-    ////public Draw.Point 고객등록Page_GroupBoxUse_ptClickRel { get; set; } = StdUtil.s_ptDrawInvalid; // Click Point
-
-    ////// 버튼 - 조회
-    ////public string 고객등록Page_BtnSerach_sWndName { get; set; } = string.Empty; // WndName
-    ////public Draw.Point 고객등록Page_BtnSerach_ptCheckRel { get; set; } = StdUtil.s_ptDrawInvalid; // Check Point
-
-    ////// Pan Wnd
-    ////public string 고객등록Page_PanWnd_sClassName { get; set; } = string.Empty; // ClassName
-    ////public string 고객등록Page_PanWnd_sWndName { get; set; } = string.Empty; // WndName
-    ////public Draw.Point 고객등록Page_PanWnd_ptCheckRel { get; set; } = StdUtil.s_ptDrawInvalid; // Check Point
-
-    ////// 버튼 - 엑셀저장
-    ////public string 고객등록Page_BtnExcel_sWndName { get; set; } = string.Empty; // WndName
-    ////public Draw.Point 고객등록Page_BtnExcel_ptCheckRel { get; set; } = StdUtil.s_ptDrawInvalid; // Check Point
-
-    ////// 버튼 - 닫기
-    ////public string 고객등록Page_BtnClose_sWndName { get; set; } = string.Empty; // WndName
-    ////public Draw.Point 고객등록Page_BtnClose_ptCheckRel { get; set; } = StdUtil.s_ptDrawInvalid; // Check Point
-    ////#endregion
-
-    //#region 안내문Page
-    //public string 안내문Page_TopWnd_sClassName { get; set; } = "TfrmHomePage"; // ClassName
-    //public string 안내문Page_TopWnd_sWndName { get; set; } = "안내문";   // WndName
-    //#endregion
 }
 #nullable restore

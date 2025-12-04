@@ -254,10 +254,10 @@ public partial class InsungsAct_RcptRegPage
             int indexTruckDetail = Get트럭상세Index(tbOrder.TruckDetail);
             Debug.WriteLine($"[{m_Context.AppName}] Get트럭상세Index(\"{tbOrder.TruckDetail}\") 결과: indexTruckDetail={indexTruckDetail}");
 
-            if (indexTruckDetail == 0)
-            {
-                return new StdResult_Status(StdResult.Fail, $"지원하지 않는 트럭상세: {tbOrder.TruckDetail}", "SetGroupCarTypeAsync_트럭_04");
-            }
+            //if (indexTruckDetail == 0) // 이거 연구과제
+            //{
+            //    return new StdResult_Status(StdResult.Fail, $"지원하지 않는 트럭상세: {tbOrder.TruckDetail}", "SetGroupCarTypeAsync_트럭_04");
+            //}
 
             result = await Select트럭ComboBoxItemAsync(hWndParent, ptCheckTruckDetailComboOpen, hWndCheckTruckDetailComboOpen, indexTruckDetail, "트럭상세", 50, ctrl);
 
@@ -447,6 +447,60 @@ public partial class InsungsAct_RcptRegPage
         }
 
         Debug.WriteLine($"[{m_Context.AppName}] 모든 시도 실패 - 윈도우가 닫히지 않음");
+        return false;
+    }
+
+    /// <summary>
+    /// 확인창의 예 버튼 클릭 (등록창 확인창과 동일)
+    /// </summary>
+    /// <param name="ctrl">취소 토큰 컨트롤</param>
+    /// <param name="sClassName">확인창 클래스명 (기본값: "#32770")</param>
+    /// <param name="sCaption">확인창 캡션 (기본값: "확인")</param>
+    /// <returns>예 버튼을 찾아서 클릭했으면 true, 실패하면 false</returns>
+    /// <remarks>
+    /// [2025-12-04] Cargo24 작업 중 실수로 추가됨. 아직 호출되는 곳 없음.
+    /// 나중에 인성 작업 시 사용 예정.
+    /// </remarks>
+    private async Task<bool> ClickConfirmYesButtonAsync(CancelTokenControl ctrl, string sClassName = "#32770", string sCaption = "확인")
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+
+        // 1. 확인창 찾기
+        IntPtr hWndConfirm = Std32Window.FindMainWindow(m_MemInfo.Splash.TopWnd_uProcessId, sClassName, sCaption);
+        if (hWndConfirm == IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] 확인창을 찾을 수 없음");
+            return false;
+        }
+
+        Debug.WriteLine($"[{m_Context.AppName}] 확인창 발견: hWnd={hWndConfirm:X}");
+
+        // 2. "예(&Y)" 버튼 찾기
+        IntPtr hWndBtn = Std32Window.FindWindowEx(hWndConfirm, IntPtr.Zero, "Button", "예(&Y)");
+        if (hWndBtn == IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] '예' 버튼을 찾을 수 없음");
+            return false;
+        }
+
+        Debug.WriteLine($"[{m_Context.AppName}] '예' 버튼 발견: hWnd={hWndBtn:X}");
+
+        // 3. 예 버튼 클릭
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn, 5, 5, 50);
+        await Task.Delay(200, ctrl.Token);
+
+        // 4. 확인창이 닫힐 때까지 대기
+        for (int i = 0; i < 50; i++)
+        {
+            await Task.Delay(50, ctrl.Token);
+            if (!Std32Window.IsWindow(hWndConfirm))
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 확인창 닫힘 확인 (대기 {i * 50}ms)");
+                return true;
+            }
+        }
+
+        Debug.WriteLine($"[{m_Context.AppName}] 확인창이 닫히지 않음");
         return false;
     }
 

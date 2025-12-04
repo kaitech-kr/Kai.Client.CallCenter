@@ -387,6 +387,18 @@ public class QueueController
         _ordersOnecall.Clear();
         Debug.WriteLine($"[AutoAllocQueue] 모든 큐 클리어 완료");
     }
+
+    /// <summary>
+    /// 특정 앱의 큐만 클리어
+    /// </summary>
+    /// <param name="networkName">네트워크 이름 (StdConst_Network)</param>
+    public void ClearQueue(string networkName)
+    {
+        var queue = GetQueue(networkName);
+        int count = queue.Count;
+        queue.Clear();
+        Debug.WriteLine($"[AutoAllocQueue] {networkName} 큐 클리어 완료 ({count}건)");
+    }
     #endregion
 
     #region Helper - 페이지 계산

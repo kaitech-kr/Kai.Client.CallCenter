@@ -65,7 +65,7 @@ public class CommonVars
     public static string s_sKaiLogId = "";
     public static string s_sKaiLogPw = "";
     //public static bool s_bAutoReceipt = true; // 나중에 적재방식 수정...
-    public static bool s_bAutoAlloc = true; // 나중에 적재방식 수정...
+    public static bool s_bAutoAlloc = false; // appsettings.json으로 이동 (LoadExternalAppsConfig에서 로드)
 
     // Pointer
     public static SplashWnd s_SplashWnd = null; //  SplashWnd 

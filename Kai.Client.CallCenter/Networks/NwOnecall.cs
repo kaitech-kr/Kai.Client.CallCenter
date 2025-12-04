@@ -34,10 +34,10 @@ public class NwOnecall : IExternalApp
     {
         try
         {
-            Debug.WriteLine($"[{AppName}] InitializeAsync 시작: Id={s_Id}");
+            //Debug.WriteLine($"[{AppName}] InitializeAsync 시작: Id={s_Id}");
 
             // 1. UpdaterWorkAsync - 앱 실행 및 Splash 윈도우 찾기
-            Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 호출...");
+            //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 호출...");
             var resultErr = await m_Context.AppAct.UpdaterWorkAsync(s_AppPath);
             if (resultErr != null)
             {
@@ -47,7 +47,7 @@ public class NwOnecall : IExternalApp
             Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 성공");
 
             // 2. SplashWorkAsync - 로그인 처리
-            Debug.WriteLine($"[{AppName}] SplashWorkAsync 호출...");
+            //Debug.WriteLine($"[{AppName}] SplashWorkAsync 호출...");
             resultErr = await m_Context.AppAct.SplashWorkAsync(AppName, s_Id, s_Pw);
             if (resultErr != null)
             {
@@ -58,10 +58,10 @@ public class NwOnecall : IExternalApp
 
             // 3. MainWndAct 생성
             m_Context.MainWndAct = new OnecallAct_MainWnd(m_Context);
-            Debug.WriteLine($"[{AppName}] MainWndAct 생성 완료");
+            //Debug.WriteLine($"[{AppName}] MainWndAct 생성 완료");
 
             // 4. InitAsync - 메인 윈도우 초기화 (찾기 + 이동 + 최대화 + 자식 윈도우)
-            Debug.WriteLine($"[{AppName}] MainWnd InitAsync 호출...");
+            //Debug.WriteLine($"[{AppName}] MainWnd InitAsync 호출...");
             resultErr = await m_Context.MainWndAct.InitAsync();
             if (resultErr != null)
             {
@@ -72,9 +72,9 @@ public class NwOnecall : IExternalApp
 
             // 5. RcptRegPageAct 생성 및 초기화
             m_Context.RcptRegPageAct = new OnecallAct_RcptRegPage(m_Context);
-            Debug.WriteLine($"[{AppName}] RcptRegPageAct 생성 완료");
+            //Debug.WriteLine($"[{AppName}] RcptRegPageAct 생성 완료");
 
-            Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 호출...");
+            //Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 호출...");
             resultErr = await m_Context.RcptRegPageAct.InitializeAsync();
             if (resultErr != null)
             {

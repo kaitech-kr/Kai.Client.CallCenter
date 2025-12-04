@@ -3,7 +3,7 @@ using Draw = System.Drawing;
 
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 
 using Kai.Client.CallCenter.Classes;
 using static Kai.Client.CallCenter.Classes.CommonVars;
@@ -39,7 +39,7 @@ public class InsungsAct_App
     public InsungsAct_App(InsungContext context)
     {
         m_Context = context ?? throw new ArgumentNullException(nameof(context));
-        Debug.WriteLine($"[InsungsAct_App] 생성자 호출: AppName={m_Context.AppName}");
+        //Debug.WriteLine($"[InsungsAct_App] 생성자 호출: AppName={m_Context.AppName}");
     }
     #endregion
 
@@ -151,7 +151,7 @@ public class InsungsAct_App
                     $"[{m_Context.AppName}/SplashWork]스플래시윈도 찾기실패[{m_Context.FileInfo.Splash_TopWnd_sWndName}]",
                     "InsungsAct_App/SplashWorkAsync_01", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_App] 스플래시 윈도우 찾음: {m_Context.MemInfo.Splash.TopWnd_hWnd}");
+            //Debug.WriteLine($"[InsungsAct_App] 스플래시 윈도우 찾음: {m_Context.MemInfo.Splash.TopWnd_hWnd}");
 
             // 2. TopMost 설정 및 화면 중앙으로 이동
             Std32Window.SetWindowTopMost(m_Context.MemInfo.Splash.TopWnd_hWnd, true);
@@ -174,7 +174,7 @@ public class InsungsAct_App
                     $"[{m_Context.AppName}/SplashWork]스플래시윈도 위치이동실패", "InsungsAct_App/SplashWorkAsync_02", bWrite, bMsgBox);
             }
             await Task.Delay(1000); // 1초 대기
-            Debug.WriteLine($"[InsungsAct_App] 스플래시 윈도우 중앙 이동 완료");
+            //Debug.WriteLine($"[InsungsAct_App] 스플래시 윈도우 중앙 이동 완료");
 
             // 3. ThreadId, ProcessId 얻기
             m_Context.MemInfo.Splash.TopWnd_uThreadId = Std32Window.GetWindowThreadProcessId(
@@ -187,7 +187,7 @@ public class InsungsAct_App
                     $"[{m_Context.AppName}/SplashWork]프로세스 찾기실패",
                     "InsungsAct_App/SplashWorkAsync_03", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_App] ThreadId={m_Context.MemInfo.Splash.TopWnd_uThreadId}, ProcessId={m_Context.MemInfo.Splash.TopWnd_uProcessId}");
+            //Debug.WriteLine($"[InsungsAct_App] ThreadId={m_Context.MemInfo.Splash.TopWnd_uThreadId}, ProcessId={m_Context.MemInfo.Splash.TopWnd_uProcessId}");
 
             // 4. ID/PW 입력창 핸들 얻기
             // 아이디 텍스트박스의 핸들을 얻는다
@@ -200,7 +200,7 @@ public class InsungsAct_App
                     $"[{m_Context.AppName}/SplashWork]아이디 입력창 찾기실패",
                     "InsungsAct_App/SplashWorkAsync_04", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_App] 아이디 입력창 찾음: {m_Context.MemInfo.Splash.IdWnd_hWnd}");
+            //Debug.WriteLine($"[InsungsAct_App] 아이디 입력창 찾음: {m_Context.MemInfo.Splash.IdWnd_hWnd}");
 
             // 비밀번호 텍스트박스의 핸들을 얻는다
             m_Context.MemInfo.Splash.PwWnd_hWnd =
@@ -212,7 +212,7 @@ public class InsungsAct_App
                     $"[{m_Context.AppName}/SplashWork]비밀번호 입력창 찾기실패",
                     "InsungsAct_App/SplashWorkAsync_05", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_App] 비밀번호 입력창 찾음: {m_Context.MemInfo.Splash.PwWnd_hWnd}");
+            //Debug.WriteLine($"[InsungsAct_App] 비밀번호 입력창 찾음: {m_Context.MemInfo.Splash.PwWnd_hWnd}");
 
             #region 5. 로그인 작업           
             StdWin32.BlockInput(true); // BlockInput - 마우스와 키보드 입력을 차단한다

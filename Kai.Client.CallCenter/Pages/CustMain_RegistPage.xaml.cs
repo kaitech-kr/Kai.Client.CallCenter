@@ -7,10 +7,9 @@ using System.Text.RegularExpressions;
 using Kai.Common.StdDll_Common;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using Kai.Common.NetDll_WpfCtrl.NetUtils;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
-using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using Kai.Client.CallCenter.Windows;

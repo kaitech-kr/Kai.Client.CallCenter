@@ -38,9 +38,14 @@ public abstract class InsungAutoAllocBase : IExternalApp
     protected abstract string INFO_FILE_NAME { get; }
 
     /// <summary>
-    /// Static 설정 - Use 플래그
+    /// Static 설정 - Use 플래그 (Get)
     /// </summary>
     protected abstract bool GetStaticUse();
+
+    /// <summary>
+    /// Static 설정 - Use 플래그 (Set)
+    /// </summary>
+    protected abstract void SetStaticUse(bool value);
 
     /// <summary>
     /// Static 설정 - ID
@@ -75,6 +80,12 @@ public abstract class InsungAutoAllocBase : IExternalApp
     /// 자동배차 할일 없음 카운터 (60회마다 조회버튼 클릭)
     /// </summary>
     private long m_lRestCount = 0;
+
+    /// <summary>
+    /// Datagrid 연속 실패 카운터 (N회 연속 실패 시 앱 비활성화)
+    /// </summary>
+    private int m_nDatagridFailCount = 0;
+    private const int MAX_DATAGRID_FAIL_COUNT = 3; // 3회 연속 실패 시 비활성화
     #endregion
 
     #region Dispose
@@ -251,12 +262,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
             Debug.WriteLine($"[{APP_NAME}] TopMost 설정 완료");
             #endregion
 
-            // TODO: 나머지 자동배차 로직 구현
-            await Task.Delay(1000, ctrl.Token); // 임시 테스트
-
-            return new StdResult_Status(StdResult.Success);
-
-            #region 2. Local Variables 초기화 (테스트용 주석처리)
+            #region 2. Local Variables 초기화
             // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)
             string queueName = GetQueueName();
             List<AutoAllocModel> listFromController = ExternalAppController.QueueManager.DequeueAllToList(queueName);
@@ -316,8 +322,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
                 m_lRestCount += 1;
                 if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
                 {
-                    // TODO: Helper 함수 구현 필요 (세션 3에서 설계됨)
-                    // await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
+                    await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
                     await Task.Delay(c_nWaitLong, ctrl.Token);
                 }
 
@@ -356,9 +361,26 @@ public abstract class InsungAutoAllocBase : IExternalApp
 
             if (!bDatagridExists)
             {
-                Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우를 찾을 수 없음");
-                return new StdResult_Status(StdResult.Fail, "Datagrid 윈도우를 찾을 수 없습니다.", $"{APP_NAME}/AutoAllocAsync_03");
+                m_nDatagridFailCount++;
+                Debug.WriteLine($"[{APP_NAME}] Datagrid 윈도우를 찾을 수 없음 (연속 실패: {m_nDatagridFailCount}/{MAX_DATAGRID_FAIL_COUNT})");
+
+                // 큐 비우기
+                ExternalAppController.QueueManager.ClearQueue(queueName);
+                Debug.WriteLine($"[{APP_NAME}] 큐 비움");
+
+                // N회 연속 실패 시 앱 비활성화
+                if (m_nDatagridFailCount >= MAX_DATAGRID_FAIL_COUNT)
+                {
+                    Debug.WriteLine($"[{APP_NAME}] {MAX_DATAGRID_FAIL_COUNT}회 연속 실패 → 앱 비활성화");
+                    SetStaticUse(false);
+                    return new StdResult_Status(StdResult.Fail, $"Datagrid {MAX_DATAGRID_FAIL_COUNT}회 연속 실패로 앱 비활성화", $"{APP_NAME}/AutoAllocAsync_03_Disabled");
+                }
+
+                return new StdResult_Status(StdResult.Skip, "Datagrid 윈도우를 찾을 수 없습니다.", $"{APP_NAME}/AutoAllocAsync_03");
             }
+
+            // Datagrid 찾았으면 실패 카운터 리셋
+            m_nDatagridFailCount = 0;
             #endregion
 
             #region 4. Created Order 처리 (신규)
@@ -410,11 +432,9 @@ public abstract class InsungAutoAllocBase : IExternalApp
             }
             #endregion
 
-            #region 5. Updated, NotChanged Order 처리 (기존)
+            #region 5. 기존주문 처리 (listEtcGroup)
             if (listEtcGroup.Count > 0)
             {
-                //Debug.WriteLine($"[{APP_NAME}] Region 5: 기존 주문 관리 시작 (총 {listEtcGroup.Count}건)");
-
                 #region 5-1. 조회버튼 클릭 + 총계 확인
                 string sThisTotCount = string.Empty;
                 for (int i = 0; i < c_nRepeatNormal; i++)
@@ -472,7 +492,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
                 #region 5-3. 페이지별 리스트 검사 및 처리
                 for (int pageIdx = 0; pageIdx < nTotPage; pageIdx++)
                 {
-                    #region 사전작업
+                    #region 1. 사전작업
                     await ctrl.WaitIfPausedOrCancelledAsync();
 
                     // 현재 페이지가 맞는지 체크
@@ -504,19 +524,18 @@ public abstract class InsungAutoAllocBase : IExternalApp
                         Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} 유효 로우 갯수 얻기 실패: {resultInt.sErr}");
                         return new StdResult_Status(StdResult.Fail, resultInt.sErr, resultInt.sPos);
                     }
-                    //Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: 유효 로우 {resultInt}개");
+                    Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: 유효 로우 {resultInt.nResult}개");
 
                     Draw.Rectangle[,] rects = m_Context.MemInfo.RcptPage.DG오더_RelChildRects;
 
                     // 마지막 페이지의 경우 시작 인덱스 계산 (페이지가 2개 이상일 때만)
                     int remainder = nThisTotCount % InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
-                    int startIndex = (nTotPage > 1 && pageIdx == nTotPage - 1 && remainder != 0) ?
-                        InsungsInfo_File.접수등록Page_DG오더_dataRowCount - remainder : 0;
+                    int startIndex = (nTotPage > 1 && pageIdx == nTotPage - 1 && remainder != 0) ? InsungsInfo_File.접수등록Page_DG오더_dataRowCount - remainder : 0;
 
                     //Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}/{nTotPage}: startIndex={startIndex}, remainder={remainder}, resultInt.nResult={resultInt.nResult}");
                     #endregion
 
-                    #region 본작업
+                    #region 2. 로우별 처리
                     for (int i = startIndex, y = i + 2; i < resultInt.nResult; i++, y++)
                     {
                         #region 찾기
@@ -525,52 +544,38 @@ public abstract class InsungAutoAllocBase : IExternalApp
                         // 첫 페이지 첫 로우면 선택 확인 및 처리
                         if (pageIdx == 0 && i == startIndex)
                         {
-                            // 반전 체크용 셀 캡처 (두 번째 컬럼)
+                            // bmpPage에서 직접 반전 여부 확인 (별도 캡처 불필요)
                             Draw.Rectangle rectVerify = rects[1, y];
-                            Draw.Bitmap bmpVerify = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd, rectVerify);
+                            bool isSelected = OfrService.IsInvertedSelection(bmpPage, rectVerify);
 
-                            if (bmpVerify != null)
+                            if (isSelected)
                             {
-                                try
+                                // 이미 선택됨 → RGB 반전 OFR
+                                bInvertRgb = true;
+                                //Debug.WriteLine($"[{APP_NAME}] 첫 로우 이미 선택됨 (RGB 반전 OFR)");
+                            }
+                            else
+                            {
+                                // 선택 안됨 → 클릭 후 재캡처
+                                Debug.WriteLine($"[{APP_NAME}] 첫 로우 선택 안됨 → 클릭 후 재캡처");
+
+                                Draw.Rectangle rcFirstRow = rects[3, y]; // 4번째 컬럼
+                                Draw.Point ptClick = new Draw.Point(rcFirstRow.Left + 5, rcFirstRow.Top + 5);
+                                await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Context.MemInfo.RcptPage.DG오더_hWnd, ptClick);
+                                await Task.Delay(100, ctrl.Token);
+
+                                // 재캡처
+                                bmpPage?.Dispose();
+                                bmpPage = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
+
+                                if (bmpPage == null)
                                 {
-                                    // 반전 상태 체크
-                                    Draw.Rectangle rectInBmp = new Draw.Rectangle(0, 0, rectVerify.Width, rectVerify.Height);
-                                    bool isSelected = OfrService.IsInvertedSelection(bmpVerify, rectInBmp);
-
-                                    if (isSelected)
-                                    {
-                                        // 이미 선택됨 → RGB 반전 OFR
-                                        bInvertRgb = true;
-                                        //Debug.WriteLine($"[{APP_NAME}] 첫 로우 이미 선택됨 (RGB 반전 OFR)");
-                                    }
-                                    else
-                                    {
-                                        // 선택 안됨 → 클릭 후 재캡처
-                                        Debug.WriteLine($"[{APP_NAME}] 첫 로우 선택 안됨 → 클릭 후 재캡처");
-
-                                        Draw.Rectangle rcFirstRow = rects[3, y]; // 4번째 컬럼
-                                        Draw.Point ptClick = new Draw.Point(rcFirstRow.Left + 5, rcFirstRow.Top + 5);
-                                        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Context.MemInfo.RcptPage.DG오더_hWnd, ptClick);
-                                        await Task.Delay(100, ctrl.Token);
-
-                                        // 재캡처
-                                        bmpPage?.Dispose();
-                                        bmpPage = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
-
-                                        if (bmpPage == null)
-                                        {
-                                            Debug.WriteLine($"[{APP_NAME}] 첫 로우 클릭 후 재캡처 실패");
-                                            return new StdResult_Status(StdResult.Fail, "첫 로우 클릭 후 재캡처 실패", $"{APP_NAME}/AutoAllocAsync_Region5_3_ReCapture");
-                                        }
-
-                                        bInvertRgb = true;
-                                        Debug.WriteLine($"[{APP_NAME}] 첫 로우 선택 후 재캡처 완료 (RGB 반전 OFR)");
-                                    }
+                                    Debug.WriteLine($"[{APP_NAME}] 첫 로우 클릭 후 재캡처 실패");
+                                    return new StdResult_Status(StdResult.Fail, "첫 로우 클릭 후 재캡처 실패", $"{APP_NAME}/AutoAllocAsync_Region5_3_ReCapture");
                                 }
-                                finally
-                                {
-                                    bmpVerify.Dispose();
-                                }
+
+                                bInvertRgb = true;
+                                Debug.WriteLine($"[{APP_NAME}] 첫 로우 선택 후 재캡처 완료 (RGB 반전 OFR)");
                             }
                         }
 
@@ -692,7 +697,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
                     }
                     #endregion
 
-                    // Bitmap 해제
+                    #region 3. 완료작업
                     bmpPage?.Dispose();
 
                     // 조기 탈출: 모든 항목을 처리했으면 (로우 루프에서 이미 체크됨)
@@ -706,16 +711,19 @@ public abstract class InsungAutoAllocBase : IExternalApp
                     {
                         // 다음 페이지로 이동
                         await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(
-                            m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel스크롤Down);
+                            m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel페이지Down);
                         await Task.Delay(c_nWaitNormal, ctrl.Token);
                         Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1} -> {pageIdx + 2} 이동");
-                    }
+                    } 
+                    #endregion
                 }
                 #endregion
 
-                // Region 5 완료
+                #region 5-4. 통합 결과 처리
                 //Debug.WriteLine($"[{APP_NAME}] Region 5 완료");
+                #endregion
 
+                #region 5-5. 정리작업
                 // 처리 못한 항목 (DG에서 찾지 못함 = 이미 배차/완료됨)
                 if (listEtcGroup.Count > 0)
                 {
@@ -726,10 +734,11 @@ public abstract class InsungAutoAllocBase : IExternalApp
                         Debug.WriteLine($"[{APP_NAME}]   [{idx}] KeyCode={item.KeyCode}, StateFlag={item.StateFlag}, Seqno={GetInsungSeqno(item) ?? "(null)"}");
                     }
 
-                    ErrMsgBox($"[{APP_NAME}] DG에서 찾지 못한 항목: {listEtcGroup.Count}건 (배차/완료된 것으로 추정, 재적재 안 함)");
+                    Debug.WriteLine($"[{APP_NAME}] DG에서 찾지 못한 항목: {listEtcGroup.Count}건 (배차/완료된 것으로 추정, 재적재 안 함)");
                     // 재적재 안 함 (버림)
                 }
                 listEtcGroup.Clear();
+                #endregion
             }
 
             #endregion

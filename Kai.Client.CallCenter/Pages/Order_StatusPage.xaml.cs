@@ -10,7 +10,6 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 using System.Diagnostics;
-using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using static Kai.Client.CallCenter.Classes.CommonVars;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using Wnd = System.Windows;
 
 namespace Kai.Client.CallCenter.Pages;

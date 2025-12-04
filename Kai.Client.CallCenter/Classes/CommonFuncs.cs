@@ -56,6 +56,11 @@ public class CommonFuncs : CommonVars
     {
         Debug.WriteLine("[CommonFuncs] LoadExternalAppsConfig 실행");
 
+        // AutoAlloc 설정 로드
+        string sAutoAlloc = JsonFileManager.GetValue("ExternalApps:AutoAlloc");
+        s_bAutoAlloc = StdConvert.StringToBool(sAutoAlloc);
+        Debug.WriteLine($"[CommonFuncs] AutoAlloc 설정 로드: {s_bAutoAlloc}");
+
         // Insung01 설정 로드
         string sUse = JsonFileManager.GetValue("ExternalApps:Insung01:Use");
         Debug.WriteLine($"[CommonFuncs] sUse 확인: '{sUse}'");

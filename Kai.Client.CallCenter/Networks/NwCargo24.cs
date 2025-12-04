@@ -6,6 +6,7 @@ using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 
 using Kai.Client.CallCenter.Networks.NwCargo24s;
 using Kai.Client.CallCenter.Classes;
@@ -100,7 +101,7 @@ public class NwCargo24 : IExternalApp
             Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 성공");
 
             Debug.WriteLine($"[{AppName}] InitializeAsync 완료");
-            return new StdResult_Status(StdResult.Success, string.Empty, $"{AppName}/InitializeAsync");
+            return new StdResult_Status(StdResult.Success);
         }
         catch (Exception ex)
         {
@@ -111,6 +112,8 @@ public class NwCargo24 : IExternalApp
 
     public async Task<StdResult_Status> AutoAllocAsync(long lAllocCount, CancelTokenControl ctrl)
     {
+        Draw.Bitmap bmpPage = null;
+
         try
         {
             Debug.WriteLine($"\n-----------------[{AppName}] AutoAllocAsync 시작 - Count={lAllocCount}--------------------------");
@@ -271,6 +274,10 @@ public class NwCargo24 : IExternalApp
                             ExternalAppController.QueueManager.ReEnqueue(item, queueName, item.StateFlag);
                             break;
 
+                        case CEnum_AutoAllocProcessResult.SuccessAndComplete:
+                            Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 비적재: {item.KeyCode}");
+                            break;
+
                         case CEnum_AutoAllocProcessResult.FailureAndDiscard:
                             Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 등록 실패 (치명적): {item.KeyCode} - {resultAuto.sErr}");
                             Environment.Exit(1);
@@ -345,8 +352,7 @@ public class NwCargo24 : IExternalApp
                 if (nThisTotCount > nRowCount)
                 {
                     nTotPage = nThisTotCount / nRowCount;
-                    if ((nThisTotCount % nRowCount) > 0)
-                        nTotPage += 1;
+                    if ((nThisTotCount % nRowCount) > 0) nTotPage += 1;
                 }
 
                 Debug.WriteLine($"[{AppName}] 페이지 산정: 총계={nThisTotCount}, 페이지당={nRowCount}, 총페이지={nTotPage}");
@@ -357,25 +363,21 @@ public class NwCargo24 : IExternalApp
                 // 청크(100행) 단위는 다루지 않음 - 현재 로드된 데이터(최대 4페이지)만 처리
                 for (int pageIdx = 0; pageIdx < nTotPage; pageIdx++)
                 {
-                    // 현재 페이지의 유효 로우 수 계산
-                    int nValidRowCount;
-                    if (pageIdx < nTotPage - 1)
-                    {
-                        // 마지막 페이지가 아니면 nRowCount
-                        nValidRowCount = nRowCount;
-                    }
-                    else
-                    {
-                        // 마지막 페이지: 나머지 (0이면 nRowCount)
-                        nValidRowCount = nThisTotCount % nRowCount;
-                        if (nValidRowCount == 0) nValidRowCount = nRowCount;
-                    }
+                    #region 1. 사전작업
+                    await ctrl.WaitIfPausedOrCancelledAsync();
 
-                    // 5-3-1. 현재 페이지 확인
+                    // 유효 로우 수 확인
+                    StdResult_Int resultValidRow = m_Context.RcptRegPageAct.GetValidRowCount();
+                    if (resultValidRow.nResult <= 0)
+                    {
+                        Debug.WriteLine($"[{AppName}] 페이지[{pageIdx}] 유효 로우 없음: {resultValidRow.sErr}");
+                        break;
+                    }
+                    int nValidRowCount = resultValidRow.nResult;
+
+                    // 페이지 검증 (5-3-1)
                     int expectedFirstNum = Cargo24sAct_RcptRegPage.GetExpectedFirstRowNum(nThisTotCount, nRowCount, pageIdx);
                     int actualFirstNum = await m_Context.RcptRegPageAct.ReadFirstRowNumAsync(nValidRowCount);
-
-                    Debug.WriteLine($"[{AppName}] 페이지[{pageIdx}] 체크: 유효로우={nValidRowCount}, 예상={expectedFirstNum}, 실제={actualFirstNum}");
 
                     if (actualFirstNum != expectedFirstNum)
                     {
@@ -383,17 +385,126 @@ public class NwCargo24 : IExternalApp
                         Debug.WriteLine($"[{AppName}] 페이지 불일치 → 이동 필요");
                     }
 
-                    // 5-3-2. Row별 순번 읽기 및 listEtcGroup 매칭
-                    // TODO: 구현 예정
+                    // 페이지 전체 캡처
+                    bmpPage?.Dispose();
+                    bmpPage = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
+                    if (bmpPage == null)
+                    {
+                        Debug.WriteLine($"[{AppName}] 페이지[{pageIdx}] 캡처 실패");
+                        break;
+                    }
+                    #endregion
 
-                    // 5-3-3. 매칭된 Row 배차 처리
-                    // TODO: 구현 예정
+                    #region 2. 로우별 처리
+                    for (int rowIdx = 0; rowIdx < nValidRowCount; rowIdx++)
+                    {
+                        #region 찾기
+                        await ctrl.WaitIfPausedOrCancelledAsync();
+
+                        // 화물번호 읽기 (bmpPage 기반)
+                        StdResult_String resultSeqno = await m_Context.RcptRegPageAct.Get화물번호Async(bmpPage, rowIdx);
+                        if (string.IsNullOrEmpty(resultSeqno.strResult))
+                        {
+                            Debug.WriteLine($"[{AppName}] 페이지[{pageIdx}] 로우[{rowIdx}] 화물번호 읽기 실패");
+                            return new StdResult_Status(StdResult.Fail, $"화물번호 읽기 실패: 페이지[{pageIdx}] 로우[{rowIdx}]", $"{AppName}/AutoAllocAsync_5-3_SeqnoFail");
+                        }
+
+                        string seqno = resultSeqno.strResult;
+
+                        // listEtcGroup에서 아이템 찾기
+                        var foundItem = listEtcGroup.FirstOrDefault(item => GetCargo24Seqno(item) == seqno);
+                        if (foundItem == null) continue;
+
+                        Debug.WriteLine($"[{AppName}] ★ 매칭 성공! 로우[{rowIdx}] seqno={seqno}, KeyCode={foundItem.KeyCode}");
+
+                        // 상태 읽기
+                        StdResult_String resultStatus = await m_Context.RcptRegPageAct.Get상태Async(bmpPage, rowIdx);
+                        string status = resultStatus.strResult ?? resultStatus.sErr;
+                        Debug.WriteLine($"[{AppName}] 상태 OFR: {status}");
+                        #endregion
+
+                        #region Race condition 방지: 큐에서 최신 StateFlag 확인
+                        // AutoAllocAsync 시작 후 SignalR 업데이트가 발생할 수 있음 - 처리 직전에 큐에서 최신 상태를 확인하여 반영
+                        var latestItem = ExternalAppController.QueueManager.FindLatestInQueue(queueName, foundItem.KeyCode);
+                        if (latestItem != null)
+                        {
+                            foundItem.StateFlag = latestItem.StateFlag;
+                            foundItem.NewOrder = latestItem.NewOrder;
+                            Debug.WriteLine($"[{AppName}] 최신 StateFlag 적용: KeyCode={foundItem.KeyCode}, StateFlag={foundItem.StateFlag}");
+                        }
+                        #endregion
+
+                        #region StateFlag별 분기
+                        CommonResult_AutoAllocProcess resultAuto;
+
+                        if (foundItem.StateFlag == PostgService_Common_OrderState.NotChanged)
+                        {
+                            // TODO: Cargo24 상태 변경 확인
+                            Debug.WriteLine($"[{AppName}] [TODO] NotChanged 처리: KeyCode={foundItem.KeyCode}");
+                            resultAuto = CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+                        }
+                        else if ((foundItem.StateFlag & PostgService_Common_OrderState.Existed_WithSeqno) != 0 ||
+                                 (foundItem.StateFlag & PostgService_Common_OrderState.Updated_Assume) != 0)
+                        {
+                            // Kai 기준으로 Cargo24 업데이트
+                            var dgInfo = new CommonResult_AutoAllocDatagrid(rowIdx, status, false, bmpPage);
+                            resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiUpdated(foundItem, dgInfo, ctrl);
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"[{AppName}] 알 수 없는 StateFlag: {foundItem.StateFlag}");
+                            resultAuto = CommonResult_AutoAllocProcess.FailureAndDiscard($"알 수 없는 StateFlag", "5-3-3");
+                        }
+                        #endregion
+
+                        #region 통합 결과 처리
+                        switch (resultAuto.ResultType)
+                        {
+                            case CEnum_AutoAllocProcessResult.SuccessAndReEnqueue:
+                            case CEnum_AutoAllocProcessResult.FailureAndRetry:
+                                ExternalAppController.QueueManager.ReEnqueue(foundItem, queueName, PostgService_Common_OrderState.NotChanged);
+                                Debug.WriteLine($"[{AppName}] 재적재: KeyCode={foundItem.KeyCode}");
+                                break;
+
+                            case CEnum_AutoAllocProcessResult.SuccessAndComplete:
+                            case CEnum_AutoAllocProcessResult.FailureAndDiscard:
+                                Debug.WriteLine($"[{AppName}] 비적재: KeyCode={foundItem.KeyCode}");
+                                break;
+
+                            default:
+                                Debug.WriteLine($"[{AppName}] [TODO] 미처리 ResultType: {resultAuto.ResultType}");
+                                break;
+                        }
+                        #endregion
+
+                        #region 정리작업
+                        listEtcGroup.RemoveAll(item => item.KeyCode == foundItem.KeyCode);
+
+                        if (listEtcGroup.Count == 0)
+                        {
+                            Debug.WriteLine($"[{AppName}] listEtcGroup 모두 처리 → 루프 종료");
+                            break;
+                        }
+                        #endregion
+                    }
+                    #endregion
+
+                    #region 3. 완료작업
+                    bmpPage?.Dispose();
+
+                    #endregion
                 }
+                #endregion
+
+                #region 5-4. 통합 결과 처리
+                #endregion
+
+                #region 5-5. 정리작업
                 #endregion
             }
             #endregion
 
-            return new StdResult_Status(StdResult.Success, string.Empty, $"{AppName}/AutoAllocAsync");
+            return new StdResult_Status(StdResult.Success);
         }
         catch (OperationCanceledException)
         {

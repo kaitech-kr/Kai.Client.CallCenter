@@ -3,7 +3,7 @@ using Draw = System.Drawing;
 
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 
 using Kai.Client.CallCenter.Classes;
 using static Kai.Client.CallCenter.Classes.CommonVars;
@@ -39,7 +39,7 @@ public class InsungsAct_MainWnd
     public InsungsAct_MainWnd(InsungContext context)
     {
         m_Context = context ?? throw new ArgumentNullException(nameof(context));
-        Debug.WriteLine($"[InsungsAct_MainWnd] 생성자 호출: AppName={m_Context.AppName}");
+        //Debug.WriteLine($"[InsungsAct_MainWnd] 생성자 호출: AppName={m_Context.AppName}");
     }
     #endregion
 
@@ -51,7 +51,7 @@ public class InsungsAct_MainWnd
     {
         try
         {
-            Debug.WriteLine($"[InsungsAct_MainWnd] 초기화 시작");
+            //Debug.WriteLine($"[InsungsAct_MainWnd] 초기화 시작");
 
             // 1. 메인 윈도우 찾기 (60초 대기)
             for (int i = 0; i < 600; i++)
@@ -72,11 +72,11 @@ public class InsungsAct_MainWnd
                     $"[{m_Context.AppName}/MainWnd]메인윈도 찾기실패",
                     "InsungsAct_MainWnd/InitializeAsync_01", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_MainWnd] 메인 윈도우 찾음: {m_Main.TopWnd_hWnd}");
+            //Debug.WriteLine($"[InsungsAct_MainWnd] 메인 윈도우 찾음: {m_Main.TopWnd_hWnd}");
 
             // 2. TopMost 설정 및 해제
             await Std32Window.SetWindowTopMostAndReleaseAsync(m_Main.TopWnd_hWnd);
-            Debug.WriteLine($"[InsungsAct_MainWnd] TopMost 설정 및 해제 완료");
+            //Debug.WriteLine($"[InsungsAct_MainWnd] TopMost 설정 및 해제 완료");
 
             // 3. Minimize All New Windows - If in 3Sec Find New Window
             Std32Process.GetWindowThreadProcessId(m_Main.TopWnd_hWnd, out uint uProcessId);
@@ -127,7 +127,7 @@ public class InsungsAct_MainWnd
                     }
                 }
             }
-            Debug.WriteLine($"[InsungsAct_MainWnd] 새 팝업창 처리 완료");
+            //Debug.WriteLine($"[InsungsAct_MainWnd] 새 팝업창 처리 완료");
 
             // 4. 이동 및 최대화
             await Task.Run(() =>
@@ -157,7 +157,7 @@ public class InsungsAct_MainWnd
                     "InsungsAct_MainWnd/InitializeAsync_03", bWrite, bMsgBox);
             }
             await Task.Delay(c_nWaitVeryLong);
-            Debug.WriteLine($"[InsungsAct_MainWnd] 메인 윈도우 이동 및 최대화 완료");
+            //Debug.WriteLine($"[InsungsAct_MainWnd] 메인 윈도우 이동 및 최대화 완료");
 
             // 6. 차일드 윈도우 정보 수집
             m_Main.FirstLayer_ChildWnds = Std32Window.GetChildWindows_FirstLayer(m_Main.TopWnd_hWnd);
@@ -166,7 +166,7 @@ public class InsungsAct_MainWnd
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
                     $"[{m_Context.AppName}/MainWnd]자식윈도 못찾음", "InsungsAct_MainWnd/InitializeAsync_04", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_MainWnd] 차일드 윈도우 개수: {m_Main.FirstLayer_ChildWnds.Count}");
+            //Debug.WriteLine($"[InsungsAct_MainWnd] 차일드 윈도우 개수: {m_Main.FirstLayer_ChildWnds.Count}");
 
             // 7. MainMenu, BarMenu, MdiClient 찾기
             m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_MainMenu_rcRel);
@@ -189,7 +189,7 @@ public class InsungsAct_MainWnd
                 return CommonFuncs_StdResult.ErrMsgResult_Error(
                     $"[{m_Context.AppName}/MainWnd]MdiClient 못찾음", "InsungsAct_MainWnd/InitializeAsync_07", bWrite, bMsgBox);
             }
-            Debug.WriteLine($"[InsungsAct_MainWnd] MainMenu, BarMenu, MdiClient 찾기 완료");
+            //Debug.WriteLine($"[InsungsAct_MainWnd] MainMenu, BarMenu, MdiClient 찾기 완료");
 
             Debug.WriteLine($"[InsungsAct_MainWnd] 초기화 완료");
             return null; // 성공
@@ -216,7 +216,7 @@ public class InsungsAct_MainWnd
 
         // BarMenu의 상대 좌표로 마우스 클릭
         await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Main.WndInfo_BarMenu.hWnd, m_FileInfo.Main_BarMenu_pt접수등록);
-        Debug.WriteLine($"[InsungsAct_MainWnd] 접수등록 바메뉴 클릭: {m_FileInfo.Main_BarMenu_pt접수등록}");
+        //Debug.WriteLine($"[InsungsAct_MainWnd] 접수등록 바메뉴 클릭: {m_FileInfo.Main_BarMenu_pt접수등록}");
     }
     #endregion
 

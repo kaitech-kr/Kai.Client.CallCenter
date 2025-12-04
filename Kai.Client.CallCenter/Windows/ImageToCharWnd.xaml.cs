@@ -1,21 +1,12 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Draw = System.Drawing;
 
-using static Kai.Common.FrmDll_FormCtrl.FormFuncs;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
-using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
-using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Results;
-
-using Kai.Client.CallCenter.OfrWorks;
-using static Kai.Client.CallCenter.Classes.CommonVars;
-
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable
