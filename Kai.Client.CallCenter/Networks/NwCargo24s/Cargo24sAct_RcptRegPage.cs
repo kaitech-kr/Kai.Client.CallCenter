@@ -218,6 +218,10 @@ public partial class Cargo24sAct_RcptRegPage
             if (err조회 != null) return err조회;
             m_RcptPage.CmdBtn_hWnd조회 = hWnd조회;
 
+            // 조회 버튼 밝기 저장 (로딩 완료 판단용)
+            m_RcptPage.CmdBtn_nBrightness조회 = OfrService.GetPixelBrightnessFrmWndHandle(
+                hWnd조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회L);
+
             Debug.WriteLine($"[Cargo24sAct_RcptRegPage] CmdBtn 찾기 완료");
             #endregion
 
@@ -1110,13 +1114,13 @@ public partial class Cargo24sAct_RcptRegPage
             #endregion 기사정보 끝
 
             #region ===== 종료 작업 =====
-            // 저장 버튼 선택: OrderState가 "접수"이면 접수저장, 나머지는 대기저장
-            bool bReceiptState = (tbOrder.OrderState == "접수");
+            // 저장 버튼 선택: 공유이면 접수저장, 아니면 대기저장
+            bool bReceiptState = tbOrder.Share;
             Draw.Point ptRelSave = bReceiptState
                 ? m_FileInfo.접수등록Wnd_CmnBtn_ptRel접수저장
                 : m_FileInfo.접수등록Wnd_CmnBtn_ptRel대기저장;
 
-            Debug.WriteLine($"[{m_Context.AppName}] 종료 작업... OrderState={tbOrder.OrderState}, 저장모드={(bReceiptState ? "접수저장" : "대기저장")}");
+            Debug.WriteLine($"[{m_Context.AppName}] 종료 작업... Share={tbOrder.Share}, 저장모드={(bReceiptState ? "접수저장" : "대기저장")}");
 
             // 저장 버튼 핸들 얻기
             IntPtr hWndSave = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, ptRelSave);
@@ -1127,7 +1131,7 @@ public partial class Cargo24sAct_RcptRegPage
             }
 
             // 저장 버튼 클릭 및 창 닫힘 확인
-            bool bClosed = await SaveRegistWorkAsync(hWndSave, hWndPopup, ctrl, bReceiptState);
+            bool bClosed = await SaveAndWaitClosedAsync(hWndSave, hWndPopup, ctrl);
 
             if (bClosed)
             {
@@ -1224,6 +1228,21 @@ public partial class Cargo24sAct_RcptRegPage
             case "취소": // 취소가 아니면 화물취소 시키고 비적재
                 if (Cg24State != "취소") return await OpenEditPopupAsync(item, dgInfo.nIndex, "취소", null, ctrl);
                 else return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+
+            case "접수": // 같은 접수상태면 
+                if (Cg24State == "접수")
+                {
+                    return await OpenEditPopupAsync(item, dgInfo.nIndex, null, item.NewOrder, ctrl);
+                }
+                else
+                {
+                    MsgBox("화물24시가 접수이외의 상태이니, 연구가 필요합니다");
+                    return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+                }
+
+            default:
+                System.Windows.MessageBox.Show($"[TODO] kaiState={kaiState}, Cg24State={Cg24State}", "CheckIsOrderAsync_AssumeKaiUpdated");
+                break;
         }
 
         return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
@@ -1365,6 +1384,345 @@ public partial class Cargo24sAct_RcptRegPage
                     Debug.WriteLine($"[{m_Context.AppName}] 배차취소 완료 → 재적재");
                     return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
                 }
+            }
+
+            // 2. TbOrder를 전달 받았으면 - 현재 화면 값과 비교하여 선택적 수정
+            if (order != null)
+            {
+                int changeCount = 0;
+                StdResult_Status result;
+
+                #region ===== 0. 의뢰자 정보 선택적 수정 =====
+                // 의뢰자 고객명
+                IntPtr hWnd의뢰자고객명 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_의뢰자_ptRel고객명);
+                string current고객명 = Std32Window.GetWindowCaption(hWnd의뢰자고객명);
+                Debug.WriteLine($"[{m_Context.AppName}] 의뢰자_고객명 비교: 화면=\"{current고객명}\", DB=\"{order.CallCustName ?? ""}\"");
+                if ((order.CallCustName ?? "") != current고객명)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd의뢰자고객명, order.CallCustName ?? "", "의뢰자_고객명", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 의뢰자 전화 (숫자만 비교)
+                IntPtr hWnd의뢰자전화 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_의뢰자_ptRel고객전화);
+                string current전화 = Std32Window.GetWindowCaption(hWnd의뢰자전화);
+                string normalized화면전화 = StdConvert.MakePhoneNumberToDigit(current전화);
+                string normalizedDB전화 = StdConvert.MakePhoneNumberToDigit(order.CallTelNo ?? "");
+                Debug.WriteLine($"[{m_Context.AppName}] 의뢰자_전화 비교: 화면=\"{normalized화면전화}\", DB=\"{normalizedDB전화}\"");
+                if (normalizedDB전화 != normalized화면전화)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd의뢰자전화, order.CallTelNo ?? "", "의뢰자_전화", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 의뢰자 담당자 - 수정안된(아마 고객수정을 해야되지 않을까?)
+                //IntPtr hWnd의뢰자담당 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_의뢰자_ptRel담당자);
+                //string current담당 = Std32Window.GetWindowCaption(hWnd의뢰자담당);
+                //Debug.WriteLine($"[{m_Context.AppName}] 의뢰자_담당자 비교: 화면=\"{current담당}\", DB=\"{order.CallChargeName ?? ""}\"");
+                //if ((order.CallChargeName ?? "") != current담당)
+                //{
+                //    result = await WriteAndVerifyEditBoxAsync(hWnd의뢰자담당, order.CallChargeName ?? "", "의뢰자_담당자", ctrl);
+                //    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                //    changeCount++;
+                //}
+
+                Debug.WriteLine($"[{m_Context.AppName}] 의뢰자 영역 업데이트 완료 (변경: {changeCount}개)");
+                #endregion
+
+                #region ===== 1. 상차지 정보 선택적 수정 =====
+                // 1-1. 주소(위치) 변경 여부 확인
+                IntPtr hWnd상차위치 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_상차지_ptRel위치);
+                string current상차위치 = Std32Window.GetWindowCaption(hWnd상차위치);
+                bool need상차주소검색 = (order.StartDetailAddr ?? "") != current상차위치;
+                Debug.WriteLine($"[{m_Context.AppName}] 상차지_위치 비교: 화면=\"{current상차위치}\", DB=\"{order.StartDetailAddr ?? ""}\" → 주소검색={need상차주소검색}");
+
+                if (need상차주소검색)
+                {
+                    // 주소 변경 시: 조회버튼 클릭 → 주소검색 → 선택 → 관련 필드 덮어쓰기
+                    result = await SearchAndSelectAddressAsync(
+                        hWndPopup,
+                        m_FileInfo.접수등록Wnd_상차지_ptRel조회버튼,
+                        order.StartDetailAddr,
+                        "상차지",
+                        ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+
+                    // 위치 (상세주소)
+                    result = await WriteAndVerifyEditBoxAsync(hWnd상차위치, order.StartDetailAddr ?? "", "상차지_위치", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                }
+
+                // 주소 미변경 시: 개별 필드만 선택적 수정
+                // 고객명
+                IntPtr hWnd상차고객명 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_상차지_ptRel고객명);
+                string current상차고객명 = Std32Window.GetWindowCaption(hWnd상차고객명);
+                Debug.WriteLine($"[{m_Context.AppName}] 상차지_고객명 비교: 화면=\"{current상차고객명}\", DB=\"{order.StartCustName ?? ""}\"");
+                if ((order.StartCustName ?? "") != current상차고객명)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd상차고객명, order.StartCustName ?? "", "상차지_고객명", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 전화 (숫자만 비교)
+                IntPtr hWnd상차전화 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_상차지_ptRel전화);
+                string current상차전화 = Std32Window.GetWindowCaption(hWnd상차전화);
+                string normalized상차화면전화 = StdConvert.MakePhoneNumberToDigit(current상차전화);
+                string normalized상차DB전화 = StdConvert.MakePhoneNumberToDigit(order.StartTelNo ?? "");
+                Debug.WriteLine($"[{m_Context.AppName}] 상차지_전화 비교: 화면=\"{normalized상차화면전화}\", DB=\"{normalized상차DB전화}\"");
+                if (normalized상차DB전화 != normalized상차화면전화)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd상차전화, order.StartTelNo ?? "", "상차지_전화", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 부서명
+                IntPtr hWnd상차부서 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_상차지_ptRel부서명);
+                string current상차부서 = Std32Window.GetWindowCaption(hWnd상차부서);
+                Debug.WriteLine($"[{m_Context.AppName}] 상차지_부서명 비교: 화면=\"{current상차부서}\", DB=\"{order.StartDeptName ?? ""}\"");
+                if ((order.StartDeptName ?? "") != current상차부서)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd상차부서, order.StartDeptName ?? "", "상차지_부서명", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 담당자 - TODO: 수정 안될 수 있음 (의뢰자처럼)
+                IntPtr hWnd상차담당 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_상차지_ptRel담당자);
+                string current상차담당 = Std32Window.GetWindowCaption(hWnd상차담당);
+                Debug.WriteLine($"[{m_Context.AppName}] 상차지_담당자 비교: 화면=\"{current상차담당}\", DB=\"{order.StartChargeName ?? ""}\"");
+                if ((order.StartChargeName ?? "") != current상차담당)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd상차담당, order.StartChargeName ?? "", "상차지_담당자", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                Debug.WriteLine($"[{m_Context.AppName}] 상차지 영역 업데이트 완료 (변경: {changeCount}개)");
+                #endregion
+
+                #region ===== 2. 하차지 정보 선택적 수정 =====
+                // 2-1. 주소(위치) 변경 여부 확인
+                IntPtr hWnd하차위치 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_하차지_ptRel위치);
+                string current하차위치 = Std32Window.GetWindowCaption(hWnd하차위치);
+                bool need하차주소검색 = (order.DestDetailAddr ?? "") != current하차위치;
+                Debug.WriteLine($"[{m_Context.AppName}] 하차지_위치 비교: 화면=\"{current하차위치}\", DB=\"{order.DestDetailAddr ?? ""}\" → 주소검색={need하차주소검색}");
+
+                if (need하차주소검색)
+                {
+                    // 주소 변경 시: 조회버튼 클릭 → 주소검색 → 선택 → 관련 필드 덮어쓰기
+                    result = await SearchAndSelectAddressAsync(
+                        hWndPopup,
+                        m_FileInfo.접수등록Wnd_하차지_ptRel조회버튼,
+                        order.DestDetailAddr,
+                        "하차지",
+                        ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+
+                    // 위치 (상세주소)
+                    result = await WriteAndVerifyEditBoxAsync(hWnd하차위치, order.DestDetailAddr ?? "", "하차지_위치", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                }
+
+                // 개별 필드 선택적 수정
+                // 고객명
+                IntPtr hWnd하차고객명 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_하차지_ptRel고객명);
+                string current하차고객명 = Std32Window.GetWindowCaption(hWnd하차고객명);
+                Debug.WriteLine($"[{m_Context.AppName}] 하차지_고객명 비교: 화면=\"{current하차고객명}\", DB=\"{order.DestCustName ?? ""}\"");
+                if ((order.DestCustName ?? "") != current하차고객명)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd하차고객명, order.DestCustName ?? "", "하차지_고객명", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 전화 (숫자만 비교)
+                IntPtr hWnd하차전화 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_하차지_ptRel전화);
+                string current하차전화 = Std32Window.GetWindowCaption(hWnd하차전화);
+                string normalized하차화면전화 = StdConvert.MakePhoneNumberToDigit(current하차전화);
+                string normalized하차DB전화 = StdConvert.MakePhoneNumberToDigit(order.DestTelNo ?? "");
+                Debug.WriteLine($"[{m_Context.AppName}] 하차지_전화 비교: 화면=\"{normalized하차화면전화}\", DB=\"{normalized하차DB전화}\"");
+                if (normalized하차DB전화 != normalized하차화면전화)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd하차전화, order.DestTelNo ?? "", "하차지_전화", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 부서명
+                IntPtr hWnd하차부서 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_하차지_ptRel부서명);
+                string current하차부서 = Std32Window.GetWindowCaption(hWnd하차부서);
+                Debug.WriteLine($"[{m_Context.AppName}] 하차지_부서명 비교: 화면=\"{current하차부서}\", DB=\"{order.DestDeptName ?? ""}\"");
+                if ((order.DestDeptName ?? "") != current하차부서)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd하차부서, order.DestDeptName ?? "", "하차지_부서명", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                // 담당자
+                IntPtr hWnd하차담당 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_하차지_ptRel담당자);
+                string current하차담당 = Std32Window.GetWindowCaption(hWnd하차담당);
+                Debug.WriteLine($"[{m_Context.AppName}] 하차지_담당자 비교: 화면=\"{current하차담당}\", DB=\"{order.DestChargeName ?? ""}\"");
+                if ((order.DestChargeName ?? "") != current하차담당)
+                {
+                    result = await WriteAndVerifyEditBoxAsync(hWnd하차담당, order.DestChargeName ?? "", "하차지_담당자", ctrl);
+                    if (result.Result != StdResult.Success) return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                    changeCount++;
+                }
+
+                Debug.WriteLine($"[{m_Context.AppName}] 하차지 영역 업데이트 완료 (변경: {changeCount}개)");
+                #endregion
+
+                #region ===== 3. 배송타입 선택적 수정 (체크박스) =====
+                // 공유
+                IntPtr hWnd공유 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel공유);
+                bool current공유 = Std32Msg_Send.GetCheckStatus(hWnd공유) == 1;
+                bool target공유 = (order.OrderState == "접수" && order.Share);
+                Debug.WriteLine($"[{m_Context.AppName}] 배송_공유 비교: 화면={current공유}, DB={target공유}");
+                if (target공유 != current공유)
+                {
+                    await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd공유, target공유);
+                    changeCount++;
+                }
+
+                // 예약
+                IntPtr hWnd예약 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel예약);
+                bool current예약 = Std32Msg_Send.GetCheckStatus(hWnd예약) == 1;
+                bool target예약 = (order.DtReserve != null);
+                Debug.WriteLine($"[{m_Context.AppName}] 배송_예약 비교: 화면={current예약}, DB={target예약}");
+                if (target예약 != current예약)
+                {
+                    await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd예약, target예약);
+                    changeCount++;
+                }
+
+                // 긴급
+                IntPtr hWnd긴급 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel긴급);
+                bool current긴급 = Std32Msg_Send.GetCheckStatus(hWnd긴급) == 1;
+                bool target긴급 = (order.DeliverType == "긴급");
+                Debug.WriteLine($"[{m_Context.AppName}] 배송_긴급 비교: 화면={current긴급}, DB={target긴급}");
+                if (target긴급 != current긴급)
+                {
+                    await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd긴급, target긴급);
+                    changeCount++;
+                }
+
+                // 왕복
+                IntPtr hWnd왕복 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel왕복);
+                bool current왕복 = Std32Msg_Send.GetCheckStatus(hWnd왕복) == 1;
+                bool target왕복 = (order.DeliverType == "왕복");
+                Debug.WriteLine($"[{m_Context.AppName}] 배송_왕복 비교: 화면={current왕복}, DB={target왕복}");
+                if (target왕복 != current왕복)
+                {
+                    await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd왕복, target왕복);
+                    changeCount++;
+                }
+
+                // 경유
+                IntPtr hWnd경유 = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel경유);
+                bool current경유 = Std32Msg_Send.GetCheckStatus(hWnd경유) == 1;
+                bool target경유 = (order.DeliverType == "경유");
+                Debug.WriteLine($"[{m_Context.AppName}] 배송_경유 비교: 화면={current경유}, DB={target경유}");
+                if (target경유 != current경유)
+                {
+                    await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd경유, target경유);
+                    changeCount++;
+                }
+
+                Debug.WriteLine($"[{m_Context.AppName}] 배송타입 영역 업데이트 완료 (변경: {changeCount}개)");
+                #endregion
+
+                #region ===== 4. 차량정보 선택적 수정 =====
+                // 4-1. 차량톤수 (라디오버튼) - DB 톤수에 해당하는 버튼이 체크되어 있는지 확인
+                var ptTon = GetCarWeightWithPoint(order.CarType, order.CarWeight);
+                if (string.IsNullOrEmpty(ptTon.sErr))
+                {
+                    IntPtr hWndTon = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, ptTon.ptResult);
+                    if (hWndTon != IntPtr.Zero)
+                    {
+                        bool currentTonChecked = Std32Msg_Send.GetCheckStatus(hWndTon) == 1;
+                        Debug.WriteLine($"[{m_Context.AppName}] 차량톤수 비교: 화면체크={currentTonChecked}, DB={order.CarWeight}");
+
+                        if (!currentTonChecked)
+                        {
+                            // 톤수 라디오버튼 설정
+                            await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTon, true);
+
+                            // 몇톤 Edit에 최대적재량 설정
+                            IntPtr hWndTonEdit = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_톤수Edit_ptRel몇톤);
+                            if (hWndTonEdit != IntPtr.Zero)
+                            {
+                                string sMaxWeight = GetMaxCargoWeightString(hWndTon);
+                                await OfrWork_Common.WriteEditBox_ToHndleAsyncUpdate(hWndTonEdit, sMaxWeight);
+                            }
+
+                            // 이하 체크박스 설정
+                            IntPtr hWndTonChk = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_톤수ChkBox_ptRel이하);
+                            if (hWndTonChk != IntPtr.Zero)
+                                await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTonChk, true);
+
+                            changeCount++;
+                            Debug.WriteLine($"[{m_Context.AppName}] 차량톤수 변경: {order.CarWeight}");
+                        }
+                    }
+                }
+
+                //// 4-2. 차종 (콤보박스) - 현재 텍스트와 DB 값 비교
+                //var strTruck = GetTruckDetailStringFromInsung(order.TruckDetail);
+                //if (string.IsNullOrEmpty(strTruck.sErr))
+                //{
+                //    IntPtr hWndTruck = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_차종Combo_ptRel차종확인);
+                //    if (hWndTruck != IntPtr.Zero)
+                //    {
+                //        string current차종 = Std32Window.GetWindowCaption(hWndTruck) ?? "";
+                //        string target차종 = strTruck.strResult ?? "";
+                //        Debug.WriteLine($"[{m_Context.AppName}] 차종 비교: 화면=\"{current차종}\", DB=\"{target차종}\"");
+
+                //        if (current차종 != target차종)
+                //        {
+                //            Std32Window.SetWindowCaption(hWndTruck, target차종);
+                //            await Task.Delay(100, ctrl.Token); // 확장창 기다림
+                //            Std32Key_Msg.KeyPost_Click(hWndTruck, StdCommon32.VK_RETURN); // 엔터
+                //            await Task.Delay(100, ctrl.Token); // 엔터 후 대기
+                //            changeCount++;
+                //            Debug.WriteLine($"[{m_Context.AppName}] 차종 변경: {current차종} → {target차종}");
+                //        }
+                //    }
+                //}
+
+                //MsgBox($"[{m_Context.AppName}] 차량정보 영역 업데이트 완료 (변경: {changeCount}개)");
+                #endregion
+
+                // TODO: 운송비 선택적 수정
+
+                #region ===== 5. 결과 처리 =====
+                if (changeCount > 0)
+                {
+                    // 저장 버튼 클릭 후 확인창/보고창 처리 및 창 닫힘 대기
+                    IntPtr hWndSave = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_CmnBtn_ptRel저장);
+                    bool bSaved = await SaveAndWaitClosedAsync(hWndSave, hWndPopup, ctrl);
+                    if (!bSaved)
+                        return CommonResult_AutoAllocProcess.FailureAndDiscard("저장 실패", "UpdateOrderToPopupAsync_Save_01");
+
+                    Debug.WriteLine($"[{m_Context.AppName}] 수정 저장 완료 (변경: {changeCount}개)");
+                    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+                }
+                else
+                {
+                    // 닫기 버튼 클릭
+                    IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_CmnBtn_ptRel닫기);
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndClose);
+                    Debug.WriteLine($"[{m_Context.AppName}] 수정 없음 → 닫기");
+                    //System.Windows.MessageBox.Show($"[경고] 수정 없음: KeyCode={item.KeyCode}", "UpdateOrderToPopupAsync"); // 보류
+                    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+                }
+                #endregion
             }
 
             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);

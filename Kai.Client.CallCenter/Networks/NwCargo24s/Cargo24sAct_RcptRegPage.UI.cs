@@ -129,7 +129,7 @@ public partial class Cargo24sAct_RcptRegPage
     #region 조회 버튼
     /// <summary>
     /// 조회 버튼 클릭 (재시도 루프 방식)
-    /// - 모래시계 커서 출현/사라짐으로 로딩 완료 판단
+    /// - 조회버튼 밝기 변화로 로딩 완료 판단
     /// </summary>
     /// <param name="ctrl">취소 토큰</param>
     /// <param name="retryCount">재시도 횟수</param>
@@ -145,8 +145,8 @@ public partial class Cargo24sAct_RcptRegPage
                 // 조회 버튼 클릭
                 await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
 
-                // 모래시계 커서 대기
-                StdResult_Status resultSts = await WaitCursorLoadedAsync(ctrl);
+                // 조회버튼 밝기 변화 대기
+                StdResult_Status resultSts = await WaitBrightnessLoadedAsync(ctrl);
 
                 if (resultSts.Result == StdResult.Success || resultSts.Result == StdResult.Skip)
                 {
@@ -167,51 +167,60 @@ public partial class Cargo24sAct_RcptRegPage
     }
 
     /// <summary>
-    /// 모래시계 커서 대기 (로딩 완료 판단)
-    /// Phase 1: 모래시계 출현 대기 (최대 250ms)
-    /// Phase 2: 모래시계 사라짐 대기 (최대 timeoutSec초)
+    /// 조회버튼 밝기 변화 대기 (로딩 완료 판단)
+    /// Phase 1: 밝기 변화 대기 (로딩 시작 감지, 최대 250ms)
+    /// Phase 2: 밝기 복원 대기 (로딩 완료 감지, 최대 timeoutSec초)
     /// </summary>
-    private async Task<StdResult_Status> WaitCursorLoadedAsync(CancelTokenControl ctrl, int timeoutSec = 50)
+    private async Task<StdResult_Status> WaitBrightnessLoadedAsync(CancelTokenControl ctrl, int timeoutSec = 50)
     {
         try
         {
-            // Phase 1: 모래시계 출현 대기 (최대 250ms)
-            bool bWaitCursorAppeared = false;
+            int nOrigBrightness = m_RcptPage.CmdBtn_nBrightness조회;
+            int nBrightnessTolerance = 10; // 밝기 허용 오차
+
+            // Phase 1: 밝기 변화 대기 (로딩 시작 감지, 최대 250ms)
+            bool bBrightnessChanged = false;
             for (int i = 0; i < c_nWaitLong; i++) // 250ms
             {
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
-                if (Std32Cursor.IsWaitCursor())
+                int nCurrentBrightness = OfrService.GetPixelBrightnessFrmWndHandle(
+                    m_RcptPage.CmdBtn_hWnd조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회L);
+
+                if (Math.Abs(nCurrentBrightness - nOrigBrightness) > nBrightnessTolerance)
                 {
-                    bWaitCursorAppeared = true;
+                    bBrightnessChanged = true;
                     break;
                 }
                 await Task.Delay(1, ctrl.Token);
             }
 
-            if (!bWaitCursorAppeared)
+            if (!bBrightnessChanged)
             {
-                // 모래시계 미출현 → Skip (이미 로딩 완료)
+                // 밝기 변화 없음 → Skip (이미 로딩 완료)
                 return new StdResult_Status(StdResult.Skip);
             }
 
-            // Phase 2: 모래시계 사라짐 대기 (최대 timeoutSec초)
+            // Phase 2: 밝기 복원 대기 (로딩 완료 감지, 최대 timeoutSec초)
             for (int i = 0; i < timeoutSec * 10; i++) // 100ms 간격
             {
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
-                if (!Std32Cursor.IsWaitCursor())
+                int nCurrentBrightness = OfrService.GetPixelBrightnessFrmWndHandle(
+                    m_RcptPage.CmdBtn_hWnd조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회L);
+
+                if (Math.Abs(nCurrentBrightness - nOrigBrightness) <= nBrightnessTolerance)
                 {
                     return new StdResult_Status(StdResult.Success);
                 }
                 await Task.Delay(100, ctrl.Token);
             }
 
-            return new StdResult_Status(StdResult.Fail, $"로딩 대기 시간 초과 ({timeoutSec}초)", "Cargo24sAct_RcptRegPage/WaitCursorLoadedAsync_01");
+            return new StdResult_Status(StdResult.Fail, $"로딩 대기 시간 초과 ({timeoutSec}초)", "Cargo24sAct_RcptRegPage/WaitBrightnessLoadedAsync_01");
         }
         catch (Exception ex)
         {
-            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "Cargo24sAct_RcptRegPage/WaitCursorLoadedAsync_999");
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "Cargo24sAct_RcptRegPage/WaitBrightnessLoadedAsync_999");
         }
     }
     #endregion
@@ -538,6 +547,7 @@ public partial class Cargo24sAct_RcptRegPage
         switch (sTruckDetail)
         {
             // 다른 텍스트
+            case "전체": return new StdResult_String("차종확인");
             case "카고/윙": return new StdResult_String("카/윙");
             case "플러스카고": return new StdResult_String("플러스카");
             case "리프트카고": return new StdResult_String("리프트");
@@ -805,7 +815,7 @@ public partial class Cargo24sAct_RcptRegPage
     /// 확인창의 Yes 버튼 클릭
     /// </summary>
     private async Task<bool> ClickConfirmYesButtonAsync(CancelTokenControl ctrl,
-        string sDlgClassName = "TMessageForm", string sDlgCaption = "Confirm", string sBtnClassName = "TButton", string sBtnCaption = "&Yes")
+        string sDlgClassName = "TMessageForm", string sDlgCaption = null, string sBtnClassName = "TButton", string sBtnCaption = "&Yes")
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
 
@@ -826,15 +836,26 @@ public partial class Cargo24sAct_RcptRegPage
 
         Debug.WriteLine($"[{m_Context.AppName}] 확인창 발견: hWnd={hWndConfirm:X}");
 
-        // 2. Yes 버튼 찾기
-        IntPtr hWndBtn = Std32Window.FindChildWindow(hWndConfirm, sBtnClassName, sBtnCaption);
+        // 2. Yes/OK 버튼 찾기 (확인창=&Yes, 보고창=OK)
+        string[] btnCaptions = { "&Yes", "OK" };
+        IntPtr hWndBtn = IntPtr.Zero;
+        string foundBtnCaption = null;
+        foreach (var cap in btnCaptions)
+        {
+            hWndBtn = Std32Window.FindChildWindow(hWndConfirm, sBtnClassName, cap);
+            if (hWndBtn != IntPtr.Zero)
+            {
+                foundBtnCaption = cap;
+                break;
+            }
+        }
         if (hWndBtn == IntPtr.Zero)
         {
-            Debug.WriteLine($"[{m_Context.AppName}] '{sBtnCaption}' 버튼을 찾을 수 없음");
+            Debug.WriteLine($"[{m_Context.AppName}] 버튼을 찾을 수 없음 (시도: {string.Join(", ", btnCaptions)})");
             return false;
         }
 
-        Debug.WriteLine($"[{m_Context.AppName}] '{sBtnCaption}' 버튼 발견: hWnd={hWndBtn:X}");
+        Debug.WriteLine($"[{m_Context.AppName}] '{foundBtnCaption}' 버튼 발견: hWnd={hWndBtn:X}");
 
         // 3. Yes 버튼 클릭
         await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn);
@@ -910,12 +931,12 @@ public partial class Cargo24sAct_RcptRegPage
     }
 
     /// <summary>
-    /// 접수 저장 작업
-    /// - 확인창(Information) 처리
-    /// - 보고창(Information/OK) 처리
-    /// - 메인창 닫힘 대기
+    /// 저장 버튼 클릭 후 메인창 닫힐 때까지 확인창/보고창 처리
+    /// - 확인창(TMessageForm + &Yes) 나타나면 Yes 클릭
+    /// - 보고창(TMessageForm + OK) 나타나면 OK 클릭
+    /// - 메인창 닫히면 완료
     /// </summary>
-    private async Task<bool> SaveRegistWorkAsync(IntPtr hWndClick, IntPtr hWndOrg, CancelTokenControl ctrl, bool bReceiptSave)
+    private async Task<bool> SaveAndWaitClosedAsync(IntPtr hWndClick, IntPtr hWndOrg, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
 
@@ -923,80 +944,45 @@ public partial class Cargo24sAct_RcptRegPage
         await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndClick);
         Debug.WriteLine($"[{m_Context.AppName}] 저장 버튼 클릭");
 
-        // 2. 확인창(Yes) 처리
-        bool bConfirmOk = await ClickConfirmYesButtonAsync(ctrl, sDlgCaption: "Information");
-        if (!bConfirmOk)
-            return false;
-
-        // 3. 접수저장이면 보고창(OK) 처리
-        if (bReceiptSave)
-        {
-            await ClickReportOkButtonAsync(ctrl);
-        }
-
-        // 4. 메인창 사라지기 기다림
-        bool bMainClosed = false;
-        for (int j = 0; j < c_nRepeatVeryMany; j++)
+        // 2. 메인창 닫힐 때까지 확인창/보고창 처리
+        for (int i = 0; i < c_nRepeatVeryMany; i++)
         {
             await Task.Delay(c_nWaitShort, ctrl.Token);
+
+            // 메인창이 닫혔으면 완료
             if (!Std32Window.IsWindow(hWndOrg))
             {
                 Debug.WriteLine($"[{m_Context.AppName}] 등록창 닫힘 확인");
-                bMainClosed = true;
-                break;
+                return true;
+            }
+
+            // TMessageForm 찾기
+            IntPtr hWndMsg = Std32Window.FindMainWindow(m_Splash.TopWnd_uProcessId, "TMessageForm", null);
+            if (hWndMsg != IntPtr.Zero)
+            {
+                // &Yes 버튼 찾기 (확인창)
+                IntPtr hWndYes = Std32Window.FindChildWindow(hWndMsg, "TButton", "&Yes");
+                if (hWndYes != IntPtr.Zero)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 확인창 Yes 클릭");
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYes);
+                    continue;
+                }
+
+                // OK 버튼 찾기 (보고창)
+                IntPtr hWndOk = Std32Window.FindChildWindow(hWndMsg, "TButton", "OK");
+                if (hWndOk != IntPtr.Zero)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 보고창 OK 클릭");
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndOk);
+                    continue;
+                }
             }
         }
-        if (!bMainClosed)
-        {
-            Debug.WriteLine($"[{m_Context.AppName}] 등록창 닫힘 실패");
-            return false;
-        }
 
-        return true;
+        Debug.WriteLine($"[{m_Context.AppName}] 등록창 닫힘 실패");
+        return false;
     }
-
-    /// <summary>
-    /// 수정 저장 작업
-    /// - 확인창(Information) 처리
-    /// - 보고창(Information/OK) 처리
-    /// - 메인창 닫힘 대기
-    /// </summary>
-    //private async Task<bool> SaveUpdateWorkAsync(IntPtr hWndClick, IntPtr hWndOrg, CancelTokenControl ctrl)
-    //{
-    //    await ctrl.WaitIfPausedOrCancelledAsync();
-
-    //    // 1. 저장 버튼 클릭
-    //    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndClick);
-    //    Debug.WriteLine($"[{m_Context.AppName}] 수정 저장 버튼 클릭");
-
-    //    // 2. 확인창(Yes) 처리
-    //    bool bConfirmOk = await ClickConfirmYesButtonAsync(ctrl, sDlgCaption: "Information");
-    //    if (!bConfirmOk)
-    //        return false;
-
-    //    // 3. 보고창(OK) 처리
-    //    await ClickReportOkButtonAsync(ctrl);
-
-    //    // 4. 메인창 사라지기 기다림
-    //    bool bMainClosed = false;
-    //    for (int j = 0; j < c_nRepeatVeryMany; j++)
-    //    {
-    //        await Task.Delay(c_nWaitShort, ctrl.Token);
-    //        if (!Std32Window.IsWindow(hWndOrg))
-    //        {
-    //            Debug.WriteLine($"[{m_Context.AppName}] 수정창 닫힘 확인");
-    //            bMainClosed = true;
-    //            break;
-    //        }
-    //    }
-    //    if (!bMainClosed)
-    //    {
-    //        Debug.WriteLine($"[{m_Context.AppName}] 수정창 닫힘 실패");
-    //        return false;
-    //    }
-
-    //    return true;
-    //}
 
     /// <summary>
     /// 첫 로우 클릭 및 선택 검증 (명도 변화로 판단)
