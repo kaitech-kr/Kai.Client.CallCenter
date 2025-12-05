@@ -137,16 +137,21 @@ public class NwCargo24 : IExternalApp
             var listCargo24 = new List<AutoAllocModel>(listFromController);
 
             // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
+            // Kai에서 대기 -> 접수를 신규로 평가
+            Func<AutoAllocModel, bool> isNewFromWaiting = item => item.OldOrder?.OrderState == "대기" && item.NewOrder.OrderState == "접수" && string.IsNullOrEmpty(item.NewOrder.Cargo24);
+
             var listCreated = listCargo24
                 .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
-                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno))
+                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno) ||
+                               isNewFromWaiting(item))
                 .OrderByDescending(item => GetCargo24Seqno(item)) // Cargo24 SeqNo 역순 정렬 (큰 값 우선)
                 .Select(item => item.Clone())
                 .ToList();
 
             var listEtcGroup = listCargo24
                 .Where(item => !(item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
-                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno)))
+                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno) ||
+                               isNewFromWaiting(item)))
                 .OrderByDescending(item => GetCargo24Seqno(item)) // Cargo24 SeqNo 역순 정렬 (큰 값 우선)
                 .Select(item => item.Clone())
                 .ToList();

@@ -777,8 +777,7 @@ public partial class Cargo24sAct_RcptRegPage
 
         switch (kaiState)
         {
-            case "접수":
-                // 신규 주문 팝업창 열기 → 입력 → 닫기 → 성공 확인
+            case "접수": // 신규 주문 팝업창 열기 → 입력 → 닫기 → 성공 확인               
                 return await OpenNewOrderPopupAsync(item, ctrl);
 
             case "취소": // 무시 - 비적재
