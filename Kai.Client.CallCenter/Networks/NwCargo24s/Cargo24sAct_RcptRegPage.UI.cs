@@ -584,10 +584,10 @@ public partial class Cargo24sAct_RcptRegPage
             case "선불":
             case "착불": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel선착불);
 
+            case "카드": //return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel카드); // 하차일 지정해야 통과
+
             case "신용":
             case "송금": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel인수증);
-
-            case "카드": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel카드);
 
             // case "수수료확인": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel수수료확인);
 
@@ -641,6 +641,124 @@ public partial class Cargo24sAct_RcptRegPage
         }
 
         return new StdResult_Status(StdResult.Success);
+    }
+
+    /// <summary>
+    /// 오더상태 체크박스 선택적 설정 (isUpdate=true: 현재값 비교 후 변경)
+    /// </summary>
+    private async Task<(int changeCount, StdResult_Status result)> Set오더타입Async(IntPtr hWndTop, CEnum_Cg24OrderStatus status, bool isUpdate, CancelTokenControl ctrl)
+    {
+        int changeCount = 0;
+        var checkItems = new (CEnum_Cg24OrderStatus flag, Draw.Point pt, string name)[]
+        {
+            (CEnum_Cg24OrderStatus.공유, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel공유, "공유"),
+            (CEnum_Cg24OrderStatus.중요오더, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel중요오더, "중요오더"),
+            (CEnum_Cg24OrderStatus.예약, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel예약, "예약"),
+            (CEnum_Cg24OrderStatus.긴급, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel긴급, "긴급"),
+            (CEnum_Cg24OrderStatus.왕복, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel왕복, "왕복"),
+            (CEnum_Cg24OrderStatus.경유, m_FileInfo.접수등록Wnd_배송ChkBoxes_ptRel경유, "경유"),
+        };
+
+        foreach (var (flag, pt, name) in checkItems)
+        {
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
+            IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(hWndTop, pt);
+            if (hWnd == IntPtr.Zero)
+                return (changeCount, new StdResult_Status(StdResult.Fail, $"{name} CheckBox 핸들 획득 실패", "Set오더타입Async_00"));
+
+            bool shouldCheck = status.HasFlag(flag);
+
+            if (isUpdate)
+            {
+                bool currentCheck = Std32Msg_Send.GetCheckStatus(hWnd) == 1;
+                Debug.WriteLine($"[{m_Context.AppName}] 배송_{name} 비교: 화면={currentCheck}, DB={shouldCheck}");
+                if (shouldCheck != currentCheck)
+                {
+                    var result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
+                    if (result.Result != StdResult.Success)
+                        return (changeCount, new StdResult_Status(StdResult.Fail, $"{name} 체크박스 설정 실패", "Set오더타입Async_01"));
+                    changeCount++;
+                }
+            }
+            else
+            {
+                var result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
+                if (result.Result != StdResult.Success)
+                    return (changeCount, new StdResult_Status(StdResult.Fail, $"{name} 체크박스 설정 실패", "Set오더타입Async_02"));
+                Debug.WriteLine($"[{m_Context.AppName}] {name} 체크박스 설정 완료 (목표={shouldCheck})");
+            }
+        }
+
+        return (changeCount, new StdResult_Status(StdResult.Success));
+    }
+
+    /// <summary>
+    /// 운송비 설정 (운송비구분 라디오버튼 + 운송비합계 Edit)
+    /// </summary>
+    private async Task<(int changeCount, StdResult_Status result)> Set운송비Async(IntPtr hWndPopup, TbOrder order, bool isUpdate, CancelTokenControl ctrl)
+    {
+        int changeCount = 0;
+
+        // 1. 운송비구분 (라디오버튼)
+        var ptFee = GetFeeTypePoint(order.FeeType);
+        if (!string.IsNullOrEmpty(ptFee.sErr))
+            return (changeCount, new StdResult_Status(StdResult.Fail, ptFee.sErr, "Set운송비Async_01"));
+
+        IntPtr hWndFeeType = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, ptFee.ptResult);
+        if (hWndFeeType == IntPtr.Zero)
+            return (changeCount, new StdResult_Status(StdResult.Fail, "운송비구분 라디오버튼 핸들 획득 실패", "Set운송비Async_02"));
+
+        if (isUpdate)
+        {
+            bool currentFeeChecked = Std32Msg_Send.GetCheckStatus(hWndFeeType) == StdCommon32.BST_CHECKED;
+            Debug.WriteLine($"[{m_Context.AppName}] 운송비구분 비교: 화면체크={currentFeeChecked}, DB={order.FeeType}");
+
+            if (!currentFeeChecked)
+            {
+                var resultFee = await Simulation_Mouse.SetCheckBtnStatusAsync(hWndFeeType, true);
+                if (resultFee.Result != StdResult.Success)
+                    return (changeCount, new StdResult_Status(StdResult.Fail, "운송비구분 라디오버튼 설정 실패", "Set운송비Async_03"));
+                changeCount++;
+                Debug.WriteLine($"[{m_Context.AppName}] 운송비구분 변경: {order.FeeType}");
+            }
+        }
+        else
+        {
+            var resultFee = await Simulation_Mouse.SetCheckBtnStatusAsync(hWndFeeType, true);
+            if (resultFee.Result != StdResult.Success)
+                return (changeCount, new StdResult_Status(StdResult.Fail, "운송비구분 라디오버튼 설정 실패", "Set운송비Async_04"));
+            Debug.WriteLine($"[{m_Context.AppName}] 운송비구분 설정 완료: {order.FeeType}");
+        }
+
+        // 2. 운송비합계 (Edit)
+        IntPtr hWndFeeTotal = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_운송비Edit_ptRel합계);
+        if (hWndFeeTotal == IntPtr.Zero)
+            return (changeCount, new StdResult_Status(StdResult.Fail, "운송비합계 Edit 핸들 획득 실패", "Set운송비Async_05"));
+
+        string targetFeeTotal = order.FeeTotal.ToString();
+
+        if (isUpdate)
+        {
+            string currentFeeTotal = Std32Window.GetWindowCaption(hWndFeeTotal) ?? "";
+            Debug.WriteLine($"[{m_Context.AppName}] 운송비합계 비교: 화면=\"{currentFeeTotal}\", DB=\"{targetFeeTotal}\"");
+
+            if (currentFeeTotal != targetFeeTotal)
+            {
+                await OfrWork_Common.WriteEditBox_ToHndleAsyncUpdate(hWndFeeTotal, targetFeeTotal);
+                Std32Key_Msg.KeyPost_Click(hWndFeeTotal, StdCommon32.VK_RETURN);
+                changeCount++;
+                Debug.WriteLine($"[{m_Context.AppName}] 운송비합계 변경: {currentFeeTotal} → {targetFeeTotal}");
+            }
+        }
+        else
+        {
+            await OfrWork_Common.WriteEditBox_ToHndleAsyncUpdate(hWndFeeTotal, targetFeeTotal);
+            Std32Key_Msg.KeyPost_Click(hWndFeeTotal, StdCommon32.VK_RETURN);
+            Debug.WriteLine($"[{m_Context.AppName}] 운송비합계 설정 완료: {targetFeeTotal}");
+        }
+
+        return (changeCount, new StdResult_Status(StdResult.Success));
     }
 
     /// <summary>
@@ -813,137 +931,19 @@ public partial class Cargo24sAct_RcptRegPage
     }
 
     /// <summary>
-    /// 확인창의 Yes 버튼 클릭
-    /// </summary>
-    private async Task<bool> ClickConfirmYesButtonAsync(CancelTokenControl ctrl,
-        string sDlgClassName = "TMessageForm", string sDlgCaption = null, string sBtnClassName = "TButton", string sBtnCaption = "&Yes")
-    {
-        await ctrl.WaitIfPausedOrCancelledAsync();
-
-        // 1. 확인창 대기 및 찾기
-        IntPtr hWndConfirm = IntPtr.Zero;
-        for (int i = 0; i < c_nRepeatVeryMany; i++)
-        {
-            await Task.Delay(c_nWaitShort, ctrl.Token);
-            hWndConfirm = Std32Window.FindMainWindow(m_Splash.TopWnd_uProcessId, sDlgClassName, sDlgCaption);
-            if (hWndConfirm != IntPtr.Zero) break;
-        }
-
-        if (hWndConfirm == IntPtr.Zero)
-        {
-            Debug.WriteLine($"[{m_Context.AppName}] 확인창을 찾을 수 없음");
-            return false;
-        }
-
-        Debug.WriteLine($"[{m_Context.AppName}] 확인창 발견: hWnd={hWndConfirm:X}");
-
-        // 2. Yes/OK 버튼 찾기 (확인창=&Yes, 보고창=OK)
-        string[] btnCaptions = { "&Yes", "OK" };
-        IntPtr hWndBtn = IntPtr.Zero;
-        string foundBtnCaption = null;
-        foreach (var cap in btnCaptions)
-        {
-            hWndBtn = Std32Window.FindChildWindow(hWndConfirm, sBtnClassName, cap);
-            if (hWndBtn != IntPtr.Zero)
-            {
-                foundBtnCaption = cap;
-                break;
-            }
-        }
-        if (hWndBtn == IntPtr.Zero)
-        {
-            Debug.WriteLine($"[{m_Context.AppName}] 버튼을 찾을 수 없음 (시도: {string.Join(", ", btnCaptions)})");
-            return false;
-        }
-
-        Debug.WriteLine($"[{m_Context.AppName}] '{foundBtnCaption}' 버튼 발견: hWnd={hWndBtn:X}");
-
-        // 3. Yes 버튼 클릭
-        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn);
-        await Task.Delay(200, ctrl.Token);
-
-        // 4. 확인창이 닫힐 때까지 대기
-        for (int i = 0; i < 50; i++)
-        {
-            await Task.Delay(50, ctrl.Token);
-            if (!Std32Window.IsWindow(hWndConfirm))
-            {
-                Debug.WriteLine($"[{m_Context.AppName}] 확인창 닫힘 확인 (대기 {i * 50}ms)");
-                return true;
-            }
-        }
-
-        Debug.WriteLine($"[{m_Context.AppName}] 확인창이 닫히지 않음");
-        return false;
-    }
-
-    /// <summary>
-    /// 보고창의 OK 버튼 클릭
-    /// </summary>
-    private async Task<bool> ClickReportOkButtonAsync(CancelTokenControl ctrl,
-        string sDlgClassName = "TMessageForm", string sDlgCaption = "Information", string sBtnClassName = "TButton", string sBtnCaption = "OK")
-    {
-        await ctrl.WaitIfPausedOrCancelledAsync();
-
-        // 1. 보고창 대기 및 찾기
-        IntPtr hWndReport = IntPtr.Zero;
-        for (int i = 0; i < c_nRepeatMany; i++)
-        {
-            await Task.Delay(c_nWaitShort, ctrl.Token);
-            hWndReport = Std32Window.FindMainWindow(m_Splash.TopWnd_uProcessId, sDlgClassName, sDlgCaption);
-            if (hWndReport != IntPtr.Zero) break;
-        }
-
-        if (hWndReport == IntPtr.Zero)
-        {
-            Debug.WriteLine($"[{m_Context.AppName}] 보고창을 찾을 수 없음");
-            return false;
-        }
-
-        Debug.WriteLine($"[{m_Context.AppName}] 보고창 발견: hWnd={hWndReport:X}");
-
-        // 2. OK 버튼 찾기
-        IntPtr hWndBtn = Std32Window.FindChildWindow(hWndReport, sBtnClassName, sBtnCaption);
-        if (hWndBtn == IntPtr.Zero)
-        {
-            Debug.WriteLine($"[{m_Context.AppName}] '{sBtnCaption}' 버튼을 찾을 수 없음");
-            return false;
-        }
-
-        Debug.WriteLine($"[{m_Context.AppName}] '{sBtnCaption}' 버튼 발견: hWnd={hWndBtn:X}");
-
-        // 3. OK 버튼 클릭
-        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn);
-        await Task.Delay(200, ctrl.Token);
-
-        // 4. 보고창이 닫힐 때까지 대기
-        for (int i = 0; i < 50; i++)
-        {
-            await Task.Delay(50, ctrl.Token);
-            if (!Std32Window.IsWindow(hWndReport))
-            {
-                Debug.WriteLine($"[{m_Context.AppName}] 보고창 닫힘 확인 (대기 {i * 50}ms)");
-                return true;
-            }
-        }
-
-        Debug.WriteLine($"[{m_Context.AppName}] 보고창이 닫히지 않음");
-        return false;
-    }
-
-    /// <summary>
-    /// 저장 버튼 클릭 후 메인창 닫힐 때까지 확인창/보고창 처리
+    /// 버튼 클릭 후 메인창 닫힐 때까지 확인창/보고창 처리
     /// - 확인창(TMessageForm + &Yes) 나타나면 Yes 클릭
     /// - 보고창(TMessageForm + OK) 나타나면 OK 클릭
     /// - 메인창 닫히면 완료
     /// </summary>
-    private async Task<bool> SaveAndWaitClosedAsync(IntPtr hWndClick, IntPtr hWndOrg, CancelTokenControl ctrl)
+    private async Task<bool> SaveAndWaitClosedAsync(IntPtr hWndClick, IntPtr hWndOrg, string buttonName, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
 
-        // 1. 저장 버튼 클릭
+        // 1. 버튼 클릭
         await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndClick);
-        Debug.WriteLine($"[{m_Context.AppName}] 저장 버튼 클릭");
+        Debug.WriteLine($"[{m_Context.AppName}] {buttonName} 버튼 클릭");
+        await Task.Delay(c_nWaitLong, ctrl.Token);
 
         // 2. 메인창 닫힐 때까지 확인창/보고창 처리
         for (int i = 0; i < c_nRepeatVeryMany; i++)
@@ -957,27 +957,135 @@ public partial class Cargo24sAct_RcptRegPage
                 return true;
             }
 
-            // TMessageForm 찾기
-            IntPtr hWndMsg = Std32Window.FindMainWindow(m_Splash.TopWnd_uProcessId, "TMessageForm", null);
-            if (hWndMsg != IntPtr.Zero)
+            // TMessageForm 찾기 (캡션 검증: Information 또는 Confirm)
+            string[] validCaptions = { "Information", "Confirm" };
+            List<IntPtr> lstMsg = Std32Window.FindMainWindows_SameProcessId(m_Splash.TopWnd_uProcessId);
+            foreach (IntPtr hWnd in lstMsg)
             {
-                // &Yes 버튼 찾기 (확인창)
-                IntPtr hWndYes = Std32Window.FindChildWindow(hWndMsg, "TButton", "&Yes");
-                if (hWndYes != IntPtr.Zero)
+                string className = Std32Window.GetWindowClassName(hWnd);
+                if (className != "TMessageForm") continue;
+                if (!Std32Window.IsWindowVisible(hWnd)) continue;
+
+                string caption = Std32Window.GetWindowCaption(hWnd) ?? "";
+                if (!validCaptions.Contains(caption))
                 {
-                    Debug.WriteLine($"[{m_Context.AppName}] 확인창 Yes 클릭");
-                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYes);
+                    Debug.WriteLine($"[{m_Context.AppName}] 잘못된 창 무시 (캡션=\"{caption}\")");
                     continue;
                 }
 
+                await Task.Delay(c_nWaitNormal, ctrl.Token);
+
+                // &Yes 버튼 찾기 (확인창)
+                IntPtr hWndYes = Std32Window.FindChildWindow(hWnd, "TButton", "&Yes");
+                if (hWndYes != IntPtr.Zero)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 확인창 Yes 클릭 (캡션=\"{caption}\")");
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYes);
+                    await Task.Delay(c_nWaitLong, ctrl.Token);
+                    break;
+                }
+
                 // OK 버튼 찾기 (보고창)
-                IntPtr hWndOk = Std32Window.FindChildWindow(hWndMsg, "TButton", "OK");
+                IntPtr hWndOk = Std32Window.FindChildWindow(hWnd, "TButton", "OK");
                 if (hWndOk != IntPtr.Zero)
                 {
-                    Debug.WriteLine($"[{m_Context.AppName}] 보고창 OK 클릭");
+                    Debug.WriteLine($"[{m_Context.AppName}] 보고창 OK 클릭 (캡션=\"{caption}\")");
                     await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndOk);
-                    continue;
+                    await Task.Delay(c_nWaitLong, ctrl.Token);
+                    break;
                 }
+            }
+        }
+
+        Debug.WriteLine($"[{m_Context.AppName}] 등록창 닫힘 실패");
+        return false;
+    }
+
+    /// <summary>
+    /// 화물취소 버튼 클릭 후 확인창/보고창 처리, 버튼 Disabled 대기 후 닫기 클릭
+    /// - 확인창(TMessageForm + &Yes) 나타나면 Yes 클릭
+    /// - 보고창(TMessageForm + OK) 나타나면 OK 클릭
+    /// - 화물취소 또는 저장 버튼 Disabled 대기
+    /// - 닫기 버튼 클릭
+    /// </summary>
+    private async Task<bool> CancelAndWaitClosedAsync(IntPtr hWndClick, IntPtr hWndPopup, IntPtr hWndCheckDisabled, IntPtr hWndClose, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+
+        // 1. 화물취소 버튼 클릭
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndClick);
+        Debug.WriteLine($"[{m_Context.AppName}] 화물취소 버튼 클릭");
+        await Task.Delay(c_nWaitLong, ctrl.Token);
+
+        // 2. 확인창/보고창 처리 + 버튼 Disabled 대기
+        bool bDisabled = false;
+        for (int i = 0; i < c_nRepeatVeryMany; i++)
+        {
+            await Task.Delay(c_nWaitShort, ctrl.Token);
+
+            // 버튼이 Disabled 되었으면 완료
+            if (!Std32Window.IsWindowEnabled(hWndCheckDisabled))
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 버튼 Disabled 확인");
+                bDisabled = true;
+                break;
+            }
+
+            // TMessageForm 찾기 (캡션 검증: Information 또는 Confirm)
+            string[] validCaptions = { "Information", "Confirm" };
+            List<IntPtr> lstMsg = Std32Window.FindMainWindows_SameProcessId(m_Splash.TopWnd_uProcessId);
+
+            foreach (IntPtr hWnd in lstMsg)
+            {
+                string className = Std32Window.GetWindowClassName(hWnd);
+                if (className != "TMessageForm") continue;
+                if (!Std32Window.IsWindowVisible(hWnd)) continue;
+
+                string caption = Std32Window.GetWindowCaption(hWnd) ?? "";
+                if (!validCaptions.Contains(caption)) continue;
+
+                await Task.Delay(c_nWaitNormal, ctrl.Token);
+
+                // &Yes 버튼 찾기 (확인창)
+                IntPtr hWndYes = Std32Window.FindChildWindow(hWnd, "TButton", "&Yes");
+                if (hWndYes != IntPtr.Zero)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 확인창 Yes 클릭 (캡션=\"{caption}\")");
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYes);
+                    await Task.Delay(c_nWaitLong, ctrl.Token);
+                    break;
+                }
+
+                // OK 버튼 찾기 (보고창)
+                IntPtr hWndOk = Std32Window.FindChildWindow(hWnd, "TButton", "OK");
+                if (hWndOk != IntPtr.Zero)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}] 보고창 OK 클릭 (캡션=\"{caption}\")");
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndOk);
+                    await Task.Delay(c_nWaitLong, ctrl.Token);
+                    break;
+                }
+            }
+        }
+
+        if (!bDisabled)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] 버튼 Disabled 대기 실패");
+            return false;
+        }
+
+        // 3. 닫기 버튼 클릭
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndClose);
+        Debug.WriteLine($"[{m_Context.AppName}] 닫기 버튼 클릭");
+
+        // 4. 팝업창 닫힘 대기
+        for (int i = 0; i < c_nRepeatMany; i++)
+        {
+            await Task.Delay(c_nWaitShort, ctrl.Token);
+            if (!Std32Window.IsWindow(hWndPopup))
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 등록창 닫힘 확인");
+                return true;
             }
         }
 
