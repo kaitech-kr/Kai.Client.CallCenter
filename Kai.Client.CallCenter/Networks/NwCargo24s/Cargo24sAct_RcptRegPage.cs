@@ -1,21 +1,20 @@
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Media;
-using Draw = System.Drawing;
-
-using Kai.Common.StdDll_Common;
-using Kai.Common.StdDll_Common.StdWin32;
-using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
-
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
-using Kai.Client.CallCenter.Windows;
 using Kai.Client.CallCenter.OfrWorks;
+using Kai.Client.CallCenter.Windows;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
+using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
-using static Kai.Client.CallCenter.Classes.CommonVars;
 using Microsoft.VisualBasic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Media;
+using static Kai.Client.CallCenter.Classes.CommonVars;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
+using Draw = System.Drawing;
 
 namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 #nullable disable
@@ -1673,29 +1672,27 @@ public partial class Cargo24sAct_RcptRegPage
                     }
                 }
 
-                //// 4-2. 차종 (콤보박스) - 현재 텍스트와 DB 값 비교
-                //var strTruck = GetTruckDetailStringFromInsung(order.TruckDetail);
-                //if (string.IsNullOrEmpty(strTruck.sErr))
-                //{
-                //    IntPtr hWndTruck = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_차종Combo_ptRel차종확인);
-                //    if (hWndTruck != IntPtr.Zero)
-                //    {
-                //        string current차종 = Std32Window.GetWindowCaption(hWndTruck) ?? "";
-                //        string target차종 = strTruck.strResult ?? "";
-                //        Debug.WriteLine($"[{m_Context.AppName}] 차종 비교: 화면=\"{current차종}\", DB=\"{target차종}\"");
+                // 4-2. 차종 (콤보박스) - 현재 텍스트와 DB 값 비교
+                var strTruck = GetTruckDetailStringFromInsung(order.TruckDetail);
+                if (string.IsNullOrEmpty(strTruck.sErr))
+                {
+                    IntPtr hWndTruck = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_차종Combo_ptRel차종확인);
+                    if (hWndTruck != IntPtr.Zero)
+                    {
+                        string current차종 = Std32Window.GetWindowCaption(hWndTruck) ?? "";
+                        string target차종 = strTruck.strResult ?? "";
+                        Debug.WriteLine($"[{m_Context.AppName}] 차종 비교: 화면=\"{current차종}\", DB=\"{target차종}\"");
 
-                //        if (current차종 != target차종)
-                //        {
-                //            Std32Window.SetWindowCaption(hWndTruck, target차종);
-                //            await Task.Delay(100, ctrl.Token); // 확장창 기다림
-                //            Std32Key_Msg.KeyPost_Click(hWndTruck, StdCommon32.VK_RETURN); // 엔터
-                //            await Task.Delay(100, ctrl.Token); // 엔터 후 대기
-                //            changeCount++;
-                //            Debug.WriteLine($"[{m_Context.AppName}] 차종 변경: {current차종} → {target차종}");
-                //        }
-                //    }
-                //}
-
+                        if (current차종 != target차종)
+                        {
+                            // WM_CHAR로 콤보박스에 텍스트 전송 + 검증
+                            bool bResult = await Simulation_Keyboard.PostCharStringWithVerifyAsync(hWndTruck, target차종);
+                            Debug.WriteLine($"[{m_Context.AppName}] 차종 변경: {current차종} → {target차종}, 결과={bResult}");
+                            if (bResult)
+                                changeCount++;
+                        }
+                    }
+                }
                 //MsgBox($"[{m_Context.AppName}] 차량정보 영역 업데이트 완료 (변경: {changeCount}개)");
                 #endregion
 

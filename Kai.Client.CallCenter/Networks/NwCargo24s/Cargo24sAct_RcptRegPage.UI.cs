@@ -547,7 +547,7 @@ public partial class Cargo24sAct_RcptRegPage
         switch (sTruckDetail)
         {
             // 다른 텍스트
-            case "전체": return new StdResult_String("차종확인");
+            case "전체": return new StdResult_String("전체");
             case "카고/윙": return new StdResult_String("카/윙");
             case "플러스카고": return new StdResult_String("플러스카");
             case "리프트카고": return new StdResult_String("리프트");
@@ -566,7 +566,8 @@ public partial class Cargo24sAct_RcptRegPage
             case "로베드":
             case "사다리":
             case "초장축":
-                return new StdResult_String($"화물24시에는 없는 트럭종류[{sTruckDetail}]", "GetTruckDetailStringFromInsung_01");
+                return new StdResult_String("차종확인");
+                //return new StdResult_String($"화물24시에는 없는 트럭종류[{sTruckDetail}]", "GetTruckDetailStringFromInsung_01");
 
             // 같은 텍스트 (전체, 카고, 축카고, 플축카고, 윙바디, 탑, 호루, 냉동탑, 냉장탑 등)
             default: return new StdResult_String(sTruckDetail);

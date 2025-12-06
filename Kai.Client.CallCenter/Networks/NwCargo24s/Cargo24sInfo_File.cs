@@ -1,6 +1,6 @@
+using Kai.Client.CallCenter.Classes;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using Draw = System.Drawing;
-
-using Kai.Common.StdDll_Common;
 
 namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 
@@ -172,6 +172,55 @@ public class Cargo24sInfo_File
     public Draw.Point 접수등록Wnd_톤수ChkBox_ptRel이하 { get; set; } = new Draw.Point(966, 180); // 이하
 
     public Draw.Point 접수등록Wnd_차종Combo_ptRel차종확인 { get; set; } = new Draw.Point(602, 216); // 확인
+    public Draw.Point 접수등록Wnd_차종Btn_ptRel차종조회 { get; set; } = new Draw.Point(696, 215); // 확인 {X=696,Y=215}
+    //public CommonModel_RadioBtn[] 접수등록Wnd_차종그룹 { get; set; } = new CommonModel_RadioBtn[]
+    //{
+    //    new CommonModel_RadioBtn(new Draw.Point(558, 255), "차종확인"),
+    //    new CommonModel_RadioBtn(new Draw.Point(558, 274), "전체"),
+    //    new CommonModel_RadioBtn(new Draw.Point(558, 293), "카고"),
+    //    new CommonModel_RadioBtn(new Draw.Point(558, 312), "윙바디"),
+    //    new CommonModel_RadioBtn(new Draw.Point(558, 331), "탑"),
+    //    new CommonModel_RadioBtn(new Draw.Point(558, 350), "카/윙"),
+    //    new CommonModel_RadioBtn(new Draw.Point(558, 369), "초장축"),
+
+    //    new CommonModel_RadioBtn(new Draw.Point(658, 255), "호루"),
+    //    new CommonModel_RadioBtn(new Draw.Point(658, 274), "냉동탑"),
+    //    new CommonModel_RadioBtn(new Draw.Point(658, 293), "리프트"),
+    //    new CommonModel_RadioBtn(new Draw.Point(658, 312), "리프트윙"),
+    //    new CommonModel_RadioBtn(new Draw.Point(658, 331), "냉장윙"),
+    //    new CommonModel_RadioBtn(new Draw.Point(658, 350), "리프트호"),
+    //    new CommonModel_RadioBtn(new Draw.Point(658, 369), "리프트탑"),
+
+    //    new CommonModel_RadioBtn(new Draw.Point(758, 255), "초장축호"),
+    //    new CommonModel_RadioBtn(new Draw.Point(758, 274), "초장축탑"),
+    //    new CommonModel_RadioBtn(new Draw.Point(758, 293), "초장축윙"),
+    //    new CommonModel_RadioBtn(new Draw.Point(758, 312), "냉장탑"),
+    //    new CommonModel_RadioBtn(new Draw.Point(758, 331), "초장축호리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(758, 350), "초장축탑리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(758, 369), "초장축윙리"),
+
+    //    new CommonModel_RadioBtn(new Draw.Point(858, 255), "초장축냉동탑"),
+    //    new CommonModel_RadioBtn(new Draw.Point(858, 274), "초냉장윙리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(858, 293), "냉장탑리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(858, 312), "초냉장탑리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(858, 331), "초장축리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(858, 350), "냉동윙"),
+    //    new CommonModel_RadioBtn(new Draw.Point(858, 369), "냉동윙리"),
+
+    //    new CommonModel_RadioBtn(new Draw.Point(958, 255), "냉장윙리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(958, 274), "냉동탑리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(958, 293), "초장축냉동윙"),
+    //    new CommonModel_RadioBtn(new Draw.Point(958, 312), "초냉동윙리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(958, 331), "초장축냉장윙"),
+    //    new CommonModel_RadioBtn(new Draw.Point(958, 350), "초냉동탑리"),
+    //    new CommonModel_RadioBtn(new Draw.Point(958, 369), "초장축냉장탑")
+    //};
+    public OfrModel_RadioBtn[] 접수등록Wnd2_차종그룹 { get; set; } = new OfrModel_RadioBtn[]
+{
+        new OfrModel_RadioBtn("선불", new Draw.Rectangle(473, 301, 18, 18), new Draw.Rectangle(492, 301, 27, 19)),
+
+};
+
     public Draw.Point 접수등록Wnd_Combo_ptRel전자세금게산서 { get; set; } = new Draw.Point(863, 216); // 전자세금게산서
 
     public Draw.Point 접수등록Wnd_옵션ChkBox_ptRel독차 { get; set; } = new Draw.Point(571, 245); // 독차

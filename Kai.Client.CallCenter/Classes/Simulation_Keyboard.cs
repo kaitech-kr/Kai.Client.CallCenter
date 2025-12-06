@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
-
 using Kai.Common.StdDll_Common.StdWin32;
+
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Classes;
 
@@ -67,5 +67,35 @@ public static class Simulation_Keyboard
     public static async Task KeyPost_CtrlX_CutAsync(IntPtr hWnd, int delay = 30)
     {
         await KeyPost_ModifierWithKeyAsync(hWnd, StdCommon32.VK_CONTROL, 0x58, delay); // 0x58 = 'X'
+    }
+
+    /// <summary>
+    /// WM_CHAR로 문자열 전송 후 캡션 검증
+    /// - SetFocus로 포커스 설정 후 WM_CHAR로 각 문자 전송
+    /// - 캡션이 target과 일치하는지 검증
+    /// </summary>
+    public static async Task<bool> PostCharStringWithVerifyAsync(IntPtr hWnd, string sTarget, int nDelay = 30, int nRepeat = c_nRepeatShort)
+    {
+        if (hWnd == IntPtr.Zero || string.IsNullOrEmpty(sTarget))
+            return false;
+
+        // 캡션 검증 (반복)
+        for (int i = 0; i < nRepeat; i++)
+        {
+            // WM_CHAR로 문자열 전송
+            bool bResult = await Std32Key_Msg.PostCharStringAsync(hWnd, sTarget, nDelay);
+            if (!bResult)
+            {
+                await Task.Delay(c_nWaitNormal);
+                continue;
+            }
+
+            string sCaption = Std32Window.GetWindowCaption(hWnd) ?? "";
+            if (sCaption == sTarget) return true;
+
+            await Task.Delay(c_nWaitNormal);
+        }
+
+        return false;
     }
 }
