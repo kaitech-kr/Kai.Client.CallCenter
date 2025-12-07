@@ -9,9 +9,11 @@ using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 
 using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Windows;
 using static Kai.Client.CallCenter.Classes.CommonVars;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 
 namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 #nullable disable
@@ -19,7 +21,7 @@ namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 /// <summary>
 /// 원콜 접수등록 페이지 제어
 /// </summary>
-public class OnecallAct_RcptRegPage
+public partial class OnecallAct_RcptRegPage
 {
     #region Datagrid Column Header Info
     /// <summary>
@@ -44,7 +46,7 @@ public class OnecallAct_RcptRegPage
         new NwCommon_DgColumnHeader() { sName = "차주전화", bOfrSeq = true, nWidth = 135 },
         new NwCommon_DgColumnHeader() { sName = "담당자번호", bOfrSeq = true, nWidth = 135 },
         new NwCommon_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 130 },
-        new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 170 },
+        new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 155 },
         new NwCommon_DgColumnHeader() { sName = "인수증", bOfrSeq = false, nWidth = 60 },
         new NwCommon_DgColumnHeader() { sName = "상차일", bOfrSeq = true, nWidth = 70 },
         new NwCommon_DgColumnHeader() { sName = "하차일", bOfrSeq = true, nWidth = 70 },
@@ -81,9 +83,7 @@ public class OnecallAct_RcptRegPage
     {
         try
         {
-            //Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 시작");
-
-            // 1. 접수등록Page 윈도우 찾기 (10초)
+            #region 1. 접수등록Page 윈도우 찾기 (10초)
             for (int i = 0; i < c_nRepeatVeryMany; i++)
             {
                 mRcpt.TopWnd_hWnd = Std32Window.FindWindowEx(mMain.WndInfo_MdiClient.hWnd, IntPtr.Zero, null, fInfo.접수등록Page_TopWnd_sWndName);
@@ -93,63 +93,101 @@ public class OnecallAct_RcptRegPage
 
             if (mRcpt.TopWnd_hWnd == IntPtr.Zero)
                 return new StdResult_Error($"[{AppName}] 접수등록Page 찾기실패: {fInfo.접수등록Page_TopWnd_sWndName}", "OnecallAct_RcptRegPage/InitializeAsync_01");
+            //Debug.WriteLine($"[{AppName}] 접수등록Page 찾음: {mRcpt.TopWnd_hWnd:X}"); 
+            #endregion
 
-            //Debug.WriteLine($"[{AppName}] 접수등록Page 찾음: {mRcpt.TopWnd_hWnd:X}");
-            await Task.Delay(1000); // 윈도우 로드 대기
-
-            // 2. 자식윈도우 찾기
-            List<StdCommon32_WndInfo> lst = Std32Window.GetChildWindows_FirstLayer(mRcpt.TopWnd_hWnd);
-            if (lst.Count == 0)
-                return new StdResult_Error($"[{AppName}] 접수등록Page 자식윈도 찾기실패", "OnecallAct_RcptRegPage/InitializeAsync_02");
-            //Debug.WriteLine($"[{AppName}] 접수등록Page 자식윈도 찾음: {lst.Count}개");
-            //for (int i = 0; i < lst.Count; i++)
-            //{
-            //    Debug.WriteLine($"  [{i}] rcRel={lst[i].rcRel}, wndName={lst[i].wndName}");
-            //}
-
-            // 3. 접수영역 찾기
-            StdCommon32_WndInfo item = lst.FirstOrDefault(x => x.rcRel == fInfo.접수등록Page_접수영역_rcChkRel);
-            if (item == null)
-                return new StdResult_Error($"[{AppName}] 접수영역 찾기실패: {fInfo.접수등록Page_접수영역_rcChkRel}", "OnecallAct_RcptRegPage/InitializeAsync_03");
-            mRcpt.접수영역_hWnd = item.hWnd;
-            //Debug.WriteLine($"[{AppName}] 접수영역 찾음: {mRcpt.접수영역_hWnd:X}");
-
-            // 4. 검색영역 찾기
-            item = lst.FirstOrDefault(x => x.wndName == fInfo.접수등록Page_검색영역_sWndName);
-            if (item == null)
-                return new StdResult_Error($"[{AppName}] 검색영역 찾기실패: {fInfo.접수등록Page_검색영역_sWndName}", "OnecallAct_RcptRegPage/InitializeAsync_04");
-            mRcpt.검색영역_hWnd = item.hWnd;
-            //Debug.WriteLine($"[{AppName}] 검색영역 찾음: {mRcpt.검색영역_hWnd:X}");
-
-            // 5. DG오더 찾기
-            item = lst.FirstOrDefault(x => x.rcRel == fInfo.접수등록Page_DG오더_rcRelFirst);
-            if (item == null)
-                return new StdResult_Error($"[{AppName}] DG오더 찾기실패: {fInfo.접수등록Page_DG오더_rcRelFirst}", "OnecallAct_RcptRegPage/InitializeAsync_05");
-            mRcpt.DG오더_hWnd = item.hWnd;
-            //Debug.WriteLine($"[{AppName}] DG오더 찾음: {mRcpt.DG오더_hWnd:X}");
-
-            // 6. 확장 전 컬럼 검증/초기화
-            var resultRects = await SetDG오더LargeRectsAsync();
-            if (resultRects != null) return resultRects;
-
-            // 7. 검색영역 확장버튼 찾기
-            mRcpt.접수영역_확장버튼_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색영역_hWnd, fInfo.접수등록Page_검색ExpandBtn_ptChkRelL);
-            if (mRcpt.접수영역_확장버튼_hWnd == IntPtr.Zero)
-                return new StdResult_Error($"[{AppName}] 확장버튼 찾기실패: {fInfo.접수등록Page_검색ExpandBtn_ptChkRelL}", "OnecallAct_RcptRegPage/InitializeAsync_06");
-            Debug.WriteLine($"[{AppName}] 확장버튼 찾음: {mRcpt.접수영역_확장버튼_hWnd:X}");
-
-            // 8. 확장버튼 클릭 및 DG오더 확장 대기
-            await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수영역_확장버튼_hWnd);
-            Draw.Rectangle rcTmp = StdUtil.s_rcDrawEmpty;
-            for (int i = 0; i < c_nRepeatNormal; i++)
+            #region 2. 검색섹션을 찾을때까지 기다린후 자식정보 찾기
+            // 검색섹션 - Top정보
+            bool bFind = false;
+            for (int i = 0; i < c_nRepeatVeryMany; i++)
             {
-                rcTmp = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWnd);
-                if (rcTmp.Height == fInfo.접수등록Page_DG오더_nExpandedHeight) break;
-                await Task.Delay(c_nWaitShort);
+                await Task.Delay(c_nWaitNormal);
+                mRcpt.검색섹션_hWndTop = Std32Window.GetWndHandle_FromRelDrawPt(mMain.TopWnd_hWnd, fInfo.접수등록Page_검색섹션_ptChkRelT);
+                if ("검색" == Std32Window.GetWindowCaption(mRcpt.검색섹션_hWndTop))
+                {
+                    bFind = true;
+                    await Task.Delay(c_nWaitNormal);
+                    break;
+                }
             }
-            if (rcTmp.Height != fInfo.접수등록Page_DG오더_nExpandedHeight)
-                return new StdResult_Error($"[{AppName}] DG오더 확장실패: {rcTmp.Height} != {fInfo.접수등록Page_DG오더_nExpandedHeight}", "OnecallAct_RcptRegPage/InitializeAsync_07");
-            Debug.WriteLine($"[{AppName}] DG오더 확장완료: {rcTmp.Height}");
+            Debug.WriteLine($"[{AppName}] 검색섹션_hWnd 찾음: {mRcpt.검색섹션_hWndTop:X}");
+            if (!bFind) return new StdResult_Error($"[{AppName}] 검색섹션_hWnd 찾기실패", "OnecallAct_RcptRegPage/InitializeAsync_02");
+
+            // 검색섹션 - 자식정보
+            mRcpt.검색섹션_hWnd새로고침버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_새로고침Btn_ptChkRelS);
+            mRcpt.검색섹션_hWnd확장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색ExpandBtn_ptChkRelS);
+            //Debug.WriteLine($"[{AppName}] 확장버튼 찾음: {mRcpt.검색섹션_hWnd확장버튼:X}");
+            #endregion
+
+            #region 3. 접수섹션
+            // 3. 접수섹션 Top핸들찾기
+            mRcpt.접수섹션_hWndTop = Std32Window.GetWndHandle_FromRelDrawPt(mMain.TopWnd_hWnd, fInfo.접수등록Page_접수섹션_ptChkRelT);
+
+            // 버튼들
+            mRcpt.접수섹션_hWnd신규버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_신규Btn_ptChkRelS);
+            mRcpt.접수섹션_hWnd저장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_저장Btn_ptChkRelS);
+
+            // 상차지
+            mRcpt.접수섹션_hWnd상차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_상차지권역_ptChkRelS);
+            mRcpt.접수섹션_hWnd상차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_상차지주소_ptChkRelS);
+
+            // 하차지
+            mRcpt.접수섹션_hWnd하차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_하차지권역_ptChkRelS);
+            mRcpt.접수섹션_hWnd하차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_하차지주소_ptChkRelS);
+
+            // 화물정보
+            mRcpt.접수섹션_hWnd화물정보 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelS);
+            #endregion
+
+            #region 4. DG오더 섹션
+            // DG오더 찾기
+            mRcpt.DG오더_hWndTop = Std32Window.GetWndHandle_FromRelDrawPt(mMain.TopWnd_hWnd, fInfo.접수등록Page_DG오더_ptChkRelT);
+
+            // 확장 전 컬럼 검증/초기화
+            var (listLW, error) = await SetDG오더ColumnHeaderAsync();
+            if (error != null) return error;
+
+            // Background Brightness 계산
+            mRcpt.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(mRcpt.DG오더_hWndTop);
+            Debug.WriteLine($"[{AppName}] Background Brightness: {mRcpt.DG오더_nBackgroundBright}");
+
+            // 공통 변수
+            int headerHeight = fInfo.접수등록Page_DG오더_headerHeight;
+            int rowHeight = fInfo.접수등록Page_DG오더_dataRowHeight;
+            int gab = fInfo.접수등록Page_DG오더_dataGab;
+            int dataTextHeight = rowHeight - gab - gab;
+            int columns = listLW.Count;
+
+            // Small Rects (19행)
+            int smallRowCount = fInfo.접수등록Page_DG오더_smallRowsCount;
+            mRcpt.DG오더_rcRelSmallCells = new Draw.Rectangle[smallRowCount, columns];
+            mRcpt.DG오더_ptRelChkSmallRows = new Draw.Point[smallRowCount];
+            for (int row = 0; row < smallRowCount; row++)
+            {
+                int cellY = headerHeight + (row * rowHeight) - 2;
+                mRcpt.DG오더_ptRelChkSmallRows[row] = new Draw.Point(listLW[0].nLeft + (listLW[0].nWidth / 2), cellY + (rowHeight / 2));
+                for (int col = 0; col < columns; col++)
+                {
+                    mRcpt.DG오더_rcRelSmallCells[row, col] = new Draw.Rectangle(listLW[col].nLeft, cellY + gab, listLW[col].nWidth, dataTextHeight);
+                }
+            }
+            Debug.WriteLine($"[{AppName}] Small Rects 생성 완료: {smallRowCount}행 x {columns}열");
+
+            // Large Rects (34행)
+            int largeRowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
+            mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[largeRowCount, columns];
+            mRcpt.DG오더_ptRelChkLargeRows = new Draw.Point[largeRowCount];
+            for (int row = 0; row < largeRowCount; row++)
+            {
+                int cellY = headerHeight + (row * rowHeight) - 2;
+                mRcpt.DG오더_ptRelChkLargeRows[row] = new Draw.Point(listLW[0].nLeft + (listLW[0].nWidth / 2), cellY + (rowHeight / 2));
+                for (int col = 0; col < columns; col++)
+                {
+                    mRcpt.DG오더_rcRelLargeCells[row, col] = new Draw.Rectangle(listLW[col].nLeft, cellY + gab, listLW[col].nWidth, dataTextHeight);
+                }
+            }
+            Debug.WriteLine($"[{AppName}] Large Rects 생성 완료: {largeRowCount}행 x {columns}열");
+            #endregion
 
             Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 완료");
             return null;
@@ -161,11 +199,8 @@ public class OnecallAct_RcptRegPage
     }
     #endregion
 
-    #region SetDG오더LargeRectsAsync - 확장 후 사용
-    /// <summary>
-    /// Datagrid 확장 후 Cell Rect 배열 계산 (36행)
-    /// </summary>
-    private async Task<StdResult_Error> SetDG오더LargeRectsAsync(bool bEdit = true)
+    #region SetDG오더 섹션
+    private async Task<(List<OfrModel_LeftWidth> listLW, StdResult_Error error)> SetDG오더ColumnHeaderAsync(bool bEdit = true)
     {
         Draw.Bitmap bmpDG = null;
         List<OfrModel_LeftWidth> listLW = null;
@@ -173,18 +208,18 @@ public class OnecallAct_RcptRegPage
 
         try
         {
-            Debug.WriteLine($"[{AppName}] SetDG오더LargeRectsAsync 시작");
+            Debug.WriteLine($"[{AppName}] SetDG오더ColumnHeaderAsync 시작");
 
             // 재시도 루프
             for (int retry = 1; retry <= MAX_RETRY; retry++)
             {
                 // 1. DG 헤더 캡처
-                Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWnd);
+                Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWndTop);
                 int headerHeight = fInfo.접수등록Page_DG오더_headerHeight;
                 Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, headerHeight);
-                bmpDG = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWnd, rcHeader);
+                bmpDG = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcHeader);
                 if (bmpDG == null)
-                    return new StdResult_Error($"[{AppName}] DG 캡처 실패", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_01");
+                    return (null, new StdResult_Error($"[{AppName}] DG 캡처 실패", "SetDG오더ColumnHeaderAsync_01"));
                 Debug.WriteLine($"[{AppName}] DG 캡처 완료: {rcHeader.Width}x{rcHeader.Height}");
 
                 // 2. 컬럼 경계 검출 (MinBrightness 방식)
@@ -194,16 +229,16 @@ public class OnecallAct_RcptRegPage
 
                 byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpDG, targetRow);
                 if (minBrightness == 255)
-                    return new StdResult_Error($"[{AppName}] 최소 밝기 검출 실패", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_02");
+                    return (null, new StdResult_Error($"[{AppName}] 최소 밝기 검출 실패", "SetDG오더ColumnHeaderAsync_02"));
                 minBrightness += 2;
 
                 bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, targetRow, minBrightness, 2);
                 if (boolArr == null || boolArr.Length == 0)
-                    return new StdResult_Error($"[{AppName}] Bool 배열 생성 실패", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_03");
+                    return (null, new StdResult_Error($"[{AppName}] Bool 배열 생성 실패", "SetDG오더ColumnHeaderAsync_03"));
 
                 listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
                 if (listLW == null || listLW.Count < 2)
-                    return new StdResult_Error($"[{AppName}] 컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_04");
+                    return (null, new StdResult_Error($"[{AppName}] 컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}", "SetDG오더ColumnHeaderAsync_04"));
 
                 // 마지막 항목 제거 (오른쪽 끝 경계)
                 listLW.RemoveAt(listLW.Count - 1);
@@ -219,18 +254,17 @@ public class OnecallAct_RcptRegPage
                     bmpDG?.Dispose();
                     bmpDG = null;
 
-                    StdResult_Error initResult = await InitDG오더Async(
-                        CEnum_DgValidationIssue.InvalidColumnCount);
+                    StdResult_Error initResult = await InitDG오더Async(CEnum_DgValidationIssue.InvalidColumnCount);
 
                     if (initResult != null)
                     {
                         if (retry == MAX_RETRY)
-                            return new StdResult_Error(
+                            return (null, new StdResult_Error(
                                 $"[{AppName}] 컬럼 개수 부족: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {MAX_RETRY}회 초과)",
-                                "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_05");
+                                "SetDG오더ColumnHeaderAsync_05"));
 
                         await Task.Delay(DELAY_RETRY);
-                        continue; // 재시도
+                        continue;
                     }
 
                     await Task.Delay(DELAY_RETRY);
@@ -243,12 +277,8 @@ public class OnecallAct_RcptRegPage
 
                 for (int i = 0; i < m_ReceiptDgHeaderInfos.Length; i++)
                 {
-                    Draw.Rectangle rcTmp = new Draw.Rectangle(
-                        listLW[i].nLeft, headerGab, listLW[i].nWidth, textHeight);
-
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                        bmpDG, rcTmp, bInvertRgb: false, bEdit: bEdit);
-
+                    Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[i].nLeft + 1, headerGab, listLW[i].nWidth - 2, textHeight);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bEdit: bEdit);
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }
 
@@ -268,76 +298,206 @@ public class OnecallAct_RcptRegPage
                     if (initResult != null)
                     {
                         if (retry == MAX_RETRY)
-                            return new StdResult_Error(
+                            return (null, new StdResult_Error(
                                 $"[{AppName}] Datagrid 상태 검증 실패: {validationIssues} (재시도 {MAX_RETRY}회 초과)",
-                                "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_Validation");
+                                "SetDG오더ColumnHeaderAsync_Validation"));
                     }
 
                     await Task.Delay(DELAY_RETRY);
-                    continue; // 재시도
+                    continue;
                 }
 
                 // 모든 평가 통과
-                Debug.WriteLine($"[{AppName}] 모든 컬럼 검증 완료!");
-
-                // Cell Rect 배열 생성
+                Debug.WriteLine($"[{AppName}] SetDG오더ColumnHeaderAsync 완료: {columns}개 컬럼");
                 bmpDG?.Dispose();
-                bmpDG = null;
-
-                int rowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
-                int rowHeight = fInfo.접수등록Page_DG오더_dataRowHeight;
-                int gab = fInfo.접수등록Page_DG오더_dataGab;
-                int dataTextHeight = rowHeight - gab - gab;
-
-                mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[rowCount, columns];
-                mRcpt.DG오더_ptRelChkLargeRows = new Draw.Point[rowCount];
-
-                for (int row = 0; row < rowCount; row++)
-                {
-                    int cellY = headerHeight + (row * rowHeight) - 2;
-
-                    // Row check point (첫번째 컬럼 중앙)
-                    mRcpt.DG오더_ptRelChkLargeRows[row] = new Draw.Point(
-                        listLW[0].nLeft + (listLW[0].nWidth / 2),
-                        cellY + (rowHeight / 2)
-                    );
-
-                    // Cell rects (경계에서 계산하여 미세조정 적용)
-                    for (int col = 0; col < columns; col++)
-                    {
-                        mRcpt.DG오더_rcRelLargeCells[row, col] = new Draw.Rectangle(
-                            listLW[col].nLeft,
-                            cellY + gab,
-                            listLW[col].nWidth,
-                            dataTextHeight
-                        );
-                    }
-                }
-
-                Debug.WriteLine($"[{AppName}] Rect 배열 생성 완료: {rowCount}행 x {columns}열");
-
-                // Background Brightness 계산 (데이터그리드 중심 위치)
-                mRcpt.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(mRcpt.DG오더_hWnd);
-                Debug.WriteLine($"[{AppName}] Background Brightness: {mRcpt.DG오더_nBackgroundBright}");
-
-                Debug.WriteLine($"[{AppName}] SetDG오더LargeRectsAsync 완료");
-                return null; // 성공
+                return (listLW, null); // 성공
             }
 
             // 최대 재시도 초과
-            return new StdResult_Error(
-                $"[{AppName}] Datagrid 초기화 실패 (재시도 {MAX_RETRY}회 초과)",
-                "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_MaxRetry");
+            return (null, new StdResult_Error(
+                $"[{AppName}] 컬럼헤더 초기화 실패 (재시도 {MAX_RETRY}회 초과)",
+                "SetDG오더ColumnHeaderAsync_MaxRetry"));
         }
         catch (Exception ex)
         {
-            return new StdResult_Error($"[{AppName}] SetDG오더LargeRectsAsync 예외: {ex.Message}", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_99");
+            return (null, new StdResult_Error($"[{AppName}] SetDG오더ColumnHeaderAsync 예외: {ex.Message}", "SetDG오더ColumnHeaderAsync_99"));
         }
         finally
         {
             bmpDG?.Dispose();
         }
     }
+
+    ///// <summary>
+    ///// Datagrid 확장 후 Cell Rect 배열 계산 (36행)
+    ///// </summary>
+    //private async Task<StdResult_Error> SetDG오더LargeRectsAsync(bool bEdit = true)
+    //{
+    //    Draw.Bitmap bmpDG = null;
+    //    List<OfrModel_LeftWidth> listLW = null;
+    //    int columns = 0;
+
+    //    try
+    //    {
+    //        Debug.WriteLine($"[{AppName}] SetDG오더LargeRectsAsync 시작");
+
+    //        // 재시도 루프
+    //        for (int retry = 1; retry <= MAX_RETRY; retry++)
+    //        {
+    //            // 1. DG 헤더 캡처
+    //            Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWndTop);
+    //            int headerHeight = fInfo.접수등록Page_DG오더_headerHeight;
+    //            Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, headerHeight);
+    //            bmpDG = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcHeader);
+    //            if (bmpDG == null)
+    //                return new StdResult_Error($"[{AppName}] DG 캡처 실패", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_01");
+    //            Debug.WriteLine($"[{AppName}] DG 캡처 완료: {rcHeader.Width}x{rcHeader.Height}");
+
+    //            // 2. 컬럼 경계 검출 (MinBrightness 방식)
+    //            const int headerGab = 6;
+    //            int textHeight = fInfo.접수등록Page_DG오더_headerHeight - (headerGab * 2);
+    //            int targetRow = headerGab + textHeight;
+
+    //            byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpDG, targetRow);
+    //            if (minBrightness == 255)
+    //                return new StdResult_Error($"[{AppName}] 최소 밝기 검출 실패", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_02");
+    //            minBrightness += 2;
+
+    //            bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, targetRow, minBrightness, 2);
+    //            if (boolArr == null || boolArr.Length == 0)
+    //                return new StdResult_Error($"[{AppName}] Bool 배열 생성 실패", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_03");
+
+    //            listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
+    //            if (listLW == null || listLW.Count < 2)
+    //                return new StdResult_Error($"[{AppName}] 컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_04");
+
+    //            // 마지막 항목 제거 (오른쪽 끝 경계)
+    //            listLW.RemoveAt(listLW.Count - 1);
+
+    //            columns = listLW.Count;
+    //            Debug.WriteLine($"[{AppName}] 컬럼 검출: {columns}개 (목표: {m_ReceiptDgHeaderInfos.Length}개)");
+
+    //            // 평가 1: 컬럼 개수 확인
+    //            if (columns < m_ReceiptDgHeaderInfos.Length)
+    //            {
+    //                Debug.WriteLine($"[{AppName}] 컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {retry}/{MAX_RETRY})");
+
+    //                bmpDG?.Dispose();
+    //                bmpDG = null;
+
+    //                StdResult_Error initResult = await InitDG오더Async(
+    //                    CEnum_DgValidationIssue.InvalidColumnCount);
+
+    //                if (initResult != null)
+    //                {
+    //                    if (retry == MAX_RETRY)
+    //                        return new StdResult_Error(
+    //                            $"[{AppName}] 컬럼 개수 부족: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {MAX_RETRY}회 초과)",
+    //                            "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_05");
+
+    //                    await Task.Delay(DELAY_RETRY);
+    //                    continue; // 재시도
+    //                }
+
+    //                await Task.Delay(DELAY_RETRY);
+    //                continue;
+    //            }
+
+    //            // 평가 2: 컬럼 헤더 OFR
+    //            Debug.WriteLine($"[{AppName}] 평가 2: 컬럼 헤더 OFR 시작");
+    //            string[] columnTexts = new string[m_ReceiptDgHeaderInfos.Length];
+
+    //            for (int i = 0; i < m_ReceiptDgHeaderInfos.Length; i++) // 컬럼헤더의 배경이 경계명도가 달라서 좌, 우로 1줄임 - 어두운 명도를 기준으로 하면 안줄여도 될걸로 예상
+    //            {
+    //                Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[i].nLeft + 1, headerGab, listLW[i].nWidth - 2, textHeight);
+    //                var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bEdit: bEdit);
+
+    //                columnTexts[i] = result?.strResult ?? string.Empty;
+    //            }
+
+    //            // 평가 3: Datagrid 상태 검증
+    //            Debug.WriteLine($"[{AppName}] 평가 3: Datagrid 상태 검증 시작");
+    //            CEnum_DgValidationIssue validationIssues = ValidateDatagridState(columnTexts, listLW);
+
+    //            if (validationIssues != CEnum_DgValidationIssue.None)
+    //            {
+    //                Debug.WriteLine($"[{AppName}] Datagrid 상태 검증 실패: {validationIssues} (재시도 {retry}/{MAX_RETRY})");
+
+    //                bmpDG?.Dispose();
+    //                bmpDG = null;
+
+    //                StdResult_Error initResult = await InitDG오더Async(validationIssues);
+
+    //                if (initResult != null)
+    //                {
+    //                    if (retry == MAX_RETRY)
+    //                        return new StdResult_Error(
+    //                            $"[{AppName}] Datagrid 상태 검증 실패: {validationIssues} (재시도 {MAX_RETRY}회 초과)",
+    //                            "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_Validation");
+    //                }
+
+    //                await Task.Delay(DELAY_RETRY);
+    //                continue; // 재시도
+    //            }
+
+    //            // 모든 평가 통과
+    //            Debug.WriteLine($"[{AppName}] 모든 컬럼 검증 완료!");
+
+    //            // Cell Rect 배열 생성
+    //            bmpDG?.Dispose();
+    //            bmpDG = null;
+
+    //            int rowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
+    //            int rowHeight = fInfo.접수등록Page_DG오더_dataRowHeight;
+    //            int gab = fInfo.접수등록Page_DG오더_dataGab;
+    //            int dataTextHeight = rowHeight - gab - gab;
+
+    //            mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[rowCount, columns];
+    //            mRcpt.DG오더_ptRelChkLargeRows = new Draw.Point[rowCount];
+
+    //            for (int row = 0; row < rowCount; row++)
+    //            {
+    //                int cellY = headerHeight + (row * rowHeight) - 2;
+
+    //                // Row check point (첫번째 컬럼 중앙)
+    //                mRcpt.DG오더_ptRelChkLargeRows[row] = new Draw.Point(listLW[0].nLeft + (listLW[0].nWidth / 2), cellY + (rowHeight / 2));
+
+    //                // Cell rects (경계에서 계산하여 미세조정 적용)
+    //                for (int col = 0; col < columns; col++)
+    //                {
+    //                    mRcpt.DG오더_rcRelLargeCells[row, col] = new Draw.Rectangle(
+    //                        listLW[col].nLeft,
+    //                        cellY + gab,
+    //                        listLW[col].nWidth,
+    //                        dataTextHeight
+    //                    );
+    //                }
+    //            }
+
+    //            Debug.WriteLine($"[{AppName}] Rect 배열 생성 완료: {rowCount}행 x {columns}열");
+
+    //            // Background Brightness 계산 (데이터그리드 중심 위치)
+    //            mRcpt.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(mRcpt.DG오더_hWndTop);
+    //            Debug.WriteLine($"[{AppName}] Background Brightness: {mRcpt.DG오더_nBackgroundBright}");
+
+    //            Debug.WriteLine($"[{AppName}] SetDG오더LargeRectsAsync 완료");
+    //            return null; // 성공
+    //        }
+
+    //        // 최대 재시도 초과
+    //        return new StdResult_Error(
+    //            $"[{AppName}] Datagrid 초기화 실패 (재시도 {MAX_RETRY}회 초과)",
+    //            "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_MaxRetry");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return new StdResult_Error($"[{AppName}] SetDG오더LargeRectsAsync 예외: {ex.Message}", "OnecallAct_RcptRegPage/SetDG오더LargeRectsAsync_99");
+    //    }
+    //    finally
+    //    {
+    //        bmpDG?.Dispose();
+    //    }
+    //}
     #endregion
 
     #region ValidateDatagridState
@@ -419,13 +579,13 @@ public class OnecallAct_RcptRegPage
             int targetRow = headerGab + textHeight;
 
             // DG오더_hWnd 기준으로 헤더 영역 정의
-            Draw.Rectangle rcDG = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWnd);
+            Draw.Rectangle rcDG = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWndTop);
             Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG.Width, headerHeight);
 
             #region Step 1 - 목록초기화
             Debug.WriteLine($"[{AppName}] Step 1: 목록초기화 시작");
             await Std32Mouse_Post.MousePostAsync_ClickLeft(
-                Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.TopWnd_hWnd, fInfo.접수등록Page_접수Btn목록초기화_ptRelL));
+                Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_목록초기화Btn_ptRelS));
             await Task.Delay(c_nWaitVeryLong);
             Debug.WriteLine($"[{AppName}] Step 1 완료");
             #endregion
@@ -470,7 +630,7 @@ public class OnecallAct_RcptRegPage
                         // 수직 드래그로 제거 (위로 드래그)
                         Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(rcHeaders[x]);
                         await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
-                            mRcpt.DG오더_hWnd, ptCenter, -50, false);
+                            mRcpt.DG오더_hWndTop, ptCenter, -50, false);
 
                         await Task.Delay(c_nWaitShort);
                     }
@@ -536,7 +696,7 @@ public class OnecallAct_RcptRegPage
 
                     // 드래그로 폭 조정
                     await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
-                        mRcpt.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                        mRcpt.DG오더_hWndTop, ptStart, dx, bBkCursor: false, nMiliSec: 100);
 
                     await Task.Delay(c_nWaitNormal);
                 }
@@ -630,7 +790,7 @@ public class OnecallAct_RcptRegPage
                 Draw.Point ptStart = new Draw.Point(listLW3[find].nLeft + 10, headerGab + (textHeight / 2));
                 Draw.Point ptTarget = new Draw.Point(listLW3[x].nLeft, ptStart.Y);
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(mRcpt.DG오더_hWnd, ptStart, ptTarget, bBkCursor: false, nMiliSec: 150);
+                await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(mRcpt.DG오더_hWndTop, ptStart, ptTarget, bBkCursor: false, nMiliSec: 150);
 
                 await Task.Delay(50);  // 드래그 후
             }
@@ -661,7 +821,7 @@ public class OnecallAct_RcptRegPage
 
                 Debug.WriteLine($"[{AppName}] Step 4. 너비 조정: [{col}]'{m_ReceiptDgHeaderInfos[col].sName}' {listLW4[col].nWidth}px → {m_ReceiptDgHeaderInfos[col].nWidth}px (dx={dx})");
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(mRcpt.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(mRcpt.DG오더_hWndTop, ptStart, dx, bBkCursor: false, nMiliSec: 100);
                 await Task.Delay(c_nWaitNormal);
             }
 
@@ -688,7 +848,7 @@ public class OnecallAct_RcptRegPage
     /// </summary>
     private (Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns) CaptureAndDetectColumnBoundaries(Draw.Rectangle rcHeader, int targetRow)
     {
-        Draw.Bitmap bmpHeader = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWnd, rcHeader);
+        Draw.Bitmap bmpHeader = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcHeader);
         if (bmpHeader == null) return (null, null, 0);
 
         byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpHeader, targetRow);
@@ -730,14 +890,14 @@ public class OnecallAct_RcptRegPage
     /// DG오더 셀 영역 시각화 테스트
     /// TransparantWnd를 사용하여 홀수 행 셀 영역을 두께 1로 그리고 MsgBox 표시
     /// </summary>
-    public void Test_DrawAllCellRects()
+    public void Test_DrawLargeCellRects()
     {
         try
         {
             Debug.WriteLine($"[{AppName}] Test_DrawAllCellRects 시작");
 
             // 1. DG오더 핸들 체크
-            if (mRcpt.DG오더_hWnd == IntPtr.Zero)
+            if (mRcpt.DG오더_hWndTop == IntPtr.Zero)
             {
                 System.Windows.MessageBox.Show("DG오더_hWnd가 초기화되지 않았습니다.", "오류");
                 return;
@@ -755,7 +915,7 @@ public class OnecallAct_RcptRegPage
             Debug.WriteLine($"[{AppName}] Cell 배열: {rowCount}행 x {colCount}열");
 
             // 3. TransparantWnd 오버레이 생성 (DG오더 위치 기준)
-            TransparantWnd.CreateOverlay(mRcpt.DG오더_hWnd);
+            TransparantWnd.CreateOverlay(mRcpt.DG오더_hWndTop);
             TransparantWnd.ClearBoxes();
 
             // 4. 모든 셀 영역 그리기 (두께 1, 빨간색)
@@ -790,6 +950,277 @@ public class OnecallAct_RcptRegPage
             Debug.WriteLine($"[{AppName}] 예외 발생: {ex.Message}");
             System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
             TransparantWnd.DeleteOverlay();
+        }
+    }
+
+    /// <summary>
+    /// Small 셀 영역 시각화 테스트
+    /// </summary>
+    public void Test_DrawSmallCellRects()
+    {
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Test_DrawSmallCellRects 시작");
+
+            if (mRcpt.DG오더_hWndTop == IntPtr.Zero)
+            {
+                System.Windows.MessageBox.Show("DG오더_hWnd가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            if (mRcpt.DG오더_rcRelSmallCells == null)
+            {
+                System.Windows.MessageBox.Show("DG오더_rcRelSmallCells가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            int rowCount = mRcpt.DG오더_rcRelSmallCells.GetLength(0);
+            int colCount = mRcpt.DG오더_rcRelSmallCells.GetLength(1);
+
+            System.Windows.MessageBox.Show("Small 셀 영역 그리기 시작", "Debug");
+            TransparantWnd.CreateOverlay(mRcpt.DG오더_hWndTop);
+            TransparantWnd.ClearBoxes();
+
+            for (int row = 0; row < rowCount; row++)
+            {
+                for (int col = 0; col < colCount; col++)
+                {
+                    Draw.Rectangle rc = mRcpt.DG오더_rcRelSmallCells[row, col];
+                    TransparantWnd.DrawBoxAsync(rc, strokeColor: Media.Colors.Red, thickness: 1);
+                }
+            }
+
+            System.Windows.MessageBox.Show($"Small 셀 영역 완료\n{rowCount}행 x {colCount}열", "Debug");
+            TransparantWnd.DeleteOverlay();
+            Debug.WriteLine($"[{AppName}] Test_DrawSmallCellRects 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] 예외 발생: {ex.Message}");
+            System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
+    }
+
+    /// <summary>
+    /// 컬럼헤더 셀영역 시각화 테스트
+    /// </summary>
+    public async Task Test_DrawColumnHeaderRectsAsync()
+    {
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Test_DrawColumnHeaderRectsAsync 시작");
+
+            if (mRcpt.DG오더_hWndTop == IntPtr.Zero)
+            {
+                System.Windows.MessageBox.Show("DG오더_hWnd가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            // 1. DG 헤더 캡처
+            Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(mRcpt.DG오더_hWndTop);
+            int headerHeight = fInfo.접수등록Page_DG오더_headerHeight;
+            Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, headerHeight);
+            Draw.Bitmap bmpDG = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcHeader);
+            if (bmpDG == null)
+            {
+                System.Windows.MessageBox.Show("DG 헤더 캡처 실패", "오류");
+                return;
+            }
+
+            // 2. 컬럼 경계 검출 (현재 로직)
+            const int headerGab = 6;
+            int textHeight = headerHeight - (headerGab * 2);
+            int targetRow = headerGab + textHeight;
+
+            byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpDG, targetRow);
+            minBrightness += 2;
+
+            bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, targetRow, minBrightness, 2);
+            List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
+
+            if (listLW == null || listLW.Count < 2)
+            {
+                bmpDG?.Dispose();
+                System.Windows.MessageBox.Show($"컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}", "오류");
+                return;
+            }
+
+            // 마지막 항목 제거
+            listLW.RemoveAt(listLW.Count - 1);
+            int columns = listLW.Count;
+
+            Debug.WriteLine($"[{AppName}] 컬럼 검출: {columns}개, minBrightness={minBrightness}, targetRow={targetRow}");
+
+            // 3. TransparantWnd로 컬럼 헤더 영역 그리기
+            TransparantWnd.CreateOverlay(mRcpt.DG오더_hWndTop);
+            TransparantWnd.ClearBoxes();
+
+            for (int i = 0; i < columns; i++)// 컬럼헤더의 배경이 경계명도가 달라서 좌, 우로 1줄임 - 어두운 명도를 기준으로 하면 안줄여도 될걸로 예상
+            {
+                Draw.Rectangle rc = new Draw.Rectangle(listLW[i].nLeft+1, headerGab, listLW[i].nWidth-2, textHeight);
+                TransparantWnd.DrawBoxAsync(rc, strokeColor: Media.Colors.Red, thickness: 1);
+            }
+
+            bmpDG?.Dispose();
+
+            // 4. MsgBox
+            System.Windows.MessageBox.Show(
+                $"원콜 컬럼헤더 셀영역 테스트\n\n" +
+                $"컬럼 수: {columns}\n" +
+                $"headerHeight: {headerHeight}\n" +
+                $"targetRow: {targetRow}\n" +
+                $"minBrightness: {minBrightness}\n\n" +
+                $"확인을 누르면 오버레이가 제거됩니다.",
+                "컬럼헤더 테스트");
+
+            TransparantWnd.DeleteOverlay();
+            Debug.WriteLine($"[{AppName}] Test_DrawColumnHeaderRectsAsync 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] 예외 발생: {ex.Message}");
+            System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
+    }
+    #endregion
+
+    #region CheckOcOrderAsync_AssumeKaiNewOrder
+    /// <summary>
+    /// 신규 주문 처리 (Kai 신규 → 원콜 등록)
+    /// </summary>
+    public async Task<CommonResult_AutoAllocProcess> CheckOcOrderAsync_AssumeKaiNewOrder(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+
+        string kaiState = item.NewOrder.OrderState;
+        Debug.WriteLine($"[{AppName}] CheckOcOrderAsync_AssumeKaiNewOrder: KeyCode={item.KeyCode}, kaiState={kaiState}");
+
+        switch (kaiState)
+        {
+            case "접수": // 신규등록모드 → 입력 → 저장
+                return await RegistOrderModeAsync(item, ctrl);
+
+            case "취소": // 무시 - 비적재
+            case "대기":
+                return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+
+            case "배차":
+            case "운행":
+            case "완료":
+            case "예약":
+                Debug.WriteLine($"[{AppName}] 미구현 상태: {kaiState}");
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태: {kaiState}", "CheckOcOrderAsync_AssumeKaiNewOrder_TODO");
+
+            default:
+                Debug.WriteLine($"[{AppName}] 알 수 없는 Kai 주문 상태: {kaiState}");
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"알 수 없는 Kai 주문 상태: {kaiState}", "CheckOcOrderAsync_AssumeKaiNewOrder_800");
+        }
+    }
+    #endregion
+
+    #region RegistOrderModeAsync
+    /// <summary>
+    /// 신규등록모드: 신규버튼 클릭 → 정보 입력 → 저장
+    /// </summary>
+    public async Task<CommonResult_AutoAllocProcess> RegistOrderModeAsync(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        try
+        {
+            #region 1. 사전작업
+            Debug.WriteLine($"[{AppName}] RegistOrderModeAsync 진입: KeyCode={item.KeyCode}");
+
+            // 로컬 변수
+            TbOrder tbOrder = item.NewOrder;
+
+            // 데이터그리드 축소 (신규버튼 접근 위해)
+            await CollapseDG오더Async();
+
+            // 신규 버튼 클릭
+            await ctrl.WaitIfPausedOrCancelledAsync();
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd신규버튼);
+            Debug.WriteLine($"[{AppName}] 신규버튼 클릭"); 
+
+            // 신규등록모드 진입 확인 (상차지주소 캡션이 빌때까지 대기)
+            bool bNewMode = false;
+            for (int i = 0; i < c_nRepeatMany; i++)
+            {
+                await Task.Delay(c_nWaitShort);
+                string caption = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소);
+                if (string.IsNullOrEmpty(caption))
+                {
+                    bNewMode = true;
+                    Debug.WriteLine($"[{AppName}] 신규등록모드 진입 확인");
+                    break;
+                }
+            }
+            if (!bNewMode)
+            {
+                return CommonResult_AutoAllocProcess.FailureAndDiscard(
+                    "신규등록모드 진입 실패", "RegistOrderModeAsync_02");
+            }
+            #endregion
+
+            #region 2. 주문 정보 입력
+            string captionFull = tbOrder.StartDetailAddr;
+            var match = System.Text.RegularExpressions.Regex.Match(captionFull, @"^(.*?)(\d.*)$");
+            string captionSimple = match.Success ? match.Groups[1].Value : captionFull;
+            Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd상차지주소, captionSimple);
+
+
+            System.Windows.MessageBox.Show($"전체: [{captionSimple}]", "Test");
+            #endregion
+
+            #region 3. 저장 버튼 클릭
+
+            #endregion
+
+            #region 4. 저장 성공 확인
+
+            #endregion
+
+            return CommonResult_AutoAllocProcess.FailureAndDiscard(
+                "TODO: RegistOrderModeAsync 미구현", "RegistOrderModeAsync_TODO");
+        }
+        catch (Exception ex)
+        {
+            return CommonResult_AutoAllocProcess.FailureAndDiscard(
+                StdUtil.GetExceptionMessage(ex), "RegistOrderModeAsync_999");
+        }
+    }
+    #endregion
+
+    #region UpdateOrderModeAsync
+    /// <summary>
+    /// 수정모드: 로우 셀렉트 → 정보 수정 → 저장
+    /// </summary>
+    public async Task<CommonResult_AutoAllocProcess> UpdateOrderModeAsync(AutoAllocModel item, int nRowIndex, CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine($"[{AppName}] UpdateOrderModeAsync 진입: KeyCode={item.KeyCode}, RowIndex={nRowIndex}");
+
+            // 0. 데이터그리드 확장 (로우 접근 위해)
+            await ExpandDG오더Async();
+
+            // TODO: 1. 해당 로우 클릭 (수정모드 진입)
+
+            // TODO: 2. 수정모드 진입 확인
+
+            // TODO: 3. 주문 정보 수정
+
+            // TODO: 4. 저장 버튼 클릭
+
+            // TODO: 5. 저장 성공 확인
+
+            return CommonResult_AutoAllocProcess.FailureAndDiscard(
+                "TODO: UpdateOrderModeAsync 미구현", "UpdateOrderModeAsync_TODO");
+        }
+        catch (Exception ex)
+        {
+            return CommonResult_AutoAllocProcess.FailureAndDiscard(
+                StdUtil.GetExceptionMessage(ex), "UpdateOrderModeAsync_999");
         }
     }
     #endregion

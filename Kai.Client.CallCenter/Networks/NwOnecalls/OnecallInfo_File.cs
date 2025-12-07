@@ -39,44 +39,58 @@ public class OnecallInfo_File
     public string Main_MdiClient_ClassName = "WindowsForms10.MDICLIENT.app.0.34f5582_r7_ad1"; // ClassName
     #endregion
 
-    #region 접수등록Page - 도킹상태 접수등록Page_TopWnd 기준
-    // TopWnd
-    //public string 접수등록Page_TopWnd_sClassName = "WindowsForms10.Window.8.app.0.34f5582_r7_ad1"; // ClassName
-    public string 접수등록Page_TopWnd_sWndName = "화물등록";   // WndName
+    #region #region 접수등록Page - 도킹상태 접수등록Page_TopWnd 기준
 
-    // 접수 Section
-    public Draw.Rectangle 접수등록Page_접수영역_rcChkRel = new Draw.Rectangle(0, 0, 1916, 400); // Check Point rcRel: {X=0,Y=0,Width=1916,Height=400}
+    #region TopWnd
+    public string 접수등록Page_TopWnd_sWndName = "화물등록";   // WndName 
+    #endregion
 
-    public Draw.Point 접수등록Page_접수Btn목록초기화_ptRelL = new Draw.Point(1084, 374); // 접수등록Page(화물등록) 기준
+    #region 접수 Section
+    // Top
+    public Draw.Point 접수등록Page_접수섹션_ptChkRelT { get; set; } = new Draw.Point(1800, 255);
 
-    // 검색 Section
-    public string 접수등록Page_검색영역_sWndName = "검색"; // Check Text
-    public Draw.Point 접수등록Page_검색Range_ptChkRelFromL = new Draw.Point(115, 18); // Check Point - From 
-    public Draw.Point 접수등록Page_검색ExpandBtn_ptChkRelL = new Draw.Point(1892, 18); // Check Point - ExpandBtn
+    // 버튼들
+    public Draw.Point 접수등록Page_접수_목록초기화Btn_ptRelS { get; set; } = new Draw.Point(1084, 374); // 목록초기화Btn 
+    public Draw.Point 접수등록Page_접수_신규Btn_ptChkRelS { get; set; } = new Draw.Point(54, 374); // 신규Btn {X=54,Y=374}
+    public Draw.Point 접수등록Page_접수_저장Btn_ptChkRelS { get; set; } = new Draw.Point(178, 374); // 저장Btn {X=178,Y=374}
 
+    // 상차지
+    public Draw.Point 접수등록Page_접수_상차지권역_ptChkRelS { get; set; } = new Draw.Point(156, 58); // {X=156,Y=58}
+    public Draw.Point 접수등록Page_접수_상차지주소_ptChkRelS { get; set; } = new Draw.Point(332, 58); // {X=332,Y=58}
 
-    // Datagrid Section
-    public Draw.Rectangle 접수등록Page_DG오더_rcRelFirst = new Draw.Rectangle(0, 436, 1916, 474); // Check Point rcRel: {X=0,Y=436,Width=1916,Height=474}
+    // 하차지
+    public Draw.Point 접수등록Page_접수_하차지권역_ptChkRelS { get; set; } = new Draw.Point(156, 89); // {X=156,Y=89}
+    public Draw.Point 접수등록Page_접수_하차지주소_ptChkRelS { get; set; } = new Draw.Point(332, 90); // {X=332,Y=90}
+
+    // 화물정보
+    public Draw.Point 접수등록Page_접수_화물정보_ptChkRelS { get; set; } = new Draw.Point(375, 121); // {X=375,Y=121}
+    #endregion
+
+    #region 검색 Section
+    public Draw.Point 접수등록Page_검색섹션_ptChkRelT { get; set; } = new Draw.Point(1800, 515); // {X=1800,Y=515}
+    public Draw.Point 접수등록Page_검색_새로고침Btn_ptChkRelS { get; set; } = new Draw.Point(597, 18); // 새로고침Btn {X=597,Y=18}
+    public Draw.Point 접수등록Page_검색ExpandBtn_ptChkRelS { get; set; } = new Draw.Point(1892, 18); // ExpandBtn 
+    #endregion
+
+    #region Datagrid Section
     public int 접수등록Page_DG오더_nExpandedHeight = 874; // ExpandBtn Width
+    public Draw.Point 접수등록Page_DG오더_ptChkRelT { get; set; } = new Draw.Point(1800, 975); // {X=1800,Y=975}
 
-    //// 접수 Datagrid
-    //public Draw.Point 접수등록Page_DG오더_ptCheckRel = new Draw.Point(892, 774); // Check Point - Center
-    ////public Draw.Rectangle 접수등록Page_DG오더_rcCheckRel = new Draw.Rectangle(10, 229, 1916, 637); // Check Point
-
-    //public string 접수등록Page_DG오더_sClassName = "WindowsForms10.Window.8.app.0.34f5582_r7_ad1"; // Check Window Name
+    // 접수 Datagrid
     public int 접수등록Page_DG오더_headerHeight = 30; // HeaderRow Height
     public int 접수등록Page_DG오더_dataRowHeight = 23; // DataRow Height
     public int 접수등록Page_DG오더_dataGab = 1; // 셀 상하단 gap
-    public int 접수등록Page_DG오더_smallRowsCount = 19; // DataRow Count
+    public int 접수등록Page_DG오더_smallRowsCount = 17; // DataRow Count
     public int 접수등록Page_DG오더_largeRowsCount = 34; // DataRow Count
 
     public string[] 접수등록Page_DG오더_colOrgTexts = new string[]
-{
-    "순번", "처리일자", "처리시간", "처리상태", "상차일", "하차일", "상차지", "하차지", "혼적", "화물정보",
-    "운임", "수수료", "결제방법", "산재보험료 주선사부담", "산재보험료 차주부담", "톤수", "차종", "차량번호", "차주명", "차주전화", 
-    "차주_톤수", "차주_차종", "적재옵션", "차주_사업자상호", "차주_사업자구분", "차주_사업자번호", "인수증", "매입계산서 발행일", "상차완료보고시간", "하차완료보고시간",
-    "담당자번호", "오더번호"
-};
+    {
+        "순번", "처리일자", "처리시간", "처리상태", "상차일", "하차일", "상차지", "하차지", "혼적", "화물정보",
+        "운임", "수수료", "결제방법", "산재보험료 주선사부담", "산재보험료 차주부담", "톤수", "차종", "차량번호", "차주명", "차주전화",
+        "차주_톤수", "차주_차종", "적재옵션", "차주_사업자상호", "차주_사업자구분", "차주_사업자번호", "인수증", "매입계산서 발행일", "상차완료보고시간", "하차완료보고시간",
+        "담당자번호", "오더번호"
+    };
     #endregion
+    #endregion #endregion 접수등록Page - 도킹상태 접수등록Page_TopWnd 기준
 }
 #nullable enable

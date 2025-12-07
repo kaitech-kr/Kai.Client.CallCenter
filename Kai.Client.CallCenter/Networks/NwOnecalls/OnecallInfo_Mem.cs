@@ -59,38 +59,53 @@ public class OnecallInfo_Mem
     #region 접수(화물)등록Page
     public class RcptRegPage
     {
-        // TopWnd
-        public IntPtr TopWnd_hWnd;  // hWnd
+        #region TopWnd
+        // 최상위
+        public IntPtr TopWnd_hWnd;  // hWnd 
+        #endregion
 
-        // 접수영역
-        public IntPtr 접수영역_hWnd;  // hWnd
-        public IntPtr 접수영역_확장버튼_hWnd;  // hWnd - ExpandBtn
+        #region 접수영역
+        // 최상위 - 접수영역
+        public IntPtr 접수섹션_hWndTop;  // hWnd
 
-        // 검색영역
-        public IntPtr 검색영역_hWnd;  // hWnd
+        // 버튼들
+        public IntPtr 접수섹션_hWnd신규버튼;  // 버튼
+        public IntPtr 접수섹션_hWnd저장버튼;  // 버튼
 
-        // Datagrid
-        public IntPtr DG오더_hWnd;  // hWnd
+        // 상차지
+        public IntPtr 접수섹션_hWnd상차지권역; // Edit
+        public IntPtr 접수섹션_hWnd상차지주소; // Edit
+
+        // 하차지
+        public IntPtr 접수섹션_hWnd하차지권역; // Edit
+        public IntPtr 접수섹션_hWnd하차지주소; // Edit 
+
+        // 화물정보
+        public IntPtr 접수섹션_hWnd화물정보; // Edit
+        #endregion
+
+        #region 검색영역
+        // 최상위 - 검색영역
+        public IntPtr 검색섹션_hWndTop;  // hWnd
+
+        // 버튼들
+        public IntPtr 검색섹션_hWnd새로고침버튼;  // hWnd - 
+        public IntPtr 검색섹션_hWnd확장버튼;  // hWnd - ExpandBtn 
+        #endregion
+
+        #region Datagrid
+        // 최상위 - Datagrid
+        public IntPtr DG오더_hWndTop;  // hWnd
+
+        // 영역
         public Draw.Rectangle[,] DG오더_rcRelLargeCells;
         public Draw.Point[] DG오더_ptRelChkLargeRows;
         public Draw.Rectangle[,] DG오더_rcRelSmallCells;
         public Draw.Point[] DG오더_ptRelChkSmallRows;
 
-        //// CommandBtns GroupBox
-        //public IntPtr CmdBtn_hWnd신규;
-        //public IntPtr CmdBtn_hWnd조회;
-
-        //// Datagrid
-        //public IntPtr DG오더_hWnd;
-        //public Draw.Rectangle DG오더_AbsRect;
-        //public Draw.Rectangle[,] DG오더_rcRelCells;
-        //public Draw.Point[] DG오더_ptRelChkRows;
-        ////public string[] DG오더_ColumnTexts;
-        public Draw.Rectangle[,] DG오더_RelChildRects;
-        public int DG오더_nBackgroundBright = 0;
-
-
-        //// DateFrom
+        // 명도
+        public int DG오더_nBackgroundBright = 0; 
+        #endregion
     }
     #endregion
 
