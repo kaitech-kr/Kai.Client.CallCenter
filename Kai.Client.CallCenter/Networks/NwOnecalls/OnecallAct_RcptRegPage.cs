@@ -128,15 +128,35 @@ public partial class OnecallAct_RcptRegPage
             mRcpt.접수섹션_hWnd저장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_저장Btn_ptChkRelS);
 
             // 상차지
-            mRcpt.접수섹션_hWnd상차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_상차지권역_ptChkRelS);
+            mRcpt.접수섹션_hWnd상차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_상차지권역_rcChkRelS));
             mRcpt.접수섹션_hWnd상차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_상차지주소_ptChkRelS);
 
             // 하차지
-            mRcpt.접수섹션_hWnd하차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_하차지권역_ptChkRelS);
+            mRcpt.접수섹션_hWnd하차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_하차지권역_rcChkRelS));
             mRcpt.접수섹션_hWnd하차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_하차지주소_ptChkRelS);
 
             // 화물정보
             mRcpt.접수섹션_hWnd화물정보 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelS);
+
+            // 운임
+            mRcpt.접수섹션_hWnd총운임 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_총운임_ptChkRelS);
+            mRcpt.접수섹션_hWnd수수료 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_수수료_ptChkRelS);
+
+            // 차량정보
+            mRcpt.접수섹션_차량_hWnd톤수 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_톤수_rcChkRelS)); // 차량톤수
+
+            mRcpt.접수섹션_차량_hWnd차종 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_차종_rcChkRelS)); // 차종
+
+            mRcpt.접수섹션_차량_hWnd대수 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_대수_rcChkRelS)); // 차량대수
+
+            mRcpt.접수섹션_차량_hWnd결재 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_결재_rcChkRelS)); // 결재
+
             #endregion
 
             #region 4. DG오더 섹션
@@ -1133,6 +1153,7 @@ public partial class OnecallAct_RcptRegPage
 
             // 로컬 변수
             TbOrder tbOrder = item.NewOrder;
+            bool bTmp = false;
 
             // 데이터그리드 축소 (신규버튼 접근 위해)
             await CollapseDG오더Async();
@@ -1157,19 +1178,47 @@ public partial class OnecallAct_RcptRegPage
             }
             if (!bNewMode)
             {
-                return CommonResult_AutoAllocProcess.FailureAndDiscard(
-                    "신규등록모드 진입 실패", "RegistOrderModeAsync_02");
+                return CommonResult_AutoAllocProcess.FailureAndDiscard("신규등록모드 진입 실패", "RegistOrderModeAsync_01");
             }
             #endregion
 
             #region 2. 주문 정보 입력
-            string captionFull = tbOrder.StartDetailAddr;
-            var match = System.Text.RegularExpressions.Regex.Match(captionFull, @"^(.*?)(\d.*)$");
-            string captionSimple = match.Success ? match.Groups[1].Value : captionFull;
-            Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd상차지주소, captionSimple);
+            // 상차지 입력
+            var result상차 = await Set상세주소Async(mRcpt.접수섹션_hWnd상차지주소, fInfo.접수등록Page_접수_상차지권역_rcChkRelS, tbOrder.StartDetailAddr, ctrl);
+            if (result상차.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"상차지 입력실패: {result상차.sErr}", "RegistOrderModeAsync_02");
+
+            // 하차지 입력
+            var result하차 = await Set상세주소Async(mRcpt.접수섹션_hWnd하차지주소, fInfo.접수등록Page_접수_하차지권역_rcChkRelS, tbOrder.DestDetailAddr, ctrl);
+            if (result하차.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"하차지 입력실패: {result하차.sErr}", "RegistOrderModeAsync_03");
+
+            // 화물정보 - 디비에 적요가 있으면 쓰고, 없으면 없음을 쓴다
+            if (string.IsNullOrEmpty(tbOrder.OrderRemarks)) Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd화물정보, "없음");
+            else Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd화물정보, tbOrder.OrderRemarks);
+            await Task.Delay(c_nWaitShort);
+            Std32Key_Msg.KeyPost_Click(mRcpt.접수섹션_hWnd화물정보, StdCommon32.VK_RETURN);
+
+            // 운임
+            if (tbOrder.FeeTotal > 0) // 총운임
+            {
+                bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd총운임, tbOrder.FeeTotal);
+                if(!bTmp) return CommonResult_AutoAllocProcess.FailureAndDiscard($"총운임 입력실패: {tbOrder.FeeTotal}", "RegistOrderModeAsync_04");
+            }
+            if (tbOrder.FeeCharge > 0) // 수수료
+            {
+                bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd수수료, tbOrder.FeeCharge);
+                if (!bTmp) return CommonResult_AutoAllocProcess.FailureAndDiscard($"총운임 입력실패: {tbOrder.FeeTotal}", "RegistOrderModeAsync_05");
+            }
+
+            // 차량 - 톤수 (공용함수)
+            CommonModel_ComboBox resultModel = GetCarWeightResult(tbOrder.CarType, tbOrder.CarWeight);
+            var result톤수 = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd톤수, resultModel.ptPos);
+            if (result톤수.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"톤수 선택실패: {result톤수.sErr}", "RegistOrderModeAsync_06");
 
 
-            System.Windows.MessageBox.Show($"전체: [{captionSimple}]", "Test");
+
             #endregion
 
             #region 3. 저장 버튼 클릭
@@ -1181,7 +1230,7 @@ public partial class OnecallAct_RcptRegPage
             #endregion
 
             return CommonResult_AutoAllocProcess.FailureAndDiscard(
-                "TODO: RegistOrderModeAsync 미구현", "RegistOrderModeAsync_TODO");
+                    "TODO: RegistOrderModeAsync 미구현", "RegistOrderModeAsync_TODO");
         }
         catch (Exception ex)
         {

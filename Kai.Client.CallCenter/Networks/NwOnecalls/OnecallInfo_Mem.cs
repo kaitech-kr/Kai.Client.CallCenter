@@ -82,6 +82,16 @@ public class OnecallInfo_Mem
 
         // 화물정보
         public IntPtr 접수섹션_hWnd화물정보; // Edit
+
+        // 운임
+        public IntPtr 접수섹션_hWnd총운임; // Edit
+        public IntPtr 접수섹션_hWnd수수료; // Edit
+
+        // 차량정보
+        public IntPtr 접수섹션_차량_hWnd톤수; // Combo
+        public IntPtr 접수섹션_차량_hWnd차종; // Combo
+        public IntPtr 접수섹션_차량_hWnd대수; // Combo
+        public IntPtr 접수섹션_차량_hWnd결재; // Combo
         #endregion
 
         #region 검색영역
