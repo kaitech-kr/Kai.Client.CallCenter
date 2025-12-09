@@ -70,7 +70,7 @@ public class OnecallInfo_File
     public Draw.Point 접수등록Page_접수_총운임_ptChkRelS { get; set; } = new Draw.Point(147, 153); // {X=147,Y=153}
     public Draw.Point 접수등록Page_접수_수수료_ptChkRelS { get; set; } = new Draw.Point(331, 153); // {X=331,Y=153}
 
-    // 차량정보 - 톤수
+    // 차량정보
     public Draw.Rectangle 접수등록Page_접수_톤수_rcChkRelS { get; set; } = new Draw.Rectangle(108, 176, 80, 20); // {X=105,Y=173,Width=103,Height=26}
     public Draw.Rectangle 접수등록Page_접수_차종_rcChkRelS { get; set; } = new Draw.Rectangle(278, 176, 89, 20); // {X=275,Y=173,Width=112,Height=26}
     public Draw.Rectangle 접수등록Page_접수_대수_rcChkRelS { get; set; } = new Draw.Rectangle(436, 176, 44, 20); // {X=433,Y=173,Width=67,Height=26}
@@ -98,46 +98,69 @@ public class OnecallInfo_File
         //new CommonModel_ComboBox("", "5t플축", new Draw.Point(45, 316)), // 5t플축
 
         new CommonModel_ComboBox("8t", "8t", new Draw.Point(45, 338)), // 8t
-        //new CommonModel_ComboBox("", "9.5t", new Draw.Point(45, 360)), // 9.5t
+        new CommonModel_ComboBox("", "9.5t", new Draw.Point(45, 360)), // 9.5t
         new CommonModel_ComboBox("11t", "11t", new Draw.Point(45, 382)), // 11t
         new CommonModel_ComboBox("14t", "14t", new Draw.Point(45, 404)), // 14t
         //new CommonModel_ComboBox("", "16t", new Draw.Point(45, 426)), // 16t
 
         new CommonModel_ComboBox("18t", "18t", new Draw.Point(45, 448)), // 18t
-        //new CommonModel_ComboBox("", "22t", new Draw.Point(45, 470)), // 22t
+        new CommonModel_ComboBox("", "22t", new Draw.Point(45, 470)), // 22t
         new CommonModel_ComboBox("25t", "25t", new Draw.Point(45, 492)), // 25t
     };
 
     public CommonModel_ComboBox[] 접수등록Page_접수_차종Open = new CommonModel_ComboBox[]
     {
-        new CommonModel_ComboBox("", "차종무관", new Draw.Point(45, 8)), // 차종무관
-        new CommonModel_ComboBox("", "카고", new Draw.Point(45, 8)), // 카고
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), //
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), //
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), //
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)), // 
-        new CommonModel_ComboBox("", "", new Draw.Point(45, 8)) //
+          new CommonModel_ComboBox("전체", "차종무관", new Draw.Point(45, 8)),    // 차종무관
+          new CommonModel_ComboBox("카고", "카고", new Draw.Point(45, 30)),           // 카고
+          new CommonModel_ComboBox("윙바디", "윙바디", new Draw.Point(45, 52)),         // 윙바디
+          new CommonModel_ComboBox("탑", "탑", new Draw.Point(45, 74)),             // 탑
+          new CommonModel_ComboBox("냉장탑", "냉장탑", new Draw.Point(45, 96)),         // 냉장탑
+       
+          new CommonModel_ComboBox("카고/윙", "카고/윙", new Draw.Point(45, 118)),       // 카고/윙
+          //new CommonModel_ComboBox("", "윙바디/탑", new Draw.Point(45, 140)),     // 윙바디/탑
+          new CommonModel_ComboBox("리프트카고", "리프트", new Draw.Point(45, 162)),        // 리프트
+          new CommonModel_ComboBox("리프트윙", "리프트윙", new Draw.Point(45, 184)),      // 리프트윙
+          new CommonModel_ComboBox("리프트호루", "호로리프트", new Draw.Point(45, 206)),    // 호로리프트
+       
+          new CommonModel_ComboBox("플러스윙", "윙플러스", new Draw.Point(45, 228)),      // 윙플러스
+          new CommonModel_ComboBox("호루", "호로", new Draw.Point(45, 250)),          // 호로
+          new CommonModel_ComboBox("냉동탑", "냉동탑", new Draw.Point(45, 272)),        // 냉동탑
+          new CommonModel_ComboBox("리프트탑", "탑리프트", new Draw.Point(45, 294)),      // 탑리프트
+          new CommonModel_ComboBox("츄레라", "추레라", new Draw.Point(45, 316)),        // 추레라
+       
+          new CommonModel_ComboBox("다마", "다마스", new Draw.Point(45, 338)),        // 다마스
+          new CommonModel_ComboBox("라보", "라보", new Draw.Point(45, 360)),          // 라보
+          new CommonModel_ComboBox("리프트카고", "카고리프트", new Draw.Point(45, 382)),    // 카고리프트
+          new CommonModel_ComboBox("무진동", "무진동", new Draw.Point(45, 404)),        // 무진동
+          new CommonModel_ComboBox("냉장윙", "냉장윙", new Draw.Point(45, 426)),        // 냉장윙
+       
+          new CommonModel_ComboBox("초장축", "초장축", new Draw.Point(45, 448)),        // 초장축
     };
+
+    public CommonModel_ComboBox[] 접수등록Page_접수_결재Open = new CommonModel_ComboBox[] // 화물24시에 맞게 조정
+    {
+          new CommonModel_ComboBox("신용", "인수증", new Draw.Point(45, 8)),    // 인수증
+          new CommonModel_ComboBox("카드", "인수증", new Draw.Point(45, 8)),    // 인수증
+          new CommonModel_ComboBox("송금", "인수증", new Draw.Point(45, 8)),    // 인수증
+
+          new CommonModel_ComboBox("선불", "선착불", new Draw.Point(45, 30)),   // 선착불
+          new CommonModel_ComboBox("착불", "선착불", new Draw.Point(45, 30)),   // 선착불
+
+          //new CommonModel_ComboBox("착불", "착불", new Draw.Point(45, 52)),   // 착불
+          //new CommonModel_ComboBox("선불", "선불", new Draw.Point(45, 74)),   // 선불
+          //new CommonModel_ComboBox("카드", "카드", new Draw.Point(45, 96)),   // 카드   
+    };
+
+    // 화물중량
+    public Draw.Point 접수등록Page_접수_화물중량_ptChkRelS { get; set; } = new Draw.Point(156, 216); // {X=156,Y=216}
+
+    // 구분
+    public Draw.Rectangle 접수등록Page_구분_독차Part_rcChkRelM { get; set; } = new Draw.Rectangle(767, 19, 16, 16); // {X=767,Y=15,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_구분_혼적Part_rcChkRelM { get; set; } = new Draw.Rectangle(845, 19, 16, 16); // {X=845,Y=15,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_구분_긴급Part_rcChkRelM { get; set; } = new Draw.Rectangle(1093, 20, 16, 16); // {X=1093,Y=16,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_구분_왕복Part_rcChkRelM { get; set; } = new Draw.Rectangle(1154, 20, 16, 16); // {X=1154,Y=16,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_구분_경유Part_rcChkRelM { get; set; } = new Draw.Rectangle(1218, 20, 16, 16); // {X=1218,Y=16,Width=55,Height=26}
+
     #endregion
 
     #region 검색 Section

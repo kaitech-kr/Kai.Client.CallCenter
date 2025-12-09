@@ -157,6 +157,25 @@ public partial class OnecallAct_RcptRegPage
             mRcpt.접수섹션_차량_hWnd결재 = Std32Window.GetWndHandle_FromRelDrawPt(
                 mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_결재_rcChkRelS)); // 결재
 
+            // 화물중량
+            mRcpt.접수섹션_hWnd화물중량 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물중량_ptChkRelS);
+
+            // 구분
+            mRcpt.접수섹션_구분_hWnd독차 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_구분_독차Part_rcChkRelM));
+
+            mRcpt.접수섹션_구분_hWnd혼적 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_구분_혼적Part_rcChkRelM));
+
+            mRcpt.접수섹션_구분_hWnd긴급 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_구분_긴급Part_rcChkRelM));
+
+            mRcpt.접수섹션_구분_hWnd왕복 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_구분_왕복Part_rcChkRelM));
+
+            mRcpt.접수섹션_구분_hWnd경유 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_구분_경유Part_rcChkRelM));
+
             #endregion
 
             #region 4. DG오더 섹션
@@ -1183,13 +1202,17 @@ public partial class OnecallAct_RcptRegPage
             #endregion
 
             #region 2. 주문 정보 입력
+            Debug.WriteLine($"[{AppName}] #region 2 시작: 상차={tbOrder.StartDetailAddr}, 하차={tbOrder.DestDetailAddr}");
+
             // 상차지 입력
             var result상차 = await Set상세주소Async(mRcpt.접수섹션_hWnd상차지주소, fInfo.접수등록Page_접수_상차지권역_rcChkRelS, tbOrder.StartDetailAddr, ctrl);
+            Debug.WriteLine($"[{AppName}] 상차지 결과: {result상차.Result}, {result상차.sErr}");
             if (result상차.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"상차지 입력실패: {result상차.sErr}", "RegistOrderModeAsync_02");
 
             // 하차지 입력
             var result하차 = await Set상세주소Async(mRcpt.접수섹션_hWnd하차지주소, fInfo.접수등록Page_접수_하차지권역_rcChkRelS, tbOrder.DestDetailAddr, ctrl);
+            Debug.WriteLine($"[{AppName}] 하차지 결과: {result하차.Result}, {result하차.sErr}");
             if (result하차.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"하차지 입력실패: {result하차.sErr}", "RegistOrderModeAsync_03");
 
@@ -1211,26 +1234,82 @@ public partial class OnecallAct_RcptRegPage
                 if (!bTmp) return CommonResult_AutoAllocProcess.FailureAndDiscard($"총운임 입력실패: {tbOrder.FeeTotal}", "RegistOrderModeAsync_05");
             }
 
-            // 차량 - 톤수 (공용함수)
-            CommonModel_ComboBox resultModel = GetCarWeightResult(tbOrder.CarType, tbOrder.CarWeight);
-            var result톤수 = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd톤수, resultModel.ptPos);
-            if (result톤수.Result != StdResult.Success)
-                return CommonResult_AutoAllocProcess.FailureAndDiscard($"톤수 선택실패: {result톤수.sErr}", "RegistOrderModeAsync_06");
+            // 차량 - 톤수
+            CommonModel_ComboBox result톤수 = GetCarWeightResult(tbOrder.CarType, tbOrder.CarWeight);
+            StdResult_Status resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd톤수, result톤수, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_톤수_rcChkRelS);
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"톤수 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_06");
 
+            // 차량 - 차종
+            CommonModel_ComboBox result차종 = GetTruckDetailResult(tbOrder.CarType, tbOrder.TruckDetail);
+            resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd차종, result차종, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_차종_rcChkRelS);
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"차종 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_07");
 
+            // 차량 - 결재
+            CommonModel_ComboBox result결재 = GetFeeTypeResult(tbOrder.FeeType);
+            resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd결재, result결재, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_결재_rcChkRelS);
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"결재 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_08");
+
+            // 화물중량
+            string maxWeight = GetMaxCarWeight(result톤수);
+            if (maxWeight != "0.00")
+            {
+                Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd화물중량, maxWeight);
+            }
+
+            // 구분         
+            switch (tbOrder.DeliverType)
+            {
+                case "왕복": 
+                    resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_구분_hWnd왕복, fInfo.접수등록Page_구분_왕복Part_rcChkRelM, true, "왕복");
+                    break;
+
+                case "경유":
+                    resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_구분_hWnd경유, fInfo.접수등록Page_구분_경유Part_rcChkRelM, true, "경유");
+                    break;
+
+                case "긴급":
+                    resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_구분_hWnd긴급, fInfo.접수등록Page_구분_긴급Part_rcChkRelM, true, "긴급");
+                    break;
+
+                default: resultSts = new StdResult_Status(StdResult.Success);
+                    break;
+            }
 
             #endregion
 
             #region 3. 저장 버튼 클릭
-
+            // TODO: 추가 작업 완료 후 활성화
+            //Debug.WriteLine($"[{AppName}] #region 3 시작: 저장 버튼 클릭");
+            //await ctrl.WaitIfPausedOrCancelledAsync();
+            //await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd저장버튼);
             #endregion
 
             #region 4. 저장 성공 확인
-
+            // TODO: 추가 작업 완료 후 활성화
+            //// 저장 성공 시 상차지주소 필드가 초기화됨
+            //bool bSaved = false;
+            //for (int i = 0; i < c_nRepeatMany; i++)
+            //{
+            //    await Task.Delay(c_nWaitShort);
+            //    string caption = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소);
+            //    if (string.IsNullOrEmpty(caption))
+            //    {
+            //        bSaved = true;
+            //        Debug.WriteLine($"[{AppName}] 저장 성공 확인");
+            //        break;
+            //    }
+            //}
+            //if (!bSaved)
+            //{
+            //    return CommonResult_AutoAllocProcess.FailureAndDiscard("저장 확인 실패", "RegistOrderModeAsync_09");
+            //}
             #endregion
 
-            return CommonResult_AutoAllocProcess.FailureAndDiscard(
-                    "TODO: RegistOrderModeAsync 미구현", "RegistOrderModeAsync_TODO");
+            Debug.WriteLine($"[{AppName}] RegistOrderModeAsync 완료: KeyCode={item.KeyCode}");
+            return CommonResult_AutoAllocProcess.FailureAndDiscard("TODO: 추가 작업 필요", "RegistOrderModeAsync_TODO");
         }
         catch (Exception ex)
         {

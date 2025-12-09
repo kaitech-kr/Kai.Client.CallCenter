@@ -92,6 +92,16 @@ public class OnecallInfo_Mem
         public IntPtr 접수섹션_차량_hWnd차종; // Combo
         public IntPtr 접수섹션_차량_hWnd대수; // Combo
         public IntPtr 접수섹션_차량_hWnd결재; // Combo
+
+        // 화물중량
+        public IntPtr 접수섹션_hWnd화물중량; // Edit
+
+        // 구분
+        public IntPtr 접수섹션_구분_hWnd독차; // 콤보박스 
+        public IntPtr 접수섹션_구분_hWnd혼적; // 콤보박스 
+        public IntPtr 접수섹션_구분_hWnd긴급; // 콤보박스 
+        public IntPtr 접수섹션_구분_hWnd왕복; // 콤보박스 
+        public IntPtr 접수섹션_구분_hWnd경유; // 콤보박스 
         #endregion
 
         #region 검색영역
