@@ -50,31 +50,34 @@ public class OnecallInfo_File
     // Top
     public Draw.Point 접수등록Page_접수섹션_ptChkRelT { get; set; } = new Draw.Point(1800, 255);
 
+    // 콜센터 대표전화번호 - 다른 UI포커스를 죽이기 위한 포커스용 핸들
+    public Draw.Point 접수등록Page_포커스_ptChkRelM { get; set; } = new Draw.Point(230, 25); // {X=230,Y=25}
+
     // 버튼들
     public Draw.Point 접수등록Page_접수_목록초기화Btn_ptRelS { get; set; } = new Draw.Point(1084, 374); // 목록초기화Btn 
-    public Draw.Point 접수등록Page_접수_신규Btn_ptChkRelS { get; set; } = new Draw.Point(54, 374); // 신규Btn {X=54,Y=374}
-    public Draw.Point 접수등록Page_접수_저장Btn_ptChkRelS { get; set; } = new Draw.Point(178, 374); // 저장Btn {X=178,Y=374}
+    public Draw.Point 접수등록Page_접수_신규Btn_ptChkRelM { get; set; } = new Draw.Point(54, 374); // 신규Btn {X=54,Y=374}
+    public Draw.Point 접수등록Page_접수_저장Btn_ptChkRelM { get; set; } = new Draw.Point(178, 374); // 저장Btn {X=178,Y=374}
 
     // 상차지
-    public Draw.Rectangle 접수등록Page_접수_상차지권역_rcChkRelS { get; set; } = new Draw.Rectangle(106, 48, 101, 20); // {X=105,Y=45,Width=103,Height=26}
-    public Draw.Point 접수등록Page_접수_상차지주소_ptChkRelS { get; set; } = new Draw.Point(332, 58); // 
+    public Draw.Rectangle 접수등록Page_접수_상차지권역_rcChkRelM { get; set; } = new Draw.Rectangle(106, 48, 101, 20); // {X=105,Y=45,Width=103,Height=26}
+    public Draw.Point 접수등록Page_접수_상차지주소_ptChkRelM { get; set; } = new Draw.Point(332, 58); // 
 
     // 하차지
-    public Draw.Rectangle 접수등록Page_접수_하차지권역_rcChkRelS { get; set; } = new Draw.Rectangle(106, 79, 101, 20); // {X=105,Y=76,Width=103,Height=26}
-    public Draw.Point 접수등록Page_접수_하차지주소_ptChkRelS { get; set; } = new Draw.Point(332, 90); // {X=332,Y=90}
+    public Draw.Rectangle 접수등록Page_접수_하차지권역_rcChkRelM { get; set; } = new Draw.Rectangle(106, 79, 101, 20); // {X=105,Y=76,Width=103,Height=26}
+    public Draw.Point 접수등록Page_접수_하차지주소_ptChkRelM { get; set; } = new Draw.Point(332, 90); // {X=332,Y=90}
 
     // 화물정보
-    public Draw.Point 접수등록Page_접수_화물정보_ptChkRelS { get; set; } = new Draw.Point(375, 121); // {X=375,Y=121}
+    public Draw.Point 접수등록Page_접수_화물정보_ptChkRelM { get; set; } = new Draw.Point(375, 121); // {X=375,Y=121}
 
     // 운임
-    public Draw.Point 접수등록Page_접수_총운임_ptChkRelS { get; set; } = new Draw.Point(147, 153); // {X=147,Y=153}
-    public Draw.Point 접수등록Page_접수_수수료_ptChkRelS { get; set; } = new Draw.Point(331, 153); // {X=331,Y=153}
+    public Draw.Point 접수등록Page_접수_총운임_ptChkRelM { get; set; } = new Draw.Point(147, 153); // {X=147,Y=153}
+    public Draw.Point 접수등록Page_접수_수수료_ptChkRelM { get; set; } = new Draw.Point(331, 153); // {X=331,Y=153}
 
     // 차량정보
-    public Draw.Rectangle 접수등록Page_접수_톤수_rcChkRelS { get; set; } = new Draw.Rectangle(108, 176, 80, 20); // {X=105,Y=173,Width=103,Height=26}
-    public Draw.Rectangle 접수등록Page_접수_차종_rcChkRelS { get; set; } = new Draw.Rectangle(278, 176, 89, 20); // {X=275,Y=173,Width=112,Height=26}
-    public Draw.Rectangle 접수등록Page_접수_대수_rcChkRelS { get; set; } = new Draw.Rectangle(436, 176, 44, 20); // {X=433,Y=173,Width=67,Height=26}
-    public Draw.Rectangle 접수등록Page_접수_결재_rcChkRelS { get; set; } = new Draw.Rectangle(552, 176, 72, 20); // {X=549,Y=173,Width=95,Height=26}
+    public Draw.Rectangle 접수등록Page_접수_톤수_rcChkRelM { get; set; } = new Draw.Rectangle(108, 176, 80, 20); // {X=105,Y=173,Width=103,Height=26}
+    public Draw.Rectangle 접수등록Page_접수_차종_rcChkRelM { get; set; } = new Draw.Rectangle(278, 176, 89, 20); // {X=275,Y=173,Width=112,Height=26}
+    public Draw.Rectangle 접수등록Page_접수_대수_rcChkRelM { get; set; } = new Draw.Rectangle(436, 176, 44, 20); // {X=433,Y=173,Width=67,Height=26}
+    public Draw.Rectangle 접수등록Page_접수_결재_rcChkRelM { get; set; } = new Draw.Rectangle(552, 176, 72, 20); // {X=549,Y=173,Width=95,Height=26}
 
     // 차량톤수
     public CommonModel_ComboBox[] 접수등록Page_접수_톤수Open = new CommonModel_ComboBox[]
@@ -152,7 +155,7 @@ public class OnecallInfo_File
     };
 
     // 화물중량
-    public Draw.Point 접수등록Page_접수_화물중량_ptChkRelS { get; set; } = new Draw.Point(156, 216); // {X=156,Y=216}
+    public Draw.Point 접수등록Page_접수_화물중량_ptChkRelM { get; set; } = new Draw.Point(156, 216); // {X=156,Y=216}
 
     // 구분
     public Draw.Rectangle 접수등록Page_구분_독차Part_rcChkRelM { get; set; } = new Draw.Rectangle(767, 19, 16, 16); // {X=767,Y=15,Width=55,Height=26}
@@ -161,12 +164,44 @@ public class OnecallInfo_File
     public Draw.Rectangle 접수등록Page_구분_왕복Part_rcChkRelM { get; set; } = new Draw.Rectangle(1154, 20, 16, 16); // {X=1154,Y=16,Width=55,Height=26}
     public Draw.Rectangle 접수등록Page_구분_경유Part_rcChkRelM { get; set; } = new Draw.Rectangle(1218, 20, 16, 16); // {X=1218,Y=16,Width=55,Height=26}
 
+    // 상차방법
+    public Draw.Rectangle 접수등록Page_상차방법_지게차Part_rcChkRelM { get; set; } = new Draw.Rectangle(767, 57, 16, 16); // {X=767,Y=53,Width=71,Height=26}
+    public Draw.Rectangle 접수등록Page_상차방법_호이스트Part_rcChkRelM { get; set; } = new Draw.Rectangle(846, 57, 16, 16); // {X=846,Y=53,Width=86,Height=26}
+    public Draw.Rectangle 접수등록Page_상차방법_수해줌Part_rcChkRelM { get; set; } = new Draw.Rectangle(935, 57, 16, 16); // {X=935,Y=53,Width=71,Height=26}
+    public Draw.Rectangle 접수등록Page_상차방법_수작업Part_rcChkRelM { get; set; } = new Draw.Rectangle(1014, 57, 16, 16); // {X=1014,Y=53,Width=71,Height=26}
+    public Draw.Rectangle 접수등록Page_상차방법_크레인Part_rcChkRelM { get; set; } = new Draw.Rectangle(1093, 57, 16, 16); // {X=1093,Y=53,Width=71,Height=26}
+
+    // 상차일시
+    public Draw.Rectangle 접수등록Page_상차일시_당상Part_rcChkRelM { get; set; } = new Draw.Rectangle(767, 94, 16, 16); // {X=767,Y=90,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_상차일시_낼상Part_rcChkRelM { get; set; } = new Draw.Rectangle(846, 94, 16, 16); // {X=846,Y=90,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_상차일시_월상Part_rcChkRelM { get; set; } = new Draw.Rectangle(907, 94, 16, 16); // {X=907,Y=90,Width=55,Height=26}
+
+    // 하차방법
+    public Draw.Rectangle 접수등록Page_하차방법_지게차Part_rcChkRelM { get; set; } = new Draw.Rectangle(767, 130, 16, 16); // {X=767,Y=126,Width=71,Height=26}
+    public Draw.Rectangle 접수등록Page_하차방법_호이스트Part_rcChkRelM { get; set; } = new Draw.Rectangle(846, 130, 16, 16); // {X=846,Y=126,Width=86,Height=26}
+    public Draw.Rectangle 접수등록Page_하차방법_수해줌Part_rcChkRelM { get; set; } = new Draw.Rectangle(935, 130, 16, 16); // {X=935,Y=126,Width=71,Height=26}
+    public Draw.Rectangle 접수등록Page_하차방법_수작업Part_rcChkRelM { get; set; } = new Draw.Rectangle(1014, 130, 16, 16); // {X=1014,Y=126,Width=71,Height=26}
+    public Draw.Rectangle 접수등록Page_하차방법_크레인Part_rcChkRelM { get; set; } = new Draw.Rectangle(1093, 130, 16, 16); // {X=1093,Y=126,Width=71,Height=26}
+
+    // 하차일시
+    public Draw.Rectangle 접수등록Page_하차일시_당착Part_rcChkRelM { get; set; } = new Draw.Rectangle(767, 168, 16, 16); // {X=767,Y=164,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_하차일시_낼착Part_rcChkRelM { get; set; } = new Draw.Rectangle(846, 168, 16, 16); // {X=846,Y=164,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_하차일시_월착Part_rcChkRelM { get; set; } = new Draw.Rectangle(914, 168, 16, 16); // {X=914,Y=164,Width=55,Height=26}
+    public Draw.Rectangle 접수등록Page_하차일시_당_내착Part_rcChkRelM { get; set; } = new Draw.Rectangle(767, 196, 16, 16); // {X=767,Y=192,Width=93,Height=26}
+
+    // 화물메모 
+    public Draw.Point 접수등록Page_접수_화물메모_ptChkRelM { get; set; } = new Draw.Point(1025, 273); // {X=1025,Y=273}
+
+    // 의뢰자
+    public Draw.Rectangle 접수등록Page_의뢰자_상호_rcChkRelM { get; set; } = new Draw.Rectangle(765, 294, 123, 20); // {X=765,Y=294,Width=123,Height=20}
+    public Draw.Point 접수등록Page_의뢰자_전화번호_ptChkRelM { get; set; } = new Draw.Point(1053, 304); // {X=1053,Y=304}
+
     #endregion
 
     #region 검색 Section
     public Draw.Point 접수등록Page_검색섹션_ptChkRelT { get; set; } = new Draw.Point(1800, 515); // {X=1800,Y=515}
-    public Draw.Point 접수등록Page_검색_새로고침Btn_ptChkRelS { get; set; } = new Draw.Point(597, 18); // 새로고침Btn {X=597,Y=18}
-    public Draw.Point 접수등록Page_검색ExpandBtn_ptChkRelS { get; set; } = new Draw.Point(1892, 18); // ExpandBtn 
+    public Draw.Point 접수등록Page_검색_새로고침Btn_ptChkRelM { get; set; } = new Draw.Point(597, 18); // 새로고침Btn {X=597,Y=18}
+    public Draw.Point 접수등록Page_검색ExpandBtn_ptChkRelM { get; set; } = new Draw.Point(1892, 18); // ExpandBtn 
     #endregion
 
     #region Datagrid Section

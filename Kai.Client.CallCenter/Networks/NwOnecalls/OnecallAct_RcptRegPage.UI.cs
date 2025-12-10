@@ -21,6 +21,15 @@ public partial class OnecallAct_RcptRegPage
     /// Onecall SeqNo 가져오기
     /// </summary>
     private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
+
+    /// <summary>
+    /// 포커스 탈출 (빈 영역 클릭)
+    /// </summary>
+    private async Task EscapeFocusAsync(CancellationToken ct = default, int nDelay = c_nWaitVeryShort)
+    {
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd포커스탈출);
+        await Task.Delay(nDelay, ct);
+    }
     #endregion
 
     #region DG오더 확장/축소 상태 관리
@@ -119,7 +128,7 @@ public partial class OnecallAct_RcptRegPage
                 for (int i = 0; i < c_nRepeatMany; i++)
                 {
                     await Task.Delay(c_nWaitShort);
-                    hFind = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelS);
+                    hFind = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelM);
                     if (hFind != mRcpt.접수섹션_hWnd화물정보)
                     {
                         await Task.Delay(c_nWaitShort);
@@ -134,7 +143,7 @@ public partial class OnecallAct_RcptRegPage
                 for (int i = 0; i < c_nRepeatMany; i++)
                 {
                     await Task.Delay(c_nWaitShort);
-                    hFind = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelS);
+                    hFind = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelM);
                     if (hFind == mRcpt.접수섹션_hWnd화물정보)
                     {
                         await Task.Delay(c_nWaitShort);
@@ -341,6 +350,68 @@ public partial class OnecallAct_RcptRegPage
         }
 
         return fInfo.접수등록Page_접수_결재Open[4];
+    }
+    #endregion
+
+    #region 오더번호 OFR
+    /// <summary>
+    /// 지정된 로우의 오더번호 OFR
+    /// - 셀 캡처 후 단음소 OFR
+    /// - 원콜은 RGB 반전 불필요
+    /// </summary>
+    private async Task<StdResult_String> Get오더번호Async(int rowIndex, CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
+    {
+        try
+        {
+            const int COL_오더번호 = 2;
+
+            Draw.Rectangle rect오더번호Cell = mRcpt.DG오더_rcRelSmallCells[COL_오더번호, rowIndex];
+            Debug.WriteLine($"[{AppName}] 오더번호 OFR - rowIndex={rowIndex}, 셀위치={rect오더번호Cell}");
+
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+                Debug.WriteLine($"[{AppName}] ===== 오더번호 OFR 시도 {i}/{retryCount} =====");
+
+                Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rect오더번호Cell);
+                if (bmpCell == null)
+                {
+                    Debug.WriteLine($"[{AppName}] 오더번호 셀 캡처 실패 (시도 {i}/{retryCount})");
+                    if (i < retryCount) await Task.Delay(c_nWaitLong, ctrl.Token);
+                    continue;
+                }
+
+                try
+                {
+                    // 마지막 시도에서만 bEdit=true (수동 입력 대화상자)
+                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpCell, 0.7, i == retryCount);
+
+                    // ☒ 없는 완전한 결과만 성공
+                    if (!string.IsNullOrEmpty(resultSeqno.strResult) && !resultSeqno.strResult.Contains('☒'))
+                    {
+                        Debug.WriteLine($"[{AppName}] 오더번호 획득 성공: '{resultSeqno.strResult}' (시도 {i}/{retryCount})");
+                        return new StdResult_String(resultSeqno.strResult);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"[{AppName}] OFR 실패: '{resultSeqno.strResult ?? resultSeqno.sErr}' (시도 {i}/{retryCount})");
+                    }
+                }
+                finally
+                {
+                    bmpCell?.Dispose();
+                }
+
+                if (i < retryCount) await Task.Delay(c_nWaitLong, ctrl.Token);
+            }
+
+            return new StdResult_String($"오더번호 OFR 실패 ({retryCount}회 시도)", "Get오더번호Async_99");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] Get오더번호Async 예외: {ex.Message}");
+            return new StdResult_String(StdUtil.GetExceptionMessage(ex), "Get오더번호Async_999");
+        }
     }
     #endregion
 }

@@ -67,10 +67,13 @@ public class OnecallInfo_Mem
         #region 접수영역
         // 최상위 - 접수영역
         public IntPtr 접수섹션_hWndTop;  // hWnd
+        public IntPtr 접수섹션_hWnd포커스탈출;  // hWnd
 
         // 버튼들
         public IntPtr 접수섹션_hWnd신규버튼;  // 버튼
         public IntPtr 접수섹션_hWnd저장버튼;  // 버튼
+        public IntPtr 접수섹션_hWnd취소버튼;  // 버튼
+        public IntPtr 접수섹션_hWnd복사버튼;  // 버튼
 
         // 상차지
         public IntPtr 접수섹션_hWnd상차지권역; // Edit
@@ -97,11 +100,43 @@ public class OnecallInfo_Mem
         public IntPtr 접수섹션_hWnd화물중량; // Edit
 
         // 구분
-        public IntPtr 접수섹션_구분_hWnd독차; // 콤보박스 
-        public IntPtr 접수섹션_구분_hWnd혼적; // 콤보박스 
-        public IntPtr 접수섹션_구분_hWnd긴급; // 콤보박스 
-        public IntPtr 접수섹션_구분_hWnd왕복; // 콤보박스 
-        public IntPtr 접수섹션_구분_hWnd경유; // 콤보박스 
+        public IntPtr 접수섹션_구분_hWnd독차; // 체크박스 
+        public IntPtr 접수섹션_구분_hWnd혼적; // 체크박스 
+        public IntPtr 접수섹션_구분_hWnd긴급; // 체크박스 
+        public IntPtr 접수섹션_구분_hWnd왕복; // 체크박스 
+        public IntPtr 접수섹션_구분_hWnd경유; // 체크박스 
+
+        // 상차방법
+        public IntPtr 접수섹션_상차방법_hWnd지게차; // 체크박스 
+        public IntPtr 접수섹션_상차방법_hWn호이스트; // 체크박스 
+        public IntPtr 접수섹션_상차방법_hWnd수해줌; // 체크박스 
+        public IntPtr 접수섹션_상차방법_hWnd수작업; // 체크박스 
+        public IntPtr 접수섹션_상차방법_hWnd크레인; // 체크박스 
+
+        // 상차일시
+        public IntPtr 접수섹션_상차일시_hWnd당상; // 체크박스 
+        public IntPtr 접수섹션_상차일시_hWnd낼상; // 체크박스 
+        public IntPtr 접수섹션_상차일시_hWnd월상; // 체크박스 
+
+        // 하차방법
+        public IntPtr 접수섹션_하차방법_hWnd지게차; // 체크박스 
+        public IntPtr 접수섹션_하차방법_hWn호이스트; // 체크박스 
+        public IntPtr 접수섹션_하차방법_hWnd수해줌; // 체크박스 
+        public IntPtr 접수섹션_하차방법_hWnd수작업; // 체크박스 
+        public IntPtr 접수섹션_하차방법_hWnd크레인; // 체크박스 
+                              
+        // 하차일시
+        public IntPtr 접수섹션_하차일시_hWnd당착; // 체크박스 
+        public IntPtr 접수섹션_하차일시_hWnd낼착; // 체크박스 
+        public IntPtr 접수섹션_하차일시_hWnd월착; // 체크박스 
+        public IntPtr 접수섹션_하차일시_hWnd당_내착; // 체크박스 
+
+        // 화물메모
+        public IntPtr 접수섹션_hWnd화물메모; // Edit
+
+        // 의뢰자
+        public IntPtr 접수섹션_의뢰자_hWnd상호; // Combo
+        public IntPtr 접수섹션_의뢰자_hWnd전화; // Edit
         #endregion
 
         #region 검색영역

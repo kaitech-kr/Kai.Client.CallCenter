@@ -14,6 +14,7 @@ using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Windows;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 
 namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 #nullable disable
@@ -114,8 +115,8 @@ public partial class OnecallAct_RcptRegPage
             if (!bFind) return new StdResult_Error($"[{AppName}] 검색섹션_hWnd 찾기실패", "OnecallAct_RcptRegPage/InitializeAsync_02");
 
             // 검색섹션 - 자식정보
-            mRcpt.검색섹션_hWnd새로고침버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_새로고침Btn_ptChkRelS);
-            mRcpt.검색섹션_hWnd확장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색ExpandBtn_ptChkRelS);
+            mRcpt.검색섹션_hWnd새로고침버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_새로고침Btn_ptChkRelM);
+            mRcpt.검색섹션_hWnd확장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색ExpandBtn_ptChkRelM);
             //Debug.WriteLine($"[{AppName}] 확장버튼 찾음: {mRcpt.검색섹션_hWnd확장버튼:X}");
             #endregion
 
@@ -123,42 +124,47 @@ public partial class OnecallAct_RcptRegPage
             // 3. 접수섹션 Top핸들찾기
             mRcpt.접수섹션_hWndTop = Std32Window.GetWndHandle_FromRelDrawPt(mMain.TopWnd_hWnd, fInfo.접수등록Page_접수섹션_ptChkRelT);
 
+            // 포커스탈출
+            mRcpt.접수섹션_hWnd포커스탈출 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_포커스_ptChkRelM);
+
             // 버튼들
-            mRcpt.접수섹션_hWnd신규버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_신규Btn_ptChkRelS);
-            mRcpt.접수섹션_hWnd저장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_저장Btn_ptChkRelS);
+            mRcpt.접수섹션_hWnd신규버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_신규Btn_ptChkRelM);
+            mRcpt.접수섹션_hWnd저장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_저장Btn_ptChkRelM);
+            mRcpt.접수섹션_hWnd취소버튼 = StdWin32.FindWindowEx(mRcpt.접수섹션_hWndTop, IntPtr.Zero, null, "화물취소"); // 검증용으로 위치가 필요할까?
+            mRcpt.접수섹션_hWnd복사버튼 = StdWin32.FindWindowEx(mRcpt.접수섹션_hWndTop, IntPtr.Zero, null, "화물복사"); // 검증용으로 위치가 필요할까?
 
             // 상차지
             mRcpt.접수섹션_hWnd상차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(
-                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_상차지권역_rcChkRelS));
-            mRcpt.접수섹션_hWnd상차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_상차지주소_ptChkRelS);
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_상차지권역_rcChkRelM));
+            mRcpt.접수섹션_hWnd상차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_상차지주소_ptChkRelM);
 
             // 하차지
             mRcpt.접수섹션_hWnd하차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(
-                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_하차지권역_rcChkRelS));
-            mRcpt.접수섹션_hWnd하차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_하차지주소_ptChkRelS);
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_하차지권역_rcChkRelM));
+            mRcpt.접수섹션_hWnd하차지주소 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_하차지주소_ptChkRelM);
 
             // 화물정보
-            mRcpt.접수섹션_hWnd화물정보 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelS);
+            mRcpt.접수섹션_hWnd화물정보 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물정보_ptChkRelM);
 
             // 운임
-            mRcpt.접수섹션_hWnd총운임 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_총운임_ptChkRelS);
-            mRcpt.접수섹션_hWnd수수료 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_수수료_ptChkRelS);
+            mRcpt.접수섹션_hWnd총운임 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_총운임_ptChkRelM);
+            mRcpt.접수섹션_hWnd수수료 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_수수료_ptChkRelM);
 
             // 차량정보
             mRcpt.접수섹션_차량_hWnd톤수 = Std32Window.GetWndHandle_FromRelDrawPt(
-                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_톤수_rcChkRelS)); // 차량톤수
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_톤수_rcChkRelM)); // 차량톤수
 
             mRcpt.접수섹션_차량_hWnd차종 = Std32Window.GetWndHandle_FromRelDrawPt(
-                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_차종_rcChkRelS)); // 차종
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_차종_rcChkRelM)); // 차종
 
             mRcpt.접수섹션_차량_hWnd대수 = Std32Window.GetWndHandle_FromRelDrawPt(
-                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_대수_rcChkRelS)); // 차량대수
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_대수_rcChkRelM)); // 차량대수
 
             mRcpt.접수섹션_차량_hWnd결재 = Std32Window.GetWndHandle_FromRelDrawPt(
-                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_결재_rcChkRelS)); // 결재
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_접수_결재_rcChkRelM)); // 결재
 
             // 화물중량
-            mRcpt.접수섹션_hWnd화물중량 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물중량_ptChkRelS);
+            mRcpt.접수섹션_hWnd화물중량 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물중량_ptChkRelM);
 
             // 구분
             mRcpt.접수섹션_구분_hWnd독차 = Std32Window.GetWndHandle_FromRelDrawPt(
@@ -175,6 +181,70 @@ public partial class OnecallAct_RcptRegPage
 
             mRcpt.접수섹션_구분_hWnd경유 = Std32Window.GetWndHandle_FromRelDrawPt(
                 mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_구분_경유Part_rcChkRelM));
+
+            // 상차방법
+            mRcpt.접수섹션_상차방법_hWnd지게차 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차방법_지게차Part_rcChkRelM));
+
+            mRcpt.접수섹션_상차방법_hWn호이스트 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차방법_호이스트Part_rcChkRelM));
+
+            mRcpt.접수섹션_상차방법_hWnd수해줌 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차방법_수해줌Part_rcChkRelM));
+
+            mRcpt.접수섹션_상차방법_hWnd수작업 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차방법_수작업Part_rcChkRelM));
+
+            mRcpt.접수섹션_상차방법_hWnd크레인 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차방법_크레인Part_rcChkRelM));
+
+            // 상차일시
+            mRcpt.접수섹션_상차일시_hWnd당상 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차일시_당상Part_rcChkRelM));
+
+            mRcpt.접수섹션_상차일시_hWnd낼상 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차일시_낼상Part_rcChkRelM));
+
+            mRcpt.접수섹션_상차일시_hWnd월상 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_상차일시_월상Part_rcChkRelM));
+
+            // 하차방법
+            mRcpt.접수섹션_하차방법_hWnd지게차 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차방법_지게차Part_rcChkRelM));
+
+            mRcpt.접수섹션_하차방법_hWn호이스트 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차방법_호이스트Part_rcChkRelM));
+
+            mRcpt.접수섹션_하차방법_hWnd수해줌 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차방법_수해줌Part_rcChkRelM));
+
+            mRcpt.접수섹션_하차방법_hWnd수작업 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차방법_수작업Part_rcChkRelM));
+
+            mRcpt.접수섹션_하차방법_hWnd크레인 = Std32Window.GetWndHandle_FromRelDrawPt(
+               mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차방법_크레인Part_rcChkRelM));
+
+            // 하차일시
+            mRcpt.접수섹션_하차일시_hWnd당착 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차일시_당착Part_rcChkRelM));
+
+            mRcpt.접수섹션_하차일시_hWnd낼착 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차일시_낼착Part_rcChkRelM));
+
+            mRcpt.접수섹션_하차일시_hWnd월착 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차일시_월착Part_rcChkRelM));
+
+            mRcpt.접수섹션_하차일시_hWnd당_내착 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_하차일시_당_내착Part_rcChkRelM));
+
+            // 화물메모
+            mRcpt.접수섹션_hWnd화물메모 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_화물메모_ptChkRelM);
+
+            // 의뢰자
+            mRcpt.접수섹션_의뢰자_hWnd상호 = Std32Window.GetWndHandle_FromRelDrawPt( // 상호
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_의뢰자_상호_rcChkRelM));
+
+            mRcpt.접수섹션_의뢰자_hWnd전화 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_의뢰자_전화번호_ptChkRelM); // 전화
 
             #endregion
 
@@ -197,9 +267,9 @@ public partial class OnecallAct_RcptRegPage
             int dataTextHeight = rowHeight - gab - gab;
             int columns = listLW.Count;
 
-            // Small Rects (19행)
+            // Small Rects (19행) - [col, row] 순서 (화물24시와 통일)
             int smallRowCount = fInfo.접수등록Page_DG오더_smallRowsCount;
-            mRcpt.DG오더_rcRelSmallCells = new Draw.Rectangle[smallRowCount, columns];
+            mRcpt.DG오더_rcRelSmallCells = new Draw.Rectangle[columns, smallRowCount];
             mRcpt.DG오더_ptRelChkSmallRows = new Draw.Point[smallRowCount];
             for (int row = 0; row < smallRowCount; row++)
             {
@@ -207,14 +277,14 @@ public partial class OnecallAct_RcptRegPage
                 mRcpt.DG오더_ptRelChkSmallRows[row] = new Draw.Point(listLW[0].nLeft + (listLW[0].nWidth / 2), cellY + (rowHeight / 2));
                 for (int col = 0; col < columns; col++)
                 {
-                    mRcpt.DG오더_rcRelSmallCells[row, col] = new Draw.Rectangle(listLW[col].nLeft, cellY + gab, listLW[col].nWidth, dataTextHeight);
+                    mRcpt.DG오더_rcRelSmallCells[col, row] = new Draw.Rectangle(listLW[col].nLeft, cellY + gab, listLW[col].nWidth, dataTextHeight);
                 }
             }
-            Debug.WriteLine($"[{AppName}] Small Rects 생성 완료: {smallRowCount}행 x {columns}열");
+            Debug.WriteLine($"[{AppName}] Small Rects 생성 완료: {columns}열 x {smallRowCount}행");
 
-            // Large Rects (34행)
+            // Large Rects (34행) - [col, row] 순서 (화물24시와 통일)
             int largeRowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
-            mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[largeRowCount, columns];
+            mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[columns, largeRowCount];
             mRcpt.DG오더_ptRelChkLargeRows = new Draw.Point[largeRowCount];
             for (int row = 0; row < largeRowCount; row++)
             {
@@ -222,10 +292,10 @@ public partial class OnecallAct_RcptRegPage
                 mRcpt.DG오더_ptRelChkLargeRows[row] = new Draw.Point(listLW[0].nLeft + (listLW[0].nWidth / 2), cellY + (rowHeight / 2));
                 for (int col = 0; col < columns; col++)
                 {
-                    mRcpt.DG오더_rcRelLargeCells[row, col] = new Draw.Rectangle(listLW[col].nLeft, cellY + gab, listLW[col].nWidth, dataTextHeight);
+                    mRcpt.DG오더_rcRelLargeCells[col, row] = new Draw.Rectangle(listLW[col].nLeft, cellY + gab, listLW[col].nWidth, dataTextHeight);
                 }
             }
-            Debug.WriteLine($"[{AppName}] Large Rects 생성 완료: {largeRowCount}행 x {columns}열");
+            Debug.WriteLine($"[{AppName}] Large Rects 생성 완료: {columns}열 x {largeRowCount}행");
             #endregion
 
             Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 완료");
@@ -963,7 +1033,7 @@ public partial class OnecallAct_RcptRegPage
             {
                 for (int col = 0; col < colCount; col++)
                 {
-                    Draw.Rectangle rc = mRcpt.DG오더_rcRelLargeCells[row, col];
+                    Draw.Rectangle rc = mRcpt.DG오더_rcRelLargeCells[col, row];
                     TransparantWnd.DrawBoxAsync(rc, strokeColor: Media.Colors.Red, thickness: 1);
                     cellCount++;
                 }
@@ -1024,7 +1094,7 @@ public partial class OnecallAct_RcptRegPage
             {
                 for (int col = 0; col < colCount; col++)
                 {
-                    Draw.Rectangle rc = mRcpt.DG오더_rcRelSmallCells[row, col];
+                    Draw.Rectangle rc = mRcpt.DG오더_rcRelSmallCells[col, row];
                     TransparantWnd.DrawBoxAsync(rc, strokeColor: Media.Colors.Red, thickness: 1);
                 }
             }
@@ -1123,6 +1193,123 @@ public partial class OnecallAct_RcptRegPage
             TransparantWnd.DeleteOverlay();
         }
     }
+
+    /// <summary>
+    /// 상차방법 체크박스 영역 시각화 테스트
+    /// </summary>
+    public void Test_Draw상차방법Rects()
+    {
+        try
+        {
+            if (mRcpt.접수섹션_hWndTop == IntPtr.Zero) return;
+
+            TransparantWnd.CreateOverlay(mRcpt.접수섹션_hWndTop);
+            TransparantWnd.ClearBoxes();
+
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차방법_지게차Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차방법_호이스트Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차방법_수해줌Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차방법_수작업Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차방법_크레인Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+
+            System.Windows.MessageBox.Show("상차방법 체크박스 영역 테스트\n확인 후 오버레이 제거됨", "테스트");
+
+            TransparantWnd.DeleteOverlay();
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"오류: {ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
+    }
+
+    /// <summary>
+    /// 상차일시 체크박스 영역 시각화 테스트
+    /// </summary>
+    public void Test_Draw상차일시Rects()
+    {
+        try
+        {
+            if (mRcpt.접수섹션_hWndTop == IntPtr.Zero) return;
+
+            TransparantWnd.CreateOverlay(mRcpt.접수섹션_hWndTop);
+            TransparantWnd.ClearBoxes();
+
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차일시_당상Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차일시_낼상Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_상차일시_월상Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+
+            System.Windows.MessageBox.Show("상차일시 체크박스 영역 테스트\n확인 후 오버레이 제거됨", "테스트");
+
+            TransparantWnd.DeleteOverlay();
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"오류: {ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
+    }
+
+    /// <summary>
+    /// 하차방법/하차일시 체크박스 영역 시각화 테스트 (9개)
+    /// </summary>
+    public void Test_Draw하차Rects()
+    {
+        try
+        {
+            if (mRcpt.접수섹션_hWndTop == IntPtr.Zero) return;
+
+            TransparantWnd.CreateOverlay(mRcpt.접수섹션_hWndTop);
+            TransparantWnd.ClearBoxes();
+
+            // 하차방법 5개
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차방법_지게차Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차방법_호이스트Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차방법_수해줌Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차방법_수작업Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차방법_크레인Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+
+            // 하차일시 4개
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차일시_당착Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차일시_낼착Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차일시_월착Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_하차일시_당_내착Part_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+
+            System.Windows.MessageBox.Show("하차방법/하차일시 영역 테스트 (9개)\n확인 후 오버레이 제거됨", "테스트");
+
+            TransparantWnd.DeleteOverlay();
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"오류: {ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
+    }
+
+    /// <summary>
+    /// 의뢰자 상호 영역 시각화 테스트
+    /// </summary>
+    public void Test_Draw의뢰자Rects()
+    {
+        try
+        {
+            if (mRcpt.접수섹션_hWndTop == IntPtr.Zero) return;
+
+            TransparantWnd.CreateOverlay(mRcpt.접수섹션_hWndTop);
+            TransparantWnd.ClearBoxes();
+
+            TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_의뢰자_상호_rcChkRelM, strokeColor: Media.Colors.Red, thickness: 1);
+
+            System.Windows.MessageBox.Show("의뢰자 상호 영역 테스트\n확인 후 오버레이 제거됨", "테스트");
+
+            TransparantWnd.DeleteOverlay();
+        }
+        catch (Exception ex)
+        {
+            System.Windows.MessageBox.Show($"오류: {ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
+    }
     #endregion
 
     #region CheckOcOrderAsync_AssumeKaiNewOrder
@@ -1205,13 +1392,13 @@ public partial class OnecallAct_RcptRegPage
             Debug.WriteLine($"[{AppName}] #region 2 시작: 상차={tbOrder.StartDetailAddr}, 하차={tbOrder.DestDetailAddr}");
 
             // 상차지 입력
-            var result상차 = await Set상세주소Async(mRcpt.접수섹션_hWnd상차지주소, fInfo.접수등록Page_접수_상차지권역_rcChkRelS, tbOrder.StartDetailAddr, ctrl);
+            var result상차 = await Set상세주소Async(mRcpt.접수섹션_hWnd상차지주소, fInfo.접수등록Page_접수_상차지권역_rcChkRelM, tbOrder.StartDetailAddr, ctrl);
             Debug.WriteLine($"[{AppName}] 상차지 결과: {result상차.Result}, {result상차.sErr}");
             if (result상차.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"상차지 입력실패: {result상차.sErr}", "RegistOrderModeAsync_02");
 
             // 하차지 입력
-            var result하차 = await Set상세주소Async(mRcpt.접수섹션_hWnd하차지주소, fInfo.접수등록Page_접수_하차지권역_rcChkRelS, tbOrder.DestDetailAddr, ctrl);
+            var result하차 = await Set상세주소Async(mRcpt.접수섹션_hWnd하차지주소, fInfo.접수등록Page_접수_하차지권역_rcChkRelM, tbOrder.DestDetailAddr, ctrl);
             Debug.WriteLine($"[{AppName}] 하차지 결과: {result하차.Result}, {result하차.sErr}");
             if (result하차.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"하차지 입력실패: {result하차.sErr}", "RegistOrderModeAsync_03");
@@ -1219,7 +1406,7 @@ public partial class OnecallAct_RcptRegPage
             // 화물정보 - 디비에 적요가 있으면 쓰고, 없으면 없음을 쓴다
             if (string.IsNullOrEmpty(tbOrder.OrderRemarks)) Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd화물정보, "없음");
             else Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd화물정보, tbOrder.OrderRemarks);
-            await Task.Delay(c_nWaitShort);
+            await Task.Delay(c_nWaitShort, ctrl.Token);
             Std32Key_Msg.KeyPost_Click(mRcpt.접수섹션_hWnd화물정보, StdCommon32.VK_RETURN);
 
             // 운임
@@ -1235,20 +1422,23 @@ public partial class OnecallAct_RcptRegPage
             }
 
             // 차량 - 톤수
+            await EscapeFocusAsync();
             CommonModel_ComboBox result톤수 = GetCarWeightResult(tbOrder.CarType, tbOrder.CarWeight);
-            StdResult_Status resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd톤수, result톤수, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_톤수_rcChkRelS);
+            StdResult_Status resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd톤수, result톤수, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_톤수_rcChkRelM);
             if (resultSts.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"톤수 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_06");
 
             // 차량 - 차종
+            await EscapeFocusAsync();
             CommonModel_ComboBox result차종 = GetTruckDetailResult(tbOrder.CarType, tbOrder.TruckDetail);
-            resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd차종, result차종, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_차종_rcChkRelS);
+            resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd차종, result차종, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_차종_rcChkRelM);
             if (resultSts.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"차종 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_07");
 
             // 차량 - 결재
+            await EscapeFocusAsync();
             CommonModel_ComboBox result결재 = GetFeeTypeResult(tbOrder.FeeType);
-            resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd결재, result결재, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_결재_rcChkRelS);
+            resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd결재, result결재, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_결재_rcChkRelM);
             if (resultSts.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard($"결재 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_08");
 
@@ -1256,13 +1446,13 @@ public partial class OnecallAct_RcptRegPage
             string maxWeight = GetMaxCarWeight(result톤수);
             if (maxWeight != "0.00")
             {
-                Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd화물중량, maxWeight);
+                // 자리수마다 갯수 파학해서 입력해야 하므로 복잡해서 확인 메세지박스 처리로...
             }
 
-            // 구분         
+            // 구분
             switch (tbOrder.DeliverType)
             {
-                case "왕복": 
+                case "왕복":
                     resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_구분_hWnd왕복, fInfo.접수등록Page_구분_왕복Part_rcChkRelM, true, "왕복");
                     break;
 
@@ -1277,44 +1467,145 @@ public partial class OnecallAct_RcptRegPage
                 default: resultSts = new StdResult_Status(StdResult.Success);
                     break;
             }
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"배송방법 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_09");
 
+            // 상차방법 - 개선해야함(우선은 수작업)
+            string sLoadMethod = "수작업";
+            resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_상차방법_hWnd수작업, fInfo.접수등록Page_상차방법_수작업Part_rcChkRelM, true, "수작업");
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"상차방법 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_10");
+
+            // 상차일시 - 개선해야함(우선은 당상)
+            string sLoadDate = "당상";
+            resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_상차일시_hWnd당상, fInfo.접수등록Page_상차일시_당상Part_rcChkRelM, true, "당상");
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"상차일시 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_11");
+
+            // 하차방법 - 개선해야함(우선은 수작업)
+            string sUnloadMethod = "수작업";
+            resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_하차방법_hWnd수작업, fInfo.접수등록Page_하차방법_수작업Part_rcChkRelM, true, "수작업");
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"하차방법 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_12");
+
+            // 하차일시 - 개선해야함(우선은 당상)
+            string sUnloadDate = "당착";
+            resultSts = await SetCheckBoxAsync(mRcpt.접수섹션_하차일시_hWnd당착, fInfo.접수등록Page_하차일시_당착Part_rcChkRelM, true, "당착");
+            if (resultSts.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"하차일시 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_13");
+
+            // 화물메모
+            await EscapeFocusAsync(ctrl.Token, 100);
+            string sMemo = "화물메모 테스트"; // tbOrder.OrderMemo
+            Std32Window.SetWindowCaption(mRcpt.접수섹션_hWnd화물메모, sMemo);
+
+            // 의뢰자
+            await EscapeFocusAsync(ctrl.Token, 100);
+            string sTelNo = StdConvert.ToPhoneNumberFormat(tbOrder.CallTelNo);
+            Std32Window.SetWindowCaption(mRcpt.접수섹션_의뢰자_hWnd전화, sTelNo); // 전화번호
+
+            await EscapeFocusAsync(ctrl.Token, 100);
+            Std32Window.SetWindowCaption(mRcpt.접수섹션_의뢰자_hWnd상호, tbOrder.CallCustName); // 전화번호
+
+            // 사업자번호
             #endregion
 
             #region 3. 저장 버튼 클릭
-            // TODO: 추가 작업 완료 후 활성화
-            //Debug.WriteLine($"[{AppName}] #region 3 시작: 저장 버튼 클릭");
-            //await ctrl.WaitIfPausedOrCancelledAsync();
-            //await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd저장버튼);
+            Debug.WriteLine($"[{AppName}] #region 3 시작: 저장 버튼 클릭");
+            await ctrl.WaitIfPausedOrCancelledAsync();
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd저장버튼);
+
+            // 화물중량 확인창 찾기
+            (IntPtr hWndParent, IntPtr hWndYesBtn) = (IntPtr.Zero, IntPtr.Zero);
+            for (int i = 0; i < c_nRepeatMany; i++)
+            {
+                await Task.Delay(c_nWaitShort, ctrl.Token);
+                (hWndParent, hWndYesBtn) = Std32Window.FindMainWindow_EmptyCaption_HavingChildButton(mInfo.Splash.TopWnd_uProcessId, "예");
+                if (hWndYesBtn != IntPtr.Zero) break;
+            }
+
+            if(hWndParent == IntPtr.Zero || hWndYesBtn == IntPtr.Zero)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"화물중량 확인창 찾기 실패: {resultSts.sErr}", "RegistOrderModeAsync_14");
+
+            // 예 버튼클릭
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYesBtn);
+
+            // hWndParent가 없어질때까지 대기
+            for (int i = 0; i < c_nRepeatMany; i++)
+            {
+                await Task.Delay(c_nWaitShort, ctrl.Token);
+                if (!Std32Window.IsWindowVisible(hWndParent)) break;
+            }
+
+            // 상(하)차지 캡션이 클리어 됬나 체크
+            bool bSaved = false;
+            for (int i = 0; i < c_nRepeatMany; i++)
+            {
+                await Task.Delay(c_nWaitShort, ctrl.Token);
+                string caption상차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소);
+                string caption하차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd하차지주소);
+                if (string.IsNullOrEmpty(caption상차) && string.IsNullOrEmpty(caption하차))
+                {
+                    bSaved = true;
+                    Debug.WriteLine($"[{AppName}] 저장 성공 확인");
+                    break;
+                }
+            }
+            if (!bSaved)
+            {
+                return CommonResult_AutoAllocProcess.FailureAndDiscard("저장 확인 실패", "RegistOrderModeAsync_09");
+            }
             #endregion
 
             #region 4. 저장 성공 확인
-            // TODO: 추가 작업 완료 후 활성화
-            //// 저장 성공 시 상차지주소 필드가 초기화됨
-            //bool bSaved = false;
-            //for (int i = 0; i < c_nRepeatMany; i++)
-            //{
-            //    await Task.Delay(c_nWaitShort);
-            //    string caption = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소);
-            //    if (string.IsNullOrEmpty(caption))
-            //    {
-            //        bSaved = true;
-            //        Debug.WriteLine($"[{AppName}] 저장 성공 확인");
-            //        break;
-            //    }
-            //}
-            //if (!bSaved)
-            //{
-            //    return CommonResult_AutoAllocProcess.FailureAndDiscard("저장 확인 실패", "RegistOrderModeAsync_09");
-            //}
+            await Task.Delay(c_nWaitLong, ctrl.Token);
+
+            // 4-1. 오더번호 OFR
+            StdResult_String resultSeqno = await Get오더번호Async(0, ctrl);
+            if (string.IsNullOrEmpty(resultSeqno.strResult))
+            {
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"오더번호 획득 실패: {resultSeqno.sErr}", "RegistOrderModeAsync_10");
+            }
+            Debug.WriteLine($"[{AppName}] 주문 등록 완료 - 오더번호: {resultSeqno.strResult}");
+
+            // 4-2. 사전 체크
+            if (item.NewOrder.KeyCode <= 0)
+            {
+                Debug.WriteLine($"[{AppName}] KeyCode 없음 - Kai DB에 없는 주문");
+                return CommonResult_AutoAllocProcess.FailureAndDiscard("Kai DB에 없는 주문입니다", "RegistOrderModeAsync_11");
+            }
+
+            if (!string.IsNullOrEmpty(item.NewOrder.Onecall))
+            {
+                Debug.WriteLine($"[{AppName}] 이미 등록된 오더번호: {item.NewOrder.Onecall}");
+                return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+            }
+
+            if (s_SrGClient == null || !s_SrGClient.m_bLoginSignalR)
+            {
+                Debug.WriteLine($"[{AppName}] SignalR 연결 안됨");
+                return CommonResult_AutoAllocProcess.FailureAndDiscard("서버 연결이 끊어졌습니다", "RegistOrderModeAsync_12");
+            }
+
+            // 4-3. Kai DB 업데이트
+            item.NewOrder.Onecall = resultSeqno.strResult;
+            StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+
+            if (resultUpdate.nResult < 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
+            {
+                Debug.WriteLine($"[{AppName}] Kai DB 업데이트 실패: {resultUpdate.sErr}");
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"Kai DB 업데이트 실패: {resultUpdate.sErr}", "RegistOrderModeAsync_13");
+            }
+
+            Debug.WriteLine($"[{AppName}] Kai DB 업데이트 성공 - Onecall: {resultSeqno.strResult}");
             #endregion
 
             Debug.WriteLine($"[{AppName}] RegistOrderModeAsync 완료: KeyCode={item.KeyCode}");
-            return CommonResult_AutoAllocProcess.FailureAndDiscard("TODO: 추가 작업 필요", "RegistOrderModeAsync_TODO");
+            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
         }
         catch (Exception ex)
         {
-            return CommonResult_AutoAllocProcess.FailureAndDiscard(
-                StdUtil.GetExceptionMessage(ex), "RegistOrderModeAsync_999");
+            return CommonResult_AutoAllocProcess.FailureAndDiscard(StdUtil.GetExceptionMessage(ex), "RegistOrderModeAsync_999");
         }
     }
     #endregion
