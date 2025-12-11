@@ -27,7 +27,7 @@ public partial class OnecallAct_RcptRegPage
     /// </summary>
     private async Task EscapeFocusAsync(CancellationToken ct = default, int nDelay = c_nWaitVeryShort)
     {
-        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd포커스탈출);
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
         await Task.Delay(nDelay, ct);
     }
     #endregion
@@ -226,7 +226,7 @@ public partial class OnecallAct_RcptRegPage
             {
                 if (bmpVerify == null) continue; // 재시도
 
-                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, i == c_nRepeatShort);
+                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, true, i == c_nRepeatShort);
 
                 if (ofrResult == null || string.IsNullOrEmpty(ofrResult.strResult)) continue; // 재시도
 
@@ -351,6 +351,18 @@ public partial class OnecallAct_RcptRegPage
 
         return fInfo.접수등록Page_접수_결재Open[4];
     }
+
+    private CommonModel_ComboBox GetAutoRefreshResult(string sTime)
+    {
+        if (string.IsNullOrEmpty(sTime)) return fInfo.접수등록Page_검색_자동조회Open[0];
+
+        foreach (var item in fInfo.접수등록Page_검색_자동조회Open)
+        {
+            if (item.sMyName == sTime) return item;
+        }
+
+        return fInfo.접수등록Page_검색_자동조회Open[0];
+    }
     #endregion
 
     #region 오더번호 OFR
@@ -411,6 +423,167 @@ public partial class OnecallAct_RcptRegPage
         {
             Debug.WriteLine($"[{AppName}] Get오더번호Async 예외: {ex.Message}");
             return new StdResult_String(StdUtil.GetExceptionMessage(ex), "Get오더번호Async_999");
+        }
+    }
+    #endregion
+
+    #region Click새로고침버튼Async
+    /// <summary>
+    /// 새로고침 버튼 클릭 (포커스 탈출 → 클릭 → 클릭 확인 → 딜레이)
+    /// </summary>
+    public async Task<StdResult_Status> Click새로고침버튼Async(CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
+    {
+        try
+        {
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                // 1. 포커스 탈출
+                await EscapeFocusAsync(ctrl.Token);
+
+                // 2. 새로고침 버튼 클릭
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd새로고침버튼);
+
+                // 3. 클릭 확인 (명도 <= 10 대기, 최대 500ms)
+                bool bClicked = false;
+                for (int j = 0; j < 500; j++)
+                {
+                    int brightness = OfrService.GetPixelBrightnessFrmWndHandle(
+                        mRcpt.검색섹션_hWnd새로고침버튼, fInfo.접수등록Page_검색_Focused_ptChkRelS);
+                    if (brightness <= 10)
+                    {
+                        bClicked = true;
+                        break;
+                    }
+                    await Task.Delay(1, ctrl.Token);
+                }
+
+                if (!bClicked)
+                {
+                    Debug.WriteLine($"[{AppName}] 새로고침 버튼 클릭 확인 실패 (시도 {i}/{retryCount})");
+                    continue;
+                }
+
+                // 4. 오더량 기반 딜레이 (100개 단위, 최소 100ms)
+                int delay = ((m_nLastTotalCount / 100) + 1) * 100;
+                Debug.WriteLine($"[{AppName}] 새로고침 딜레이: {delay}ms (총계: {m_nLastTotalCount})");
+                await Task.Delay(delay, ctrl.Token);
+
+                return new StdResult_Status(StdResult.Success, "새로고침 완료");
+            }
+
+            return new StdResult_Status(StdResult.Fail, $"새로고침 버튼 클릭 {retryCount}회 모두 실패", "Click새로고침버튼Async_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "Click새로고침버튼Async_999");
+        }
+    }
+    #endregion
+
+    #region Get총계Async
+    /// <summary>
+    /// 총계 OFR (DG오더_hWndTop 기준, 확장상태에 따라 Small/Large 영역 선택)
+    /// </summary>
+    public async Task<StdResult_Int> Get총계Async(CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
+    {
+        try
+        {
+            Draw.Rectangle rcTotal = IsDGExpanded()
+                ? fInfo.접수등록Page_DG오더Large_rcTotalS
+                : fInfo.접수등록Page_DG오더Small_rcTotalS;
+
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                Draw.Bitmap bmpTotal = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcTotal);
+                if (bmpTotal == null)
+                {
+                    Debug.WriteLine($"[{AppName}] 총계 캡처 실패 (시도 {i}/{retryCount})");
+                    if (i < retryCount) await Task.Delay(c_nWaitNormal, ctrl.Token);
+                    continue;
+                }
+
+                try
+                {
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpTotal, bTextSave: false, bEdit: i == retryCount);
+                    int nTotal = int.TryParse(new string(result.strResult?.Where(char.IsDigit).ToArray() ?? Array.Empty<char>()), out int n) ? n : -1;
+
+                    if (nTotal >= 0)
+                    {
+                        Debug.WriteLine($"[{AppName}] 총계 OFR 성공: {nTotal} (시도 {i}/{retryCount})");
+                        return new StdResult_Int(nTotal);
+                    }
+                }
+                finally
+                {
+                    bmpTotal.Dispose();
+                }
+
+                if (i < retryCount) await Task.Delay(c_nWaitNormal, ctrl.Token);
+            }
+
+            return new StdResult_Int(-1, $"총계 OFR 실패 ({retryCount}회 시도)", "Get총계Async_99");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] Get총계Async 예외: {ex.Message}");
+            return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "Get총계Async_999");
+        }
+    }
+    #endregion
+
+    #region IsDGExpanded
+    /// <summary>
+    /// DG오더 확장 상태 확인 (접수섹션이 안보이면 확장 상태)
+    /// </summary>
+    /// <returns>true: 확장(Large, 34행), false: 축소(Small, 17행)</returns>
+    public bool IsDGExpanded()
+    {
+        return !Std32Window.IsWindowVisible(mRcpt.접수섹션_hWndTop);
+    }
+    #endregion
+
+    #region GetValidRowCount
+    /// <summary>
+    /// DG오더의 유효 로우 수 반환 (Small 모드 고정)
+    /// - 배경 밝기(255)보다 어두우면 데이터 있는 로우로 판단
+    /// </summary>
+    public StdResult_Int GetValidRowCount()
+    {
+        try
+        {
+            Draw.Rectangle[,] rects = mRcpt.DG오더_rcRelSmallCells;
+            int maxRows = fInfo.접수등록Page_DG오더Small_RowsCount;
+
+            if (rects == null)
+                return new StdResult_Int("DG오더_rcRelSmallCells 미초기화", "GetValidRowCount_01");
+
+            int nBackgroundBright = 255;  // 원콜 빈 셀 배경은 흰색
+            int nThreshold = nBackgroundBright - 1;
+            int nValidRows = 0;
+
+            for (int row = 0; row < maxRows; row++)
+            {
+                // [col, row] 순서 - 첫 번째 열의 중앙 위치에서 밝기 체크
+                int nCurBright = OfrService.GetPixelBrightnessFrmWndHandle(
+                    mRcpt.DG오더_hWndTop,
+                    rects[0, row].Right,
+                    rects[0, row].Top + 6);
+
+                if (nCurBright < nThreshold)
+                    nValidRows++;
+                else
+                    break;
+            }
+
+            return new StdResult_Int(nValidRows);
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Int(StdUtil.GetExceptionMessage(ex), "GetValidRowCount_999");
         }
     }
     #endregion

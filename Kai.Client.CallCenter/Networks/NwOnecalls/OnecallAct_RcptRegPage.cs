@@ -67,6 +67,11 @@ public partial class OnecallAct_RcptRegPage
     private OnecallInfo_Mem.MainWnd mMain => mInfo.Main;
     private OnecallInfo_Mem.RcptRegPage mRcpt => mInfo.RcptPage;
     private string AppName => m_Context.AppName;
+
+    /// <summary>
+    /// 마지막으로 읽은 총계 (조회 딜레이 계산용)
+    /// </summary>
+    public int m_nLastTotalCount { get; set; } = 0;
     #endregion
 
     #region 생성자
@@ -114,7 +119,12 @@ public partial class OnecallAct_RcptRegPage
             Debug.WriteLine($"[{AppName}] 검색섹션_hWnd 찾음: {mRcpt.검색섹션_hWndTop:X}");
             if (!bFind) return new StdResult_Error($"[{AppName}] 검색섹션_hWnd 찾기실패", "OnecallAct_RcptRegPage/InitializeAsync_02");
 
-            // 검색섹션 - 자식정보
+            // 검색섹션 - 자식정보           
+            mRcpt.검색섹션_hWnd포커스탈출 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_검색_포커Kill_ptChkRelM); // 포커스탈출
+
+            mRcpt.검색섹션_hWnd자동조회 = Std32Window.GetWndHandle_FromRelDrawPt(
+                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_검색_자동조회_rcChkRelM)); // 자동조회
+
             mRcpt.검색섹션_hWnd새로고침버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_새로고침Btn_ptChkRelM);
             mRcpt.검색섹션_hWnd확장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색ExpandBtn_ptChkRelM);
             //Debug.WriteLine($"[{AppName}] 확장버튼 찾음: {mRcpt.검색섹션_hWnd확장버튼:X}");
@@ -123,9 +133,6 @@ public partial class OnecallAct_RcptRegPage
             #region 3. 접수섹션
             // 3. 접수섹션 Top핸들찾기
             mRcpt.접수섹션_hWndTop = Std32Window.GetWndHandle_FromRelDrawPt(mMain.TopWnd_hWnd, fInfo.접수등록Page_접수섹션_ptChkRelT);
-
-            // 포커스탈출
-            mRcpt.접수섹션_hWnd포커스탈출 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_포커스_ptChkRelM);
 
             // 버튼들
             mRcpt.접수섹션_hWnd신규버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_신규Btn_ptChkRelM);
@@ -268,7 +275,7 @@ public partial class OnecallAct_RcptRegPage
             int columns = listLW.Count;
 
             // Small Rects (19행) - [col, row] 순서 (화물24시와 통일)
-            int smallRowCount = fInfo.접수등록Page_DG오더_smallRowsCount;
+            int smallRowCount = fInfo.접수등록Page_DG오더Small_RowsCount;
             mRcpt.DG오더_rcRelSmallCells = new Draw.Rectangle[columns, smallRowCount];
             mRcpt.DG오더_ptRelChkSmallRows = new Draw.Point[smallRowCount];
             for (int row = 0; row < smallRowCount; row++)
@@ -283,7 +290,7 @@ public partial class OnecallAct_RcptRegPage
             Debug.WriteLine($"[{AppName}] Small Rects 생성 완료: {columns}열 x {smallRowCount}행");
 
             // Large Rects (34행) - [col, row] 순서 (화물24시와 통일)
-            int largeRowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
+            int largeRowCount = fInfo.접수등록Page_DG오더Large_RowsCount;
             mRcpt.DG오더_rcRelLargeCells = new Draw.Rectangle[columns, largeRowCount];
             mRcpt.DG오더_ptRelChkLargeRows = new Draw.Point[largeRowCount];
             for (int row = 0; row < largeRowCount; row++)
@@ -298,7 +305,26 @@ public partial class OnecallAct_RcptRegPage
             Debug.WriteLine($"[{AppName}] Large Rects 생성 완료: {columns}열 x {largeRowCount}행");
             #endregion
 
-            Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 완료");
+            #region 6. 초기 총계 읽기 (조회 딜레이 계산용)
+            var resultTotal = await Get총계Async(new CancelTokenControl());
+            if (resultTotal.nResult >= 0)
+            {
+                m_nLastTotalCount = resultTotal.nResult;
+                Debug.WriteLine($"[{AppName}] 초기 총계: {resultTotal.nResult}");
+            }
+            #endregion
+
+            #region 7. 자동조회 콤보박스 5초 설정
+            await EscapeFocusAsync();
+            var result자동조회 = GetAutoRefreshResult("5초");
+            var resultSts = await SelectComboBoxItemAsync(mRcpt.검색섹션_hWnd자동조회, result자동조회, mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_자동조회_rcChkRelM);
+            if (resultSts.Result == StdResult.Success)
+                Debug.WriteLine($"[{AppName}] 자동조회 5초 설정 완료");
+            else
+                Debug.WriteLine($"[{AppName}] 자동조회 설정 실패: {resultSts.sErr}");
+            #endregion
+
+            //MsgBox($"[{AppName}] RcptRegPage InitializeAsync 완료");
             return null;
         }
         catch (Exception ex)
@@ -387,7 +413,7 @@ public partial class OnecallAct_RcptRegPage
                 for (int i = 0; i < m_ReceiptDgHeaderInfos.Length; i++)
                 {
                     Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[i].nLeft + 1, headerGab, listLW[i].nWidth - 2, textHeight);
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bEdit: bEdit);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, bEdit: bEdit);
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }
 
@@ -556,7 +582,7 @@ public partial class OnecallAct_RcptRegPage
     //            bmpDG?.Dispose();
     //            bmpDG = null;
 
-    //            int rowCount = fInfo.접수등록Page_DG오더_largeRowsCount;
+    //            int rowCount = fInfo.접수등록Page_DG오더Large_RowsCount;
     //            int rowHeight = fInfo.접수등록Page_DG오더_dataRowHeight;
     //            int gab = fInfo.접수등록Page_DG오더_dataGab;
     //            int dataTextHeight = rowHeight - gab - gab;
@@ -985,7 +1011,7 @@ public partial class OnecallAct_RcptRegPage
         {
             Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
 
-            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bEdit: bEdit);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, bEdit: bEdit);
 
             texts[x] = result?.strResult;
         }
@@ -1019,15 +1045,15 @@ public partial class OnecallAct_RcptRegPage
                 return;
             }
 
-            int rowCount = mRcpt.DG오더_rcRelLargeCells.GetLength(0);
-            int colCount = mRcpt.DG오더_rcRelLargeCells.GetLength(1);
-            Debug.WriteLine($"[{AppName}] Cell 배열: {rowCount}행 x {colCount}열");
+            int colCount = mRcpt.DG오더_rcRelLargeCells.GetLength(0);  // [col, row] 순서
+            int rowCount = mRcpt.DG오더_rcRelLargeCells.GetLength(1);
+            Debug.WriteLine($"[{AppName}] Cell 배열: {colCount}열 x {rowCount}행");
 
             // 3. TransparantWnd 오버레이 생성 (DG오더 위치 기준)
             TransparantWnd.CreateOverlay(mRcpt.DG오더_hWndTop);
             TransparantWnd.ClearBoxes();
 
-            // 4. 모든 셀 영역 그리기 (두께 1, 빨간색)
+            // 5. 모든 셀 영역 그리기 (두께 1, 빨간색)
             int cellCount = 0;
             for (int row = 0; row < rowCount; row++)
             {
@@ -1109,6 +1135,48 @@ public partial class OnecallAct_RcptRegPage
             System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
             TransparantWnd.DeleteOverlay();
         }
+    }
+
+    /// <summary>
+    /// 총계 OFR 영역 시각화 테스트
+    /// </summary>
+    public void Test_Draw총계영역()
+    {
+        if (mRcpt.DG오더_hWndTop == IntPtr.Zero)
+        {
+            System.Windows.MessageBox.Show("DG오더_hWndTop가 초기화되지 않았습니다.", "오류");
+            return;
+        }
+
+        Draw.Rectangle rcTotalS = fInfo.접수등록Page_DG오더Small_rcTotalS;
+
+        TransparantWnd.CreateOverlay(mRcpt.DG오더_hWndTop);
+        TransparantWnd.DrawBoxAsync(rcTotalS, Media.Colors.Red, 1);
+
+        System.Windows.MessageBox.Show($"총계 영역: {rcTotalS}", "총계 영역 테스트");
+
+        TransparantWnd.DeleteOverlay();
+    }
+
+    /// <summary>
+    /// 총계 OFR 영역 시각화 테스트 (Large/확장 상태)
+    /// </summary>
+    public void Test_Draw총계영역Large()
+    {
+        if (mRcpt.DG오더_hWndTop == IntPtr.Zero)
+        {
+            System.Windows.MessageBox.Show("DG오더_hWndTop가 초기화되지 않았습니다.", "오류");
+            return;
+        }
+
+        Draw.Rectangle rcTotalL = fInfo.접수등록Page_DG오더Large_rcTotalS;
+
+        TransparantWnd.CreateOverlay(mRcpt.DG오더_hWndTop);
+        TransparantWnd.DrawBoxAsync(rcTotalL, Media.Colors.Red, 1);
+
+        System.Windows.MessageBox.Show($"총계 영역 (Large): {rcTotalL}", "총계 영역 테스트");
+
+        TransparantWnd.DeleteOverlay();
     }
 
     /// <summary>
@@ -1284,6 +1352,52 @@ public partial class OnecallAct_RcptRegPage
             System.Windows.MessageBox.Show($"오류: {ex.Message}", "오류");
             TransparantWnd.DeleteOverlay();
         }
+    }
+
+    /// <summary>
+    /// 자동조회 콤보박스 영역 테스트
+    /// </summary>
+    public void Test_Draw자동조회Rect()
+    {
+        if (mRcpt.검색섹션_hWndTop == IntPtr.Zero)
+        {
+            System.Windows.MessageBox.Show("검색섹션_hWndTop이 초기화되지 않았습니다.", "오류");
+            return;
+        }
+
+        TransparantWnd.CreateOverlay(mRcpt.검색섹션_hWndTop);
+        TransparantWnd.DrawBoxAsync(fInfo.접수등록Page_검색_자동조회_rcChkRelM, Media.Colors.Red, 1);
+
+        System.Windows.MessageBox.Show($"자동조회 영역: {fInfo.접수등록Page_검색_자동조회_rcChkRelM}", "자동조회 영역 테스트");
+
+        TransparantWnd.DeleteOverlay();
+    }
+
+    /// <summary>
+    /// 새로고침버튼 테두리 명도 테스트 (점선 패턴 위치)
+    /// </summary>
+    public void Test_새로고침버튼_테두리명도()
+    {
+        if (mRcpt.검색섹션_hWnd새로고침버튼 == IntPtr.Zero)
+        {
+            System.Windows.MessageBox.Show("검색섹션_hWnd새로고침버튼이 초기화되지 않았습니다.", "오류");
+            return;
+        }
+
+        System.Windows.MessageBox.Show("확인 후 명도 측정", "대기");
+
+        var sb = new System.Text.StringBuilder();
+        for (int y = 1; y <= 4; y++)
+        {
+            for (int x = 1; x <= 5; x++)
+            {
+                int b = OfrService.GetPixelBrightnessFrmWndHandle(mRcpt.검색섹션_hWnd새로고침버튼, new Draw.Point(x, y));
+                sb.Append($"{b}\t");
+            }
+            sb.AppendLine();
+        }
+
+        System.Windows.MessageBox.Show(sb.ToString(), "테두리 명도");
     }
 
     /// <summary>
@@ -1537,7 +1651,7 @@ public partial class OnecallAct_RcptRegPage
                 if (!Std32Window.IsWindowVisible(hWndParent)) break;
             }
 
-            // 상(하)차지 캡션이 클리어 됬나 체크
+            // 상(하)차지 캡션이 클리어 됬나 체크 - 총갯수를 체크해도 됨.
             bool bSaved = false;
             for (int i = 0; i < c_nRepeatMany; i++)
             {

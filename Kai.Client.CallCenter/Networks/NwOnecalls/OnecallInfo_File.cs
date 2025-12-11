@@ -50,9 +50,6 @@ public class OnecallInfo_File
     // Top
     public Draw.Point 접수등록Page_접수섹션_ptChkRelT { get; set; } = new Draw.Point(1800, 255);
 
-    // 콜센터 대표전화번호 - 다른 UI포커스를 죽이기 위한 포커스용 핸들
-    public Draw.Point 접수등록Page_포커스_ptChkRelM { get; set; } = new Draw.Point(230, 25); // {X=230,Y=25}
-
     // 버튼들
     public Draw.Point 접수등록Page_접수_목록초기화Btn_ptRelS { get; set; } = new Draw.Point(1084, 374); // 목록초기화Btn 
     public Draw.Point 접수등록Page_접수_신규Btn_ptChkRelM { get; set; } = new Draw.Point(54, 374); // 신규Btn {X=54,Y=374}
@@ -200,20 +197,40 @@ public class OnecallInfo_File
 
     #region 검색 Section
     public Draw.Point 접수등록Page_검색섹션_ptChkRelT { get; set; } = new Draw.Point(1800, 515); // {X=1800,Y=515}
+    public Draw.Point 접수등록Page_검색_Focused_ptChkRelS { get; set; } = new Draw.Point(4, 3); // 버튼내부에 포커스된 점선명도 위치
+    public Draw.Rectangle 접수등록Page_검색_자동조회_rcChkRelM { get; set; } = new Draw.Rectangle(941, 9, 42, 18); // {X=938,Y=6,Width=65,Height=24}
+    public CommonModel_ComboBox[] 접수등록Page_검색_자동조회Open = new CommonModel_ComboBox[] // 화물24시에 맞게 조정
+    {
+          new CommonModel_ComboBox("안함", "안함", new Draw.Point(30, 10)),    
+          new CommonModel_ComboBox("5초", "인수증", new Draw.Point(30, 30)),  
+          new CommonModel_ComboBox("10초", "인수증", new Draw.Point(30, 50)),    
+                                                         
+          new CommonModel_ComboBox("15초", "선착불", new Draw.Point(30, 150)),  
+                                                    
+          new CommonModel_ComboBox("20초", "선착불", new Draw.Point(30, 250)),  
+    };
+
+    // 콜센터 대표전화번호 - 다른 UI포커스를 죽이기 위한 포커스용 핸들
+    public Draw.Point 접수등록Page_검색_포커Kill_ptChkRelM { get; set; } = new Draw.Point(466, 18); // {X=466,Y=18}
     public Draw.Point 접수등록Page_검색_새로고침Btn_ptChkRelM { get; set; } = new Draw.Point(597, 18); // 새로고침Btn {X=597,Y=18}
     public Draw.Point 접수등록Page_검색ExpandBtn_ptChkRelM { get; set; } = new Draw.Point(1892, 18); // ExpandBtn 
     #endregion
 
     #region Datagrid Section
     public int 접수등록Page_DG오더_nExpandedHeight = 874; // ExpandBtn Width
-    public Draw.Point 접수등록Page_DG오더_ptChkRelT { get; set; } = new Draw.Point(1800, 975); // {X=1800,Y=975}
+    public Draw.Point 접수등록Page_DG오더_ptChkRelT { get; set; } = new Draw.Point(1800, 975); // {X=1800,Y=975} // 데이타그리드 탑핸들 얻는 위치
 
     // 접수 Datagrid
     public int 접수등록Page_DG오더_headerHeight = 30; // HeaderRow Height
     public int 접수등록Page_DG오더_dataRowHeight = 23; // DataRow Height
     public int 접수등록Page_DG오더_dataGab = 1; // 셀 상하단 gap
-    public int 접수등록Page_DG오더_smallRowsCount = 17; // DataRow Count
-    public int 접수등록Page_DG오더_largeRowsCount = 34; // DataRow Count
+
+    public int 접수등록Page_DG오더Small_RowsCount = 17; // DataRow Count
+    public Draw.Rectangle 접수등록Page_DG오더Small_rcTotalS = new Draw.Rectangle(325, 430, 81, 20); // 총계 OFR영역 - {X=325,Y=427} {X=406,Y=449}
+
+    public int 접수등록Page_DG오더Large_RowsCount = 34; // DataRow Count 
+    public Draw.Rectangle 접수등록Page_DG오더Large_rcTotalS = new Draw.Rectangle(325, 830, 81, 20); // 총계 OFR영역
+
 
     public string[] 접수등록Page_DG오더_colOrgTexts = new string[]
     {
@@ -222,6 +239,8 @@ public class OnecallInfo_File
         "차주_톤수", "차주_차종", "적재옵션", "차주_사업자상호", "차주_사업자구분", "차주_사업자번호", "인수증", "매입계산서 발행일", "상차완료보고시간", "하차완료보고시간",
         "담당자번호", "오더번호"
     };
+
+
     #endregion
     #endregion #endregion 접수등록Page - 도킹상태 접수등록Page_TopWnd 기준
 }

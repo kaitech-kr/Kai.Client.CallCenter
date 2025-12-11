@@ -156,10 +156,10 @@ public class OnecallAct_MainWnd
                 rcMain.Width, rcMain.Height, true);
 
             // 최대화 및 확인
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < c_nRepeatVeryMany; i++)
             {
                 StdWin32.PostMessage(mMain.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, StdCommon32.SC_MAXIMIZE, IntPtr.Zero);
-                await Task.Delay(500);
+                await Task.Delay(c_nWaitNormal);
 
                 hWndFind = Std32Window.GetParentWndHandle_FromAbsDrawPt(ptTarget);
                 if (hWndFind == mMain.TopWnd_hWnd) break;

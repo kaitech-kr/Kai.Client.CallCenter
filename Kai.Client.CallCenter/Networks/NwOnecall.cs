@@ -131,8 +131,9 @@ public class NwOnecall : IExternalApp
             // 작업잔량 리스트 복사
             var listOnecall = new List<AutoAllocModel>(listFromController);
 
-            // 신규(대기→접수 포함) 판별 함수
-            Func<AutoAllocModel, bool> isNewFromWaiting = item => item.OldOrder?.OrderState == "대기" && item.NewOrder.OrderState == "접수" && string.IsNullOrEmpty(item.NewOrder.Onecall);
+            // 신규(접수 포함) 판별 함수
+            //Func<AutoAllocModel, bool> isNewFromWaiting = item => item.OldOrder?.OrderState == "대기" && item.NewOrder.OrderState == "접수" && string.IsNullOrEmpty(item.NewOrder.Onecall);
+            Func<AutoAllocModel, bool> isNewFromWaiting = item => item.NewOrder.OrderState == "접수" && item.NewOrder.Share == true && string.IsNullOrEmpty(item.NewOrder.Onecall);
 
             // listCreated 분류 (신규)
             var listCreated = listOnecall
@@ -154,6 +155,10 @@ public class NwOnecall : IExternalApp
 
             // 상세 로깅
             Debug.WriteLine($"[{AppName}] listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
+            foreach (var item in listCreated)
+                Debug.WriteLine($"[{AppName}]   Created: KeyCode={item.KeyCode}, StateFlag={item.StateFlag}, Onecall={item.NewOrder?.Onecall}");
+            foreach (var item in listEtcGroup)
+                Debug.WriteLine($"[{AppName}]   EtcGroup: KeyCode={item.KeyCode}, StateFlag={item.StateFlag}, Onecall={item.NewOrder?.Onecall}");
 
             // 할일 체크
             int tot = listCreated.Count + listEtcGroup.Count;
@@ -250,17 +255,59 @@ public class NwOnecall : IExternalApp
                 Debug.WriteLine($"[{AppName}] Region 5: 기존 주문 처리 시작 (총 {listEtcGroup.Count}건)");
 
                 #region 5-1. 조회버튼 클릭 + 총계 확인
-                // TODO: Click조회버튼Async 구현 후 호출
-                // TODO: 총계 OFR
-                int nThisTotCount = 0; // TODO: 실제 총계로 대체
+                int nThisTotCount = -1;
+                for (int i = 1; i <= c_nRepeatNormal; i++)
+                {
+                    await ctrl.WaitIfPausedOrCancelledAsync();
+
+                    StdResult_Status resultQuery = await m_Context.RcptRegPageAct.Click새로고침버튼Async(ctrl);
+                    if (resultQuery.Result == StdResult.Fail) continue;
+
+                    StdResult_Int resultTotal = await m_Context.RcptRegPageAct.Get총계Async(ctrl);
+                    if (resultTotal.nResult >= 0)
+                    {
+                        nThisTotCount = resultTotal.nResult;
+                        m_Context.RcptRegPageAct.m_nLastTotalCount = nThisTotCount; // 다음 조회 딜레이용
+                        Debug.WriteLine($"[{AppName}] 총계 읽기 성공 (시도 {i}회): {nThisTotCount}");
+                        break;
+                    }
+
+                    await Task.Delay(c_nWaitNormal, ctrl.Token);
+                }
+
+                if (nThisTotCount < 0)
+                {
+                    Debug.WriteLine($"[{AppName}] 총계 읽기 실패 ({c_nRepeatNormal}회 시도)");
+                    return new StdResult_Status(StdResult.Retry, "총계 읽기 실패", $"{AppName}/AutoAllocAsync_51");
+                }
+
+                if (nThisTotCount == 0)
+                {
+                    Debug.WriteLine($"[{AppName}] 데이터 없음 (총계: 0) - Region 5 스킵");
+                    return new StdResult_Status(StdResult.Success);
+                }
+
+                Debug.WriteLine($"[{AppName}] 데이터 있음 (총계: {nThisTotCount}건)");
                 #endregion
 
-                #region 5-2. 페이지 산정
-                // TODO: 페이지 계산 로직
+                #region 5-2. 페이지 산정 (Small 모드 고정)
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                int nRowCount = m_Context.FileInfo.접수등록Page_DG오더Small_RowsCount;
+                int nTotPage = 1;
+
+                // 페이지 계산
+                if (nThisTotCount > nRowCount)
+                {
+                    nTotPage = nThisTotCount / nRowCount;
+                    if ((nThisTotCount % nRowCount) > 0) nTotPage += 1;
+                }
+
+                Debug.WriteLine($"[{AppName}] 페이지 산정: 총계={nThisTotCount}, 페이지당={nRowCount}, 총페이지={nTotPage}");
                 #endregion
 
                 #region 5-3. 페이지별 리스트 검사
-                // TODO: CheckOcOrderAsync_AssumeKaiUpdated 구현 후 호출
+                // TODO: 페이지별 리스트 검사 구현
                 #endregion
 
                 Debug.WriteLine($"[{AppName}] Region 5 완료");

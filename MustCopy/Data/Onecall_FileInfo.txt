@@ -20,8 +20,8 @@
   "접수등록Page_DG오더_nExpandedHeight": 874,
   "접수등록Page_DG오더_headerHeight": 30,
   "접수등록Page_DG오더_dataRowHeight": 23,
-  "접수등록Page_DG오더_smallRowsCount": 19,
-  "접수등록Page_DG오더_largeRowsCount": 36,
+  "접수등록Page_DG오더Small_RowsCount": 19,
+  "접수등록Page_DG오더Large_RowsCount": 36,
   "접수등록Page_DG오더_colOrgTexts": [
     "순번",
     "처리일자",

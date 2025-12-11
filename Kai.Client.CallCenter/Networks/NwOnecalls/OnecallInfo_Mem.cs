@@ -67,7 +67,6 @@ public class OnecallInfo_Mem
         #region 접수영역
         // 최상위 - 접수영역
         public IntPtr 접수섹션_hWndTop;  // hWnd
-        public IntPtr 접수섹션_hWnd포커스탈출;  // hWnd
 
         // 버튼들
         public IntPtr 접수섹션_hWnd신규버튼;  // 버튼
@@ -142,6 +141,8 @@ public class OnecallInfo_Mem
         #region 검색영역
         // 최상위 - 검색영역
         public IntPtr 검색섹션_hWndTop;  // hWnd
+        public IntPtr 검색섹션_hWnd포커스탈출;  // hWnd
+        public IntPtr 검색섹션_hWnd자동조회;  // hWnd
 
         // 버튼들
         public IntPtr 검색섹션_hWnd새로고침버튼;  // hWnd - 
@@ -151,12 +152,15 @@ public class OnecallInfo_Mem
         #region Datagrid
         // 최상위 - Datagrid
         public IntPtr DG오더_hWndTop;  // hWnd
+        public bool bExpandMode = false;
 
         // 영역
         public Draw.Rectangle[,] DG오더_rcRelLargeCells;
         public Draw.Point[] DG오더_ptRelChkLargeRows;
         public Draw.Rectangle[,] DG오더_rcRelSmallCells;
         public Draw.Point[] DG오더_ptRelChkSmallRows;
+
+        //public Draw.Rectangle = 
 
         // 명도
         public int DG오더_nBackgroundBright = 0; 
