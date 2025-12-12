@@ -256,7 +256,7 @@ public class InsungsInfo_File
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel배송지정 { get; set; } = new Draw.Rectangle(471, 372, 19, 19); // Check Rect - X=469,Y=369,Width=51,Height=25
     public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel당일택배 { get; set; } = new Draw.Rectangle(521, 372, 19, 19); // Check Rect - X=519,Y=369,Width=74,Height=25
 
-    // qothd종류 RadioButton 그룹
+    // 긴급종류 RadioButton 그룹
     public OfrModel_RadioBtn[] 접수등록Wnd_우측상단_배송그룹 { get; set; } = new OfrModel_RadioBtn[]
     {
         new OfrModel_RadioBtn("편도", new Draw.Rectangle(596, 373, 18, 18), new Draw.Rectangle(615, 373, 27, 19)),

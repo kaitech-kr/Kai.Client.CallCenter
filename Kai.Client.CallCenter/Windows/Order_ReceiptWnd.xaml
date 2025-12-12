@@ -1261,10 +1261,12 @@
                                         <ComboBoxItem Content="3.5t"/>
                                         <ComboBoxItem Content="5t"/>
                                         <ComboBoxItem Content="8t"/>
+                                        <ComboBoxItem Content="9.5t"/>
                                         <ComboBoxItem Content="11t"/>
                                         <ComboBoxItem Content="14t"/>
                                         <ComboBoxItem Content="15t"/>
                                         <ComboBoxItem Content="18t"/>
+                                        <ComboBoxItem Content="22t"/>
                                         <ComboBoxItem Content="25t"/>
                                     </ComboBox>
                                 </Border>
@@ -1284,7 +1286,7 @@
                                         <ComboBoxItem Content="플축리"/>
                                         <ComboBoxItem Content="윙바디"/>
                                         <ComboBoxItem Content="플러스윙"/>
-                                        <ComboBoxItem Content="축윙"/>
+                                        <ComboBoxItem Content="윙축"/>
                                         <ComboBoxItem Content="플축윙"/>
                                         <ComboBoxItem Content="리프트윙"/>
                                         <ComboBoxItem Content="플러스윙리"/>
@@ -1303,14 +1305,11 @@
                                         <ComboBoxItem Content="냉장탑리"/>
                                         <ComboBoxItem Content="냉동플축윙"/>
                                         <ComboBoxItem Content="냉장플축윙"/>
-                                        <ComboBoxItem Content="냉동플축리"/>
-                                        <ComboBoxItem Content="냉장플축리"/>
+                                        <ComboBoxItem Content="냉동플축윙리"/>
+                                        <ComboBoxItem Content="냉장플축윙리"/>
                                         <ComboBoxItem Content="평카"/>
-                                        <ComboBoxItem Content="로브이"/>
-                                        <ComboBoxItem Content="츄레라"/>
-                                        <ComboBoxItem Content="로베드"/>
-                                        <ComboBoxItem Content="사다리"/>
                                         <ComboBoxItem Content="초장축"/>
+                                        <ComboBoxItem Content="무진동"/>
                                     </ComboBox>
                                 </Border>
 

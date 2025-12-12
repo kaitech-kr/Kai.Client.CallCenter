@@ -379,11 +379,8 @@ public partial class Cargo24sAct_RcptRegPage
 
                 for (int i = 1; i < m_ReceiptDgHeaderInfos.Length; i++)
                 {
-                    Draw.Rectangle rcTmp = new Draw.Rectangle(
-                        listLW[i].nLeft, TARGET_ROW, listLW[i].nWidth, OFR_HEIGHT);
-
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                        bmpDG, rcTmp, bInvertRgb: false, bEdit: bEdit);
+                    Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[i].nLeft, TARGET_ROW, listLW[i].nWidth, OFR_HEIGHT);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, 0.9, bEdit: bEdit);
 
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }
@@ -665,8 +662,7 @@ public partial class Cargo24sAct_RcptRegPage
             {
                 Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[x].nLeft, HEADER_GAB, listLW[x].nWidth, OFR_HEIGHT);
 
-                var resultChSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                    bmpHeader, rcTmp, bInvertRgb: false, bEdit: bEdit);
+                var resultChSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcTmp, bInvertRgb: false, bTextSave: true, 0.9, bEdit: bEdit);
 
                 if (string.IsNullOrEmpty(resultChSet.strResult))
                 {

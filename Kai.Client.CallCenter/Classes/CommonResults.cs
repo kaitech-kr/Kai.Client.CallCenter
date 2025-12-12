@@ -163,4 +163,20 @@ public class CommonResult_SearchType
         this.hWndResult = hWndResult;
     }
 }
+
+//public class CommonResult_ModelComboBox : StdResult_Error
+//{
+//    public CommonModel_ComboBox resultCbBox { get; } = null;
+
+//    public CommonResult_ModelComboBox(CommonModel_ComboBox resultCbBox)
+//    {
+//        this.resultCbBox = resultCbBox;
+//    }
+
+//    public CommonResult_ModelComboBox(string sErr, string sPos)
+//    {
+//        base.sPos = sPos;
+//        base.sErr = sErr;
+//    }
+//}
 #nullable enable

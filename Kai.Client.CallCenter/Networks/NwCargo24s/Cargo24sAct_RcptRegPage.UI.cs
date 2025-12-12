@@ -1,16 +1,15 @@
-using System.Diagnostics;
-using System.Windows.Media;
-using Draw = System.Drawing;
-
-using Kai.Common.StdDll_Common;
-using Kai.Common.StdDll_Common.StdWin32;
-using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
-
 using Kai.Client.CallCenter.Classes;
+using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Windows;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
+using Kai.Common.StdDll_Common;
+using Kai.Common.StdDll_Common.StdWin32;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+using System.Diagnostics;
+using System.Windows.Media;
 using static Kai.Client.CallCenter.Classes.CommonVars;
+using Draw = System.Drawing;
 
 namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 #nullable disable
@@ -57,7 +56,7 @@ public partial class Cargo24sAct_RcptRegPage
     }
 
     /// <summary>
-    /// Datagrid ���� ���� (�÷� ����, �ʺ� Ȯ��)
+    /// Datagrid
     /// </summary>
     /// <param name="columnTexts">OFR�� �о�� �÷� ��� �ؽ�Ʈ �迭</param>
     /// <param name="listLW">�÷� Left/Width ����Ʈ</param>
@@ -584,6 +583,8 @@ public partial class Cargo24sAct_RcptRegPage
             case "선불":
             case "착불": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel선착불);
 
+
+
             case "카드": //return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel카드); // 하차일 지정해야 통과
 
             case "신용":
@@ -886,13 +887,10 @@ public partial class Cargo24sAct_RcptRegPage
             if (hWnd == IntPtr.Zero)
             {
                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} EditBox 핸들이 유효하지 않습니다.");
-                return new StdResult_Status(StdResult.Fail,
-                    $"{fieldName} EditBox를 찾을 수 없습니다.",
-                    "WriteAndVerifyEditBoxAsync_00");
+                return new StdResult_Status(StdResult.Fail, $"{fieldName} EditBox를 찾을 수 없습니다.", "WriteAndVerifyEditBoxAsync_00");
             }
 
-            if (expectedValue == null)
-                expectedValue = "";
+            if (expectedValue == null) expectedValue = "";
 
             // 재시도 루프 (최대 3번)
             for (int i = 0; i < c_nRepeatShort; i++)
@@ -1265,7 +1263,7 @@ public partial class Cargo24sAct_RcptRegPage
     public async Task<StdResult_String> Get상태Async(Draw.Bitmap bmpPage, int rowIdx)
     {
         Draw.Rectangle rectStatus = m_RcptPage.DG오더_rcRelCells[c_nCol상태, rowIdx];
-        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, false);
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb: false, bTextSave: true, 0.9, bEdit: true);
     }
     #endregion
 }

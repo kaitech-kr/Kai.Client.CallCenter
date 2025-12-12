@@ -160,10 +160,8 @@ public class OnecallInfo_Mem
         public Draw.Rectangle[,] DG오더_rcRelSmallCells;
         public Draw.Point[] DG오더_ptRelChkSmallRows;
 
-        //public Draw.Rectangle = 
-
         // 명도
-        public int DG오더_nBackgroundBright = 0; 
+        public int DG오더_nBkMarginedBright = 0; 
         #endregion
     }
     #endregion

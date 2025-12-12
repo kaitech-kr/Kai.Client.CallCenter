@@ -202,12 +202,12 @@ public class OnecallInfo_File
     public CommonModel_ComboBox[] 접수등록Page_검색_자동조회Open = new CommonModel_ComboBox[] // 화물24시에 맞게 조정
     {
           new CommonModel_ComboBox("안함", "안함", new Draw.Point(30, 10)),    
-          new CommonModel_ComboBox("5초", "인수증", new Draw.Point(30, 30)),  
-          new CommonModel_ComboBox("10초", "인수증", new Draw.Point(30, 50)),    
-                                                         
-          new CommonModel_ComboBox("15초", "선착불", new Draw.Point(30, 150)),  
-                                                    
-          new CommonModel_ComboBox("20초", "선착불", new Draw.Point(30, 250)),  
+          new CommonModel_ComboBox("5초", "5초", new Draw.Point(30, 30)),  
+          new CommonModel_ComboBox("10초", "10초", new Draw.Point(30, 50)),    
+          // 생략...                                             
+          new CommonModel_ComboBox("15초", "15초", new Draw.Point(30, 150)),  
+          // 생략...                                                     
+          new CommonModel_ComboBox("20초", "20초", new Draw.Point(30, 250)),  
     };
 
     // 콜센터 대표전화번호 - 다른 UI포커스를 죽이기 위한 포커스용 핸들
@@ -222,7 +222,7 @@ public class OnecallInfo_File
 
     // 접수 Datagrid
     public int 접수등록Page_DG오더_headerHeight = 30; // HeaderRow Height
-    public int 접수등록Page_DG오더_dataRowHeight = 23; // DataRow Height
+    public int 접수등록Page_DG오더_dataRowHeight = 22; // DataRow Height
     public int 접수등록Page_DG오더_dataGab = 1; // 셀 상하단 gap
 
     public int 접수등록Page_DG오더Small_RowsCount = 17; // DataRow Count
@@ -240,7 +240,11 @@ public class OnecallInfo_File
         "담당자번호", "오더번호"
     };
 
-
+    public Draw.Point 접수등록Page_DG오더VScroll_BarCenter_ptChkRelM = new Draw.Point(1905, 225);  // DG오더 핸들기준 {X=1905,Y=225}
+    public Draw.Point 접수등록Page_DG오더VScroll_Up버튼_ptChkRelS = new Draw.Point(8, 8);       // DG오더 - 스크롤바 기준 
+    public Draw.Point 접수등록Page_DG오더VScroll_Up페이지_ptChkRelS = new Draw.Point(8, 18);    // DG오더 - 스크롤바 기준 
+    public Draw.Point 접수등록Page_DG오더VScroll_Down버튼_ptChkRelS = new Draw.Point(8, 387);   // DG오더 - 스크롤바 기준 
+    public Draw.Point 접수등록Page_DG오더VScroll_Down페이지_ptChkRelS = new Draw.Point(8, 377); // DG오더 - 스크롤바 기준 
     #endregion
     #endregion #endregion 접수등록Page - 도킹상태 접수등록Page_TopWnd 기준
 }

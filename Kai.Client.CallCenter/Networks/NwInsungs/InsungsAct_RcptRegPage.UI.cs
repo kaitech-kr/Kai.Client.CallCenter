@@ -2390,12 +2390,12 @@ public partial class InsungsAct_RcptRegPage
                     {
                         // 차량톤수 OFR (전체)
                         var result차량 = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel차량톤수, false, bEdit: false);
+                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel차량톤수, false, bTextSave: true, dWeight: 0.9, bEdit: false);
                         string current차량톤수 = result차량.strResult ?? "";
 
                         // 트럭상세 OFR (좌측 4문자)
                         var result트럭 = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel트럭상세, false, bEdit: false, maxCharCount: 4);
+                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel트럭상세, false, bTextSave: true, dWeight: 0.9, bEdit: false, maxCharCount: 4);
                         string current트럭상세 = result트럭.strResult ?? "";
 
                         bmpCapture.Dispose();
@@ -2603,7 +2603,7 @@ public partial class InsungsAct_RcptRegPage
             // 4-2. 기사이름 OFR (다음소)
             Draw.Rectangle rectDriverName = m_FileInfo.접수등록Wnd_기사그룹_rcChkRel기사이름;
             Draw.Bitmap bmpDriverName = OfrService.CaptureScreenRect_InWndHandle(hWndPopup, rectDriverName);
-            StdResult_String resultDriverName = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverName, bEdit: false);
+            StdResult_String resultDriverName = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverName, bTextSave: true, dWeight: 0.9, bEdit: false);
             string driverName = resultDriverName.strResult ?? "";
             bmpDriverName?.Dispose();
             Debug.WriteLine($"[{m_Context.AppName}] 기사이름 OFR: '{driverName}'");
@@ -2611,7 +2611,7 @@ public partial class InsungsAct_RcptRegPage
             // 4-3. 기사소속 OFR (다음소)
             Draw.Rectangle rectDriverCenter = m_FileInfo.접수등록Wnd_기사그룹_rcChkRel기사소속;
             Draw.Bitmap bmpDriverCenter = OfrService.CaptureScreenRect_InWndHandle(hWndPopup, rectDriverCenter);
-            StdResult_String resultDriverCenter = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverCenter, bEdit: false);
+            StdResult_String resultDriverCenter = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverCenter, bTextSave: true, dWeight: 0.9, bEdit: false);
             string driverCenter = resultDriverCenter.strResult ?? "";
             bmpDriverCenter?.Dispose();
             Debug.WriteLine($"[{m_Context.AppName}] 기사소속 OFR: '{driverCenter}'");
@@ -3030,10 +3030,10 @@ public partial class InsungsAct_RcptRegPage
     /// <param name="bInvertRgb">RGB 반전 여부</param>
     /// <param name="ctrl">취소 토큰</param>
     /// <returns>상태 문자열 (앞 2글자: "접수", "배차", "취소" 등)</returns>
-    public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectStatus, bool bInvertRgb, CancelTokenControl ctrl)
+    public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectStatus, bool bInvertRgb, bool bText, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb);
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb, bText, dWeight: 0.9);
     }
 
     /// <summary>
@@ -3052,6 +3052,7 @@ public partial class InsungsAct_RcptRegPage
 
     /// <summary>
     /// 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
+    /// - 원콜, 화물24시도 동일 로직 사용 가능 (검증 후 공용화 검토)
     /// </summary>
     /// <param name="nTotRows">총 행 수</param>
     /// <param name="pageIdx">페이지 인덱스 (0-based)</param>

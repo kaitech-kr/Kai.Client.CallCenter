@@ -1,199 +1,610 @@
------------------[INSUNG1] AutoAllocAsync 시작 - Count=1--------------------------
-[INSUNG1] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=161, RunStartTime=null, DriverPhone=null
-[AutoAllocQueue] Dequeue: KeyCode=160, RunStartTime=null, DriverPhone=null
-[AutoAllocQueue] DequeueAllToList: INSUNG1, 2개 꺼냄
-[INSUNG1] 큐에서 가져온 주문 개수: 2
-[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
-[INSUNG1] listCreated 개수: 2
-[INSUNG1]   [0] KeyCode=161, StateFlag=Existed_NonSeqno, SeqNo=, CarType=트럭, CallCustFrom=INSUNG1, 출발=현북면
-[INSUNG1]   [1] KeyCode=160, StateFlag=Existed_NonSeqno, SeqNo=, CarType=트럭, CallCustFrom=INSUNG1, 출발=현북면
-[INSUNG1] ==========================================
-[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
-[INSUNG1] listEtcGroup 개수: 0
-[INSUNG1] ==========================================
-[INSUNG1] 자동배차 할일 있음: lAllocCount=1, tot=2, listCreated=2, listEtcGroup=0
-[INSUNG1] Region 4: 신규 주문 처리 시작 (총 2건)
-[INSUNG1]   [2/2] 신규 주문 처리: KeyCode=160, 상태=대기
-[INSUNG1] 신규버튼 클릭 완료 (시도 1/3)
-[INSUNG1] 신규주문 팝업창 열림: 37105C
-[INSUNG1] 1. 의뢰자 정보 입력...
-[INSUNG1] 의뢰자 검색어: "[테스트도착지]/담당"
-[INSUNG1] 고객 검색 Enter 키 전송
-[INSUNG1] 고객검색창 발견: 11A8E, 닫힘 대기 중...
-[INSUNG1] 고객검색창 자동 닫힘 → 단수 고객, 동명 재확인 중...
-[INSUNG1] 고객 검색 성공: 1개 (동명=현북면)
-[INSUNG1] 의뢰자 검색 성공 (1개)
-[INSUNG1] 의뢰자_전화1 입력 성공: "01000000000"
-[INSUNG1] 의뢰자_전화2 입력 성공: ""
-[INSUNG1] 의뢰자_부서 입력 성공: "부서"
-[INSUNG1] 의뢰자_담당 입력 성공: "담당"
-[INSUNG1] 2. 출발지 정보 입력...
-[INSUNG1]   출발지 = 의뢰자: Enter로 자동 입력
-[INSUNG1] 출발지_동명 입력 성공: "현북면"
-[INSUNG1] 출발지_전화1 입력 성공: "01000000000"
-[INSUNG1] 출발지_전화2 입력 성공: ""
-[INSUNG1] 출발지_부서 입력 성공: "부서"
-[INSUNG1] 출발지_담당 입력 성공: "담당"
-[INSUNG1] 출발지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
-[INSUNG1] 3. 도착지 정보 입력...
-[INSUNG1]   도착지 = 의뢰자: Enter로 자동 입력
-[INSUNG1] 도착지_동명 입력 성공: "현북면"
-[INSUNG1] 도착지_전화1 입력 성공: "01000000000"
-[INSUNG1] 도착지_전화2 입력 성공: ""
-[INSUNG1] 도착지_부서 입력 성공: "부서"
-[INSUNG1] 도착지_담당 입력 성공: "담당"
-[INSUNG1] 도착지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
-[INSUNG1] 적요 입력 성공: ""
-[INSUNG1] 4-2. 공유 CheckBox 처리...
-[INSUNG1]   공유: False
-[INSUNG1] 4-3. 요금종류 RadioButton 처리...
-[INSUNG1]   요금종류: 선불
-[INSUNG1] 4-4. 차량종류 RadioButton 처리...
-[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
-[INSUNG1] btns.hWndTop=37105C, btns.hWndMid=360A9C
-[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=1E0ECE
-[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=221424
-[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
-[INSUNG1]   차량무게: 1t
-[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
-[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=1E0ECE, ptCheckAbs={X=2826,Y=396}
-[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: B14B6
-[INSUNG1] 차량무게 ComboBox 열림 감지 (1번째 시도) - 새 Handle: B14B6
-[INSUNG1] 차량무게 ComboBox 항목 선택 완료: index=1
-[INSUNG1] 차량무게 선택 완료 → 트럭상세 ComboBox 열림 대기...
-[INSUNG1] Get트럭상세Index("카고/윙") 결과: indexTruckDetail=1
-[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=트럭상세, itemIndex=1, hWndBefore=221424, ptCheckAbs={X=2899,Y=396}
-[INSUNG1] 트럭상세 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 31A8C
-[INSUNG1] 트럭상세 ComboBox 열림 감지 (1번째 시도) - 새 Handle: 31A8C
-[INSUNG1] 트럭상세 ComboBox 항목 선택 완료: index=1
-[INSUNG1] 트럭 ComboBox 처리 완료
-[INSUNG1]   차량종류: 트럭
-[INSUNG1]   차량무게: 1t
-[INSUNG1]   트럭상세: 카고/윙
-[INSUNG1] 4-5. 배송타입 RadioButton 처리...
-[INSUNG1]   배송타입: 편도
-[INSUNG1] 4-6. 계산서 CheckBox 처리...
-[INSUNG1]   계산서: False
-[INSUNG1] 4-7. 요금 그룹 입력...
-[INSUNG1] 4-8. 오더메모 입력...
-[INSUNG1] 오더메모 입력 성공: "160/"
-[INSUNG1] 입력 성공 → 대기저장 버튼 클릭 시도
-[INSUNG1] ClickNWaitWindowChangedAsync 시작: hWndClick=5D09D4, hWndOrg=37105C
-[INSUNG1] 버튼 클릭 시도 1/3 - 클릭 전
-[INSUNG1] 버튼 클릭 완료 1/3
-[INSUNG1] 윈도우 닫힘 확인 (시도 1, 대기 200ms)
-[INSUNG1] ===== 첫 로우 클릭 시도 1/3 =====
-[INSUNG1] 첫 로우 클릭 완료, 선택 검증 시작
-[INSUNG1] 선택 여부: 선택됨
-[INSUNG1] 첫 로우 선택 검증 성공 (시도 1/3)
-[INSUNG1] 주문번호 OFR - rowIndex=0, yIndex=2, InvertRgb=True
-[INSUNG1] ===== Seqno OFR 시도 1/3 =====
-[INSUNG1] 주문번호 셀 위치 [2, 2]: {X=133,Y=56,Width=77,Height=15}
-[INSUNG1] RGB 반전 완료
-[INSUNG1] Seqno 획득 성공: '274854988' (시도 1/3)
-[INSUNG1] 주문 등록 완료 - Seqno: 274854988
-[SrGlobalClient] RequestId 등록: ba03d4f2-080b-46de-afef-1259270d8b70
-[INSUNG1] Kai DB 업데이트 성공 - INSUNG1: 274854988
-[SrGlobalClient] 자신의 RequestId 감지 - 무시: ba03d4f2-080b-46de-afef-1259270d8b70
-[SrGlobalClient] 로컬 업데이트 감지 - UI 갱신: KeyCode=160, Seq=3
-[INSUNG1]   [2] 신규 주문 등록 성공: 160
-[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=160, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
-[INSUNG1]   [1/2] 신규 주문 처리: KeyCode=161, 상태=대기
-[INSUNG1] 신규버튼 클릭 완료 (시도 1/3)
-[INSUNG1] 신규주문 팝업창 열림: 4B0BF6
-[INSUNG1] 1. 의뢰자 정보 입력...
-[INSUNG1] 의뢰자 검색어: "[테스트도착지]/담당"
-[INSUNG1] 고객 검색 Enter 키 전송
-[INSUNG1] 고객검색창 발견: 6F0A26, 닫힘 대기 중...
-[INSUNG1] 고객검색창 자동 닫힘 → 단수 고객, 동명 재확인 중...
-[INSUNG1] 고객 검색 성공: 1개 (동명=현북면)
-[INSUNG1] 의뢰자 검색 성공 (1개)
-[INSUNG1] 의뢰자_전화1 입력 성공: "01000000000"
-[INSUNG1] 의뢰자_전화2 입력 성공: ""
-[INSUNG1] 의뢰자_부서 입력 성공: "부서"
-[INSUNG1] 의뢰자_담당 입력 성공: "담당"
-[INSUNG1] 2. 출발지 정보 입력...
-[INSUNG1]   출발지 = 의뢰자: Enter로 자동 입력
-[INSUNG1] 출발지_동명 입력 성공: "현북면"
-[INSUNG1] 출발지_전화1 입력 성공: "01000000000"
-[INSUNG1] 출발지_전화2 입력 성공: ""
-[INSUNG1] 출발지_부서 입력 성공: "부서"
-[INSUNG1] 출발지_담당 입력 성공: "담당"
-[INSUNG1] 출발지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
-[INSUNG1] 3. 도착지 정보 입력...
-[INSUNG1]   도착지 = 의뢰자: Enter로 자동 입력
-[INSUNG1] 도착지_동명 입력 성공: "현북면"
-[INSUNG1] 도착지_전화1 입력 성공: "01000000000"
-[INSUNG1] 도착지_전화2 입력 성공: ""
-[INSUNG1] 도착지_부서 입력 성공: "부서"
-[INSUNG1] 도착지_담당 입력 성공: "담당"
+[ONECALL] 평가 3: Datagrid 상태 검증 시작
+[ValidateDatagridState] Datagrid 상태 정상
+[ONECALL] SetDG오더ColumnHeaderAsync 완료: 21개 컬럼
+[ONECALL] Small Rects 생성 완료: 21열 x 17행
+[ONECALL] Large Rects 생성 완료: 21열 x 34행
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] SelectComboBoxItemAsync 시작: target=5초, hWnd=220B6C
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=19,Height=12}, W=19,H=12,Hex=0x0020F8F1DF000806E030C0998F83C380000404602000F97F0C003E0000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=8,Y=0,Width=11,Height=10}, W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
+[StartEndList 검색결과] 없음
+[StartEndList] x=1, foundChar=null → 마킹 안 함
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=1,Width=7,Height=11}, W=7,H=11,Hex=0xBFC160F08181C0A0D807
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[StartEndList] 음소 개수=2
+  [0] processed=False, result=null
+  [1] processed=False, result=null
+[미처리 그룹] 총 1개: [0~1]
+  processed[0]=False, result=null
+  processed[1]=False, result=null
+[RightSliding 인식 시작] 이미지 크기: 19x12
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~14
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=7ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=8ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=7ms
+[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=10ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=19,Height=12}, 오른쪽문자영역={X=4,Y=0,Width=15,Height=12}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=4,Y=0,Width=15,Height=12}
+[RightSliding 1단계 실패]
+[ONECALL] SelectComboBoxItemAsync [1] OFR 실패
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=19,Height=12}, W=19,H=12,Hex=0x0020F8F1DF000806E030C0998F83C380000404602000F97F0C003E0000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=8,Y=0,Width=11,Height=10}, W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
+[StartEndList 검색결과] 없음
+[StartEndList] x=1, foundChar=null → 마킹 안 함
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=1,Width=7,Height=11}, W=7,H=11,Hex=0xBFC160F08181C0A0D807
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[StartEndList] 음소 개수=2
+  [0] processed=False, result=null
+  [1] processed=False, result=null
+[미처리 그룹] 총 1개: [0~1]
+  processed[0]=False, result=null
+  processed[1]=False, result=null
+[RightSliding 인식 시작] 이미지 크기: 19x12
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~14
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=7ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=8ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=12ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=2ms
+[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=2ms
+[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=7ms
+[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=19,Height=12}, 오른쪽문자영역={X=4,Y=0,Width=15,Height=12}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=4,Y=0,Width=15,Height=12}
+[RightSliding 1단계 실패]
+[ONECALL] SelectComboBoxItemAsync [2] OFR 실패
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=19,Height=12}, W=19,H=12,Hex=0x0020F8F1DF000806E030C0998F83C380000404602000F97F0C003E0000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=8,Y=0,Width=11,Height=10}, W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
+[StartEndList 검색결과] 없음
+[StartEndList] x=1, foundChar=null → 마킹 안 함
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=1,Width=7,Height=11}, W=7,H=11,Hex=0xBFC160F08181C0A0D807
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[StartEndList] 음소 개수=2
+  [0] processed=False, result=null
+  [1] processed=False, result=null
+[미처리 그룹] 총 1개: [0~1]
+  processed[0]=False, result=null
+  processed[1]=False, result=null
+[RightSliding 인식 시작] 이미지 크기: 19x12
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~14
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=10ms
+[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=7ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=19,Height=12}, 오른쪽문자영역={X=4,Y=0,Width=15,Height=12}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=4,Y=0,Width=15,Height=12}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=1,Width=7,Height=11}
+[ImageToCharWnd] Window_Loaded 시작
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.StackTrace.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+[TbChar 저장 시도] manualInput='5', rcChar={X=0,Y=1,Width=7,Height=11}, avgBright2=169
+[TbChar] model=W=7,H=11,Hex=0xBFC160F08181C0A0D807
+[TbChar] existingChar=없음
+[TbChar 저장 완료] '5' → result=17097336
+[대화상자] len=1, currentIdx=1, endIdx=1, rcChar={X=8,Y=0,Width=11,Height=10}
+[ImageToCharWnd] Window_Loaded 시작
+[TbChar 저장 시도] manualInput='초', rcChar={X=8,Y=0,Width=11,Height=10}, avgBright2=169
+[TbChar] model=W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
+[TbChar] existingChar=없음
+[TbChar 저장 완료] '초' → result=17097337
+[최종 결과] OfrStr_ComplexCharSetAsync: '5초' (14466ms)
+[ONECALL] SelectComboBoxItemAsync 성공: 5초 (15749ms)
+[ONECALL] RcptRegPage InitializeAsync 성공
+[ONECALL] InitializeAsync 완료
+[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
+[ExternalAppController] InitializeAsync 완료
+[MasterModeManager] ExternalAppController 초기화 완료
+[MainWnd] Master 모드 초기화 완료
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Xceed.Wpf.Toolkit.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+[ExternalAppController] 기존 주문 1개 로드 시작
+[분류] KeyCode=180, CarType=트럭, CarWeight=1t, 인성=True, 화물/원콜=True
+[AutoAllocQueue] Enqueue: INSUNG1, KeyCode=180, StateFlag=Existed_NonSeqno, 큐크기=1
+  → INSUNG1 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] Enqueue: INSUNG2, KeyCode=180, StateFlag=Existed_NonSeqno, 큐크기=1
+  → INSUNG2 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] Enqueue: CARGO24, KeyCode=180, StateFlag=Existed_NonSeqno, 큐크기=1
+  → CARGO24 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] Enqueue: ONECALL, KeyCode=180, StateFlag=Existed_WithSeqno, 큐크기=1
+  → ONECALL 큐 추가: SeqNo=149311768, Flag=Existed_WithSeqno
+[AutoAllocQueue] 큐 상태:
+  인성1: 1개
+  인성2: 1개
+  화물24시: 1개
+  원콜: 1개
+  전체: 4개
+[ExternalAppController] 자동배차 시작
+[ExternalAppController] AutoAllocLoopAsync 시작
+
+-----------------[ONECALL] AutoAllocAsync 시작 - Count=1--------------------------
+[ONECALL] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
+[ONECALL] 큐에서 가져온 주문 개수: 1
+[ONECALL] listCreated=0, listEtcGroup=1
+[ONECALL]   EtcGroup: KeyCode=180, StateFlag=Existed_WithSeqno, Onecall=149311768
+[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
+[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] 총계 읽기 성공 (시도 1회): 2
+[ONECALL] 데이터 있음 (총계: 2건)
+[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
+[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
+[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
+[ONECALL] 페이지 1/1: 유효 로우 2개
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
+[StartEndList 검색결과] 찾음: '소'
+[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
+[StartEndList 검색결과] 찾음: 'l'
+[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[백트래킹 실패] x=0, 원래 값 복원
+[StartEndList] 음소 개수=3
+  [0] processed=False, result=null
+  [1] processed=True, result=l
+  [2] processed=True, result=소
+[미처리 그룹] 총 1개: [0~0]
+  processed[0]=False, result=null
+  processed[1]=True, result=l
+  processed[2]=True, result=소
+[RightSliding 인식 시작] 이미지 크기: 8x13
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~8
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=7ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
+[ImageToCharWnd] Window_Loaded 시작
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (3749ms)
+[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
+[ONECALL] StateFlag=Existed/Updated: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
+[ONECALL] 처리 완료 (재적재): seqno=149311768
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=4882ms, Delay=118ms
+
+-----------------[ONECALL] AutoAllocAsync 시작 - Count=2--------------------------
+[ONECALL] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
+[ONECALL] 큐에서 가져온 주문 개수: 1
+[ONECALL] listCreated=0, listEtcGroup=1
+[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
+[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] 총계 읽기 성공 (시도 1회): 2
+[ONECALL] 데이터 있음 (총계: 2건)
+[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
+[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
+[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
+[ONECALL] 페이지 1/1: 유효 로우 2개
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
+[StartEndList 검색결과] 찾음: '소'
+[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
+[StartEndList 검색결과] 찾음: 'l'
+[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[백트래킹 실패] x=0, 원래 값 복원
+[StartEndList] 음소 개수=3
+  [0] processed=False, result=null
+  [1] processed=True, result=l
+  [2] processed=True, result=소
+[미처리 그룹] 총 1개: [0~0]
+  processed[0]=False, result=null
+  processed[1]=True, result=l
+  processed[2]=True, result=소
+[RightSliding 인식 시작] 이미지 크기: 8x13
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~8
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
+[ImageToCharWnd] Window_Loaded 시작
+12048 스레드가 종료되었습니다(코드: 0 (0x0)).
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (8660ms)
+[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
+[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
+[ONECALL] 처리 완료 (재적재): seqno=149311768
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [2] 완료 - Elapsed=9516ms, Delay=0ms
+
+-----------------[ONECALL] AutoAllocAsync 시작 - Count=3--------------------------
+[ONECALL] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
+[ONECALL] 큐에서 가져온 주문 개수: 1
+[ONECALL] listCreated=0, listEtcGroup=1
+[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
+[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] 총계 읽기 성공 (시도 1회): 2
+[ONECALL] 데이터 있음 (총계: 2건)
+[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
+[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
+[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
+[ONECALL] 페이지 1/1: 유효 로우 2개
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
+[StartEndList 검색결과] 찾음: '소'
+[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
+[StartEndList 검색결과] 찾음: 'l'
+[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[백트래킹 실패] x=0, 원래 값 복원
+[StartEndList] 음소 개수=3
+  [0] processed=False, result=null
+  [1] processed=True, result=l
+  [2] processed=True, result=소
+[미처리 그룹] 총 1개: [0~0]
+  processed[0]=False, result=null
+  processed[1]=True, result=l
+  processed[2]=True, result=소
+[RightSliding 인식 시작] 이미지 크기: 8x13
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~8
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
+[ImageToCharWnd] Window_Loaded 시작
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (4607ms)
+[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
+[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
+[ONECALL] 처리 완료 (재적재): seqno=149311768
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [3] 완료 - Elapsed=5459ms, Delay=0ms
+
+-----------------[ONECALL] AutoAllocAsync 시작 - Count=4--------------------------
+[ONECALL] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
+[ONECALL] 큐에서 가져온 주문 개수: 1
+[ONECALL] listCreated=0, listEtcGroup=1
+[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
+[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] 총계 읽기 성공 (시도 1회): 2
+[ONECALL] 데이터 있음 (총계: 2건)
+[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
+[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
+[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
+[ONECALL] 페이지 1/1: 유효 로우 2개
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
+[StartEndList 검색결과] 찾음: '소'
+[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
+[StartEndList 검색결과] 찾음: 'l'
+[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[백트래킹 실패] x=0, 원래 값 복원
+[StartEndList] 음소 개수=3
+  [0] processed=False, result=null
+  [1] processed=True, result=l
+  [2] processed=True, result=소
+[미처리 그룹] 총 1개: [0~0]
+  processed[0]=False, result=null
+  processed[1]=True, result=l
+  processed[2]=True, result=소
+[RightSliding 인식 시작] 이미지 크기: 8x13
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~8
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
+[ImageToCharWnd] Window_Loaded 시작
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (1382ms)
+[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
+[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
+[ONECALL] 처리 완료 (재적재): seqno=149311768
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [4] 완료 - Elapsed=2262ms, Delay=2738ms
+
+-----------------[ONECALL] AutoAllocAsync 시작 - Count=5--------------------------
+[ONECALL] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
+[ONECALL] 큐에서 가져온 주문 개수: 1
+[ONECALL] listCreated=0, listEtcGroup=1
+[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
+[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] 총계 읽기 성공 (시도 1회): 2
+[ONECALL] 데이터 있음 (총계: 2건)
+[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
+[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
+[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
+[ONECALL] 페이지 1/1: 유효 로우 2개
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
+[StartEndList 검색결과] 찾음: '소'
+[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
+[StartEndList 검색결과] 찾음: 'l'
+[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[백트래킹 실패] x=0, 원래 값 복원
+[StartEndList] 음소 개수=3
+  [0] processed=False, result=null
+  [1] processed=True, result=l
+  [2] processed=True, result=소
+[미처리 그룹] 총 1개: [0~0]
+  processed[0]=False, result=null
+  processed[1]=True, result=l
+  processed[2]=True, result=소
+[RightSliding 인식 시작] 이미지 크기: 8x13
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~8
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
+[ImageToCharWnd] Window_Loaded 시작
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (11364ms)
+[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
+[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
+[ONECALL] 처리 완료 (재적재): seqno=149311768
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [5] 완료 - Elapsed=12201ms, Delay=0ms
+
+-----------------[ONECALL] AutoAllocAsync 시작 - Count=6--------------------------
+[ONECALL] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
+[ONECALL] 큐에서 가져온 주문 개수: 1
+[ONECALL] listCreated=0, listEtcGroup=1
+[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
+[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] 총계 읽기 성공 (시도 1회): 2
+[ONECALL] 데이터 있음 (총계: 2건)
+[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
+[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
+[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
+[ONECALL] 페이지 1/1: 유효 로우 2개
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
+[StartEndList 검색결과] 찾음: '소'
+[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
+[StartEndList 검색결과] 찾음: 'l'
+[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[백트래킹 실패] x=0, 원래 값 복원
+[StartEndList] 음소 개수=3
+  [0] processed=False, result=null
+  [1] processed=True, result=l
+  [2] processed=True, result=소
+[미처리 그룹] 총 1개: [0~0]
+  processed[0]=False, result=null
+  processed[1]=True, result=l
+  processed[2]=True, result=소
+[RightSliding 인식 시작] 이미지 크기: 8x13
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~8
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=4ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
+[ImageToCharWnd] Window_Loaded 시작
 예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
-[INSUNG1] 도착지_위치 입력 성공: "강원 양양군 현북면 중광정리 1 / 하조대"
-[INSUNG1] 적요 입력 성공: ""
-[INSUNG1] 4-2. 공유 CheckBox 처리...
-[INSUNG1]   공유: False
-[INSUNG1] 4-3. 요금종류 RadioButton 처리...
-[INSUNG1]   요금종류: 선불
-[INSUNG1] 4-4. 차량종류 RadioButton 처리...
-[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
-[INSUNG1] btns.hWndTop=4B0BF6, btns.hWndMid=118C4
-[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=118BE
-[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=118C0
-[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
-[INSUNG1]   차량무게: 1t
-[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
-[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=118BE, ptCheckAbs={X=2826,Y=396}
-[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 31A5A
-[INSUNG1] 차량무게 ComboBox 열림 감지 (1번째 시도) - 새 Handle: 31A5A
-[INSUNG1] 차량무게 ComboBox 항목 선택 완료: index=1
-[INSUNG1] 차량무게 선택 완료 → 트럭상세 ComboBox 열림 대기...
-[INSUNG1] Get트럭상세Index("전체") 결과: indexTruckDetail=0
-[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
-[INSUNG1] btns.hWndTop=4B0BF6, btns.hWndMid=118C4
-[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=118BE
-[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=18153C
-[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
-[INSUNG1]   차량무게: 1t
-[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
-[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=118BE, ptCheckAbs={X=2826,Y=396}
-[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (11번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (21번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (31번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (41번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (51번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (61번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (71번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (81번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (91번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 트럭 선택 예정 → 차량무게, 트럭상세 ComboBox 체크 위치 Handle 저장...
-[INSUNG1] btns.hWndTop=4B0BF6, btns.hWndMid=118C4
-[INSUNG1] 차량무게 - 상대좌표: {X=721,Y=354}, 절대좌표: {X=2826,Y=396}, Handle=118BE
-[INSUNG1] 트럭상세 - 상대좌표: {X=794,Y=354}, 절대좌표: {X=2899,Y=396}, Handle=118C0
-[INSUNG1] 트럭 선택 완료 → 차량무게 ComboBox 열림 대기...
-[INSUNG1]   차량무게: 1t
-[INSUNG1] Get차량톤수Index("1t") 결과: indexCarWeight=1
-[INSUNG1] Select트럭ComboBoxItemAsync 진입: sFieldName=차량무게, itemIndex=1, hWndBefore=118BE, ptCheckAbs={X=2826,Y=396}
-[INSUNG1] 차량무게 ComboBox 대기 중... (1번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (11번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (21번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (31번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (41번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (51번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (61번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (71번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (81번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 차량무게 ComboBox 대기 중... (91번째 시도) - 현재 Handle: 118BE
-[INSUNG1] 입력 실패 → 닫기 버튼으로 창 닫기 시도
-[INSUNG1] 실패 원인: 트럭 설정 실패
-[INSUNG1] ClickNWaitWindowChangedAsync 시작: hWndClick=11800, hWndOrg=4B0BF6
-[INSUNG1] 버튼 클릭 시도 1/3 - 클릭 전
-[INSUNG1] 버튼 클릭 완료 1/3
-[INSUNG1] 윈도우 닫힘 확인 (시도 1, 대기 50ms)
-[INSUNG1] 닫기 버튼으로 창 닫힘 확인 → 입력 실패 결과 반환
-[INSUNG1]   [1] 신규 주문 등록 실패 (치명적): 161 - 트럭 설정 실패
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.TimeoutException'(WindowsBase.dll)
-[Cargo24sAct_App] Updater 프로세스 종료됨
-'[29664] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 4294967295 (0xffffffff)).
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (8595ms)
+[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
+[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
+[ONECALL] 처리 완료 (재적재): seqno=149311768
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [6] 완료 - Elapsed=9452ms, Delay=0ms
+
+-----------------[ONECALL] AutoAllocAsync 시작 - Count=7--------------------------
+[ONECALL] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
+[ONECALL] 큐에서 가져온 주문 개수: 1
+[ONECALL] listCreated=0, listEtcGroup=1
+[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
+[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
+[ONECALL] 총계 읽기 성공 (시도 1회): 2
+[ONECALL] 데이터 있음 (총계: 2건)
+[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
+[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
+[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
+[ONECALL] 페이지 1/1: 유효 로우 2개
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
+[StartEndList 검색결과] 찾음: '소'
+[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
+[StartEndList 검색결과] 찾음: 'l'
+[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
+[StartEndList 검색결과] 없음
+[StartEndList] x=0, foundChar=null → 마킹 안 함
+[백트래킹 실패] x=0, 원래 값 복원
+[StartEndList] 음소 개수=3
+  [0] processed=False, result=null
+  [1] processed=True, result=l
+  [2] processed=True, result=소
+[미처리 그룹] 총 1개: [0~0]
+  processed[0]=False, result=null
+  processed[1]=True, result=l
+  processed[2]=True, result=소
+[RightSliding 인식 시작] 이미지 크기: 8x13
+[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
+[RightSliding 1단계] 검색 범위: w=3~8
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
+[RightSliding 1단계 실패]
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
+[ImageToCharWnd] Window_Loaded 시작
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (2937ms)
+[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
+[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
+[ONECALL] 처리 완료 (재적재): seqno=149311768
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [7] 완료 - Elapsed=3815ms, Delay=1185ms

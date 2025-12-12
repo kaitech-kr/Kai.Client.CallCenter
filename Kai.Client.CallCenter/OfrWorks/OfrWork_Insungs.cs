@@ -201,7 +201,7 @@ public class OfrWork_Insungs : OfrWork_Common
                 if (bmpExact == null) continue;
 
                 // 5. OFR 수행
-                StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit: false);
+                StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bTextSave: true, dWeight: 0.9, bEdit: true);
 
                 bmpExact?.Dispose();
 

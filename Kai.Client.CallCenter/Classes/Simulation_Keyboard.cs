@@ -1,3 +1,4 @@
+using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 
 using static Kai.Client.CallCenter.Classes.CommonVars;
@@ -76,8 +77,7 @@ public static class Simulation_Keyboard
     /// </summary>
     public static async Task<bool> PostCharStringWithVerifyAsync(IntPtr hWnd, string sTarget, int nDelay = 30, int nRepeat = c_nRepeatShort)
     {
-        if (hWnd == IntPtr.Zero || string.IsNullOrEmpty(sTarget))
-            return false;
+        if (hWnd == IntPtr.Zero || string.IsNullOrEmpty(sTarget)) return false;
 
         // 캡션 검증 (반복)
         for (int i = 0; i < nRepeat; i++)
@@ -92,6 +92,32 @@ public static class Simulation_Keyboard
 
             string sCaption = Std32Window.GetWindowCaption(hWnd) ?? "";
             if (sCaption == sTarget) return true;
+
+            await Task.Delay(c_nWaitNormal);
+        }
+
+        return false;
+    }
+
+    public static async Task<bool> PostFeeWithVerifyAsync(IntPtr hWnd, int nTarget, int nDelay = 30, int nRepeat = c_nRepeatShort)
+    {
+        if (hWnd == IntPtr.Zero) return false;
+
+        string sTarget = nTarget.ToString();
+
+        // 캡션 검증 (반복)
+        for (int i = 0; i < nRepeat; i++)
+        {
+            // WM_CHAR로 문자열 전송
+            bool bResult = await Std32Key_Msg.PostCharStringAsync(hWnd, sTarget, nDelay);
+            if (!bResult)
+            {
+                await Task.Delay(c_nWaitNormal);
+                continue;
+            }
+
+            string sCaption = Std32Window.GetWindowCaption(hWnd) ?? "";
+            if (StdConvert.StringWonFormatToInt(sCaption) == nTarget) return true;
 
             await Task.Delay(c_nWaitNormal);
         }

@@ -41,12 +41,6 @@ public class ExternalAppController : IDisposable
     #endregion
 
     #region Variables
-    // 정적 변수 - 자동배차 주문 리스트 (Master 모드 전용)
-    public static List<AutoAllocModel> listForInsung01 = new List<AutoAllocModel>();
-    public static List<AutoAllocModel> listForInsung02 = new List<AutoAllocModel>();
-    // public static List<AutoAlloc> listForCargo24 = new List<AutoAlloc>();
-    // public static List<AutoAlloc> listForOnecall = new List<AutoAlloc>();
-
     // 개별 참조 (필요시 직접 접근용)
     public NwInsung01 Insung01 { get; private set; }
     public NwInsung02 Insung02 { get; private set; }
@@ -176,27 +170,27 @@ public class ExternalAppController : IDisposable
             //    Debug.WriteLine("[ExternalAppController] Insung02 사용 안함 (s_Use=false)");
             //}
 
-            if (NwCargo24.s_Use)
-            {
-                //Debug.WriteLine($"[ExternalAppController] Cargo24 생성: Id={NwCargo24.s_Id}");
-                Cargo24 = new NwCargo24();
-                m_ListApps.Add(Cargo24);
-            }
-            else
-            {
-                Debug.WriteLine("[ExternalAppController] Cargo24 사용 안함 (s_Use=false)");
-            }
-
-            //if (NwOnecall.s_Use)
+            //if (NwCargo24.s_Use)
             //{
-            //    //Debug.WriteLine($"[ExternalAppController] Onecall 생성: Id={NwOnecall.s_Id}");
-            //    Onecall = new NwOnecall();
-            //    m_ListApps.Add(Onecall);
+            //    //Debug.WriteLine($"[ExternalAppController] Cargo24 생성: Id={NwCargo24.s_Id}");
+            //    Cargo24 = new NwCargo24();
+            //    m_ListApps.Add(Cargo24);
             //}
             //else
             //{
-            //Debug.WriteLine("[ExternalAppController] Onecall 사용 안함 (s_Use=false)");
+            //    Debug.WriteLine("[ExternalAppController] Cargo24 사용 안함 (s_Use=false)");
             //}
+
+            if (NwOnecall.s_Use)
+            {
+                //Debug.WriteLine($"[ExternalAppController] Onecall 생성: Id={NwOnecall.s_Id}");
+                Onecall = new NwOnecall();
+                m_ListApps.Add(Onecall);
+            }
+            else
+            {
+                Debug.WriteLine("[ExternalAppController] Onecall 사용 안함 (s_Use=false)");
+            }
 
             Debug.WriteLine($"[ExternalAppController] 생성된 앱 개수: {m_ListApps.Count}");
 

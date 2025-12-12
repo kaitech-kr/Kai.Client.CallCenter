@@ -4,8 +4,9 @@ using Draw = System.Drawing;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using Kai.Client.CallCenter.OfrWorks;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 
+using Kai.Client.CallCenter.OfrWorks;
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Pages;
 using Kai.Client.CallCenter.Classes.Class_Master;
@@ -29,6 +30,23 @@ public partial class OnecallAct_RcptRegPage
     {
         await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
         await Task.Delay(nDelay, ct);
+    }
+
+    /// <summary>
+    /// 데이터그리드 로우 클릭 (클릭 후 포커스 탈출 - 점선 테두리 제거)
+    /// - 원콜 DG오더_rcRelSmallCells는 row=0부터 데이터 (헤더 없음)
+    /// </summary>
+    /// <param name="nRowIndex">로우 인덱스 (0-based)</param>
+    public async Task ClickDatagridRowAsync(int nRowIndex)
+    {
+        Draw.Rectangle[,] rects = mRcpt.DG오더_rcRelSmallCells;
+        Draw.Rectangle rcRow = rects[c_nCol클릭, nRowIndex];
+        Draw.Point ptClick = new Draw.Point(rcRow.Left + 5, rcRow.Top + 5);
+
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(mRcpt.DG오더_hWndTop, ptClick);
+        await Task.Delay(c_nWaitUltraShort);
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
+        await Task.Delay(c_nWaitShort);
     }
     #endregion
 
@@ -161,7 +179,7 @@ public partial class OnecallAct_RcptRegPage
                     bmpCheck = OfrService.CaptureScreenRect_InWndHandle(mRcpt.접수섹션_hWndTop, rc권역);
                     if (bmpCheck == null) continue;
 
-                    resultStr = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpCheck, i == c_nRepeatShort);
+                    resultStr = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpCheck, i == c_nRepeatShort, dWeight: 0.7, i == c_nRepeatShort);
                     if (!string.IsNullOrEmpty(resultStr.sErr)) continue;
 
                     if (resultStr.strResult.Length > 1) break;
@@ -190,6 +208,9 @@ public partial class OnecallAct_RcptRegPage
     /// <returns>성공/실패</returns>
     private async Task<StdResult_Status> SelectComboBoxItemAsync(IntPtr hWndComboBox, CommonModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerifyRelS)
     {
+        Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 시작: target={model.sYourName}, hWnd={hWndComboBox:X}");
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+
         for (int i = 1; i <= c_nRepeatShort; i++)
         {
             // 1. 콤보박스 아래 위치에서 핸들 백업
@@ -207,7 +228,11 @@ public partial class OnecallAct_RcptRegPage
                 hWndDropdown = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheck);
                 if (hWndDropdown != hWndBefore) break;
             }
-            if (hWndDropdown == hWndBefore) continue; // 재시도
+            if (hWndDropdown == hWndBefore)
+            {
+                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] 드롭다운 열기 실패");
+                continue;
+            }
 
             // 4. 항목 클릭
             await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndDropdown, model.ptPos);
@@ -224,19 +249,32 @@ public partial class OnecallAct_RcptRegPage
             await Task.Delay(c_nWaitShort);
             using (Draw.Bitmap bmpVerify = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcVerifyRelS))
             {
-                if (bmpVerify == null) continue; // 재시도
+                if (bmpVerify == null)
+                {
+                    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] 캡처 실패");
+                    continue;
+                }
 
-                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, true, i == c_nRepeatShort);
+                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, true, dWeight: 0.9, i == c_nRepeatShort);
 
-                if (ofrResult == null || string.IsNullOrEmpty(ofrResult.strResult)) continue; // 재시도
+                if (ofrResult == null || string.IsNullOrEmpty(ofrResult.strResult))
+                {
+                    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] OFR 실패");
+                    continue;
+                }
 
-                if (ofrResult.strResult != model.sYourName) continue; // 재시도
+                if (ofrResult.strResult != model.sYourName)
+                {
+                    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] OFR 불일치: '{ofrResult.strResult}' != '{model.sYourName}'");
+                    continue;
+                }
 
-                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 성공: {model.sYourName}");
+                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 성공: {model.sYourName} ({sw.ElapsedMilliseconds}ms)");
                 return new StdResult_Status(StdResult.Success);
             }
         }
 
+        Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 실패: {model.sYourName} ({sw.ElapsedMilliseconds}ms)");
         return new StdResult_Status(StdResult.Fail, $"콤보박스 선택 실패: {model.sYourName}");
     }
     #endregion
@@ -508,7 +546,7 @@ public partial class OnecallAct_RcptRegPage
 
                 try
                 {
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpTotal, bTextSave: false, bEdit: i == retryCount);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpTotal, bTextSave: false, dWeight: 0.7, bEdit: i == retryCount);
                     int nTotal = int.TryParse(new string(result.strResult?.Where(char.IsDigit).ToArray() ?? Array.Empty<char>()), out int n) ? n : -1;
 
                     if (nTotal >= 0)
@@ -549,7 +587,7 @@ public partial class OnecallAct_RcptRegPage
     #region GetValidRowCount
     /// <summary>
     /// DG오더의 유효 로우 수 반환 (Small 모드 고정)
-    /// - 배경 밝기(255)보다 어두우면 데이터 있는 로우로 판단
+    /// - 배경 밝기 + 10 마진보다 밝으면 데이터 있는 로우로 판단
     /// </summary>
     public StdResult_Int GetValidRowCount()
     {
@@ -561,8 +599,7 @@ public partial class OnecallAct_RcptRegPage
             if (rects == null)
                 return new StdResult_Int("DG오더_rcRelSmallCells 미초기화", "GetValidRowCount_01");
 
-            int nBackgroundBright = 255;  // 원콜 빈 셀 배경은 흰색
-            int nThreshold = nBackgroundBright - 1;
+            int nThreshold = mRcpt.DG오더_nBkMarginedBright; // 배경 밝기 + 10 마진
             int nValidRows = 0;
 
             for (int row = 0; row < maxRows; row++)
@@ -573,7 +610,8 @@ public partial class OnecallAct_RcptRegPage
                     rects[0, row].Right,
                     rects[0, row].Top + 6);
 
-                if (nCurBright < nThreshold)
+                // 배경보다 밝으면 데이터 있음
+                if (nCurBright > nThreshold)
                     nValidRows++;
                 else
                     break;
@@ -585,6 +623,436 @@ public partial class OnecallAct_RcptRegPage
         {
             return new StdResult_Int(StdUtil.GetExceptionMessage(ex), "GetValidRowCount_999");
         }
+    }
+    #endregion
+
+    #region 페이지 검증
+    /// <summary>
+    /// 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
+    /// - 인성, 화물24시도 동일 로직 사용 가능 (검증 후 공용화 검토)
+    /// </summary>
+    /// <param name="nTotRows">총 행 수</param>
+    /// <param name="nRowsPerPage">페이지당 행 수</param>
+    /// <param name="pageIdx">페이지 인덱스 (0-based)</param>
+    /// <returns>예상 첫 로우 번호</returns>
+    public static int GetExpectedFirstRowNum(int nTotRows, int nRowsPerPage, int pageIdx)
+    {
+        // 총 페이지 수 계산
+        int nTotPage = 1;
+        if (nTotRows > nRowsPerPage)
+        {
+            nTotPage = nTotRows / nRowsPerPage;
+            if (nTotRows % nRowsPerPage > 0)
+                nTotPage += 1;
+        }
+
+        int nCurPage = pageIdx + 1;
+        int nNum = (nRowsPerPage * pageIdx) + 1;
+
+        if (nTotPage == 1) return 1;
+
+        if (nCurPage < nTotPage) return nNum;
+
+        // 마지막 페이지 특수 처리: 나머지 행이 있는 경우
+        if (nTotRows % nRowsPerPage == 0) return nNum;
+        else return nNum - nRowsPerPage + (nTotRows % nRowsPerPage);
+    }
+
+    /// <summary>
+    /// GetExpectedFirstRowNum 테스트 (무한루프 → 메시지박스 → 결과)
+    /// </summary>
+    public async Task Test_GetExpectedFirstRowNumAsync()
+    {
+        var ctrl = new CancelTokenControl();
+        int nRowsPerPage = fInfo.접수등록Page_DG오더Small_RowsCount;
+
+        while (true)
+        {
+            // 1. 시작 확인
+            var result시작 = System.Windows.MessageBox.Show(
+                "GetExpectedFirstRowNum 테스트\n[예] 실행 / [아니오] 종료",
+                "테스트", System.Windows.MessageBoxButton.YesNo);
+            if (result시작 != System.Windows.MessageBoxResult.Yes) break;
+
+            // 2. 축소모드 강제
+            await CollapseDG오더Async();
+
+            // 3. 새로고침 클릭
+            var result새로고침 = await Click새로고침버튼Async(ctrl);
+            if (result새로고침.Result != StdResult.Success)
+            {
+                System.Windows.MessageBox.Show($"새로고침 실패: {result새로고침.sErr}", "오류");
+                continue;
+            }
+
+            // 4. 총계 OFR
+            var result총계 = await Get총계Async(ctrl);
+            if (result총계.nResult < 0)
+            {
+                System.Windows.MessageBox.Show($"총계 OFR 실패: {result총계.sErr}", "오류");
+                continue;
+            }
+
+            int nTotRows = result총계.nResult;
+
+            // 5. 총 페이지 수 계산
+            int nTotPage = 1;
+            if (nTotRows > nRowsPerPage)
+            {
+                nTotPage = nTotRows / nRowsPerPage;
+                if (nTotRows % nRowsPerPage > 0) nTotPage += 1;
+            }
+
+            // 6. 각 페이지별 예상 첫 번호 계산
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"총계: {nTotRows}");
+            sb.AppendLine($"페이지당: {nRowsPerPage}");
+            sb.AppendLine($"총 페이지: {nTotPage}");
+            sb.AppendLine("─────────────");
+
+            for (int pageIdx = 0; pageIdx < nTotPage; pageIdx++)
+            {
+                int expectedFirst = GetExpectedFirstRowNum(nTotRows, nRowsPerPage, pageIdx);
+                sb.AppendLine($"페이지[{pageIdx}]: 첫 번호 = {expectedFirst}");
+            }
+
+            System.Windows.MessageBox.Show(sb.ToString(), "GetExpectedFirstRowNum 결과");
+        }
+    }
+
+    /// <summary>
+    /// 순번 컬럼(col=0)에서 첫 로우 번호 읽기 (OFR)
+    /// - 인성 ReadFirstRowNumAsync 패턴 참조
+    /// </summary>
+    /// <returns>첫 로우 번호 (실패 시 -1)</returns>
+    public async Task<int> ReadFirstRowNumAsync()
+    {
+        const int COL_순번 = 0;
+        IntPtr hWndDG = mRcpt.DG오더_hWndTop;
+        Draw.Rectangle[,] rects = mRcpt.DG오더_rcRelSmallCells;
+
+        if (rects == null)
+        {
+            Debug.WriteLine($"[{AppName}] ReadFirstRowNumAsync: DG오더_rcRelSmallCells 미초기화");
+            return -1;
+        }
+
+        int maxRows = fInfo.접수등록Page_DG오더Small_RowsCount;
+        int firstNum = -1;
+
+        for (int rowIdx = 0; rowIdx < maxRows; rowIdx++)
+        {
+            // 1. 순번 컬럼(col=0) 캡처
+            Draw.Rectangle rcNo = rects[COL_순번, rowIdx];
+            Draw.Bitmap bmpNo = OfrService.CaptureScreenRect_InWndHandle(hWndDG, rcNo);
+            if (bmpNo == null) continue;
+
+            // 2. OFR (숫자 - 단음소)
+            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, 0.9, false);
+            bmpNo.Dispose();
+
+            if (!string.IsNullOrEmpty(resultNo.strResult))
+            {
+                int curNum = StdConvert.StringToInt(resultNo.strResult, -1);
+                if (curNum >= 1)
+                {
+                    firstNum = curNum - rowIdx;
+                    Debug.WriteLine($"[{AppName}] ReadFirstRowNumAsync: rowIdx={rowIdx}, curNum={curNum}, firstNum={firstNum}");
+                    break;
+                }
+            }
+        }
+
+        return firstNum;
+    }
+
+    /// <summary>
+    /// ReadFirstRowNumAsync 테스트 (2중 루프: 외부=새로고침, 내부=페이지별 자동 검증)
+    /// </summary>
+    public async Task Test_ReadFirstRowNumAsync()
+    {
+        var ctrl = new CancelTokenControl();
+        int nRowsPerPage = fInfo.접수등록Page_DG오더Small_RowsCount;
+
+        // 외부 루프: 새로고침 단위
+        while (true)
+        {
+            // 1. 시작 확인
+            var result시작 = System.Windows.MessageBox.Show(
+                "ReadFirstRowNumAsync 테스트\n[예] 새로고침 후 시작 / [아니오] 종료",
+                "테스트", System.Windows.MessageBoxButton.YesNo);
+            if (result시작 != System.Windows.MessageBoxResult.Yes) break;
+
+            // 2. 축소모드 강제
+            await CollapseDG오더Async();
+
+            // 3. 새로고침 클릭
+            var result새로고침 = await Click새로고침버튼Async(ctrl);
+            if (result새로고침.Result != StdResult.Success)
+            {
+                System.Windows.MessageBox.Show($"새로고침 실패: {result새로고침.sErr}", "오류");
+                continue;
+            }
+
+            // 4. 총계 OFR
+            var result총계 = await Get총계Async(ctrl);
+            if (result총계.nResult < 0)
+            {
+                System.Windows.MessageBox.Show($"총계 OFR 실패: {result총계.sErr}", "오류");
+                continue;
+            }
+
+            int nTotRows = result총계.nResult;
+
+            // 5. 총 페이지 수 계산
+            int nTotPage = 1;
+            if (nTotRows > nRowsPerPage)
+            {
+                nTotPage = nTotRows / nRowsPerPage;
+                if (nTotRows % nRowsPerPage > 0) nTotPage += 1;
+            }
+
+            // 6. 결과 수집
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"총계: {nTotRows}, 페이지당: {nRowsPerPage}, 총 페이지: {nTotPage}");
+            sb.AppendLine("─────────────────────────────");
+
+            bool bAllMatch = true;
+
+            // 내부 루프: 페이지별 자동 검증
+            for (int pageIdx = 0; pageIdx < nTotPage; pageIdx++)
+            {
+                // 페이지 이동 (첫 페이지 제외)
+                if (pageIdx > 0)
+                {
+                    await ScrollPageDownAsync();
+                }
+
+                // 예상 vs 실제 비교
+                int expectedFirst = GetExpectedFirstRowNum(nTotRows, nRowsPerPage, pageIdx);
+                int actualFirst = await ReadFirstRowNumAsync();
+                bool bMatch = (expectedFirst == actualFirst);
+                if (!bMatch) bAllMatch = false;
+
+                sb.AppendLine($"페이지[{pageIdx}]: 예상={expectedFirst}, 실제={actualFirst} {(bMatch ? "✓" : "✗")}");
+            }
+
+            sb.AppendLine("─────────────────────────────");
+            sb.AppendLine($"결과: {(bAllMatch ? "모두 일치 ✓" : "불일치 있음 ✗")}");
+
+            System.Windows.MessageBox.Show(sb.ToString(), "ReadFirstRowNumAsync 결과");
+        }
+    }
+
+    /// <summary>
+    /// 스크롤바 핸들 얻기 (1페이지 초과일 때만 호출)
+    /// - 매번 사용 직전에 DG오더_hWndTop 기준으로 핸들을 새로 얻음
+    /// </summary>
+    private IntPtr GetVScrollBarHandle()
+    {
+        return Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.DG오더_hWndTop, fInfo.접수등록Page_DG오더VScroll_BarCenter_ptChkRelM);
+    }
+
+    /// <summary>
+    /// 다음 페이지로 이동 (Page Down 클릭)
+    /// </summary>
+    public async Task ScrollPageDownAsync()
+    {
+        IntPtr hWndScroll = GetVScrollBarHandle();
+        if (hWndScroll == IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{AppName}] ScrollPageDownAsync: 스크롤바 핸들 없음");
+            return;
+        }
+
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndScroll, fInfo.접수등록Page_DG오더VScroll_Down페이지_ptChkRelS);
+        await Task.Delay(c_nWaitNormal);
+    }
+
+    /// <summary>
+    /// 이전 페이지로 이동 (Page Up 클릭)
+    /// </summary>
+    public async Task ScrollPageUpAsync()
+    {
+        IntPtr hWndScroll = GetVScrollBarHandle();
+        if (hWndScroll == IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{AppName}] ScrollPageUpAsync: 스크롤바 핸들 없음");
+            return;
+        }
+
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndScroll, fInfo.접수등록Page_DG오더VScroll_Up페이지_ptChkRelS);
+        await Task.Delay(c_nWaitNormal);
+    }
+
+    /// <summary>
+    /// 1로우 아래로 이동 (Row Down 클릭)
+    /// </summary>
+    public async Task ScrollRowDownAsync()
+    {
+        IntPtr hWndScroll = GetVScrollBarHandle();
+        if (hWndScroll == IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{AppName}] ScrollRowDownAsync: 스크롤바 핸들 없음");
+            return;
+        }
+
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndScroll, fInfo.접수등록Page_DG오더VScroll_Down버튼_ptChkRelS);
+        await Task.Delay(c_nWaitShort);
+    }
+
+    /// <summary>
+    /// 1로우 위로 이동 (Row Up 클릭)
+    /// </summary>
+    public async Task ScrollRowUpAsync()
+    {
+        IntPtr hWndScroll = GetVScrollBarHandle();
+        if (hWndScroll == IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{AppName}] ScrollRowUpAsync: 스크롤바 핸들 없음");
+            return;
+        }
+
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndScroll, fInfo.접수등록Page_DG오더VScroll_Up버튼_ptChkRelS);
+        await Task.Delay(c_nWaitShort);
+    }
+
+    /// <summary>
+    /// 페이지 검증 및 자동 조정
+    /// - 인성 VerifyAndAdjustPageAsync 패턴 참조
+    /// </summary>
+    /// <param name="nExpectedFirstNum">예상 첫 번호</param>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <param name="nRetryCount">재시도 횟수 (기본값: 3)</param>
+    /// <returns>성공/실패</returns>
+    public async Task<StdResult_Status> VerifyAndAdjustPageAsync(int nExpectedFirstNum, CancelTokenControl ctrl, int nRetryCount = c_nRepeatShort)
+    {
+        int nRowsPerPage = fInfo.접수등록Page_DG오더Small_RowsCount;
+
+        for (int retry = 0; retry < nRetryCount; retry++)
+        {
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
+            // 1. 실제 번호 OFR
+            int nActualFirstNum = await ReadFirstRowNumAsync();
+
+            // 2. 일치하면 성공
+            if (nExpectedFirstNum == nActualFirstNum)
+            {
+                return new StdResult_Status(StdResult.Success);
+            }
+
+            Debug.WriteLine($"[{AppName}] VerifyAndAdjustPageAsync: 불일치 (시도 {retry + 1}/{nRetryCount}) - 예상={nExpectedFirstNum}, 실제={nActualFirstNum}");
+
+            // 3. 불일치 → 조정 (마지막 시도 아니면)
+            if (retry < nRetryCount - 1)
+            {
+                // 차이 계산
+                int diff = nActualFirstNum - nExpectedFirstNum;
+                int absDiff = Math.Abs(diff);
+
+                int pageClicks = absDiff / nRowsPerPage;
+                int rowClicks = absDiff % nRowsPerPage;
+
+                // 최적화: rowClicks > 절반이면 역방향이 더 효율적
+                bool bReverse = false;
+                if (rowClicks > nRowsPerPage / 2)
+                {
+                    pageClicks += 1;
+                    rowClicks = nRowsPerPage - rowClicks;
+                    bReverse = true;
+                }
+
+                // 방향 결정: diff > 0 (실제가 더 큼) → 위로 스크롤, diff < 0 → 아래로 스크롤
+                bool bScrollUp = (diff > 0 && !bReverse) || (diff < 0 && bReverse);
+
+                Debug.WriteLine($"[{AppName}] 스크롤 조정: {(bScrollUp ? "UP" : "DOWN")} - {pageClicks}페이지 + {rowClicks}로우");
+
+                // 페이지 스크롤
+                for (int i = 0; i < pageClicks; i++)
+                {
+                    if (bScrollUp)
+                        await ScrollPageUpAsync();
+                    else
+                        await ScrollPageDownAsync();
+                }
+
+                // 로우 스크롤
+                for (int i = 0; i < rowClicks; i++)
+                {
+                    if (bScrollUp)
+                        await ScrollRowUpAsync();
+                    else
+                        await ScrollRowDownAsync();
+                }
+
+                await Task.Delay(c_nWaitNormal, ctrl.Token);
+            }
+        }
+
+        return new StdResult_Status(StdResult.Fail, $"페이지 조정 {nRetryCount}회 모두 실패", "VerifyAndAdjustPageAsync");
+    }
+    #endregion
+
+    #region Row OFR - 오더번호, 상태 읽기
+    /// <summary>
+    /// 데이터그리드 Row에서 오더번호 읽기 (숫자 OFR - 단음소)
+    /// </summary>
+    /// <param name="bmpPage">전체 페이지 비트맵 (재사용)</param>
+    /// <param name="rectSeqno">오더번호 셀 Rectangle</param>
+    /// <param name="bInvertRgb">RGB 반전 여부 (선택된 행인 경우 true)</param>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <returns>StdResult_String (오더번호)</returns>
+    public async Task<StdResult_String> GetRowSeqnoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectSeqno, bool bInvertRgb, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, 0.7); // 영역추출 못할시 가중치조정
+    }
+
+    /// <summary>
+    /// 데이터그리드 Row에서 상태 읽기 (한글 OFR - 다음소)
+    /// </summary>
+    /// <param name="bmpPage">전체 페이지 비트맵 (재사용)</param>
+    /// <param name="rowIdx">로우 인덱스</param>
+    /// <returns>상태 문자열</returns>
+    public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, int rowIdx)
+    {
+        Draw.Rectangle rectStatus = mRcpt.DG오더_rcRelSmallCells[c_nCol처리상태, rowIdx];
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb: false, bTextSave: true, 0.7, bEdit: true);
+    }
+    #endregion
+
+    #region 자동배차 - StateFlag별 처리 함수
+    /// <summary>
+    /// Kai DB에서 업데이트된 주문을 원콜 앱에 반영 (Existed_WithSeqno | Updated_Assume)
+    /// </summary>
+    public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiUpdated(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+
+        string kaiState = item.NewOrder?.OrderState ?? "";
+        string ocState = dgInfo.sStatus;
+
+        Debug.WriteLine($"[CheckIsOrderAsync_AssumeKaiUpdated] KeyCode={item.KeyCode}, Kai={kaiState}, Onecall={ocState}");
+
+        // TODO: 실제 처리 구현
+        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+    }
+
+    /// <summary>
+    /// 원콜 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
+    /// </summary>
+    public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_OnecallOrderManage(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+
+        string kaiState = item.NewOrder?.OrderState ?? "";
+        string ocState = dgInfo.sStatus;
+
+        Debug.WriteLine($"[CheckIsOrderAsync_OnecallOrderManage] KeyCode={item.KeyCode}, Kai={kaiState}, Onecall={ocState}");
+
+        // TODO: 실제 처리 구현
+        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
     }
     #endregion
 }

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Windows.Media;
 using Draw = System.Drawing;
 
 using Kai.Common.StdDll_Common;
@@ -35,9 +34,7 @@ public class NwCargo24 : IExternalApp
     private long m_lRestCount = 0; // 자동배차 할일 없을 때 카운터 (주기적 조회용)
     private int m_nDatagridFailCount = 0; // Datagrid 연속 실패 카운터
     private const int MAX_DATAGRID_FAIL_COUNT = 3; // 3회 연속 실패 시 비활성화
-    #endregion
 
-    #region Helper Methods
     /// <summary>
     /// Cargo24 SeqNo 가져오기
     /// </summary>
@@ -138,7 +135,8 @@ public class NwCargo24 : IExternalApp
 
             // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
             // Kai에서 대기 -> 접수를 신규로 평가
-            Func<AutoAllocModel, bool> isNewFromWaiting = item => item.OldOrder?.OrderState == "대기" && item.NewOrder.OrderState == "접수" && string.IsNullOrEmpty(item.NewOrder.Cargo24);
+            //Func<AutoAllocModel, bool> isNewFromWaiting = item => item.OldOrder?.OrderState == "대기" && item.NewOrder.OrderState == "접수" && string.IsNullOrEmpty(item.NewOrder.Cargo24);
+            Func<AutoAllocModel, bool> isNewFromWaiting = item => item.NewOrder.OrderState == "접수" && string.IsNullOrEmpty(item.NewOrder.Cargo24);
 
             var listCreated = listCargo24
                 .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
@@ -387,7 +385,7 @@ public class NwCargo24 : IExternalApp
                     if (actualFirstNum != expectedFirstNum)
                     {
                         // TODO: 페이지 이동 처리
-                        Debug.WriteLine($"[{AppName}] 페이지 불일치 → 이동 필요");
+                       ErrMsgBox($"[{AppName}] 페이지 불일치 → 이동 필요");
                     }
 
                     // 페이지 전체 캡처
@@ -395,7 +393,7 @@ public class NwCargo24 : IExternalApp
                     bmpPage = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd);
                     if (bmpPage == null)
                     {
-                        Debug.WriteLine($"[{AppName}] 페이지[{pageIdx}] 캡처 실패");
+                        ErrMsgBox($"[{AppName}] 페이지[{pageIdx}] 캡처 실패");
                         break;
                     }
                     #endregion

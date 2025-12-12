@@ -58,6 +58,11 @@ public partial class OnecallAct_RcptRegPage
     private const int COLUMN_WIDTH_TOLERANCE = 1;  // 컬럼 너비 허용 오차 (픽셀)
     private const int MAX_RETRY = 3;               // 최대 재시도 횟수
     private const int DELAY_RETRY = 500;           // 재시도 대기 시간 (ms)
+
+    public const int c_nCol순번 = 0;
+    public const int c_nCol처리상태 = 1;
+    public const int c_nCol오더번호 = 2;
+    public const int c_nCol클릭 = 3; // 로우 클릭용 (처리일자)
     #endregion
 
     #region Private Fields
@@ -99,7 +104,6 @@ public partial class OnecallAct_RcptRegPage
 
             if (mRcpt.TopWnd_hWnd == IntPtr.Zero)
                 return new StdResult_Error($"[{AppName}] 접수등록Page 찾기실패: {fInfo.접수등록Page_TopWnd_sWndName}", "OnecallAct_RcptRegPage/InitializeAsync_01");
-            //Debug.WriteLine($"[{AppName}] 접수등록Page 찾음: {mRcpt.TopWnd_hWnd:X}"); 
             #endregion
 
             #region 2. 검색섹션을 찾을때까지 기다린후 자식정보 찾기
@@ -120,14 +124,13 @@ public partial class OnecallAct_RcptRegPage
             if (!bFind) return new StdResult_Error($"[{AppName}] 검색섹션_hWnd 찾기실패", "OnecallAct_RcptRegPage/InitializeAsync_02");
 
             // 검색섹션 - 자식정보           
-            mRcpt.검색섹션_hWnd포커스탈출 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_검색_포커Kill_ptChkRelM); // 포커스탈출
+            mRcpt.검색섹션_hWnd포커스탈출 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_포커Kill_ptChkRelM); // 포커스탈출
 
-            mRcpt.검색섹션_hWnd자동조회 = Std32Window.GetWndHandle_FromRelDrawPt(
-                mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_검색_자동조회_rcChkRelM)); // 자동조회
+            mRcpt.검색섹션_hWnd자동조회 = 
+                Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_검색_자동조회_rcChkRelM)); // 자동조회
 
             mRcpt.검색섹션_hWnd새로고침버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_새로고침Btn_ptChkRelM);
             mRcpt.검색섹션_hWnd확장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색ExpandBtn_ptChkRelM);
-            //Debug.WriteLine($"[{AppName}] 확장버튼 찾음: {mRcpt.검색섹션_hWnd확장버튼:X}");
             #endregion
 
             #region 3. 접수섹션
@@ -252,20 +255,20 @@ public partial class OnecallAct_RcptRegPage
                 mRcpt.접수섹션_hWndTop, StdUtil.GetCenterDrawPoint(fInfo.접수등록Page_의뢰자_상호_rcChkRelM));
 
             mRcpt.접수섹션_의뢰자_hWnd전화 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_의뢰자_전화번호_ptChkRelM); // 전화
-
             #endregion
 
             #region 4. DG오더 섹션
             // DG오더 찾기
             mRcpt.DG오더_hWndTop = Std32Window.GetWndHandle_FromRelDrawPt(mMain.TopWnd_hWnd, fInfo.접수등록Page_DG오더_ptChkRelT);
 
+            // Background Brightness 계산 (데이터 로드 전에 측정, +10 마진 적용 - 이보다 밝으면 데이터)
+            int nBkBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(mRcpt.DG오더_hWndTop);
+            mRcpt.DG오더_nBkMarginedBright = nBkBright + 10;
+            Debug.WriteLine($"[{AppName}] Background Brightness: {nBkBright}, Margined: {mRcpt.DG오더_nBkMarginedBright}");
+
             // 확장 전 컬럼 검증/초기화
             var (listLW, error) = await SetDG오더ColumnHeaderAsync();
             if (error != null) return error;
-
-            // Background Brightness 계산
-            mRcpt.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(mRcpt.DG오더_hWndTop);
-            Debug.WriteLine($"[{AppName}] Background Brightness: {mRcpt.DG오더_nBackgroundBright}");
 
             // 공통 변수
             int headerHeight = fInfo.접수등록Page_DG오더_headerHeight;
@@ -310,7 +313,6 @@ public partial class OnecallAct_RcptRegPage
             if (resultTotal.nResult >= 0)
             {
                 m_nLastTotalCount = resultTotal.nResult;
-                Debug.WriteLine($"[{AppName}] 초기 총계: {resultTotal.nResult}");
             }
             #endregion
 
@@ -318,13 +320,8 @@ public partial class OnecallAct_RcptRegPage
             await EscapeFocusAsync();
             var result자동조회 = GetAutoRefreshResult("5초");
             var resultSts = await SelectComboBoxItemAsync(mRcpt.검색섹션_hWnd자동조회, result자동조회, mRcpt.검색섹션_hWndTop, fInfo.접수등록Page_검색_자동조회_rcChkRelM);
-            if (resultSts.Result == StdResult.Success)
-                Debug.WriteLine($"[{AppName}] 자동조회 5초 설정 완료");
-            else
-                Debug.WriteLine($"[{AppName}] 자동조회 설정 실패: {resultSts.sErr}");
             #endregion
 
-            //MsgBox($"[{AppName}] RcptRegPage InitializeAsync 완료");
             return null;
         }
         catch (Exception ex)
@@ -413,7 +410,7 @@ public partial class OnecallAct_RcptRegPage
                 for (int i = 0; i < m_ReceiptDgHeaderInfos.Length; i++)
                 {
                     Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[i].nLeft + 1, headerGab, listLW[i].nWidth - 2, textHeight);
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, bEdit: bEdit);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, dWeight: 0.9, bEdit: bEdit);
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }
 
@@ -1011,7 +1008,7 @@ public partial class OnecallAct_RcptRegPage
         {
             Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
 
-            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, bEdit: bEdit);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: 0.8, bEdit: bEdit);
 
             texts[x] = result?.strResult;
         }
@@ -1424,6 +1421,7 @@ public partial class OnecallAct_RcptRegPage
             TransparantWnd.DeleteOverlay();
         }
     }
+
     #endregion
 
     #region CheckOcOrderAsync_AssumeKaiNewOrder

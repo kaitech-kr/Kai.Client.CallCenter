@@ -600,7 +600,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
 
                         // 찾았으면 상태 읽기 (모든 케이스에서 필요)
                         Draw.Rectangle rectStatus = rects[InsungsAct_RcptRegPage.c_nCol상태, y];
-                        StdResult_String resultStatus = await m_Context.RcptRegPageAct.GetRowStatusAsync(bmpPage, rectStatus, bInvertRgb, ctrl);
+                        StdResult_String resultStatus = await m_Context.RcptRegPageAct.GetRowStatusAsync(bmpPage, rectStatus, bInvertRgb, true, ctrl);
                         if (string.IsNullOrEmpty(resultStatus.strResult))
                         {
                             Debug.WriteLine($"[{APP_NAME}] 페이지 {pageIdx + 1}, y={y}, 상태 읽기 실패: {resultStatus.sErr}");

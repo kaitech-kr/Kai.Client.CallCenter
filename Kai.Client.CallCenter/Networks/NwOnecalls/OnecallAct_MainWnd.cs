@@ -43,8 +43,6 @@ public class OnecallAct_MainWnd
     {
         try
         {
-            //Debug.WriteLine($"[{AppName}] MainWnd InitAsync 시작");
-
             // 1. 메인 윈도우 찾기 (10초)
             for (int i = 0; i < 100; i++)
             {
@@ -61,9 +59,7 @@ public class OnecallAct_MainWnd
             if (mMain.TopWnd_hWnd == IntPtr.Zero)
                 return new StdResult_Error($"[{AppName}] 메인윈도 찾기실패", "OnecallAct_MainWnd/InitAsync_01");
 
-            //Debug.WriteLine($"[{AppName}] 메인윈도 찾음: {mMain.TopWnd_hWnd:X}");
-
-            // 2. 추가 팝업 윈도우 처리 (3초 동안 새 윈도우 최소화/닫기)
+            // 2. 추가 팝업 윈도우 처리 (1초 동안 새 윈도우 최소화/닫기)
             await HandlePopupWindowsAsync();
 
             // 3. 메인 윈도우 이동 및 최대화
@@ -75,8 +71,6 @@ public class OnecallAct_MainWnd
             if (mMain.FirstLayer_ChildWnds.Count == 0)
                 return new StdResult_Error($"[{AppName}] 자식윈도 못찾음", "OnecallAct_MainWnd/InitAsync_03");
 
-            //Debug.WriteLine($"[{AppName}] 자식윈도 찾음: {mMain.FirstLayer_ChildWnds.Count}개");
-
             // 5. MainMenu 찾기
             mMain.WndInfo_MainMenu = mMain.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == fInfo.Main_MainMenu_rcRel);
             if (mMain.WndInfo_MainMenu == null)
@@ -87,7 +81,6 @@ public class OnecallAct_MainWnd
             if (mMain.WndInfo_MdiClient == null)
                 return new StdResult_Error($"[{AppName}] MdiClient 못찾음", "OnecallAct_MainWnd/InitAsync_05");
 
-            //Debug.WriteLine($"[{AppName}] MainWnd InitAsync 완료");
             return null;
         }
         catch (Exception ex)
@@ -109,7 +102,7 @@ public class OnecallAct_MainWnd
         for (int i = 0; i < 100; i++)
         {
             await Task.Delay(100);
-            if ((DateTime.Now - last).TotalSeconds > 3) break;
+            if ((DateTime.Now - last).TotalSeconds > 1) break;
 
             List<IntPtr> lstCurWnds = Std32Window.FindMainWindows_SameProcessId(uProcessId);
 
@@ -176,7 +169,6 @@ public class OnecallAct_MainWnd
         }
 
         await Task.Delay(500);
-        //Debug.WriteLine($"[{AppName}] 메인윈도 이동/최대화 완료");
         return null;
     }
     #endregion

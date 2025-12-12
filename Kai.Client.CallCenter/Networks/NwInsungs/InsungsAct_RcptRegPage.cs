@@ -490,11 +490,8 @@ public partial class InsungsAct_RcptRegPage
 
                 for (int i = 0; i < columns; i++)
                 {
-                    Draw.Rectangle rcColHeader = new Draw.Rectangle(
-                        listLW[i].nLeft, headerGab, listLW[i].nWidth, textHeight);
-
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                        bmpDG, rcColHeader, bInvertRgb: false, bEdit: bEdit);
+                    Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[i].nLeft, headerGab, listLW[i].nWidth, textHeight);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: 0.9, bEdit: bEdit);
 
                     m_RcptPage.DG오더_ColumnTexts[i] = result?.strResult ?? string.Empty;
                 }
@@ -632,8 +629,7 @@ public partial class InsungsAct_RcptRegPage
         for (int x = 0; x < columns; x++)
         {
             Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
-
-            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bEdit: bEdit);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: 0.9, bEdit: bEdit);
 
             texts[x] = result?.strResult;
         }
@@ -1157,7 +1153,7 @@ public partial class InsungsAct_RcptRegPage
 
                     if (bmpExact == null) continue;
 
-                    StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit);
+                    StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit, dWeight: 0.9, bEdit);
 
                     bmpExact?.Dispose();
 
