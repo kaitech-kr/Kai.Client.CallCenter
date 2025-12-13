@@ -26,7 +26,7 @@ namespace Kai.Client.CallCenter.Networks.NwInsungs;
 /// </summary>
 public abstract class InsungAutoAllocBase : IExternalApp
 {
-    #region Abstract Members (상속 클래스에서 구현)
+    #region 1. Abstract Members - 추상 멤버
     /// <summary>
     /// 앱 이름 (INSUNG1 또는 INSUNG2)
     /// </summary>
@@ -63,7 +63,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
     protected abstract string GetStaticAppPath();
     #endregion
 
-    #region Context
+    #region 2. Context - 컨텍스트
     /// <summary>
     /// 인성의 모든 공용 데이터를 담는 Context
     /// </summary>
@@ -75,7 +75,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
     public InsungContext Context => m_Context;
     #endregion
 
-    #region AutoAlloc Variables
+    #region 3. AutoAlloc Variables - 자동배차 변수
     /// <summary>
     /// 자동배차 할일 없음 카운터 (60회마다 조회버튼 클릭)
     /// </summary>
@@ -88,7 +88,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
     private const int MAX_DATAGRID_FAIL_COUNT = 3; // 3회 연속 실패 시 비활성화
     #endregion
 
-    #region Dispose
+    #region 4. Dispose - 리소스 해제
     private bool disposedValue;
 
     protected virtual void Dispose(bool disposing)
@@ -111,7 +111,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
     }
     #endregion
 
-    #region Helper Methods - Field Access
+    #region 5. Helper Methods - 헬퍼 함수
     /// <summary>
     /// AutoAllocModel에서 인성 주문번호 가져오기 (AppName에 따라 Insung1 또는 Insung2)
     /// </summary>
@@ -142,7 +142,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
     }
     #endregion
 
-    #region IExternalApp 구현
+    #region 6. IExternalApp Implementation - 인터페이스 구현
     public bool IsUsed => GetStaticUse();
     public string AppName => APP_NAME;
 
@@ -763,7 +763,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
     }
     #endregion
 
-    #region Helper Methods - File I/O
+    #region 7. File I/O - 파일 입출력
     /// <summary>
     /// FileInfo를 JSON 파일에서 읽어서 Context.FileInfo에 로드
     /// </summary>
@@ -850,7 +850,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
     }
     #endregion
 
-    #region 생성자
+    #region 8. Constructor - 생성자
     /// <summary>
     /// 베이스 생성자: Context 및 Act 객체 초기화
     /// </summary>

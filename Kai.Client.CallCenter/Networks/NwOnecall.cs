@@ -40,6 +40,42 @@ public class NwOnecall : IExternalApp
     private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
     #endregion
 
+    #region Dispose
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                Debug.WriteLine($"[{AppName}] Dispose 호출");
+                // 관리형 리소스 해제
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+    #endregion
+
+    #region 생성자
+    /// <summary>
+    /// 원콜 생성자
+    /// </summary>
+    public NwOnecall()
+    {
+        Debug.WriteLine($"[{AppName}] 생성자 호출");
+        m_Context = new OnecallContext(StdConst_Network.ONECALL, s_Id, s_Pw);
+        m_Context.AppAct = new OnecallAct_App(m_Context);
+    }
+    #endregion
+
     #region IExternalApp 구현
     public bool IsUsed => s_Use;
     public string AppName => StdConst_Network.ONECALL;
@@ -112,6 +148,9 @@ public class NwOnecall : IExternalApp
             // TopMost 설정 - 원콜 메인 창을 최상위로
             await Std32Window.SetWindowTopMostAndReleaseAsync(m_Context.MemInfo.Main.TopWnd_hWnd, CommonVars.c_nWaitShort);
             Debug.WriteLine($"[{AppName}] TopMost 설정 완료");
+
+            // DG오더 축소모드로 변경 (Small 데이터그리드 영역 사용)
+            await m_Context.RcptRegPageAct.CollapseDG오더Async();
             #endregion
 
             #region 2. Local Variables 초기화
@@ -245,9 +284,6 @@ public class NwOnecall : IExternalApp
             if (listEtcGroup.Count > 0)
             {
                 Debug.WriteLine($"[{AppName}] Region 5: 기존 주문 처리 시작 (총 {listEtcGroup.Count}건)");
-
-                // 무조건 축소모드로 변경 (Small 데이터그리드 영역 사용)
-                await m_Context.RcptRegPageAct.CollapseDG오더Async();
 
                 #region 5-1. 조회버튼 클릭 + 총계 확인
                 int nThisTotCount = -1;
@@ -513,42 +549,6 @@ public class NwOnecall : IExternalApp
         {
             Debug.WriteLine($"[{AppName}] Shutdown 예외 발생: {ex.Message}");
         }
-    }
-    #endregion
-
-    #region Dispose
-    private bool disposedValue;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                Debug.WriteLine($"[{AppName}] Dispose 호출");
-                // 관리형 리소스 해제
-            }
-
-            disposedValue = true;
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-    #endregion
-
-    #region 생성자
-    /// <summary>
-    /// 원콜 생성자
-    /// </summary>
-    public NwOnecall()
-    {
-        Debug.WriteLine($"[{AppName}] 생성자 호출");
-        m_Context = new OnecallContext(StdConst_Network.ONECALL, s_Id, s_Pw);
-        m_Context.AppAct = new OnecallAct_App(m_Context);
     }
     #endregion
 }

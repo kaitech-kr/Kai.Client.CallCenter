@@ -22,7 +22,7 @@ namespace Kai.Client.CallCenter.Networks.NwInsungs;
 /// </summary>
 public partial class InsungsAct_RcptRegPage
 {
-    #region UI 헬퍼 함수들
+    #region 1. Helpers - UI 헬퍼
 
     /// <summary>
     /// CallCount 컨트롤 찾기 헬퍼 메서드
@@ -335,7 +335,7 @@ public partial class InsungsAct_RcptRegPage
     }
     #endregion
 
-    #region 창/팝업 제어 함수들
+    #region 2. Window Control - 창/팝업 제어
     /// <summary>
     /// 로딩 패널 대기 (조회 시 데이터 로딩 확인)
     /// - Phase 1: 로딩 패널 출현 대기 (최대 250ms)
@@ -593,7 +593,7 @@ public partial class InsungsAct_RcptRegPage
 
     #endregion
 
-    #region 버튼 함수들
+    #region 3. Buttons - 버튼 함수
     /// <summary>
     /// 조회 버튼 클릭 및 데이터 로딩 대기
     /// - WaitPanLoadedAsync로 로딩 완료 확인
@@ -713,7 +713,7 @@ public partial class InsungsAct_RcptRegPage
 
     #endregion
 
-    #region EditBox/ComboBox 입력 함수들
+    #region 4. Input Helpers - EditBox/ComboBox 입력
 
     /// <summary>
     /// EditBox 입력 및 검증 (재시도 포함)
@@ -890,7 +890,7 @@ public partial class InsungsAct_RcptRegPage
 
     #endregion
 
-    #region 접수창 관련 함수들
+    #region 5. Receipt Window - 접수창 관련
     // 새로 등록
     /// <summary>
     /// 신규 버튼 클릭 후 접수등록 팝업창 열기
@@ -2911,7 +2911,7 @@ public partial class InsungsAct_RcptRegPage
     }
     #endregion
 
-    #region 데이타그리드 관련 함수들
+    #region 6. Datagrid - 데이터그리드 관련
 
     /// <summary>
     /// Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)

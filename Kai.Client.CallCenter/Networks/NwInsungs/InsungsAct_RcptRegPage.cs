@@ -16,7 +16,7 @@ namespace Kai.Client.CallCenter.Networks.NwInsungs;
 
 public partial class InsungsAct_RcptRegPage
 {
-    #region Variables
+    #region 1. Variables - 변수
     /// <summary>
     /// 컬럼 너비 허용 오차 (픽셀)
     /// </summary>
@@ -77,7 +77,7 @@ public partial class InsungsAct_RcptRegPage
 
         new NwCommon_DgColumnHeader() { sName = "적요", bOfrSeq = false, nWidth = 240 },
 
-    #region Temp Save
+    #region 1-1. Temp Save - 임시 저장
     //new NwCommon_DgColumnHeader() { sName = "배차", bOfrSeq = true },
     //new NwCommon_DgColumnHeader() { sName = "픽업", bOfrSeq = true },
     //new NwCommon_DgColumnHeader() { sName = "완료", bOfrSeq = true },
@@ -109,11 +109,11 @@ public partial class InsungsAct_RcptRegPage
     //new NwCommon_DgColumnHeader() { sName = "접수처", bOfrSeq = false },
     //new NwCommon_DgColumnHeader() { sName = "인수증", bOfrSeq = false },
     //new NwCommon_DgColumnHeader() { sName = "차량번호", bOfrSeq = false },
-    #endregion Temp Save 끝
+    #endregion
     };
     #endregion
 
-    #region Context Reference
+    #region 2. Context Reference - 컨텍스트 참조
     /// <summary>
     /// Context에 대한 읽기 전용 참조
     /// </summary>
@@ -128,7 +128,7 @@ public partial class InsungsAct_RcptRegPage
     private InsungsInfo_Mem.RcptRegPage m_RcptPage => m_MemInfo.RcptPage;
     #endregion
 
-    #region Constructor
+    #region 3. Constructor - 생성자
     /// <summary>
     /// 생성자 - Context를 받아서 초기화
     /// </summary>
@@ -139,7 +139,7 @@ public partial class InsungsAct_RcptRegPage
     }
     #endregion
 
-    #region 초기화용 함수들
+    #region 4. Initialize - 초기화
     public async Task<StdResult_Error> InitializeAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
     {
         try
@@ -1645,7 +1645,7 @@ public partial class InsungsAct_RcptRegPage
     }
     #endregion
 
-    #region 자동배차 - Kai신규 관련함수들
+    #region 5. AutoAlloc NewOrder - Kai신규 자동배차
     /// <summary>
     /// 신규 주문 등록 확인 (Kai에만 존재, 인성에 없음)
     /// </summary>
@@ -1687,7 +1687,7 @@ public partial class InsungsAct_RcptRegPage
     }
     #endregion
 
-    #region 자동배차 - Kai변경 관련함수들
+    #region 6. AutoAlloc UpdateOrder - Kai변경 자동배차
     /// <summary>
     /// Kai DB에서 업데이트된 주문을 인성 앱에 반영
     /// </summary>
@@ -1811,7 +1811,7 @@ public partial class InsungsAct_RcptRegPage
     }
     #endregion
 
-    #region 자동배차 - Insung상태관리 관련함수들
+    #region 7. Status Management - Insung상태 관리
     /// <summary>
     /// Insung 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
     /// - Insung 상태를 primary switch로 분기

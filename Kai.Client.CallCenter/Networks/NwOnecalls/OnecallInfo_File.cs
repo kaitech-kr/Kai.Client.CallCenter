@@ -217,17 +217,20 @@ public class OnecallInfo_File
     #endregion
 
     #region Datagrid Section
-    public int 접수등록Page_DG오더_nExpandedHeight = 874; // ExpandBtn Width
+    //public int 접수등록Page_DG오더_nExpandedHeight = 874; // ExpandBtn Width
     public Draw.Point 접수등록Page_DG오더_ptChkRelT { get; set; } = new Draw.Point(1800, 975); // {X=1800,Y=975} // 데이타그리드 탑핸들 얻는 위치
 
     // 접수 Datagrid
     public int 접수등록Page_DG오더_headerHeight = 30; // HeaderRow Height
-    public int 접수등록Page_DG오더_dataRowHeight = 22; // DataRow Height
+    public int 접수등록Page_DG오더_dataRowHeight = 23; // DataRow Height
     public int 접수등록Page_DG오더_dataGab = 1; // 셀 상하단 gap
+    public int 접수등록Page_DG오더_nSelectdBright = 200; // 청색 = 195 + 5 - 여유
 
+    // Small
     public int 접수등록Page_DG오더Small_RowsCount = 17; // DataRow Count
     public Draw.Rectangle 접수등록Page_DG오더Small_rcTotalS = new Draw.Rectangle(325, 430, 81, 20); // 총계 OFR영역 - {X=325,Y=427} {X=406,Y=449}
 
+    // Large
     public int 접수등록Page_DG오더Large_RowsCount = 34; // DataRow Count 
     public Draw.Rectangle 접수등록Page_DG오더Large_rcTotalS = new Draw.Rectangle(325, 830, 81, 20); // 총계 OFR영역
 
