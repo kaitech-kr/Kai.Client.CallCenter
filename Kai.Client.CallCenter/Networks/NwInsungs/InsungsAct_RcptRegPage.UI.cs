@@ -1001,7 +1001,7 @@ public partial class InsungsAct_RcptRegPage
             {
                 // 출발지 = 의뢰자: Enter만 치고 동명 확인
                 Debug.WriteLine($"[{m_Context.AppName}]   출발지 = 의뢰자: Enter로 자동 입력");
-                Std32Key_Msg.KeyPost_Down(wndRcpt.출발지_hWnd고객명, StdCommon32.VK_RETURN);
+                await Std32Key_Msg.KeyPost_DownAsync(wndRcpt.출발지_hWnd고객명, StdCommon32.VK_RETURN);
                 await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);  // 100ms
 
                 string 동명 = Std32Window.GetWindowCaption(wndRcpt.출발지_hWnd동명);
@@ -1053,7 +1053,7 @@ public partial class InsungsAct_RcptRegPage
             {
                 // 도착지 = 의뢰자: Enter만 치고 동명 확인
                 Debug.WriteLine($"[{m_Context.AppName}]   도착지 = 의뢰자: Enter로 자동 입력");
-                Std32Key_Msg.KeyPost_Down(wndRcpt.도착지_hWnd고객명, StdCommon32.VK_RETURN);
+                await Std32Key_Msg.KeyPost_DownAsync(wndRcpt.도착지_hWnd고객명, StdCommon32.VK_RETURN);
                 await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);  // 100ms
 
                 string 동명 = Std32Window.GetWindowCaption(wndRcpt.도착지_hWnd동명);
@@ -2390,12 +2390,12 @@ public partial class InsungsAct_RcptRegPage
                     {
                         // 차량톤수 OFR (전체)
                         var result차량 = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel차량톤수, false, bTextSave: true, dWeight: 0.9, bEdit: false);
+                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel차량톤수, false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: false);
                         string current차량톤수 = result차량.strResult ?? "";
 
                         // 트럭상세 OFR (좌측 4문자)
                         var result트럭 = await OfrWork_Common.OfrStr_ComplexCharSetAsync(
-                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel트럭상세, false, bTextSave: true, dWeight: 0.9, bEdit: false, maxCharCount: 4);
+                            bmpCapture, m_Context.FileInfo.접수등록Wnd_우측상단_rcChkRel트럭상세, false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: false, maxCharCount: 4);
                         string current트럭상세 = result트럭.strResult ?? "";
 
                         bmpCapture.Dispose();
@@ -2595,7 +2595,7 @@ public partial class InsungsAct_RcptRegPage
             // 4-1. 기사번호 OFR (단음소)
             Draw.Rectangle rectDriverId = m_FileInfo.접수등록Wnd_기사그룹_rcChkRel기사번호;
             Draw.Bitmap bmpDriverId = OfrService.CaptureScreenRect_InWndHandle(hWndPopup, rectDriverId);
-            StdResult_String resultDriverId = await OfrWork_Common.OfrStr_SeqCharAsync(bmpDriverId, 0.9); // 영역추출 못할시 가중치조정
+            StdResult_String resultDriverId = await OfrWork_Common.OfrStr_SeqCharAsync(bmpDriverId, c_dOfrWeight); // 영역추출 못할시 가중치조정
             string driverId = resultDriverId.strResult ?? "";
             bmpDriverId?.Dispose();
             Debug.WriteLine($"[{m_Context.AppName}] 기사번호 OFR: '{driverId}'");
@@ -2603,7 +2603,7 @@ public partial class InsungsAct_RcptRegPage
             // 4-2. 기사이름 OFR (다음소)
             Draw.Rectangle rectDriverName = m_FileInfo.접수등록Wnd_기사그룹_rcChkRel기사이름;
             Draw.Bitmap bmpDriverName = OfrService.CaptureScreenRect_InWndHandle(hWndPopup, rectDriverName);
-            StdResult_String resultDriverName = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverName, bTextSave: true, dWeight: 0.9, bEdit: false);
+            StdResult_String resultDriverName = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverName, bTextSave: true, dWeight: c_dOfrWeight, bEdit: false);
             string driverName = resultDriverName.strResult ?? "";
             bmpDriverName?.Dispose();
             Debug.WriteLine($"[{m_Context.AppName}] 기사이름 OFR: '{driverName}'");
@@ -2611,7 +2611,7 @@ public partial class InsungsAct_RcptRegPage
             // 4-3. 기사소속 OFR (다음소)
             Draw.Rectangle rectDriverCenter = m_FileInfo.접수등록Wnd_기사그룹_rcChkRel기사소속;
             Draw.Bitmap bmpDriverCenter = OfrService.CaptureScreenRect_InWndHandle(hWndPopup, rectDriverCenter);
-            StdResult_String resultDriverCenter = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverCenter, bTextSave: true, dWeight: 0.9, bEdit: false);
+            StdResult_String resultDriverCenter = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDriverCenter, bTextSave: true, dWeight: c_dOfrWeight, bEdit: false);
             string driverCenter = resultDriverCenter.strResult ?? "";
             bmpDriverCenter?.Dispose();
             Debug.WriteLine($"[{m_Context.AppName}] 기사소속 OFR: '{driverCenter}'");
@@ -2756,7 +2756,7 @@ public partial class InsungsAct_RcptRegPage
             }
 
             // 1. EnterKey 전송 (검색 실행)
-            Std32Key_Msg.KeyPost_Down(hWnd고객명, StdCommon32.VK_RETURN);
+            await Std32Key_Msg.KeyPost_DownAsync(hWnd고객명, StdCommon32.VK_RETURN);
             Debug.WriteLine($"[{m_Context.AppName}] 고객 검색 Enter 키 전송");
 
             // 2. 검색 결과 확인 (최대 50번, 1.5초)
@@ -3019,7 +3019,7 @@ public partial class InsungsAct_RcptRegPage
     public async Task<StdResult_String> GetRowSeqnoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectSeqno, bool bInvertRgb, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, 0.9); // 영역추출 못할시 가중치조정
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, c_dOfrWeight); // 영역추출 못할시 가중치조정
     }
 
     /// <summary>
@@ -3033,7 +3033,7 @@ public partial class InsungsAct_RcptRegPage
     public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectStatus, bool bInvertRgb, bool bText, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb, bText, dWeight: 0.9);
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb, bText, dWeight: c_dOfrWeight);
     }
 
     /// <summary>
@@ -3047,7 +3047,7 @@ public partial class InsungsAct_RcptRegPage
     public async Task<StdResult_String> GetRowDriverPhNoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectDriverPhNo, bool bInvertRgb, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectDriverPhNo, bInvertRgb, 0.9); // 영역추출 못할시 가중치조정
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectDriverPhNo, bInvertRgb, c_dOfrWeight); // 영역추출 못할시 가중치조정
     }
 
     /// <summary>
@@ -3101,7 +3101,7 @@ public partial class InsungsAct_RcptRegPage
             if (bmpNo == null) continue;
 
             // 2. OFR (bEdit=false이면 대화상자 안 띄움)
-            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, 0.9, bEdit); // 영역추출 못할시 가중치조정
+            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, c_dOfrWeight, bEdit); // 영역추출 못할시 가중치조정
             bmpNo.Dispose();
 
             if (!string.IsNullOrEmpty(resultNo.strResult))
@@ -3401,7 +3401,7 @@ public partial class InsungsAct_RcptRegPage
                     }
 
                     // 4. 단음소 OFR (TbCharBackup 사용)
-                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, 0.9); // 영역추출 못할시 가중치조정
+                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, c_dOfrWeight); // 영역추출 못할시 가중치조정
 
                     // 5. Seqno 반환
                     if (!string.IsNullOrEmpty(resultSeqno.strResult))
@@ -3496,7 +3496,7 @@ public partial class InsungsAct_RcptRegPage
                     }
 
                     // 4. 단음소 OFR (TbCharBackup 사용)
-                    StdResult_String resultDriverPhNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, 0.9); // 영역추출 못할시 가중치조정
+                    StdResult_String resultDriverPhNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, c_dOfrWeight); // 영역추출 못할시 가중치조정
 
                     // 5. 기사전번 반환
                     if (!string.IsNullOrEmpty(resultDriverPhNo.strResult))

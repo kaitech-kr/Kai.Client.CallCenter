@@ -51,9 +51,12 @@ public class OnecallInfo_File
     public Draw.Point 접수등록Page_접수섹션_ptChkRelT { get; set; } = new Draw.Point(1800, 255);
 
     // 버튼들
-    public Draw.Point 접수등록Page_접수_목록초기화Btn_ptRelS { get; set; } = new Draw.Point(1084, 374); // 목록초기화Btn 
     public Draw.Point 접수등록Page_접수_신규Btn_ptChkRelM { get; set; } = new Draw.Point(54, 374); // 신규Btn {X=54,Y=374}
     public Draw.Point 접수등록Page_접수_저장Btn_ptChkRelM { get; set; } = new Draw.Point(178, 374); // 저장Btn {X=178,Y=374}
+    public Draw.Point 접수등록Page_접수_화물취소Btn_ptChkRelM { get; set; } = new Draw.Point(301, 374); // 화물취소Btn {X=301,Y=374}
+    public Draw.Point 접수등록Page_접수_화물복사Btn_ptChkRelM { get; set; } = new Draw.Point(404, 374); // 화물복사Btn {X=404,Y=374}
+    public Draw.Point 접수등록Page_접수_재접수Btn_ptChkRelM { get; set; } = new Draw.Point(507, 374); // 재접수Btn {X=507,Y=374}
+    public Draw.Point 접수등록Page_접수_목록초기화Btn_ptRelS { get; set; } = new Draw.Point(1084, 374); // 목록초기화Btn 
 
     // 상차지
     public Draw.Rectangle 접수등록Page_접수_상차지권역_rcChkRelM { get; set; } = new Draw.Rectangle(106, 48, 101, 20); // {X=105,Y=45,Width=103,Height=26}
@@ -98,7 +101,7 @@ public class OnecallInfo_File
         //new CommonModel_ComboBox("", "5t플축", new Draw.Point(45, 316)), // 5t플축
 
         new CommonModel_ComboBox("8t", "8t", new Draw.Point(45, 338)), // 8t
-        new CommonModel_ComboBox("", "9.5t", new Draw.Point(45, 360)), // 9.5t
+        new CommonModel_ComboBox("9.5t", "9.5t", new Draw.Point(45, 360)), // 9.5t
         new CommonModel_ComboBox("11t", "11t", new Draw.Point(45, 382)), // 11t
         new CommonModel_ComboBox("14t", "14t", new Draw.Point(45, 404)), // 14t
         //new CommonModel_ComboBox("", "16t", new Draw.Point(45, 426)), // 16t
@@ -126,13 +129,16 @@ public class OnecallInfo_File
           new CommonModel_ComboBox("호루", "호로", new Draw.Point(45, 250)),          // 호로
           new CommonModel_ComboBox("냉동탑", "냉동탑", new Draw.Point(45, 272)),        // 냉동탑
           new CommonModel_ComboBox("리프트탑", "탑리프트", new Draw.Point(45, 294)),      // 탑리프트
-          new CommonModel_ComboBox("츄레라", "추레라", new Draw.Point(45, 316)),        // 추레라
+          //new CommonModel_ComboBox("츄레라", "추레라", new Draw.Point(45, 316)),        // 추레라
        
           new CommonModel_ComboBox("다마", "다마스", new Draw.Point(45, 338)),        // 다마스
           new CommonModel_ComboBox("라보", "라보", new Draw.Point(45, 360)),          // 라보
           new CommonModel_ComboBox("리프트카고", "카고리프트", new Draw.Point(45, 382)),    // 카고리프트
           new CommonModel_ComboBox("무진동", "무진동", new Draw.Point(45, 404)),        // 무진동
+
           new CommonModel_ComboBox("냉장윙", "냉장윙", new Draw.Point(45, 426)),        // 냉장윙
+          new CommonModel_ComboBox("냉장플축윙", "냉장윙", new Draw.Point(45, 426)),        // 냉장윙
+          new CommonModel_ComboBox("냉장플축윙리", "냉장윙", new Draw.Point(45, 426)),        // 냉장윙
        
           new CommonModel_ComboBox("초장축", "초장축", new Draw.Point(45, 448)),        // 초장축
     };

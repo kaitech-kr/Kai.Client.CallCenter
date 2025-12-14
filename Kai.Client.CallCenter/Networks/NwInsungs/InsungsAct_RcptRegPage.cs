@@ -18,6 +18,11 @@ public partial class InsungsAct_RcptRegPage
 {
     #region 1. Variables - 변수
     /// <summary>
+    /// OFR 가중치
+    /// </summary>
+    private const double c_dOfrWeight = 0.8;
+
+    /// <summary>
     /// 컬럼 너비 허용 오차 (픽셀)
     /// </summary>
     private const int COLUMN_WIDTH_TOLERANCE = 1;
@@ -491,7 +496,7 @@ public partial class InsungsAct_RcptRegPage
                 for (int i = 0; i < columns; i++)
                 {
                     Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[i].nLeft, headerGab, listLW[i].nWidth, textHeight);
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: 0.9, bEdit: bEdit);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
 
                     m_RcptPage.DG오더_ColumnTexts[i] = result?.strResult ?? string.Empty;
                 }
@@ -629,7 +634,7 @@ public partial class InsungsAct_RcptRegPage
         for (int x = 0; x < columns; x++)
         {
             Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
-            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: 0.9, bEdit: bEdit);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
 
             texts[x] = result?.strResult;
         }
@@ -1153,7 +1158,7 @@ public partial class InsungsAct_RcptRegPage
 
                     if (bmpExact == null) continue;
 
-                    StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit, dWeight: 0.9, bEdit);
+                    StdResult_String result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpExact, bEdit, dWeight: c_dOfrWeight, bEdit);
 
                     bmpExact?.Dispose();
 

@@ -22,18 +22,19 @@ namespace Kai.Client.CallCenter.Networks;
 /// </summary>
 public class NwCargo24 : IExternalApp
 {
-    #region Static Configuration (appsettings.json에서 로드)
+    #region 1. Static Configuration - 정적 설정
     public static bool s_Use { get; set; } = false;
     public static string s_Id { get; set; } = string.Empty;
     public static string s_Pw { get; set; } = string.Empty;
     public static string s_AppPath { get; set; } = string.Empty;
     #endregion
 
-    #region Private Fields
+    #region 2. Private Fields - 필드
     private Cargo24Context m_Context;
     private long m_lRestCount = 0; // 자동배차 할일 없을 때 카운터 (주기적 조회용)
     private int m_nDatagridFailCount = 0; // Datagrid 연속 실패 카운터
     private const int MAX_DATAGRID_FAIL_COUNT = 3; // 3회 연속 실패 시 비활성화
+    private const double c_dOfrWeight = 0.7;
 
     /// <summary>
     /// Cargo24 SeqNo 가져오기
@@ -41,7 +42,7 @@ public class NwCargo24 : IExternalApp
     private string GetCargo24Seqno(AutoAllocModel item) => item.NewOrder.Cargo24;
     #endregion
 
-    #region IExternalApp 구현
+    #region 3. IExternalApp Implementation - 인터페이스 구현
     public bool IsUsed => s_Use;
     public string AppName => StdConst_Network.CARGO24;
 
@@ -316,7 +317,7 @@ public class NwCargo24 : IExternalApp
                     var bmpTot = OfrService.CaptureScreenRect_InWndHandle(m_Context.MemInfo.RcptPage.DG오더_hWnd, rcTotCell);
                     if (bmpTot != null)
                     {
-                        var result = await OfrWork_Common.OfrStr_SeqCharAsync(bmpTot, 0.7, bEdit: false);
+                        var result = await OfrWork_Common.OfrStr_SeqCharAsync(bmpTot, c_dOfrWeight, bEdit: false);
                         nThisTotCount = int.TryParse(new string(result.strResult?.Where(char.IsDigit).ToArray() ?? Array.Empty<char>()), out int n) ? n : -1;
                         bmpTot.Dispose();
 
@@ -550,7 +551,7 @@ public class NwCargo24 : IExternalApp
     }
     #endregion
 
-    #region Dispose
+    #region 4. Dispose - 리소스 해제
     private bool disposedValue;
 
     protected virtual void Dispose(bool disposing)
@@ -574,7 +575,7 @@ public class NwCargo24 : IExternalApp
     }
     #endregion
 
-    #region 생성자
+    #region 5. Constructor - 생성자
     /// <summary>
     /// 화물24시 생성자
     /// </summary>
@@ -586,7 +587,7 @@ public class NwCargo24 : IExternalApp
     }
     #endregion
 
-    #region Test Methods (개발/디버깅용)
+    #region 6. Test Methods - 테스트 함수
     /// <summary>
     /// UpdaterWorkAsync 테스트
     /// </summary>

@@ -223,7 +223,7 @@ public class InsungsAct_App
             if (pw != m_Context.Pw) Std32Window.SetWindowCaption(m_Context.MemInfo.Splash.PwWnd_hWnd, m_Context.Pw); // 비밀번호를 쓴다
             //Std32Window.SetWindowTopMost(m_Context.MemInfo.Splash.TopWnd_hWnd, false); // TopMost를 해제한다
             //Std32Key_Msg.KeyPost_Click(m_Context.MemInfo.Splash.PwWnd_hWnd, StdCommon32.VK_RETURN); // 아래의 LoginBtn을 클릭해도 됨
-            Std32Key_Msg.KeyPost_Down(m_Context.MemInfo.Splash.PwWnd_hWnd, StdCommon32.VK_RETURN); // 엔터키를 누른다
+            await Std32Key_Msg.KeyPost_DownAsync(m_Context.MemInfo.Splash.PwWnd_hWnd, StdCommon32.VK_RETURN); // 엔터키를 누른다
             //Std32Mouse_Post.MousePost_ChkNclickLeft_ptRel(m_Context.MemInfo.Splash.hWndLoginBtn); // 이 방식도 됨
             StdWin32.BlockInput(false); // BlockInput - 마우스와 키보드 입력을 해제한다
             await Task.Delay(300); // 0.3초 대기 - 너무 짧으면 안됨

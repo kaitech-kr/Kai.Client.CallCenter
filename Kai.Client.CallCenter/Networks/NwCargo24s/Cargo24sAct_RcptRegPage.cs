@@ -25,7 +25,12 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 /// </summary>
 public partial class Cargo24sAct_RcptRegPage
 {
-    #region Variables
+    #region 1. Variables - 변수
+    /// <summary>
+    /// OFR 가중치
+    /// </summary>
+    private const double c_dOfrWeight = 0.7;
+
     /// <summary>
     /// Datagrid 컬럼 헤더 정보 배열 (22개)
     /// </summary>
@@ -55,7 +60,7 @@ public partial class Cargo24sAct_RcptRegPage
         new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 150 },
     };
 
-    #region Constants
+    #region 1-1. Constants - 상수
     // 컬럼 인덱스
     public const int c_nCol순번 = 0;
     public const int c_nCol상태 = 1;
@@ -89,7 +94,7 @@ public partial class Cargo24sAct_RcptRegPage
     #endregion
     #endregion
 
-    #region Context Reference
+    #region 2. Context Reference - 컨텍스트 참조
     /// <summary>
     /// Context에 대한 읽기 전용 참조
     /// </summary>
@@ -105,7 +110,7 @@ public partial class Cargo24sAct_RcptRegPage
     private Cargo24sInfo_Mem.RcptRegPage m_RcptPage => m_MemInfo.RcptPage;
     #endregion
 
-    #region Constructor
+    #region 3. Constructor - 생성자
     /// <summary>
     /// 생성자 - Context를 받아서 초기화
     /// </summary>
@@ -116,7 +121,7 @@ public partial class Cargo24sAct_RcptRegPage
     }
     #endregion
 
-    #region 초기화용 함수들
+    #region 4. Initialize - 초기화
     /// <summary>
     /// 접수등록 페이지 초기화
     /// Cargo24는 로그인 후 자동으로 접수등록Page를 열므로 바메뉴 클릭 불필요
@@ -380,7 +385,7 @@ public partial class Cargo24sAct_RcptRegPage
                 for (int i = 1; i < m_ReceiptDgHeaderInfos.Length; i++)
                 {
                     Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[i].nLeft, TARGET_ROW, listLW[i].nWidth, OFR_HEIGHT);
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, 0.9, bEdit: bEdit);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, c_dOfrWeight, bEdit: bEdit);
 
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }
@@ -662,7 +667,7 @@ public partial class Cargo24sAct_RcptRegPage
             {
                 Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[x].nLeft, HEADER_GAB, listLW[x].nWidth, OFR_HEIGHT);
 
-                var resultChSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcTmp, bInvertRgb: false, bTextSave: true, 0.9, bEdit: bEdit);
+                var resultChSet = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcTmp, bInvertRgb: false, bTextSave: true, c_dOfrWeight, bEdit: bEdit);
 
                 if (string.IsNullOrEmpty(resultChSet.strResult))
                 {
@@ -762,7 +767,7 @@ public partial class Cargo24sAct_RcptRegPage
     }
     #endregion
 
-    #region 자동배차 - Kai신규 관련함수들
+    #region 5. AutoAlloc NewOrder - 자동배차 신규
     /// <summary>
     /// 신규 주문 등록 확인 (Kai에만 존재, 화물24시에 없음)
     /// </summary>
@@ -1180,7 +1185,7 @@ public partial class Cargo24sAct_RcptRegPage
     }
     #endregion
 
-    #region 자동배차 - Kai변경 관련함수들
+    #region 6. AutoAlloc UpdateOrder - 자동배차 변경
     /// <summary>
     /// Kai DB에서 업데이트된 주문을 Cargo24 앱에 반영
     /// </summary>
@@ -1221,8 +1226,7 @@ public partial class Cargo24sAct_RcptRegPage
     /// <summary>
     /// 수정 팝업 열기 (Datagrid 로우 더블클릭) → UpdateOrderToPopupAsync 호출
     /// </summary>
-    public async Task<CommonResult_AutoAllocProcess> OpenEditPopupAsync(
-        AutoAllocModel item, int rowIndex, string targetState, TbOrder order, CancelTokenControl ctrl)
+    public async Task<CommonResult_AutoAllocProcess> OpenEditPopupAsync(AutoAllocModel item, int rowIndex, string targetState, TbOrder order, CancelTokenControl ctrl)
     {
         try
         {
@@ -1296,8 +1300,7 @@ public partial class Cargo24sAct_RcptRegPage
     /// - order: 내용 수정 (null이면 스킵)
     /// - 공통: 저장 버튼 클릭
     /// </summary>
-    public async Task<CommonResult_AutoAllocProcess> UpdateOrderToPopupAsync(
-        AutoAllocModel item, IntPtr hWndPopup, string targetState, TbOrder order, CancelTokenControl ctrl)
+    public async Task<CommonResult_AutoAllocProcess> UpdateOrderToPopupAsync(AutoAllocModel item, IntPtr hWndPopup, string targetState, TbOrder order, CancelTokenControl ctrl)
     {
         try
         {
@@ -1652,7 +1655,7 @@ public partial class Cargo24sAct_RcptRegPage
     }
     #endregion
 
-    #region 자동배차 - 하물24시 상태관리 관련함수들
+    #region 7. Status Management - 상태관리
     #endregion
 }
 #nullable restore

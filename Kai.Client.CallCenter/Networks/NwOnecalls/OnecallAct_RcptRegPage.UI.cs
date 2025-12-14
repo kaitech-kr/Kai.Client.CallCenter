@@ -70,6 +70,190 @@ public partial class OnecallAct_RcptRegPage
     }
 
     /// <summary>
+    /// 버튼 클릭 → 확인창("예") 처리 → 버튼 Disabled 대기
+    /// </summary>
+    private async Task<bool> Click버튼WaitDisableAsync(IntPtr hTarget, string buttonName, CancelTokenControl ctrl)
+    {
+        // 1. 버튼 클릭
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(hTarget);
+
+        // 2. 확인창 찾기 → "예" 클릭
+        (IntPtr hWndParent, IntPtr hWndYesBtn) = (IntPtr.Zero, IntPtr.Zero);
+        for (int i = 0; i < c_nRepeatMany; i++)
+        {
+            await Task.Delay(c_nWaitShort, ctrl.Token);
+            (hWndParent, hWndYesBtn) = Std32Window.FindMainWindow_EmptyCaption_HavingChildButton(mInfo.Splash.TopWnd_uProcessId, "예");
+            if (hWndYesBtn != IntPtr.Zero) break;
+        }
+        if (hWndYesBtn == IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{AppName}] {buttonName} 확인창 찾기 실패");
+            return false;
+        }
+
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYesBtn);
+
+        // 3. 버튼 Disabled 대기
+        for (int i = 0; i < c_nRepeatMany; i++)
+        {
+            await Task.Delay(c_nWaitShort, ctrl.Token);
+            if (!Std32Window.IsWindowEnabled(hTarget))
+            {
+                Debug.WriteLine($"[{AppName}] {buttonName} 성공 확인 (버튼 Disabled)");
+                return true;
+            }
+        }
+
+        Debug.WriteLine($"[{AppName}] {buttonName} 버튼 Disabled 대기 실패");
+        return false;
+    }
+
+    /// <summary>
+    /// 화물중량 설정 (검증 포함, 최대 3회 반복)
+    /// </summary>
+    private async Task<StdResult_Status> Set화물중량Async(string maxWeight, CancelTokenControl ctrl, int nRepeate = c_nRepeatShort)
+    {
+        for (int retry = 0; retry < nRepeate; retry++)
+        {
+            // 1. 맨 앞에 클릭
+            await Std32Mouse_Post.MousePostAsync_ClickLeft_RightBottom(mRcpt.접수섹션_hWnd화물중량, 1, 1);
+
+            // 2. Ctrl+A 전체 선택
+            await Task.Delay(c_nWaitUltraShort);
+            await Simulation_Keyboard.KeyPost_CtrlA_SelectAllAsync(mRcpt.접수섹션_hWnd화물중량);
+
+            // 3. VK로 문자열 입력
+            await Task.Delay(c_nWaitUltraShort);
+            await Std32Key_Msg.PostKeyDown_VkStringAsync(mRcpt.접수섹션_hWnd화물중량, maxWeight);
+
+            // 4. 검증
+            await Task.Delay(c_nWaitShort);
+            string current = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd화물중량) ?? "";
+            if (current == maxWeight)
+            {
+                Debug.WriteLine($"[{AppName}] 화물중량 설정 성공: {maxWeight}");
+                return new StdResult_Status(StdResult.Success);
+            }
+
+            Debug.WriteLine($"[{AppName}] 화물중량 검증 실패 ({retry + 1}/3): 예상={maxWeight}, 실제={current}");
+        }
+
+        return new StdResult_Status(StdResult.Fail, $"화물중량 설정 실패: {maxWeight}");
+    }
+
+    /// <summary>
+    /// 저장 버튼 클릭 → (확인창 있으면 "예" 클릭) → 상/하차지 클리어 대기
+    /// </summary>
+    private async Task<StdResult_Status> SaveOrderAsync(CancelTokenControl ctrl)
+    {
+        // 1. 저장 버튼 클릭
+        await ctrl.WaitIfPausedOrCancelledAsync();
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd저장버튼);
+
+        // 2. 상/하차지 클리어 대기 (+ 확인창 처리)
+        for (int i = 0; i < c_nRepeatMany; i++)
+        {
+            await Task.Delay(c_nWaitShort, ctrl.Token);
+
+            // 확인창 있으면 "예" 클릭
+            var (hWndParent, hWndYesBtn) = Std32Window.FindMainWindow_EmptyCaption_HavingChildButton(
+                mInfo.Splash.TopWnd_uProcessId, "예");
+            if (hWndYesBtn != IntPtr.Zero)
+            {
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYesBtn);
+                await Task.Delay(c_nWaitShort, ctrl.Token);
+            }
+
+            // 상/하차지 클리어 확인
+            string caption상차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소);
+            string caption하차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd하차지주소);
+            if (string.IsNullOrEmpty(caption상차) && string.IsNullOrEmpty(caption하차))
+            {
+                Debug.WriteLine($"[{AppName}] 저장 성공 확인");
+                return new StdResult_Status(StdResult.Success);
+            }
+        }
+
+        return new StdResult_Status(StdResult.Fail, "저장 확인 실패");
+    }
+
+    /// <summary>
+    /// Edit 필드 비교 → 다르면 수정 → 검증
+    /// </summary>
+    private async Task<(bool changed, StdResult_Status result)> UpdateEditIfChangedAsync(IntPtr hWnd, string dbValue, string fieldName, CancelTokenControl ctrl)
+    {
+        string currentValue = Std32Window.GetWindowCaption(hWnd) ?? "";
+        if (currentValue == dbValue)
+            return (false, new StdResult_Status(StdResult.Success));
+
+        // 수정
+        Std32Window.SetWindowCaption(hWnd, dbValue ?? "");
+        await Task.Delay(c_nWaitShort, ctrl.Token);
+
+        // 검증
+        string afterValue = Std32Window.GetWindowCaption(hWnd) ?? "";
+        if (afterValue != (dbValue ?? ""))
+        {
+            Debug.WriteLine($"[{AppName}] {fieldName} 입력 검증 실패: 예상={dbValue}, 실제={afterValue}");
+            return (true, new StdResult_Status(StdResult.Fail, $"{fieldName} 입력 검증 실패"));
+        }
+
+        Debug.WriteLine($"[{AppName}] {fieldName} 수정: {currentValue} → {dbValue}");
+        return (true, new StdResult_Status(StdResult.Success));
+    }
+
+    /// <summary>
+    /// ComboBox 필드 비교 → 다르면 수정 (SelectComboBoxItemAsync가 검증 포함)
+    /// </summary>
+    private async Task<(bool changed, StdResult_Status result)> UpdateComboIfChangedAsync(IntPtr hWnd, CommonModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerify, string fieldName, CancelTokenControl ctrl)
+    {
+        // 현재값 OFR로 읽기
+        using (Draw.Bitmap bmpVerify = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcVerify))
+        {
+            if (bmpVerify != null)
+            {
+                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, false, dWeight: c_dOfrWeight, false);
+                if (ofrResult?.strResult == model.sYourName)
+                    return (false, new StdResult_Status(StdResult.Success));
+            }
+        }
+
+        // 수정 (SelectComboBoxItemAsync가 검증 포함)
+        await EscapeFocusAsync(ctrl.Token);
+        var result = await SelectComboBoxItemAsync(hWnd, model, hWndTop, rcVerify);
+        if (result.Result != StdResult.Success)
+        {
+            Debug.WriteLine($"[{AppName}] {fieldName} 선택 실패: {result.sErr}");
+            return (true, result);
+        }
+
+        Debug.WriteLine($"[{AppName}] {fieldName} 수정: → {model.sYourName}");
+        return (true, new StdResult_Status(StdResult.Success));
+    }
+
+    /// <summary>
+    /// CheckBox 필드 비교 → 다르면 수정 (SetCheckBoxAsync가 검증 포함)
+    /// </summary>
+    private async Task<(bool changed, StdResult_Status result)> UpdateCheckBoxIfChangedAsync(IntPtr hWnd, Draw.Rectangle rcOfrRelS, bool dbValue, string fieldName, CancelTokenControl ctrl)
+    {
+        // 현재값 OFR로 읽기
+        var resultChk = await OfrWork_Insungs.OfrImgReChkValue_RectInHWndAsync(mRcpt.접수섹션_hWndTop, rcOfrRelS, true);
+        if (resultChk.bResult == dbValue)
+            return (false, new StdResult_Status(StdResult.Success));
+
+        // 수정 (SetCheckBoxAsync가 검증 포함)
+        var result = await SetCheckBoxAsync(hWnd, rcOfrRelS, dbValue, fieldName);
+        if (result.Result != StdResult.Success)
+        {
+            Debug.WriteLine($"[{AppName}] {fieldName} 설정 실패: {result.sErr}");
+            return (true, result);
+        }
+
+        Debug.WriteLine($"[{AppName}] {fieldName} 수정: → {dbValue}");
+        return (true, new StdResult_Status(StdResult.Success));
+    }
+
+    /// <summary>
     /// 헤더 캡처 및 컬럼 경계 검출 헬퍼
     /// </summary>
     private (Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns) CaptureAndDetectColumnBoundaries(Draw.Rectangle rcHeader, int targetRow)
@@ -102,7 +286,7 @@ public partial class OnecallAct_RcptRegPage
         {
             Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
 
-            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: 0.8, bEdit: bEdit);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
 
             texts[x] = result?.strResult;
         }
@@ -299,7 +483,7 @@ public partial class OnecallAct_RcptRegPage
                     bmpCheck = OfrService.CaptureScreenRect_InWndHandle(mRcpt.접수섹션_hWndTop, rc권역);
                     if (bmpCheck == null) continue;
 
-                    resultStr = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpCheck, i == c_nRepeatShort, dWeight: 0.7, i == c_nRepeatShort);
+                    resultStr = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpCheck, i == c_nRepeatShort, dWeight: c_dOfrWeight, i == c_nRepeatShort);
                     if (!string.IsNullOrEmpty(resultStr.sErr)) continue;
 
                     if (resultStr.strResult.Length > 1) break;
@@ -373,7 +557,7 @@ public partial class OnecallAct_RcptRegPage
                     continue;
                 }
 
-                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, true, dWeight: 0.9, i == c_nRepeatShort);
+                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, true, dWeight: c_dOfrWeight, i == c_nRepeatShort);
 
                 if (ofrResult == null || string.IsNullOrEmpty(ofrResult.strResult))
                 {
@@ -550,7 +734,7 @@ public partial class OnecallAct_RcptRegPage
                 try
                 {
                     // 마지막 시도에서만 bEdit=true (수동 입력 대화상자)
-                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpCell, 0.7, i == retryCount);
+                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpCell, c_dOfrWeight, i == retryCount);
 
                     // ☒ 없는 완전한 결과만 성공
                     if (!string.IsNullOrEmpty(resultSeqno.strResult) && !resultSeqno.strResult.Contains('☒'))
@@ -660,7 +844,7 @@ public partial class OnecallAct_RcptRegPage
 
                 try
                 {
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpTotal, bTextSave: false, dWeight: 0.7, bEdit: i == retryCount);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpTotal, bTextSave: false, dWeight: c_dOfrWeight, bEdit: i == retryCount);
                     int nTotal = int.TryParse(new string(result.strResult?.Where(char.IsDigit).ToArray() ?? Array.Empty<char>()), out int n) ? n : -1;
 
                     if (nTotal >= 0)
@@ -849,7 +1033,7 @@ public partial class OnecallAct_RcptRegPage
             if (bmpNo == null) continue;
 
             // 2. OFR (숫자 - 단음소)
-            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, 0.9, false);
+            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, c_dOfrWeight, false);
             bmpNo.Dispose();
 
             if (!string.IsNullOrEmpty(resultNo.strResult))
@@ -1107,7 +1291,7 @@ public partial class OnecallAct_RcptRegPage
     public async Task<StdResult_String> GetRowSeqnoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectSeqno, bool bInvertRgb, CancelTokenControl ctrl)
     {
         await ctrl.WaitIfPausedOrCancelledAsync();
-        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, 0.7); // 영역추출 못할시 가중치조정
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, c_dOfrWeight); // 영역추출 못할시 가중치조정
     }
 
     /// <summary>
@@ -1119,7 +1303,7 @@ public partial class OnecallAct_RcptRegPage
     public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, int rowIdx)
     {
         Draw.Rectangle rectStatus = mRcpt.DG오더_rcRelSmallCells[c_nCol처리상태, rowIdx];
-        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb: false, bTextSave: true, 0.7, bEdit: true);
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb: false, bTextSave: true, c_dOfrWeight, bEdit: true);
     }
     #endregion
 

@@ -1350,47 +1350,47 @@ public partial class Order_StatusPage : Page
                 switch (sTruckDetail)
                 {
                     // 다른 텍스트
-                    case "전체": return "전체";
-                    case "카고/윙": return "카고/윙";
-                    case "카고": return "카고";
-                    case "플러스카고": return "플러스카고";
-                    case "축카고": return "축카고";
+                    case "전체": return "전체"; //
+                    case "카고/윙": return "카고/윙"; // 
+                    case "카고": return "카고"; // 
+                    //case "플러스카고": return "플러스카고";
+                    //case "축카고": return "축카고";
 
-                    case "플축카고": return "플축카고";
-                    case "리프트카고": return "리프트카고";
-                    case "플러스리": return "플러스리";
-                    case "플축리": return "플축리";
-                    case "윙바디": return "윙바디";
+                    //case "플축카고": return "플축카고";
+                    case "리프트카고": return "리프트카고"; // 
+                    //case "플러스리": return "플러스리";
+                    //case "플축리": return "플축리";
+                    case "윙바디": return "윙바디"; // 
 
-                    case "플러스윙": return "플러스윙";
-                    case "윙축": return "윙축";
-                    case "플축윙": return "플축윙";
-                    case "리프트윙": return "리프트윙";
-                    case "플러스윙리": return "플러스윙리";
+                    case "플러스윙": return "플러스윙"; //
+                    //case "윙축": return "윙축";
+                    //case "플축윙": return "플축윙";
+                    case "리프트윙": return "리프트윙"; // 
+                    //case "플러스윙리": return "플러스윙리";
 
-                    case "플축윙리": return "플축윙리";
-                    case "탑": return "탑";
-                    case "리프트탑": return "리프트탑";
-                    case "호루": return "호루";
-                    case "리프트호루": return "리프트호루";
+                    //case "플축윙리": return "플축윙리";
+                    case "탑": return "탑"; // 
+                    case "리프트탑": return "리프트탑"; // 
+                    case "호루": return "호루"; // 
+                    case "리프트호루": return "리프트호루"; // 
 
-                    case "자바라": return "자바라";
-                    case "리프트자바라": return "리프트자바라";
-                    case "냉동탑": return "냉동탑";
-                    case "냉장탑": return "냉장탑";
-                    case "냉동윙": return "냉동윙";
+                    //case "자바라": return "자바라";
+                    //case "리프트자바라": return "리프트자바라";
+                    case "냉동탑": return "냉동탑"; // 
+                    case "냉장탑": return "냉장탑"; // 
+                    //case "냉동윙": return "냉동윙";
 
-                    case "냉장윙": return "냉장윙";
-                    case "냉동탑리": return "냉동탑리";
-                    case "냉장탑리": return "냉장탑리";
+                    case "냉장윙": return "냉장윙"; // 
+                    //case "냉동탑리": return "냉동탑리";
+                    //case "냉장탑리": return "냉장탑리";
                     case "냉동플축윙": return "냉동플축윙";
                     case "냉장플축윙": return "냉장플축윙";
 
                     case "냉동플축윙리": return "냉동플축윙리";
                     case "냉장플축윙리": return "냉장플축윙리";
                     case "평카": return "평카";
-                    case "초장축": return "초장축";
-                    case "무진동": return "무진동";
+                    case "초장축": return "초장축"; // 
+                    case "무진동": return "무진동"; // 
 
                     default: return ""; 
                 }

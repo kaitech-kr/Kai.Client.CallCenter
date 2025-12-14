@@ -16,7 +16,7 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 
 public partial class Cargo24sAct_RcptRegPage
 {
-    #region Helper Methods
+    #region 1. Helpers - 공용 헬퍼
     /// <summary>
     /// StatusBtn ã�� ���� �޼��� (�μ� ���� ����)
     /// </summary>
@@ -105,9 +105,6 @@ public partial class Cargo24sAct_RcptRegPage
 
         return issues;
     }
-    #endregion
-
-    #region Utility Methods
     /// <summary>
     /// 접수등록 페이지가 초기화되었는지 확인
     /// </summary>
@@ -125,491 +122,46 @@ public partial class Cargo24sAct_RcptRegPage
     }
     #endregion
 
-    #region 조회 버튼
+    #region 2. DG State - DG오더 UI 상태
     /// <summary>
-    /// 조회 버튼 클릭 (재시도 루프 방식)
-    /// - 조회버튼 밝기 변화로 로딩 완료 판단
+    /// DG오더의 유효 로우 수 반환
+    /// - 배경 밝기(50)보다 어두우면 데이터 있는 로우로 판단
     /// </summary>
-    /// <param name="ctrl">취소 토큰</param>
-    /// <param name="retryCount">재시도 횟수</param>
-    /// <returns>Success: 조회 완료, Fail: 조회 실패</returns>
-    public async Task<StdResult_Status> Click조회버튼Async(CancelTokenControl ctrl, int retryCount = 3)
+    public StdResult_Int GetValidRowCount()
     {
         try
         {
-            for (int i = 1; i <= retryCount; i++)
+            Draw.Rectangle[,] rects = m_RcptPage.DG오더_rcRelCells;
+            if (rects == null)
+                return new StdResult_Int("DG오더_rcRelCells 미초기화", "GetValidRowCount_01");
+
+            int nBackgroundBright = 50;
+            int nThreshold = nBackgroundBright - 1;
+            int nValidRows = 0;
+
+            for (int y = 0; y < m_FileInfo.접수등록Page_DG오더_rowCount; y++)
             {
-                await ctrl.WaitIfPausedOrCancelledAsync();
+                int nCurBright = OfrService.GetPixelBrightnessFrmWndHandle(
+                    m_RcptPage.DG오더_hWnd,
+                    rects[0, y].Right,
+                    rects[0, y].Top + 6);
 
-                // 조회 버튼 클릭
-                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
-
-                // 조회버튼 밝기 변화 대기
-                StdResult_Status resultSts = await WaitBrightnessLoadedAsync(ctrl);
-
-                if (resultSts.Result == StdResult.Success || resultSts.Result == StdResult.Skip)
-                {
-                    return new StdResult_Status(StdResult.Success, "조회 완료");
-                }
-
-                // Fail = 타임아웃 → 재시도
-                Debug.WriteLine($"[{m_Context.AppName}] 조회 실패 (시도 {i}회): 타임아웃");
-                await Task.Delay(c_nWaitNormal, ctrl.Token);
-            }
-
-            return new StdResult_Status(StdResult.Fail, $"조회 버튼 클릭 {retryCount}회 모두 실패", "Cargo24sAct_RcptRegPage/Click조회버튼Async_01");
-        }
-        catch (Exception ex)
-        {
-            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "Cargo24sAct_RcptRegPage/Click조회버튼Async_999");
-        }
-    }
-
-    /// <summary>
-    /// 조회버튼 밝기 변화 대기 (로딩 완료 판단)
-    /// Phase 1: 밝기 변화 대기 (로딩 시작 감지, 최대 250ms)
-    /// Phase 2: 밝기 복원 대기 (로딩 완료 감지, 최대 timeoutSec초)
-    /// </summary>
-    private async Task<StdResult_Status> WaitBrightnessLoadedAsync(CancelTokenControl ctrl, int timeoutSec = 50)
-    {
-        try
-        {
-            int nOrigBrightness = m_RcptPage.CmdBtn_nBrightness조회;
-            int nBrightnessTolerance = 10; // 밝기 허용 오차
-
-            // Phase 1: 밝기 변화 대기 (로딩 시작 감지, 최대 250ms)
-            bool bBrightnessChanged = false;
-            for (int i = 0; i < c_nWaitLong; i++) // 250ms
-            {
-                await ctrl.WaitIfPausedOrCancelledAsync();
-
-                int nCurrentBrightness = OfrService.GetPixelBrightnessFrmWndHandle(
-                    m_RcptPage.CmdBtn_hWnd조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회L);
-
-                if (Math.Abs(nCurrentBrightness - nOrigBrightness) > nBrightnessTolerance)
-                {
-                    bBrightnessChanged = true;
+                if (nCurBright < nThreshold)
+                    nValidRows++;
+                else
                     break;
-                }
-                await Task.Delay(1, ctrl.Token);
             }
 
-            if (!bBrightnessChanged)
-            {
-                // 밝기 변화 없음 → Skip (이미 로딩 완료)
-                return new StdResult_Status(StdResult.Skip);
-            }
-
-            // Phase 2: 밝기 복원 대기 (로딩 완료 감지, 최대 timeoutSec초)
-            for (int i = 0; i < timeoutSec * 10; i++) // 100ms 간격
-            {
-                await ctrl.WaitIfPausedOrCancelledAsync();
-
-                int nCurrentBrightness = OfrService.GetPixelBrightnessFrmWndHandle(
-                    m_RcptPage.CmdBtn_hWnd조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회L);
-
-                if (Math.Abs(nCurrentBrightness - nOrigBrightness) <= nBrightnessTolerance)
-                {
-                    return new StdResult_Status(StdResult.Success);
-                }
-                await Task.Delay(100, ctrl.Token);
-            }
-
-            return new StdResult_Status(StdResult.Fail, $"로딩 대기 시간 초과 ({timeoutSec}초)", "Cargo24sAct_RcptRegPage/WaitBrightnessLoadedAsync_01");
+            return new StdResult_Int(nValidRows);
         }
         catch (Exception ex)
         {
-            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "Cargo24sAct_RcptRegPage/WaitBrightnessLoadedAsync_999");
+            return new StdResult_Int(StdUtil.GetExceptionMessage(ex), "GetValidRowCount_999");
         }
     }
     #endregion
 
-    #region 스크롤 함수
-    /// <summary>
-    /// Page Down 스크롤 (VK_NEXT)
-    /// </summary>
-    public async Task ScrollPageDownAsync(int count = 1, int delayMs = 100)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_NEXT);
-            if (i < count - 1) await Task.Delay(delayMs);
-        }
-    }
-
-    /// <summary>
-    /// Page Up 스크롤 (VK_PRIOR)
-    /// </summary>
-    public async Task ScrollPageUpAsync(int count = 1, int delayMs = 100)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_PRIOR);
-            if (i < count - 1) await Task.Delay(delayMs);
-        }
-    }
-
-    /// <summary>
-    /// Row Down 스크롤 (VK_DOWN)
-    /// </summary>
-    public async Task ScrollRowDownAsync(int count = 1, int delayMs = 100)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_DOWN);
-            if (i < count - 1) await Task.Delay(delayMs);
-        }
-    }
-
-    /// <summary>
-    /// Row Up 스크롤 (VK_UP)
-    /// </summary>
-    public async Task ScrollRowUpAsync(int count = 1, int delayMs = 100)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_UP);
-            if (i < count - 1) await Task.Delay(delayMs);
-        }
-    }
-    #endregion
-
-    #region 로우 관련 함수들
-    /// <summary>
-    /// 특정 로우가 셀렉트되었는지 확인 (순번 컬럼에 숫자가 없으면 셀렉트됨)
-    /// </summary>
-    /// <param name="rowIndex">로우 인덱스 (0-based)</param>
-    /// <returns>true: 셀렉트됨, false: 셀렉트 안됨, null: 판단 불가</returns>
-    public async Task<bool?> IsRowSelectedAsync(int rowIndex)
-    {
-        var rcCell = m_RcptPage.DG오더_rcRelCells[0, rowIndex]; // [col=0, row] 순번 컬럼
-        var bmp = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcCell);
-        if (bmp == null) return null;
-
-        var result = await OfrWork_Common.OfrStr_SeqCharAsync(bmp, 0.7, bEdit: false);
-        bmp.Dispose();
-
-        if (string.IsNullOrEmpty(result.strResult)) return null;
-
-        // 숫자가 있으면 셀렉트 안됨, 없으면 셀렉트됨 (화살표)
-        string digits = new string(result.strResult.Where(char.IsDigit).ToArray());
-        return string.IsNullOrEmpty(digits);
-    }
-
-    /// <summary>
-    /// 특정 로우를 클릭하여 셀렉트
-    /// </summary>
-    /// <param name="rowIndex">로우 인덱스 (0-based)</param>
-    public async Task SelectRowAsync(int rowIndex)
-    {
-        var rcCell = m_RcptPage.DG오더_rcRelCells[0, rowIndex]; // [col=0, row]
-        Draw.Point ptClick = new Draw.Point(rcCell.Left + rcCell.Width / 2, rcCell.Top + rcCell.Height / 2);
-        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptClick);
-        await Task.Delay(c_nWaitShort);
-    }
-
-    /// <summary>
-    /// 첫 로우가 셀렉트되어 있는지 확인하고, 아니면 셀렉트
-    /// </summary>
-    public async Task EnsureFirstRowSelectedAsync()
-    {
-        bool? isSelected = await IsRowSelectedAsync(0);
-        if (isSelected != true)
-        {
-            await SelectRowAsync(0);
-        }
-    }
-
-    /// <summary>
-    /// 마지막 로우가 셀렉트되어 있는지 확인하고, 아니면 셀렉트
-    /// </summary>
-    /// <param name="lastRowIndex">마지막 로우 인덱스 (0-based, 기본값 24)</param>
-    public async Task EnsureLastRowSelectedAsync(int lastRowIndex = 24)
-    {
-        bool? isSelected = await IsRowSelectedAsync(lastRowIndex);
-        if (isSelected != true)
-        {
-            await SelectRowAsync(lastRowIndex);
-        }
-    }
-
-    /// <summary>
-    /// 현재 페이지의 첫 로우 순번을 읽습니다.
-    /// 선택된 로우는 화살표가 표시되므로, 다른 로우를 읽어서 계산합니다.
-    /// </summary>
-    /// <param name="nValidRowCount">현재 페이지의 유효 로우 수 (총계가 rowCount보다 작으면 총계)</param>
-    /// <returns>첫 로우 순번 (-1: 실패)</returns>
-    public async Task<int> ReadFirstRowNumAsync(int nValidRowCount)
-    {
-        // 1건만 있는 경우 → 첫 로우 = 1
-        if (nValidRowCount == 1)
-        {
-            Debug.WriteLine($"[Cargo24/ReadFirstRowNum] 1건만 있음 → 첫 로우 = 1");
-            return 1;
-        }
-
-        // 여러 행이 있는 경우 → 숫자가 있는 셀을 찾아서 계산
-        for (int y = 0; y < nValidRowCount; y++)
-        {
-            var rcCell = m_RcptPage.DG오더_rcRelCells[0, y]; // [col=0, row=y] 순번 컬럼
-            var bmp = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcCell);
-            if (bmp == null) continue;
-
-            var result = await OfrWork_Common.OfrStr_SeqCharAsync(bmp, 0.7, bEdit: false);
-            bmp.Dispose();
-
-            if (string.IsNullOrEmpty(result.strResult)) continue;
-
-            // 숫자만 추출
-            string digits = new string(result.strResult.Where(char.IsDigit).ToArray());
-            if (string.IsNullOrEmpty(digits)) continue; // 화살표 등 숫자가 아닌 경우 skip
-
-            if (int.TryParse(digits, out int curNum))
-            {
-                // 첫 로우 순번 계산: curNum - y (y는 0-based index)
-                int firstNum = curNum - y;
-                Debug.WriteLine($"[Cargo24/ReadFirstRowNum] y={y}, curNum={curNum} → 첫 로우 = {firstNum}");
-                return firstNum;
-            }
-        }
-
-        Debug.WriteLine($"[Cargo24/ReadFirstRowNum] 유효한 순번을 찾지 못함");
-        return -1;
-    }
-
-    /// <summary>
-    /// 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
-    /// - 인성 로직 인용
-    /// </summary>
-    /// <param name="nTotRows">총 행 수</param>
-    /// <param name="nRowsPerPage">페이지당 행 수</param>
-    /// <param name="pageIdx">페이지 인덱스 (0-based)</param>
-    /// <returns>예상 첫 로우 번호</returns>
-    public static int GetExpectedFirstRowNum(int nTotRows, int nRowsPerPage, int pageIdx)
-    {
-        // 총 페이지 수 계산
-        int nTotPage = 1;
-        if (nTotRows > nRowsPerPage)
-        {
-            nTotPage = nTotRows / nRowsPerPage;
-            if (nTotRows % nRowsPerPage > 0)
-                nTotPage += 1;
-        }
-
-        int nCurPage = pageIdx + 1;
-        int nNum = (nRowsPerPage * pageIdx) + 1;
-
-        if (nTotPage == 1) return 1;
-        if (nCurPage < nTotPage) return nNum;
-
-        // 마지막 페이지 특수 처리: 나머지 행이 있는 경우
-        if (nTotRows % nRowsPerPage == 0) return nNum;
-        else return nNum - nRowsPerPage + (nTotRows % nRowsPerPage);
-    }
-    #endregion
-
-    #region Test Methods
-    /// <summary>
-    /// DG오더 셀 영역 시각화 테스트
-    /// TransparantWnd를 사용하여 모든 셀 영역을 두께 1로 그리고 MsgBox 표시
-    /// </summary>
-    public void Test_DrawAllCellRects()
-    {
-        try
-        {
-            Debug.WriteLine($"[Cargo24/Test] Test_DrawAllCellRects 시작");
-
-            // 1. DG오더 핸들 체크
-            if (m_RcptPage.DG오더_hWnd == IntPtr.Zero)
-            {
-                System.Windows.MessageBox.Show("DG오더_hWnd가 초기화되지 않았습니다.", "오류");
-                return;
-            }
-
-            // 2. Cell Rect 배열 체크
-            if (m_RcptPage.DG오더_rcRelCells == null)
-            {
-                System.Windows.MessageBox.Show("DG오더_rcRelCells가 초기화되지 않았습니다.", "오류");
-                return;
-            }
-
-            int colCount = m_RcptPage.DG오더_rcRelCells.GetLength(0);
-            int rowCount = m_RcptPage.DG오더_rcRelCells.GetLength(1);
-            Debug.WriteLine($"[Cargo24/Test] Cell 배열: {rowCount}행 x {colCount}열");
-
-            // 3. TransparantWnd 오버레이 생성 (DG오더 위치 기준)
-            TransparantWnd.CreateOverlay(m_RcptPage.DG오더_hWnd);
-            TransparantWnd.ClearBoxes();
-
-            // 4-1. 헤더 셀 그리기 (두께 1, 파란색)
-            int cellCount = 0;
-            for (int col = 0; col < colCount; col++)
-            {
-                var rcData = m_RcptPage.DG오더_rcRelCells[col, 0]; // 첫 데이터 로우에서 x, width 가져옴
-                Draw.Rectangle rcHeader = new Draw.Rectangle(rcData.X, 4, rcData.Width, HEADER_HEIGHT - 8);
-                TransparantWnd.DrawBoxAsync(rcHeader, strokeColor: Colors.Blue, thickness: 1);
-                cellCount++;
-            }
-
-            // 4-2. 데이터 셀 그리기 (두께 1, 빨간색)
-            for (int row = 0; row < rowCount; row++)
-            {
-                for (int col = 0; col < colCount; col++)
-                {
-                    Draw.Rectangle rc = m_RcptPage.DG오더_rcRelCells[col, row];
-                    TransparantWnd.DrawBoxAsync(rc, strokeColor: Colors.Red, thickness: 1);
-                    cellCount++;
-                }
-            }
-
-            Debug.WriteLine($"[Cargo24/Test] {cellCount}개 셀 영역 그리기 완료");
-
-            // 5. MsgBox 표시 (확인 후 오버레이 삭제)
-            System.Windows.MessageBox.Show(
-                $"화물24시 DG오더 셀 영역 테스트\n\n" +
-                $"행: {rowCount}\n" +
-                $"열: {colCount}\n" +
-                $"총 셀: {cellCount}개\n\n" +
-                $"확인을 누르면 오버레이가 제거됩니다.",
-                "셀 영역 테스트");
-
-            // 6. 오버레이 삭제
-            TransparantWnd.DeleteOverlay();
-            Debug.WriteLine($"[Cargo24/Test] Test_DrawAllCellRects 완료");
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[Cargo24/Test] 예외 발생: {ex.Message}");
-            System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
-            TransparantWnd.DeleteOverlay();
-        }
-    }
-    #endregion
-
-    #region 접수/수정 창 관련함수들
-    /// <summary>
-    /// TbOrder에서 CEnum_Cg24OrderStatus 플래그 생성
-    /// </summary>
-    private static CEnum_Cg24OrderStatus Get오더타입FlagsFromKaiTable(TbOrder tbOrder)
-    {
-        CEnum_Cg24OrderStatus status = CEnum_Cg24OrderStatus.None;
-
-        //if (tbOrder.Share) status |= CEnum_Cg24OrderStatus.공유; // 화물24시는 무조건 접수=공유, 대기=미공유
-        if (tbOrder.OrderState == "접수" && tbOrder.Share) status |= CEnum_Cg24OrderStatus.공유;
-        if (tbOrder.DtReserve != null) status |= CEnum_Cg24OrderStatus.예약;
-        if (tbOrder.DeliverType == "긴급") status |= CEnum_Cg24OrderStatus.긴급;
-        if (tbOrder.DeliverType == "왕복") status |= CEnum_Cg24OrderStatus.왕복;
-        if (tbOrder.DeliverType == "경유") status |= CEnum_Cg24OrderStatus.경유;
-
-        return status;
-    }
-
-    /// <summary>
-    /// 차량톤수에 따른 라디오버튼 좌표 반환
-    /// </summary>
-    private StdResult_Point GetCarWeightWithPoint(string sCarType, string sCarWeight)
-    {
-        switch (sCarType)
-        {
-            case "다마": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel0C3);
-            case "라보": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel0C5);
-            case "트럭":
-                switch (sCarWeight)
-                {
-                    case "1t":
-                    case "1t화물": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel1C0);
-
-                    case "1.4t":
-                    case "1.4t화물": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel1C4);
-
-                    case "2.5t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel2C5);
-                    case "3.5t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel3C5);
-                    case "5t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel5);
-                    case "8t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel8);
-                    case "11t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel11);
-                    case "14t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel14);
-                    case "15t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel15);
-                    case "18t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel18);
-                    case "25t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel25);
-
-                    default: return new StdResult_Point($"모르는 톤수[{sCarWeight}]", "GetCarWeightWithPoint_01");
-                }
-            default: return new StdResult_Point($"모르는 차량종류[{sCarType}]", "GetCarWeightWithPoint_02");
-        }
-    }
-
-    /// <summary>
-    /// 인성 트럭종류 → 화물24시 트럭종류 변환
-    /// </summary>
-    private StdResult_String GetTruckDetailStringFromInsung(string sTruckDetail)
-    {
-        switch (sTruckDetail)
-        {
-            // 다른 텍스트
-            case "전체": return new StdResult_String("전체");
-            case "카고/윙": return new StdResult_String("카/윙");
-            case "플러스카고": return new StdResult_String("플러스카");
-            case "리프트카고": return new StdResult_String("리프트");
-            case "플축리": return new StdResult_String("플축카리");
-            case "축윙": return new StdResult_String("윙축");
-            case "리프트호루": return new StdResult_String("리프트호");
-
-            // 없는 차량종류
-            case "자바라":
-            case "리프트자바라":
-            case "냉동플축리":
-            case "냉장플축리":
-            case "평카":
-            case "로브이":
-            case "츄레라":
-            case "로베드":
-            case "사다리":
-            case "초장축":
-                return new StdResult_String("차종확인");
-                //return new StdResult_String($"화물24시에는 없는 트럭종류[{sTruckDetail}]", "GetTruckDetailStringFromInsung_01");
-
-            // 같은 텍스트 (전체, 카고, 축카고, 플축카고, 윙바디, 탑, 호루, 냉동탑, 냉장탑 등)
-            default: return new StdResult_String(sTruckDetail);
-        }
-    }
-
-    /// <summary>
-    /// 운송비구분에 따른 라디오버튼 좌표 반환
-    /// </summary>
-    private StdResult_Point GetFeeTypePoint(string sFeeType)
-    {
-        switch (sFeeType)
-        {
-            case "선불":
-            case "착불": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel선착불);
-
-
-
-            case "카드": //return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel카드); // 하차일 지정해야 통과
-
-            case "신용":
-            case "송금": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel인수증);
-
-            // case "수수료확인": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel수수료확인);
-
-            default: return new StdResult_Point($"모르는 요금타입[{sFeeType}]", "GetFeeTypePoint_01");
-        }
-    }
-
-    /// <summary>
-    /// 핸들 캡션에서 최대적재량 계산 (1.1배, 소수점 2자리)
-    /// </summary>
-    private static string GetMaxCargoWeightString(IntPtr hWnd)
-    {
-        string sCaption = Std32Window.GetWindowCaption(hWnd);
-        if (float.TryParse(sCaption, out float fWeight))
-        {
-            float fMax = fWeight * 1.1f;
-            return fMax.ToString("F2");
-        }
-        return sCaption; // 변환 실패 시 원본 반환
-    }
-
+    #region 3. Input Helpers - 입력 공용함수
     /// <summary>
     /// 오더상태 체크박스 일괄 설정 (Flags enum 사용)
     /// </summary>
@@ -1145,7 +697,415 @@ public partial class Cargo24sAct_RcptRegPage
             return false;
         }
     }
+    #endregion
 
+    #region 4. Converters - 데이터 변환
+    /// <summary>
+    /// TbOrder에서 CEnum_Cg24OrderStatus 플래그 생성
+    /// </summary>
+    private static CEnum_Cg24OrderStatus Get오더타입FlagsFromKaiTable(TbOrder tbOrder)
+    {
+        CEnum_Cg24OrderStatus status = CEnum_Cg24OrderStatus.None;
+
+        //if (tbOrder.Share) status |= CEnum_Cg24OrderStatus.공유; // 화물24시는 무조건 접수=공유, 대기=미공유
+        if (tbOrder.OrderState == "접수" && tbOrder.Share) status |= CEnum_Cg24OrderStatus.공유;
+        if (tbOrder.DtReserve != null) status |= CEnum_Cg24OrderStatus.예약;
+        if (tbOrder.DeliverType == "긴급") status |= CEnum_Cg24OrderStatus.긴급;
+        if (tbOrder.DeliverType == "왕복") status |= CEnum_Cg24OrderStatus.왕복;
+        if (tbOrder.DeliverType == "경유") status |= CEnum_Cg24OrderStatus.경유;
+
+        return status;
+    }
+
+    /// <summary>
+    /// 차량톤수에 따른 라디오버튼 좌표 반환
+    /// </summary>
+    private StdResult_Point GetCarWeightWithPoint(string sCarType, string sCarWeight)
+    {
+        switch (sCarType)
+        {
+            case "다마": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel0C3);
+            case "라보": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel0C5);
+            case "트럭":
+                switch (sCarWeight)
+                {
+                    case "1t":
+                    case "1t화물": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel1C0);
+
+                    case "1.4t":
+                    case "1.4t화물": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel1C4);
+
+                    case "2.5t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel2C5);
+                    case "3.5t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel3C5);
+                    case "5t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel5);
+                    case "8t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel8);
+                    case "11t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel11);
+                    case "14t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel14);
+                    case "15t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel15);
+                    case "18t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel18);
+                    case "25t": return new StdResult_Point(m_FileInfo.접수등록Wnd_톤수RdoBtns_ptRel25);
+
+                    default: return new StdResult_Point($"모르는 톤수[{sCarWeight}]", "GetCarWeightWithPoint_01");
+                }
+            default: return new StdResult_Point($"모르는 차량종류[{sCarType}]", "GetCarWeightWithPoint_02");
+        }
+    }
+
+    /// <summary>
+    /// 인성 트럭종류 → 화물24시 트럭종류 변환
+    /// </summary>
+    private StdResult_String GetTruckDetailStringFromInsung(string sTruckDetail)
+    {
+        switch (sTruckDetail)
+        {
+            // 다른 텍스트
+            case "전체": return new StdResult_String("전체");
+            case "카고/윙": return new StdResult_String("카/윙");
+            case "플러스카고": return new StdResult_String("플러스카");
+            case "리프트카고": return new StdResult_String("리프트");
+            case "플축리": return new StdResult_String("플축카리");
+            case "축윙": return new StdResult_String("윙축");
+            case "리프트호루": return new StdResult_String("리프트호");
+
+            // 없는 차량종류
+            case "자바라":
+            case "리프트자바라":
+            case "냉동플축리":
+            case "냉장플축리":
+            case "평카":
+            case "로브이":
+            case "츄레라":
+            case "로베드":
+            case "사다리":
+            case "초장축":
+                return new StdResult_String("차종확인");
+                //return new StdResult_String($"화물24시에는 없는 트럭종류[{sTruckDetail}]", "GetTruckDetailStringFromInsung_01");
+
+            // 같은 텍스트 (전체, 카고, 축카고, 플축카고, 윙바디, 탑, 호루, 냉동탑, 냉장탑 등)
+            default: return new StdResult_String(sTruckDetail);
+        }
+    }
+
+    /// <summary>
+    /// 운송비구분에 따른 라디오버튼 좌표 반환
+    /// </summary>
+    private StdResult_Point GetFeeTypePoint(string sFeeType)
+    {
+        switch (sFeeType)
+        {
+            case "선불":
+            case "착불": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel선착불);
+
+
+
+            case "카드": //return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel카드); // 하차일 지정해야 통과
+
+            case "신용":
+            case "송금": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel인수증);
+
+            // case "수수료확인": return new StdResult_Point(m_FileInfo.접수등록Wnd_운송비RdoBtns_ptRel수수료확인);
+
+            default: return new StdResult_Point($"모르는 요금타입[{sFeeType}]", "GetFeeTypePoint_01");
+        }
+    }
+
+    /// <summary>
+    /// 핸들 캡션에서 최대적재량 계산 (1.1배, 소수점 2자리)
+    /// </summary>
+    private static string GetMaxCargoWeightString(IntPtr hWnd)
+    {
+        string sCaption = Std32Window.GetWindowCaption(hWnd);
+        if (float.TryParse(sCaption, out float fWeight))
+        {
+            float fMax = fWeight * 1.1f;
+            return fMax.ToString("F2");
+        }
+        return sCaption; // 변환 실패 시 원본 반환
+    }
+    #endregion
+
+    #region 6. Refresh & Query - 새로고침/조회
+    /// <summary>
+    /// 조회 버튼 클릭 (재시도 루프 방식)
+    /// - 조회버튼 밝기 변화로 로딩 완료 판단
+    /// </summary>
+    /// <param name="ctrl">취소 토큰</param>
+    /// <param name="retryCount">재시도 횟수</param>
+    /// <returns>Success: 조회 완료, Fail: 조회 실패</returns>
+    public async Task<StdResult_Status> Click조회버튼Async(CancelTokenControl ctrl, int retryCount = 3)
+    {
+        try
+        {
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                // 조회 버튼 클릭
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
+
+                // 조회버튼 밝기 변화 대기
+                StdResult_Status resultSts = await WaitBrightnessLoadedAsync(ctrl);
+
+                if (resultSts.Result == StdResult.Success || resultSts.Result == StdResult.Skip)
+                {
+                    return new StdResult_Status(StdResult.Success, "조회 완료");
+                }
+
+                // Fail = 타임아웃 → 재시도
+                Debug.WriteLine($"[{m_Context.AppName}] 조회 실패 (시도 {i}회): 타임아웃");
+                await Task.Delay(c_nWaitNormal, ctrl.Token);
+            }
+
+            return new StdResult_Status(StdResult.Fail, $"조회 버튼 클릭 {retryCount}회 모두 실패", "Cargo24sAct_RcptRegPage/Click조회버튼Async_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "Cargo24sAct_RcptRegPage/Click조회버튼Async_999");
+        }
+    }
+
+    /// <summary>
+    /// 조회버튼 밝기 변화 대기 (로딩 완료 판단)
+    /// Phase 1: 밝기 변화 대기 (로딩 시작 감지, 최대 250ms)
+    /// Phase 2: 밝기 복원 대기 (로딩 완료 감지, 최대 timeoutSec초)
+    /// </summary>
+    private async Task<StdResult_Status> WaitBrightnessLoadedAsync(CancelTokenControl ctrl, int timeoutSec = 50)
+    {
+        try
+        {
+            int nOrigBrightness = m_RcptPage.CmdBtn_nBrightness조회;
+            int nBrightnessTolerance = 10; // 밝기 허용 오차
+
+            // Phase 1: 밝기 변화 대기 (로딩 시작 감지, 최대 250ms)
+            bool bBrightnessChanged = false;
+            for (int i = 0; i < c_nWaitLong; i++) // 250ms
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                int nCurrentBrightness = OfrService.GetPixelBrightnessFrmWndHandle(
+                    m_RcptPage.CmdBtn_hWnd조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회L);
+
+                if (Math.Abs(nCurrentBrightness - nOrigBrightness) > nBrightnessTolerance)
+                {
+                    bBrightnessChanged = true;
+                    break;
+                }
+                await Task.Delay(1, ctrl.Token);
+            }
+
+            if (!bBrightnessChanged)
+            {
+                // 밝기 변화 없음 → Skip (이미 로딩 완료)
+                return new StdResult_Status(StdResult.Skip);
+            }
+
+            // Phase 2: 밝기 복원 대기 (로딩 완료 감지, 최대 timeoutSec초)
+            for (int i = 0; i < timeoutSec * 10; i++) // 100ms 간격
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                int nCurrentBrightness = OfrService.GetPixelBrightnessFrmWndHandle(
+                    m_RcptPage.CmdBtn_hWnd조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회L);
+
+                if (Math.Abs(nCurrentBrightness - nOrigBrightness) <= nBrightnessTolerance)
+                {
+                    return new StdResult_Status(StdResult.Success);
+                }
+                await Task.Delay(100, ctrl.Token);
+            }
+
+            return new StdResult_Status(StdResult.Fail, $"로딩 대기 시간 초과 ({timeoutSec}초)", "Cargo24sAct_RcptRegPage/WaitBrightnessLoadedAsync_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "Cargo24sAct_RcptRegPage/WaitBrightnessLoadedAsync_999");
+        }
+    }
+    #endregion
+
+    #region 7. Page Navigation - 페이지 관리
+    /// <summary>
+    /// Page Down 스크롤 (VK_NEXT)
+    /// </summary>
+    public async Task ScrollPageDownAsync(int count = 1, int delayMs = 100)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_NEXT);
+            if (i < count - 1) await Task.Delay(delayMs);
+        }
+    }
+
+    /// <summary>
+    /// Page Up 스크롤 (VK_PRIOR)
+    /// </summary>
+    public async Task ScrollPageUpAsync(int count = 1, int delayMs = 100)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_PRIOR);
+            if (i < count - 1) await Task.Delay(delayMs);
+        }
+    }
+
+    /// <summary>
+    /// Row Down 스크롤 (VK_DOWN)
+    /// </summary>
+    public async Task ScrollRowDownAsync(int count = 1, int delayMs = 100)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_DOWN);
+            if (i < count - 1) await Task.Delay(delayMs);
+        }
+    }
+
+    /// <summary>
+    /// Row Up 스크롤 (VK_UP)
+    /// </summary>
+    public async Task ScrollRowUpAsync(int count = 1, int delayMs = 100)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Std32Key_Msg.KeyPost_Click(m_RcptPage.DG오더_hWnd, StdCommon32.VK_UP);
+            if (i < count - 1) await Task.Delay(delayMs);
+        }
+    }
+
+    /// <summary>
+    /// 특정 로우가 셀렉트되었는지 확인 (순번 컬럼에 숫자가 없으면 셀렉트됨)
+    /// </summary>
+    /// <param name="rowIndex">로우 인덱스 (0-based)</param>
+    /// <returns>true: 셀렉트됨, false: 셀렉트 안됨, null: 판단 불가</returns>
+    public async Task<bool?> IsRowSelectedAsync(int rowIndex)
+    {
+        var rcCell = m_RcptPage.DG오더_rcRelCells[0, rowIndex]; // [col=0, row] 순번 컬럼
+        var bmp = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcCell);
+        if (bmp == null) return null;
+
+        var result = await OfrWork_Common.OfrStr_SeqCharAsync(bmp, c_dOfrWeight, bEdit: false);
+        bmp.Dispose();
+
+        if (string.IsNullOrEmpty(result.strResult)) return null;
+
+        // 숫자가 있으면 셀렉트 안됨, 없으면 셀렉트됨 (화살표)
+        string digits = new string(result.strResult.Where(char.IsDigit).ToArray());
+        return string.IsNullOrEmpty(digits);
+    }
+
+    /// <summary>
+    /// 특정 로우를 클릭하여 셀렉트
+    /// </summary>
+    /// <param name="rowIndex">로우 인덱스 (0-based)</param>
+    public async Task SelectRowAsync(int rowIndex)
+    {
+        var rcCell = m_RcptPage.DG오더_rcRelCells[0, rowIndex]; // [col=0, row]
+        Draw.Point ptClick = new Draw.Point(rcCell.Left + rcCell.Width / 2, rcCell.Top + rcCell.Height / 2);
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptClick);
+        await Task.Delay(c_nWaitShort);
+    }
+
+    /// <summary>
+    /// 첫 로우가 셀렉트되어 있는지 확인하고, 아니면 셀렉트
+    /// </summary>
+    public async Task EnsureFirstRowSelectedAsync()
+    {
+        bool? isSelected = await IsRowSelectedAsync(0);
+        if (isSelected != true)
+        {
+            await SelectRowAsync(0);
+        }
+    }
+
+    /// <summary>
+    /// 마지막 로우가 셀렉트되어 있는지 확인하고, 아니면 셀렉트
+    /// </summary>
+    /// <param name="lastRowIndex">마지막 로우 인덱스 (0-based, 기본값 24)</param>
+    public async Task EnsureLastRowSelectedAsync(int lastRowIndex = 24)
+    {
+        bool? isSelected = await IsRowSelectedAsync(lastRowIndex);
+        if (isSelected != true)
+        {
+            await SelectRowAsync(lastRowIndex);
+        }
+    }
+
+    /// <summary>
+    /// 현재 페이지의 첫 로우 순번을 읽습니다.
+    /// 선택된 로우는 화살표가 표시되므로, 다른 로우를 읽어서 계산합니다.
+    /// </summary>
+    /// <param name="nValidRowCount">현재 페이지의 유효 로우 수 (총계가 rowCount보다 작으면 총계)</param>
+    /// <returns>첫 로우 순번 (-1: 실패)</returns>
+    public async Task<int> ReadFirstRowNumAsync(int nValidRowCount)
+    {
+        // 1건만 있는 경우 → 첫 로우 = 1
+        if (nValidRowCount == 1)
+        {
+            Debug.WriteLine($"[Cargo24/ReadFirstRowNum] 1건만 있음 → 첫 로우 = 1");
+            return 1;
+        }
+
+        // 여러 행이 있는 경우 → 숫자가 있는 셀을 찾아서 계산
+        for (int y = 0; y < nValidRowCount; y++)
+        {
+            var rcCell = m_RcptPage.DG오더_rcRelCells[0, y]; // [col=0, row=y] 순번 컬럼
+            var bmp = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcCell);
+            if (bmp == null) continue;
+
+            var result = await OfrWork_Common.OfrStr_SeqCharAsync(bmp, c_dOfrWeight, bEdit: false);
+            bmp.Dispose();
+
+            if (string.IsNullOrEmpty(result.strResult)) continue;
+
+            // 숫자만 추출
+            string digits = new string(result.strResult.Where(char.IsDigit).ToArray());
+            if (string.IsNullOrEmpty(digits)) continue; // 화살표 등 숫자가 아닌 경우 skip
+
+            if (int.TryParse(digits, out int curNum))
+            {
+                // 첫 로우 순번 계산: curNum - y (y는 0-based index)
+                int firstNum = curNum - y;
+                Debug.WriteLine($"[Cargo24/ReadFirstRowNum] y={y}, curNum={curNum} → 첫 로우 = {firstNum}");
+                return firstNum;
+            }
+        }
+
+        Debug.WriteLine($"[Cargo24/ReadFirstRowNum] 유효한 순번을 찾지 못함");
+        return -1;
+    }
+
+    /// <summary>
+    /// 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
+    /// - 인성 로직 인용
+    /// </summary>
+    /// <param name="nTotRows">총 행 수</param>
+    /// <param name="nRowsPerPage">페이지당 행 수</param>
+    /// <param name="pageIdx">페이지 인덱스 (0-based)</param>
+    /// <returns>예상 첫 로우 번호</returns>
+    public static int GetExpectedFirstRowNum(int nTotRows, int nRowsPerPage, int pageIdx)
+    {
+        // 총 페이지 수 계산
+        int nTotPage = 1;
+        if (nTotRows > nRowsPerPage)
+        {
+            nTotPage = nTotRows / nRowsPerPage;
+            if (nTotRows % nRowsPerPage > 0)
+                nTotPage += 1;
+        }
+
+        int nCurPage = pageIdx + 1;
+        int nNum = (nRowsPerPage * pageIdx) + 1;
+
+        if (nTotPage == 1) return 1;
+        if (nCurPage < nTotPage) return nNum;
+
+        // 마지막 페이지 특수 처리: 나머지 행이 있는 경우
+        if (nTotRows % nRowsPerPage == 0) return nNum;
+        else return nNum - nRowsPerPage + (nTotRows % nRowsPerPage);
+    }
+    #endregion
+
+    #region 8. Row OFR - DG Row 데이터 읽기
     /// <summary>
     /// 지정된 로우의 화물번호 OFR
     /// - 셀 캡처 후 단음소 OFR
@@ -1177,7 +1137,7 @@ public partial class Cargo24sAct_RcptRegPage
                 try
                 {
                     // 마지막 시도에서만 bEdit=true (수동 입력 대화상자)
-                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpCell, 0.7, i == retryCount);
+                    StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpCell, c_dOfrWeight, i == retryCount);
 
                     // ☒ 없는 완전한 결과만 성공
                     if (!string.IsNullOrEmpty(resultSeqno.strResult) && !resultSeqno.strResult.Contains('☒'))
@@ -1206,55 +1166,14 @@ public partial class Cargo24sAct_RcptRegPage
             return new StdResult_String(StdUtil.GetExceptionMessage(ex), "Get화물번호Async_999");
         }
     }
-    #endregion
 
-    #region 유효 로우 수 확인
-    /// <summary>
-    /// DG오더의 유효 로우 수 반환
-    /// - 배경 밝기(50)보다 어두우면 데이터 있는 로우로 판단
-    /// </summary>
-    public StdResult_Int GetValidRowCount()
-    {
-        try
-        {
-            Draw.Rectangle[,] rects = m_RcptPage.DG오더_rcRelCells;
-            if (rects == null)
-                return new StdResult_Int("DG오더_rcRelCells 미초기화", "GetValidRowCount_01");
-
-            int nBackgroundBright = 50;
-            int nThreshold = nBackgroundBright - 1;
-            int nValidRows = 0;
-
-            for (int y = 0; y < m_FileInfo.접수등록Page_DG오더_rowCount; y++)
-            {
-                int nCurBright = OfrService.GetPixelBrightnessFrmWndHandle(
-                    m_RcptPage.DG오더_hWnd,
-                    rects[0, y].Right,
-                    rects[0, y].Top + 6);
-
-                if (nCurBright < nThreshold)
-                    nValidRows++;
-                else
-                    break;
-            }
-
-            return new StdResult_Int(nValidRows);
-        }
-        catch (Exception ex)
-        {
-            return new StdResult_Int(StdUtil.GetExceptionMessage(ex), "GetValidRowCount_999");
-        }
-    }
-    #endregion
-
-    #region bmpPage 기반 OFR
     /// <summary>
     /// 캡처된 페이지 이미지에서 특정 로우의 화물번호 읽기
     /// </summary>
     public async Task<StdResult_String> Get화물번호Async(Draw.Bitmap bmpPage, int rowIdx)
     {
         Draw.Rectangle rectSeqno = m_RcptPage.DG오더_rcRelCells[c_nCol화물번호, rowIdx];
-        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, false, 0.9);
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, false, c_dOfrWeight);
     }
 
     /// <summary>
@@ -1263,7 +1182,85 @@ public partial class Cargo24sAct_RcptRegPage
     public async Task<StdResult_String> Get상태Async(Draw.Bitmap bmpPage, int rowIdx)
     {
         Draw.Rectangle rectStatus = m_RcptPage.DG오더_rcRelCells[c_nCol상태, rowIdx];
-        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb: false, bTextSave: true, 0.9, bEdit: true);
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb: false, bTextSave: true, c_dOfrWeight, bEdit: true);
+    }
+    #endregion
+
+    #region 9. Test Methods - 테스트 함수
+    /// <summary>
+    /// DG오더 셀 영역 시각화 테스트
+    /// TransparantWnd를 사용하여 모든 셀 영역을 두께 1로 그리고 MsgBox 표시
+    /// </summary>
+    public void Test_DrawAllCellRects()
+    {
+        try
+        {
+            Debug.WriteLine($"[Cargo24/Test] Test_DrawAllCellRects 시작");
+
+            // 1. DG오더 핸들 체크
+            if (m_RcptPage.DG오더_hWnd == IntPtr.Zero)
+            {
+                System.Windows.MessageBox.Show("DG오더_hWnd가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            // 2. Cell Rect 배열 체크
+            if (m_RcptPage.DG오더_rcRelCells == null)
+            {
+                System.Windows.MessageBox.Show("DG오더_rcRelCells가 초기화되지 않았습니다.", "오류");
+                return;
+            }
+
+            int colCount = m_RcptPage.DG오더_rcRelCells.GetLength(0);
+            int rowCount = m_RcptPage.DG오더_rcRelCells.GetLength(1);
+            Debug.WriteLine($"[Cargo24/Test] Cell 배열: {rowCount}행 x {colCount}열");
+
+            // 3. TransparantWnd 오버레이 생성 (DG오더 위치 기준)
+            TransparantWnd.CreateOverlay(m_RcptPage.DG오더_hWnd);
+            TransparantWnd.ClearBoxes();
+
+            // 4-1. 헤더 셀 그리기 (두께 1, 파란색)
+            int cellCount = 0;
+            for (int col = 0; col < colCount; col++)
+            {
+                var rcData = m_RcptPage.DG오더_rcRelCells[col, 0]; // 첫 데이터 로우에서 x, width 가져옴
+                Draw.Rectangle rcHeader = new Draw.Rectangle(rcData.X, 4, rcData.Width, HEADER_HEIGHT - 8);
+                TransparantWnd.DrawBoxAsync(rcHeader, strokeColor: Colors.Blue, thickness: 1);
+                cellCount++;
+            }
+
+            // 4-2. 데이터 셀 그리기 (두께 1, 빨간색)
+            for (int row = 0; row < rowCount; row++)
+            {
+                for (int col = 0; col < colCount; col++)
+                {
+                    Draw.Rectangle rc = m_RcptPage.DG오더_rcRelCells[col, row];
+                    TransparantWnd.DrawBoxAsync(rc, strokeColor: Colors.Red, thickness: 1);
+                    cellCount++;
+                }
+            }
+
+            Debug.WriteLine($"[Cargo24/Test] {cellCount}개 셀 영역 그리기 완료");
+
+            // 5. MsgBox 표시 (확인 후 오버레이 삭제)
+            System.Windows.MessageBox.Show(
+                $"화물24시 DG오더 셀 영역 테스트\n\n" +
+                $"행: {rowCount}\n" +
+                $"열: {colCount}\n" +
+                $"총 셀: {cellCount}개\n\n" +
+                $"확인을 누르면 오버레이가 제거됩니다.",
+                "셀 영역 테스트");
+
+            // 6. 오버레이 삭제
+            TransparantWnd.DeleteOverlay();
+            Debug.WriteLine($"[Cargo24/Test] Test_DrawAllCellRects 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[Cargo24/Test] 예외 발생: {ex.Message}");
+            System.Windows.MessageBox.Show($"테스트 중 오류 발생:\n{ex.Message}", "오류");
+            TransparantWnd.DeleteOverlay();
+        }
     }
     #endregion
 }

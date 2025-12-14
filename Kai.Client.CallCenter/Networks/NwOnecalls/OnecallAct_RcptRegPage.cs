@@ -24,6 +24,10 @@ namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 /// </summary>
 public partial class OnecallAct_RcptRegPage
 {
+    #region Constants
+    private const double c_dOfrWeight = 0.7;
+    #endregion
+
     #region Datagrid Column Header Info
     /// <summary>
     /// Datagrid 컬럼 헤더 정보 배열 (21개)
@@ -140,8 +144,9 @@ public partial class OnecallAct_RcptRegPage
             // 버튼들
             mRcpt.접수섹션_hWnd신규버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_신규Btn_ptChkRelM);
             mRcpt.접수섹션_hWnd저장버튼 = Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_저장Btn_ptChkRelM);
-            mRcpt.접수섹션_hWnd취소버튼 = StdWin32.FindWindowEx(mRcpt.접수섹션_hWndTop, IntPtr.Zero, null, "화물취소"); // 검증용으로 위치가 필요할까?
-            mRcpt.접수섹션_hWnd복사버튼 = StdWin32.FindWindowEx(mRcpt.접수섹션_hWndTop, IntPtr.Zero, null, "화물복사"); // 검증용으로 위치가 필요할까?
+            mRcpt.접수섹션_hWnd화물취소버튼 = StdWin32.FindWindowEx(mRcpt.접수섹션_hWndTop, IntPtr.Zero, null, "화물취소"); // 검증용으로 위치가 필요할까?
+            mRcpt.접수섹션_hWnd화물복사버튼 = StdWin32.FindWindowEx(mRcpt.접수섹션_hWndTop, IntPtr.Zero, null, "화물복사"); // 검증용으로 위치가 필요할까?
+            mRcpt.접수섹션_hWnd재접수버튼 = StdWin32.FindWindowEx(mRcpt.접수섹션_hWndTop, IntPtr.Zero, null, "재접수"); // 검증용으로 위치가 필요할까?
 
             // 상차지
             mRcpt.접수섹션_hWnd상차지권역 = Std32Window.GetWndHandle_FromRelDrawPt(
@@ -409,7 +414,7 @@ public partial class OnecallAct_RcptRegPage
                 for (int i = 0; i < m_ReceiptDgHeaderInfos.Length; i++)
                 {
                     Draw.Rectangle rcTmp = new Draw.Rectangle(listLW[i].nLeft + 1, headerGab, listLW[i].nWidth - 2, textHeight);
-                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, dWeight: 0.9, bEdit: bEdit);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcTmp, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
                     columnTexts[i] = result?.strResult ?? string.Empty;
                 }
 
@@ -873,7 +878,9 @@ public partial class OnecallAct_RcptRegPage
             string maxWeight = GetMaxCarWeight(result톤수);
             if (maxWeight != "0.00")
             {
-                // 자리수마다 갯수 파학해서 입력해야 하므로 복잡해서 확인 메세지박스 처리로...
+                var result화물중량 = await Set화물중량Async(maxWeight, ctrl);
+                if (result화물중량.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndDiscard($"화물중량 설정실패: {result화물중량.sErr}", "RegistOrderModeAsync_09");
             }
 
             // 구분
@@ -940,49 +947,9 @@ public partial class OnecallAct_RcptRegPage
 
             #region 3. 저장 버튼 클릭
             Debug.WriteLine($"[{AppName}] #region 3 시작: 저장 버튼 클릭");
-            await ctrl.WaitIfPausedOrCancelledAsync();
-            await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd저장버튼);
-
-            // 화물중량 확인창 찾기
-            (IntPtr hWndParent, IntPtr hWndYesBtn) = (IntPtr.Zero, IntPtr.Zero);
-            for (int i = 0; i < c_nRepeatMany; i++)
-            {
-                await Task.Delay(c_nWaitShort, ctrl.Token);
-                (hWndParent, hWndYesBtn) = Std32Window.FindMainWindow_EmptyCaption_HavingChildButton(mInfo.Splash.TopWnd_uProcessId, "예");
-                if (hWndYesBtn != IntPtr.Zero) break;
-            }
-
-            if (hWndParent == IntPtr.Zero || hWndYesBtn == IntPtr.Zero)
-                return CommonResult_AutoAllocProcess.FailureAndDiscard($"화물중량 확인창 찾기 실패: {resultSts.sErr}", "RegistOrderModeAsync_14");
-
-            // 예 버튼클릭
-            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYesBtn);
-
-            // hWndParent가 없어질때까지 대기
-            for (int i = 0; i < c_nRepeatMany; i++)
-            {
-                await Task.Delay(c_nWaitShort, ctrl.Token);
-                if (!Std32Window.IsWindowVisible(hWndParent)) break;
-            }
-
-            // 상(하)차지 캡션이 클리어 됬나 체크 - 총갯수를 체크해도 됨.
-            bool bSaved = false;
-            for (int i = 0; i < c_nRepeatMany; i++)
-            {
-                await Task.Delay(c_nWaitShort, ctrl.Token);
-                string caption상차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소);
-                string caption하차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd하차지주소);
-                if (string.IsNullOrEmpty(caption상차) && string.IsNullOrEmpty(caption하차))
-                {
-                    bSaved = true;
-                    Debug.WriteLine($"[{AppName}] 저장 성공 확인");
-                    break;
-                }
-            }
-            if (!bSaved)
-            {
-                return CommonResult_AutoAllocProcess.FailureAndDiscard("저장 확인 실패", "RegistOrderModeAsync_09");
-            }
+            var resultSave = await SaveOrderAsync(ctrl);
+            if (resultSave.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"저장 실패: {resultSave.sErr}", "RegistOrderModeAsync_10");
             #endregion
 
             #region 4. 저장 성공 확인
@@ -1046,6 +1013,7 @@ public partial class OnecallAct_RcptRegPage
     {
         string kaiState = item.NewOrder?.OrderState ?? "";
         string ocState = dgInfo.sStatus;
+        TbOrder tbOrder = item.NewOrder;
         Debug.WriteLine($"[CheckIsOrderAsync_AssumeKaiUpdated] KeyCode={item.KeyCode}, Kai={kaiState}, Onecall={ocState}");
 
         await ctrl.WaitIfPausedOrCancelledAsync();
@@ -1053,23 +1021,27 @@ public partial class OnecallAct_RcptRegPage
         switch (kaiState)
         {
             case "대기":
-            //case "취소": // 취소가 아니면 화물취소 시키고 비적재 - 테스트모드만 주석처리 끝나면 원복...
-                if (ocState != "취소") return await UpdateOrderModeAsync(item, dgInfo.nIndex, "취소", null, ctrl);
+                case "취소": // 취소가 아니면 화물취소 시키고 비적재 - 테스트모드만 주석처리 끝나면 원복...
+                if (ocState != "취소")
+                    return await UpdateOrderModeAsync(item, dgInfo.nIndex, "취소", null, ctrl);
                 else return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
 
-            case "취소": // 테스트용으로 임시작업
-            case "접수": // 같은 접수상태면 
+            //case "취소": // 테스트용으로 임시작업
+            case "접수": // 같은 접수상태라도 kaiState의 공유상태에 따라 다르게 반응해야함
                 if (ocState == "접수")
                 {
-                    return await UpdateOrderModeAsync(item, dgInfo.nIndex, null, item.NewOrder, ctrl);
+                    if(tbOrder.Share) return await UpdateOrderModeAsync(item, dgInfo.nIndex, null, item.NewOrder, ctrl);
+                    else return await UpdateOrderModeAsync(item, dgInfo.nIndex, "취소", null, ctrl);
                 }
                 else
                 {
-                    //MsgBox("화물24시가 접수이외의 상태이니, 연구가 필요합니다");
+                    MsgBox("화물24시가 접수이외의 상태이니, 연구가 필요합니다");
+                    break;
+
                     //return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
 
                     // For Test
-                    return await UpdateOrderModeAsync(item, dgInfo.nIndex, null, item.NewOrder, ctrl);
+                    //return await UpdateOrderModeAsync(item, dgInfo.nIndex, null, item.NewOrder, ctrl);
                 }
 
             default:
@@ -1090,19 +1062,20 @@ public partial class OnecallAct_RcptRegPage
     {
         try
         {
+            #region 1. 사전작업
             Debug.WriteLine($"[{AppName}] UpdateOrderModeAsync 진입: KeyCode={item.KeyCode}, RowIndex={nRowIndex}, targetState={targetState}, order={(order != null ? "있음" : "없음")}");
 
-            // 0. 파라미터 검증
+            // 파라미터 검증
             if (string.IsNullOrEmpty(targetState) && order == null)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard("targetState와 order 둘 다 null입니다.", "UpdateOrderModeAsync_00");
 
-            // 1. 해당 로우 클릭 (클릭만으로 수정모드 진입)
+            // 해당 로우 클릭 (클릭만으로 수정모드 진입)
             bool bSelected = await ClickDatagridRowAsync(nRowIndex);
             Debug.WriteLine($"[{AppName}] 로우 클릭 완료: nRowIndex={nRowIndex}, 선택됨={bSelected}");
             if (!bSelected)
                 return CommonResult_AutoAllocProcess.FailureAndRetry("로우 선택 실패", "UpdateOrderModeAsync_01");
 
-            // 2. 오더번호 검증 (선택한 로우가 올바른지 확인)
+            // 오더번호 검증 (선택한 로우가 올바른지 확인)
             string expectedSeqno = item.NewOrder.Onecall;
             var resultSeqno = await Get오더번호Async(nRowIndex, ctrl);
             if (!string.IsNullOrEmpty(resultSeqno.sErr))
@@ -1110,26 +1083,209 @@ public partial class OnecallAct_RcptRegPage
             if (resultSeqno.strResult != expectedSeqno)
                 return CommonResult_AutoAllocProcess.FailureAndRetry($"오더번호 불일치: 예상={expectedSeqno}, 실제={resultSeqno.strResult}", "UpdateOrderModeAsync_02B");
             Debug.WriteLine($"[{AppName}] 오더번호 검증 성공: {resultSeqno.strResult}");
+            #endregion
 
-            // 3. 상태 변경 (targetState가 있으면)
+            #region 2. 상태 변경
             if (!string.IsNullOrEmpty(targetState))
             {
-                // TODO: 취소 등 상태 버튼 클릭
-
-                // TODO: 6. 취소 성공 확인
+                if (targetState == "취소")
+                {
+                    bool bCancelled = await Click버튼WaitDisableAsync(mRcpt.접수섹션_hWnd화물취소버튼, "화물취소", ctrl);
+                    if (!bCancelled)
+                        return CommonResult_AutoAllocProcess.FailureAndRetry("화물취소 실패", "UpdateOrderModeAsync_03");
+                    return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+                }
+                else if (targetState == "접수")
+                {
+                    bool bReRegistered = await Click버튼WaitDisableAsync(mRcpt.접수섹션_hWnd재접수버튼, "재접수", ctrl);
+                    if (!bReRegistered)
+                        return CommonResult_AutoAllocProcess.FailureAndRetry("재접수 실패", "UpdateOrderModeAsync_04");
+                    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+                }
             }
+            #endregion
 
-            // TODO: 4. 정보 수정 (order가 있으면)
+            #region 3. 정보 수정
             if (order != null)
             {
-                // TODO: 화면값 vs DB값 비교 → 선택적 수정
+                int changeCount = 0;
 
-                // TODO: 5. 저장 버튼 클릭
+                // 상차지 입력
+                string current상차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소) ?? "";
+                if (current상차 != order.StartDetailAddr)
+                {
+                    var result상차 = await Set상세주소Async(mRcpt.접수섹션_hWnd상차지주소, fInfo.접수등록Page_접수_상차지권역_rcChkRelM, order.StartDetailAddr, ctrl);
+                    if (result상차.Result != StdResult.Success)
+                        return CommonResult_AutoAllocProcess.FailureAndRetry($"상차지 입력실패: {result상차.sErr}", "UpdateOrderModeAsync_10");
+                    changeCount++;
+                    Debug.WriteLine($"[{AppName}] 상차지 수정: {current상차} → {order.StartDetailAddr}");
+                }
 
-                // TODO: 6. 저장 성공 확인
+                // 하차지 입력
+                string current하차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd하차지주소) ?? "";
+                if (current하차 != order.DestDetailAddr)
+                {
+                    var result하차 = await Set상세주소Async(mRcpt.접수섹션_hWnd하차지주소, fInfo.접수등록Page_접수_하차지권역_rcChkRelM, order.DestDetailAddr, ctrl);
+                    if (result하차.Result != StdResult.Success)
+                        return CommonResult_AutoAllocProcess.FailureAndRetry($"하차지 입력실패: {result하차.sErr}", "UpdateOrderModeAsync_11");
+                    changeCount++;
+                    Debug.WriteLine($"[{AppName}] 하차지 수정: {current하차} → {order.DestDetailAddr}");
+                }
+
+                // 화물정보
+                string db화물정보 = string.IsNullOrEmpty(order.OrderRemarks) ? "없음" : order.OrderRemarks;
+                var (changed화물, result화물) = await UpdateEditIfChangedAsync(mRcpt.접수섹션_hWnd화물정보, db화물정보, "화물정보", ctrl);
+                if (result화물.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"화물정보 입력실패: {result화물.sErr}", "UpdateOrderModeAsync_12");
+                if (changed화물) changeCount++;
+
+                // 운임 - 총운임
+                string current총운임 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd총운임) ?? "";
+                string db총운임 = order.FeeTotal > 0 ? order.FeeTotal.ToString() : "";
+                if (current총운임 != db총운임 && order.FeeTotal > 0)
+                {
+                    bool bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd총운임, order.FeeTotal);
+                    if (!bTmp)
+                        return CommonResult_AutoAllocProcess.FailureAndRetry($"총운임 입력실패: {order.FeeTotal}", "UpdateOrderModeAsync_13");
+                    changeCount++;
+                    Debug.WriteLine($"[{AppName}] 총운임 수정: {current총운임} → {db총운임}");
+                }
+
+                // 운임 - 수수료
+                string current수수료 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd수수료) ?? "";
+                string db수수료 = order.FeeCharge > 0 ? order.FeeCharge.ToString() : "";
+                if (current수수료 != db수수료 && order.FeeCharge > 0)
+                {
+                    bool bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd수수료, order.FeeCharge);
+                    if (!bTmp)
+                        return CommonResult_AutoAllocProcess.FailureAndRetry($"수수료 입력실패: {order.FeeCharge}", "UpdateOrderModeAsync_14");
+                    changeCount++;
+                    Debug.WriteLine($"[{AppName}] 수수료 수정: {current수수료} → {db수수료}");
+                }
+
+                // 차량 - 톤수
+                CommonModel_ComboBox model톤수 = GetCarWeightResult(order.CarType, order.CarWeight);
+                var (changed톤수, result톤수) = await UpdateComboIfChangedAsync(
+                    mRcpt.접수섹션_차량_hWnd톤수, model톤수, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_톤수_rcChkRelM, "톤수", ctrl);
+                if (result톤수.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"톤수 선택실패: {result톤수.sErr}", "UpdateOrderModeAsync_15");
+                if (changed톤수) changeCount++;
+
+                // 차량 - 차종
+                CommonModel_ComboBox model차종 = GetTruckDetailResult(order.CarType, order.TruckDetail);
+                var (changed차종, result차종) = await UpdateComboIfChangedAsync(
+                    mRcpt.접수섹션_차량_hWnd차종, model차종, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_차종_rcChkRelM, "차종", ctrl);
+                if (result차종.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"차종 선택실패: {result차종.sErr}", "UpdateOrderModeAsync_16");
+                if (changed차종) changeCount++;
+
+                // 차량 - 결재
+                CommonModel_ComboBox model결재 = GetFeeTypeResult(order.FeeType);
+                var (changed결재, result결재) = await UpdateComboIfChangedAsync(
+                    mRcpt.접수섹션_차량_hWnd결재, model결재, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_결재_rcChkRelM, "결재", ctrl);
+                if (result결재.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"결재 선택실패: {result결재.sErr}", "UpdateOrderModeAsync_17");
+                if (changed결재) changeCount++;
+
+                // 화물중량
+                string maxWeight = GetMaxCarWeight(model톤수);
+                string curWeight = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd화물중량) ?? "";
+                if (maxWeight != curWeight)
+                {
+                    var result화물중량 = await Set화물중량Async(maxWeight, ctrl);
+                    if (result화물중량.Result != StdResult.Success)
+                        return CommonResult_AutoAllocProcess.FailureAndRetry($"화물중량 설정실패: {result화물중량.sErr}", "UpdateOrderModeAsync_17_1");
+                    changeCount++;
+                }
+
+                // 구분 (왕복/경유/긴급)
+                bool db왕복 = order.DeliverType == "왕복";
+                bool db경유 = order.DeliverType == "경유";
+                bool db긴급 = order.DeliverType == "긴급";
+
+                var (changed왕복, result왕복) = await UpdateCheckBoxIfChangedAsync(
+                    mRcpt.접수섹션_구분_hWnd왕복, fInfo.접수등록Page_구분_왕복Part_rcChkRelM, db왕복, "왕복", ctrl);
+                if (result왕복.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"왕복 설정실패: {result왕복.sErr}", "UpdateOrderModeAsync_18");
+                if (changed왕복) changeCount++;
+
+                var (changed경유, result경유) = await UpdateCheckBoxIfChangedAsync(
+                    mRcpt.접수섹션_구분_hWnd경유, fInfo.접수등록Page_구분_경유Part_rcChkRelM, db경유, "경유", ctrl);
+                if (result경유.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"경유 설정실패: {result경유.sErr}", "UpdateOrderModeAsync_19");
+                if (changed경유) changeCount++;
+
+                var (changed긴급, result긴급) = await UpdateCheckBoxIfChangedAsync(
+                    mRcpt.접수섹션_구분_hWnd긴급, fInfo.접수등록Page_구분_긴급Part_rcChkRelM, db긴급, "긴급", ctrl);
+                if (result긴급.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"긴급 설정실패: {result긴급.sErr}", "UpdateOrderModeAsync_20");
+                if (changed긴급) changeCount++;
+
+                // 상차방법 (수작업 고정)
+                var (changed상차방법, result상차방법) = await UpdateCheckBoxIfChangedAsync(
+                    mRcpt.접수섹션_상차방법_hWnd수작업, fInfo.접수등록Page_상차방법_수작업Part_rcChkRelM, true, "수작업", ctrl);
+                if (result상차방법.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"상차방법 설정실패: {result상차방법.sErr}", "UpdateOrderModeAsync_21");
+                if (changed상차방법) changeCount++;
+
+                // 상차일시 (당상 고정)
+                var (changed상차일시, result상차일시) = await UpdateCheckBoxIfChangedAsync(
+                    mRcpt.접수섹션_상차일시_hWnd당상, fInfo.접수등록Page_상차일시_당상Part_rcChkRelM, true, "당상", ctrl);
+                if (result상차일시.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"상차일시 설정실패: {result상차일시.sErr}", "UpdateOrderModeAsync_22");
+                if (changed상차일시) changeCount++;
+
+                // 하차방법 (수작업 고정)
+                var (changed하차방법, result하차방법) = await UpdateCheckBoxIfChangedAsync(
+                    mRcpt.접수섹션_하차방법_hWnd수작업, fInfo.접수등록Page_하차방법_수작업Part_rcChkRelM, true, "수작업", ctrl);
+                if (result하차방법.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"하차방법 설정실패: {result하차방법.sErr}", "UpdateOrderModeAsync_23");
+                if (changed하차방법) changeCount++;
+
+                // 하차일시 (당착 고정)
+                var (changed하차일시, result하차일시) = await UpdateCheckBoxIfChangedAsync(
+                    mRcpt.접수섹션_하차일시_hWnd당착, fInfo.접수등록Page_하차일시_당착Part_rcChkRelM, true, "당착", ctrl);
+                if (result하차일시.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"하차일시 설정실패: {result하차일시.sErr}", "UpdateOrderModeAsync_24");
+                if (changed하차일시) changeCount++;
+
+                // 화물메모
+                string db화물메모 = order.OrderMemo ?? "";
+                var (changed화물메모, result화물메모) = await UpdateEditIfChangedAsync(
+                    mRcpt.접수섹션_hWnd화물메모, db화물메모, "화물메모", ctrl);
+                if (result화물메모.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"화물메모 입력실패: {result화물메모.sErr}", "UpdateOrderModeAsync_25");
+                if (changed화물메모) changeCount++;
+
+                // 의뢰자 - 전화
+                string db의뢰자전화 = StdConvert.ToPhoneNumberFormat(order.CallTelNo);
+                var (changed의뢰자전화, result의뢰자전화) = await UpdateEditIfChangedAsync(
+                    mRcpt.접수섹션_의뢰자_hWnd전화, db의뢰자전화, "의뢰자전화", ctrl);
+                if (result의뢰자전화.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"의뢰자전화 입력실패: {result의뢰자전화.sErr}", "UpdateOrderModeAsync_26");
+                if (changed의뢰자전화) changeCount++;
+
+                // 의뢰자 - 상호
+                string db의뢰자상호 = order.CallCustName ?? "";
+                var (changed의뢰자상호, result의뢰자상호) = await UpdateEditIfChangedAsync(
+                    mRcpt.접수섹션_의뢰자_hWnd상호, db의뢰자상호, "의뢰자상호", ctrl);
+                if (result의뢰자상호.Result != StdResult.Success)
+                    return CommonResult_AutoAllocProcess.FailureAndRetry($"의뢰자상호 입력실패: {result의뢰자상호.sErr}", "UpdateOrderModeAsync_27");
+                if (changed의뢰자상호) changeCount++;
+
+                Debug.WriteLine($"[{AppName}] 정보 수정 완료: {changeCount}개 필드 변경");
             }
+            #endregion
 
-            return CommonResult_AutoAllocProcess.FailureAndDiscard("TODO: UpdateOrderModeAsync 미구현", "UpdateOrderModeAsync_TODO");
+            #region 4. 저장 및 확인
+            var resultSave = await SaveOrderAsync(ctrl);
+            if (resultSave.Result != StdResult.Success)
+                return CommonResult_AutoAllocProcess.FailureAndRetry($"저장 실패: {resultSave.sErr}", "UpdateOrderModeAsync_29");
+
+            Debug.WriteLine($"[{AppName}] UpdateOrderModeAsync 완료: KeyCode={item.KeyCode}");
+            #endregion
+
+            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
         }
         catch (Exception ex)
         {

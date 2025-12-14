@@ -71,8 +71,9 @@ public class OnecallInfo_Mem
         // 버튼들
         public IntPtr 접수섹션_hWnd신규버튼;  // 버튼
         public IntPtr 접수섹션_hWnd저장버튼;  // 버튼
-        public IntPtr 접수섹션_hWnd취소버튼;  // 버튼
-        public IntPtr 접수섹션_hWnd복사버튼;  // 버튼
+        public IntPtr 접수섹션_hWnd화물취소버튼;  // 버튼
+        public IntPtr 접수섹션_hWnd화물복사버튼;  // 버튼
+        public IntPtr 접수섹션_hWnd재접수버튼;  // 버튼
 
         // 상차지
         public IntPtr 접수섹션_hWnd상차지권역; // Edit
