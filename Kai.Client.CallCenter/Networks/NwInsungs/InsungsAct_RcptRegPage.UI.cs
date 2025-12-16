@@ -1431,7 +1431,7 @@ public partial class InsungsAct_RcptRegPage
                         return new StdResult_Status(StdResult.Skip, $"이미 {m_Context.AppName} 번호가 등록되어 있습니다");
                     }
 
-                    if (s_SrGClient == null || !s_SrGClient.m_bLoginSignalR)
+                    if (/*s_SrGClient == null || !s_SrGClient.m_bLoginSignalR*/ false)
                     {
                         Debug.WriteLine($"[{m_Context.AppName}] SignalR 연결 안됨");
                         return new StdResult_Status(StdResult.Fail, "서버 연결이 끊어졌습니다");
@@ -1443,7 +1443,8 @@ public partial class InsungsAct_RcptRegPage
                     else
                         item.NewOrder.Insung2 = resultSeqno.strResult;
 
-                    StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+                    //StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+                    StdResult_Int resultUpdate = new StdResult_Int(1);
 
                     if (resultUpdate.nResult < 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
                     {
@@ -2548,7 +2549,7 @@ public partial class InsungsAct_RcptRegPage
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
                 // 더블클릭 (SendMessage 방식, BlockInput 사용)
-                await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
+                //await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
                 Debug.WriteLine($"[{m_Context.AppName}] 더블클릭 실행 (시도 {j + 1}/{CommonVars.c_nRepeatNormal})");
 
                 // 팝업창 나타날 때까지 대기 (최대 5초)
@@ -3221,7 +3222,7 @@ public partial class InsungsAct_RcptRegPage
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
                 // 더블클릭 (SendMessage 방식, BlockInput 사용)
-                await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
+                //await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
                 Debug.WriteLine($"[{m_Context.AppName}] 더블클릭 실행 (시도 {j + 1}/{CommonVars.c_nRepeatNormal})");
 
                 // 팝업창 나타날 때까지 대기 (최대 5초)

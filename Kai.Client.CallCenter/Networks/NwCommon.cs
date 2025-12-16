@@ -23,14 +23,15 @@ public class NwCommon
         string sAppFolder = string.Empty;
         try
         {
-            sAppFolder = s_KaiReg.GetStringValue(sRegName); // Registry에 등록된 경로를 읽는다
+            //sAppFolder = s_KaiReg.GetStringValue(sRegName); // Registry에 등록된 경로를 읽는다
+            sAppFolder = "";
 
             if (string.IsNullOrEmpty(sAppFolder)) // 정보가 없을시..
             {
                 if (Directory.Exists(sPredictFolder)) // 예측 경로가 존재하면
                 {
                     sAppFolder = sPredictFolder;
-                    s_KaiReg.SetValue(sRegName, sAppFolder); // 실행경로를 등록한다
+                    //s_KaiReg.SetValue(sRegName, sAppFolder); // 실행경로를 등록한다
                 }
                 else // 예측 경로가 존재하지 않으면 - FolderDialog를 띄워서 경로를 입력받는다
                 {
@@ -41,7 +42,7 @@ public class NwCommon
                     if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                     {
                         sAppFolder = dialog.FileName;
-                        s_KaiReg.SetValue(sRegName, sAppFolder); // 실행경로를 등록한다
+                        //s_KaiReg.SetValue(sRegName, sAppFolder); // 실행경로를 등록한다
                     }
                 }
             }

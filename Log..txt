@@ -1,161 +1,15 @@
-[ONECALL] 평가 3: Datagrid 상태 검증 시작
-[ValidateDatagridState] Datagrid 상태 정상
-[ONECALL] SetDG오더ColumnHeaderAsync 완료: 21개 컬럼
-[ONECALL] Small Rects 생성 완료: 21열 x 17행
-[ONECALL] Large Rects 생성 완료: 21열 x 34행
-[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
-[ONECALL] SelectComboBoxItemAsync 시작: target=5초, hWnd=220B6C
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=19,Height=12}, W=19,H=12,Hex=0x0020F8F1DF000806E030C0998F83C380000404602000F97F0C003E0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=8,Y=0,Width=11,Height=10}, W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
-[StartEndList 검색결과] 없음
-[StartEndList] x=1, foundChar=null → 마킹 안 함
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=1,Width=7,Height=11}, W=7,H=11,Hex=0xBFC160F08181C0A0D807
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[StartEndList] 음소 개수=2
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-[미처리 그룹] 총 1개: [0~1]
-  processed[0]=False, result=null
-  processed[1]=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 19x12
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~14
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=8ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=10ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=19,Height=12}, 오른쪽문자영역={X=4,Y=0,Width=15,Height=12}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=4,Y=0,Width=15,Height=12}
-[RightSliding 1단계 실패]
-[ONECALL] SelectComboBoxItemAsync [1] OFR 실패
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=19,Height=12}, W=19,H=12,Hex=0x0020F8F1DF000806E030C0998F83C380000404602000F97F0C003E0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=8,Y=0,Width=11,Height=10}, W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
-[StartEndList 검색결과] 없음
-[StartEndList] x=1, foundChar=null → 마킹 안 함
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=1,Width=7,Height=11}, W=7,H=11,Hex=0xBFC160F08181C0A0D807
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[StartEndList] 음소 개수=2
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-[미처리 그룹] 총 1개: [0~1]
-  processed[0]=False, result=null
-  processed[1]=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 19x12
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~14
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=8ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=12ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=2ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=19,Height=12}, 오른쪽문자영역={X=4,Y=0,Width=15,Height=12}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=4,Y=0,Width=15,Height=12}
-[RightSliding 1단계 실패]
-[ONECALL] SelectComboBoxItemAsync [2] OFR 실패
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=19,Height=12}, W=19,H=12,Hex=0x0020F8F1DF000806E030C0998F83C380000404602000F97F0C003E0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=8,Y=0,Width=11,Height=10}, W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
-[StartEndList 검색결과] 없음
-[StartEndList] x=1, foundChar=null → 마킹 안 함
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=1,Width=7,Height=11}, W=7,H=11,Hex=0xBFC160F08181C0A0D807
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[StartEndList] 음소 개수=2
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-[미처리 그룹] 총 1개: [0~1]
-  processed[0]=False, result=null
-  processed[1]=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 19x12
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~14
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=10ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=19,Height=12}, 오른쪽문자영역={X=4,Y=0,Width=15,Height=12}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=4,Y=0,Width=15,Height=12}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=1,Width=7,Height=11}
-[ImageToCharWnd] Window_Loaded 시작
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.StackTrace.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-[TbChar 저장 시도] manualInput='5', rcChar={X=0,Y=1,Width=7,Height=11}, avgBright2=169
-[TbChar] model=W=7,H=11,Hex=0xBFC160F08181C0A0D807
-[TbChar] existingChar=없음
-[TbChar 저장 완료] '5' → result=17097336
-[대화상자] len=1, currentIdx=1, endIdx=1, rcChar={X=8,Y=0,Width=11,Height=10}
-[ImageToCharWnd] Window_Loaded 시작
-[TbChar 저장 시도] manualInput='초', rcChar={X=8,Y=0,Width=11,Height=10}, avgBright2=169
-[TbChar] model=W=11,H=10,Hex=0x20F01F08E0C0998383000420F83F
-[TbChar] existingChar=없음
-[TbChar 저장 완료] '초' → result=17097337
-[최종 결과] OfrStr_ComplexCharSetAsync: '5초' (14466ms)
-[ONECALL] SelectComboBoxItemAsync 성공: 5초 (15749ms)
-[ONECALL] RcptRegPage InitializeAsync 성공
-[ONECALL] InitializeAsync 완료
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
-[ExternalAppController] InitializeAsync 완료
-[MasterModeManager] ExternalAppController 초기화 완료
-[MainWnd] Master 모드 초기화 완료
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Xceed.Wpf.Toolkit.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-[ExternalAppController] 기존 주문 1개 로드 시작
-[분류] KeyCode=180, CarType=트럭, CarWeight=1t, 인성=True, 화물/원콜=True
-[AutoAllocQueue] Enqueue: INSUNG1, KeyCode=180, StateFlag=Existed_NonSeqno, 큐크기=1
-  → INSUNG1 큐 추가: SeqNo=, Flag=Existed_NonSeqno
-[AutoAllocQueue] Enqueue: INSUNG2, KeyCode=180, StateFlag=Existed_NonSeqno, 큐크기=1
-  → INSUNG2 큐 추가: SeqNo=, Flag=Existed_NonSeqno
-[AutoAllocQueue] Enqueue: CARGO24, KeyCode=180, StateFlag=Existed_NonSeqno, 큐크기=1
-  → CARGO24 큐 추가: SeqNo=, Flag=Existed_NonSeqno
-[AutoAllocQueue] Enqueue: ONECALL, KeyCode=180, StateFlag=Existed_WithSeqno, 큐크기=1
-  → ONECALL 큐 추가: SeqNo=149311768, Flag=Existed_WithSeqno
-[AutoAllocQueue] 큐 상태:
-  인성1: 1개
-  인성2: 1개
-  화물24시: 1개
-  원콜: 1개
-  전체: 4개
-[ExternalAppController] 자동배차 시작
-[ExternalAppController] AutoAllocLoopAsync 시작
-
 -----------------[ONECALL] AutoAllocAsync 시작 - Count=1--------------------------
 [ONECALL] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[AutoAllocQueue] Dequeue: KeyCode=182, RunStartTime=null, DriverPhone=null
 [AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
 [ONECALL] 큐에서 가져온 주문 개수: 1
 [ONECALL] listCreated=0, listEtcGroup=1
-[ONECALL]   EtcGroup: KeyCode=180, StateFlag=Existed_WithSeqno, Onecall=149311768
+[ONECALL]   EtcGroup: KeyCode=182, StateFlag=Existed_WithSeqno, Onecall=149359958
 [ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
-[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
-[ONECALL] CollapseDG오더Async: 이미 축소 상태
 [ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
 [ONECALL] 총계 OFR 성공: 2 (시도 1/3)
 [ONECALL] 총계 읽기 성공 (시도 1회): 2
 [ONECALL] 데이터 있음 (총계: 2건)
@@ -163,65 +17,36 @@
 [ONECALL] 페이지 1/1 → 예상 첫 번호: 1
 [ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
 [ONECALL] 페이지 1/1: 유효 로우 2개
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
-[StartEndList 검색결과] 찾음: '소'
-[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
-[StartEndList 검색결과] 찾음: 'l'
-[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=0, 원래 값 복원
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=True, result=l
-  [2] processed=True, result=소
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-  processed[1]=True, result=l
-  processed[2]=True, result=소
-[RightSliding 인식 시작] 이미지 크기: 8x13
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~8
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
-[ImageToCharWnd] Window_Loaded 시작
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (3749ms)
-[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
-[ONECALL] StateFlag=Existed/Updated: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
-[ONECALL] 처리 완료 (재적재): seqno=149311768
-[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] 페이지 1, y=0, seqno=149359958, status=취소
+[CheckIsOrderAsync_AssumeKaiUpdated] KeyCode=182, Kai=취소, Onecall=취소
+[ONECALL] UpdateOrderModeAsync 진입: KeyCode=182, RowIndex=0, targetState=, order=있음
+[ONECALL] 로우 클릭 완료: nRowIndex=0, 선택됨=True
+[ONECALL] 오더번호 OFR - rowIndex=0, 셀위치={X=118,Y=29,Width=99,Height=20}
+[ONECALL] ===== 오더번호 OFR 시도 1/3 =====
+[ONECALL] 오더번호 획득 성공: '149359958' (시도 1/3)
+[ONECALL] 오더번호 검증 성공: 149359958
+[ONECALL] 총운임 수정: 32,000 → 32000
+[ONECALL] 화물중량 설정 성공: 25.00
+[ONECALL] 정보 수정 완료: 2개 필드 변경
+[ONECALL] 저장 성공 확인
+[ONECALL] UpdateOrderModeAsync 완료: KeyCode=182
+[ONECALL] 처리 완료 (재적재): seqno=149359958
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=182, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
 [ONECALL] Region 5 완료
------------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=4882ms, Delay=118ms
+-----------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=1960ms, Delay=3040ms
 
 -----------------[ONECALL] AutoAllocAsync 시작 - Count=2--------------------------
 [ONECALL] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[AutoAllocQueue] Dequeue: KeyCode=182, RunStartTime=null, DriverPhone=null
 [AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
 [ONECALL] 큐에서 가져온 주문 개수: 1
 [ONECALL] listCreated=0, listEtcGroup=1
-[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL]   EtcGroup: KeyCode=182, StateFlag=NotChanged, Onecall=149359958
 [ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
-[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
-[ONECALL] CollapseDG오더Async: 이미 축소 상태
 [ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
 [ONECALL] 총계 OFR 성공: 2 (시도 1/3)
 [ONECALL] 총계 읽기 성공 (시도 1회): 2
 [ONECALL] 데이터 있음 (총계: 2건)
@@ -229,66 +54,25 @@
 [ONECALL] 페이지 1/1 → 예상 첫 번호: 1
 [ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
 [ONECALL] 페이지 1/1: 유효 로우 2개
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
-[StartEndList 검색결과] 찾음: '소'
-[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
-[StartEndList 검색결과] 찾음: 'l'
-[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=0, 원래 값 복원
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=True, result=l
-  [2] processed=True, result=소
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-  processed[1]=True, result=l
-  processed[2]=True, result=소
-[RightSliding 인식 시작] 이미지 크기: 8x13
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~8
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
-[ImageToCharWnd] Window_Loaded 시작
-12048 스레드가 종료되었습니다(코드: 0 (0x0)).
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (8660ms)
-[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
-[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
-[ONECALL] 처리 완료 (재적재): seqno=149311768
-[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] 페이지 1, y=0, seqno=149359958, status=취소
+[CheckIsOrderAsync_OnecallOrderManage] KeyCode=182, Kai=취소, Onecall=취소
+[ONECALL] 처리 완료 (재적재): seqno=149359958
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=182, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
 [ONECALL] Region 5 완료
------------[ExternalAppController] AutoAlloc [2] 완료 - Elapsed=9516ms, Delay=0ms
+-----------[ExternalAppController] AutoAlloc [2] 완료 - Elapsed=716ms, Delay=4284ms
 
 -----------------[ONECALL] AutoAllocAsync 시작 - Count=3--------------------------
 [ONECALL] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[AutoAllocQueue] Dequeue: KeyCode=182, RunStartTime=null, DriverPhone=null
 [AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
 [ONECALL] 큐에서 가져온 주문 개수: 1
 [ONECALL] listCreated=0, listEtcGroup=1
-[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL]   EtcGroup: KeyCode=182, StateFlag=NotChanged, Onecall=149359958
 [ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
-[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
-[ONECALL] CollapseDG오더Async: 이미 축소 상태
 [ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
 [ONECALL] 총계 OFR 성공: 2 (시도 1/3)
 [ONECALL] 총계 읽기 성공 (시도 1회): 2
 [ONECALL] 데이터 있음 (총계: 2건)
@@ -296,65 +80,25 @@
 [ONECALL] 페이지 1/1 → 예상 첫 번호: 1
 [ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
 [ONECALL] 페이지 1/1: 유효 로우 2개
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
-[StartEndList 검색결과] 찾음: '소'
-[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
-[StartEndList 검색결과] 찾음: 'l'
-[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=0, 원래 값 복원
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=True, result=l
-  [2] processed=True, result=소
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-  processed[1]=True, result=l
-  processed[2]=True, result=소
-[RightSliding 인식 시작] 이미지 크기: 8x13
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~8
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
-[ImageToCharWnd] Window_Loaded 시작
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (4607ms)
-[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
-[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
-[ONECALL] 처리 완료 (재적재): seqno=149311768
-[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] 페이지 1, y=0, seqno=149359958, status=취소
+[CheckIsOrderAsync_OnecallOrderManage] KeyCode=182, Kai=취소, Onecall=취소
+[ONECALL] 처리 완료 (재적재): seqno=149359958
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=182, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
 [ONECALL] Region 5 완료
------------[ExternalAppController] AutoAlloc [3] 완료 - Elapsed=5459ms, Delay=0ms
+-----------[ExternalAppController] AutoAlloc [3] 완료 - Elapsed=711ms, Delay=4289ms
 
 -----------------[ONECALL] AutoAllocAsync 시작 - Count=4--------------------------
 [ONECALL] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[AutoAllocQueue] Dequeue: KeyCode=182, RunStartTime=null, DriverPhone=null
 [AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
 [ONECALL] 큐에서 가져온 주문 개수: 1
 [ONECALL] listCreated=0, listEtcGroup=1
-[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL]   EtcGroup: KeyCode=182, StateFlag=NotChanged, Onecall=149359958
 [ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
-[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
-[ONECALL] CollapseDG오더Async: 이미 축소 상태
 [ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
 [ONECALL] 총계 OFR 성공: 2 (시도 1/3)
 [ONECALL] 총계 읽기 성공 (시도 1회): 2
 [ONECALL] 데이터 있음 (총계: 2건)
@@ -362,65 +106,25 @@
 [ONECALL] 페이지 1/1 → 예상 첫 번호: 1
 [ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
 [ONECALL] 페이지 1/1: 유효 로우 2개
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
-[StartEndList 검색결과] 찾음: '소'
-[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
-[StartEndList 검색결과] 찾음: 'l'
-[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=0, 원래 값 복원
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=True, result=l
-  [2] processed=True, result=소
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-  processed[1]=True, result=l
-  processed[2]=True, result=소
-[RightSliding 인식 시작] 이미지 크기: 8x13
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~8
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
-[ImageToCharWnd] Window_Loaded 시작
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (1382ms)
-[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
-[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
-[ONECALL] 처리 완료 (재적재): seqno=149311768
-[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] 페이지 1, y=0, seqno=149359958, status=취소
+[CheckIsOrderAsync_OnecallOrderManage] KeyCode=182, Kai=취소, Onecall=취소
+[ONECALL] 처리 완료 (재적재): seqno=149359958
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=182, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
 [ONECALL] Region 5 완료
------------[ExternalAppController] AutoAlloc [4] 완료 - Elapsed=2262ms, Delay=2738ms
+-----------[ExternalAppController] AutoAlloc [4] 완료 - Elapsed=715ms, Delay=4285ms
 
 -----------------[ONECALL] AutoAllocAsync 시작 - Count=5--------------------------
 [ONECALL] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
+[ONECALL] CollapseDG오더Async: 이미 축소 상태
+[AutoAllocQueue] Dequeue: KeyCode=182, RunStartTime=null, DriverPhone=null
 [AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
 [ONECALL] 큐에서 가져온 주문 개수: 1
 [ONECALL] listCreated=0, listEtcGroup=1
-[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
+[ONECALL]   EtcGroup: KeyCode=182, StateFlag=NotChanged, Onecall=149359958
 [ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
-[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
-[ONECALL] CollapseDG오더Async: 이미 축소 상태
 [ONECALL] 새로고침 딜레이: 100ms (총계: 2)
+[ONECALL] IsDG오더Expanded: 접수섹션Visible=True, Result=False
 [ONECALL] 총계 OFR 성공: 2 (시도 1/3)
 [ONECALL] 총계 읽기 성공 (시도 1회): 2
 [ONECALL] 데이터 있음 (총계: 2건)
@@ -428,183 +132,16 @@
 [ONECALL] 페이지 1/1 → 예상 첫 번호: 1
 [ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
 [ONECALL] 페이지 1/1: 유효 로우 2개
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
-[StartEndList 검색결과] 찾음: '소'
-[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
-[StartEndList 검색결과] 찾음: 'l'
-[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=0, 원래 값 복원
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=True, result=l
-  [2] processed=True, result=소
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-  processed[1]=True, result=l
-  processed[2]=True, result=소
-[RightSliding 인식 시작] 이미지 크기: 8x13
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~8
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
-[ImageToCharWnd] Window_Loaded 시작
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (11364ms)
-[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
-[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
-[ONECALL] 처리 완료 (재적재): seqno=149311768
-[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[ONECALL] 페이지 1, y=0, seqno=149359958, status=취소
+[CheckIsOrderAsync_OnecallOrderManage] KeyCode=182, Kai=취소, Onecall=취소
+[ONECALL] 처리 완료 (재적재): seqno=149359958
+[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=182, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
 [ONECALL] Region 5 완료
------------[ExternalAppController] AutoAlloc [5] 완료 - Elapsed=12201ms, Delay=0ms
-
------------------[ONECALL] AutoAllocAsync 시작 - Count=6--------------------------
-[ONECALL] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
-[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
-[ONECALL] 큐에서 가져온 주문 개수: 1
-[ONECALL] listCreated=0, listEtcGroup=1
-[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
-[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
-[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
-[ONECALL] CollapseDG오더Async: 이미 축소 상태
-[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
-[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
-[ONECALL] 총계 읽기 성공 (시도 1회): 2
-[ONECALL] 데이터 있음 (총계: 2건)
-[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
-[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
-[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
-[ONECALL] 페이지 1/1: 유효 로우 2개
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
-[StartEndList 검색결과] 찾음: '소'
-[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
-[StartEndList 검색결과] 찾음: 'l'
-[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=0, 원래 값 복원
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=True, result=l
-  [2] processed=True, result=소
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-  processed[1]=True, result=l
-  processed[2]=True, result=소
-[RightSliding 인식 시작] 이미지 크기: 8x13
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~8
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
-[ImageToCharWnd] Window_Loaded 시작
+=== Window_Closing 시작 ===
+SrGlobalClient 재접속 중지 플래그 설정
 예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (8595ms)
-[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
-[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
-[ONECALL] 처리 완료 (재적재): seqno=149311768
-[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
-[ONECALL] Region 5 완료
------------[ExternalAppController] AutoAlloc [6] 완료 - Elapsed=9452ms, Delay=0ms
-
------------------[ONECALL] AutoAllocAsync 시작 - Count=7--------------------------
-[ONECALL] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=180, RunStartTime=null, DriverPhone=null
-[AutoAllocQueue] DequeueAllToList: ONECALL, 1개 꺼냄
-[ONECALL] 큐에서 가져온 주문 개수: 1
-[ONECALL] listCreated=0, listEtcGroup=1
-[ONECALL]   EtcGroup: KeyCode=180, StateFlag=NotChanged, Onecall=149311768
-[ONECALL] Region 5: 기존 주문 처리 시작 (총 1건)
-[ONECALL] IsDG오더Expanded: Height=474, Threshold=874, Result=False
-[ONECALL] CollapseDG오더Async: 이미 축소 상태
-[ONECALL] 새로고침 딜레이: 100ms (총계: 2)
-[ONECALL] 총계 OFR 성공: 2 (시도 1/3)
-[ONECALL] 총계 읽기 성공 (시도 1회): 2
-[ONECALL] 데이터 있음 (총계: 2건)
-[ONECALL] 페이지 산정: 총계=2, 페이지당=17, 총페이지=1
-[ONECALL] 페이지 1/1 → 예상 첫 번호: 1
-[ONECALL] ReadFirstRowNumAsync: rowIdx=0, curNum=1, firstNum=1
-[ONECALL] 페이지 1/1: 유효 로우 2개
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=26,Height=13}, W=26,H=13,Hex=0x100600401820E06F80018601062C06340C1B0C016008D8BF01021006084018200061FC3F84010010060000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=9,Y=0,Width=17,Height=13}, W=17,H=13,Hex=0x030006080C30186030A06130C410B00102030406088CFF1F00300000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=14,Y=1,Width=12,Height=10}, W=12,H=10,Hex=0x20000660000D0C216020000220F0FF
-[StartEndList 검색결과] 찾음: '소'
-[StartEndList 마킹] foundChar='소', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=11,Height=13}, W=11,H=13,Hex=0x1086B0BF31CCE26103F8DF10863084210C61
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=9,Y=0,Width=2,Height=13}, W=2,H=13,Hex=0xFFFFFF03
-[StartEndList 검색결과] 찾음: 'l'
-[StartEndList 마킹] foundChar='l', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=8,Height=13}, W=8,H=13,Hex=0x1010FE182CC300FF1010101010
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=0, 원래 값 복원
-[StartEndList] 음소 개수=3
-  [0] processed=False, result=null
-  [1] processed=True, result=l
-  [2] processed=True, result=소
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-  processed[1]=True, result=l
-  processed[2]=True, result=소
-[RightSliding 인식 시작] 이미지 크기: 8x13
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~8
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=8,Height=13}, 오른쪽문자영역={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=8,Height=13}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=8,Height=13}
-[ImageToCharWnd] Window_Loaded 시작
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒l소' (2937ms)
-[ONECALL] 페이지 1, y=0, seqno=149311768, status=☒l
-[ONECALL] StateFlag=NotChanged: seqno=149311768 → 재적재 (TODO: 실제 처리 구현)
-[ONECALL] 처리 완료 (재적재): seqno=149311768
-[AutoAllocQueue] ReEnqueue: ONECALL, KeyCode=180, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
-[ONECALL] Region 5 완료
------------[ExternalAppController] AutoAlloc [7] 완료 - Elapsed=3815ms, Delay=1185ms
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Net.Http.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+SignalR OnClosedAsync called
+-----------[ExternalAppController] AutoAlloc [5] 완료 - Elapsed=749ms, Delay=4251ms

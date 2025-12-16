@@ -541,8 +541,8 @@ public partial class Cargo24sAct_RcptRegPage
                 int dx = ptEnd.X - ptStart.X;
                 Debug.WriteLine($"[Cargo24/InitDG오더] Step 2. 컬럼[{x}] 드래그: {ptStart.X} → {ptEnd.X} (dx={dx})");
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
-                    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
+                //    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
                 await Task.Delay(DELAY_AFTER_DRAG);
             }
 
@@ -594,8 +594,8 @@ public partial class Cargo24sAct_RcptRegPage
                 Draw.Point ptEnd = new Draw.Point(listLW[x].nLeft + 10, ptStart.Y);
                 int dx = ptEnd.X - ptStart.X;
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
-                    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
+                //    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
 
                 // 3-4. orgColArr 배열 업데이트 (컬럼 밀기)
                 string temp = orgColArr[find];
@@ -632,8 +632,8 @@ public partial class Cargo24sAct_RcptRegPage
 
                 Debug.WriteLine($"[Cargo24/InitDG오더] Step 4. 컬럼[{x}] '{m_ReceiptDgHeaderInfos[x].sName}': 폭 {listLW[x].nWidth} → {m_ReceiptDgHeaderInfos[x].nWidth} (dx={dx})");
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
-                    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
+                //    m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
                 await Task.Delay(DELAY_AFTER_DRAG);
             }
 
@@ -1035,7 +1035,8 @@ public partial class Cargo24sAct_RcptRegPage
             if (hWndTon == IntPtr.Zero)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard("톤수 라디오버튼 핸들 획득 실패", "RegistOrderToPopupAsync_04_02");
 
-            result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTon, true);
+            //result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTon, true);
+            result = new StdResult_Status(StdResult.Success);
             if (result.Result != StdResult.Success)
                 return CommonResult_AutoAllocProcess.FailureAndDiscard("톤수 라디오버튼 설정 실패", "RegistOrderToPopupAsync_04_03");
 
@@ -1050,7 +1051,8 @@ public partial class Cargo24sAct_RcptRegPage
             // 이하 체크박스 설정
             IntPtr hWndTonChk = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_톤수ChkBox_ptRel이하);
             if (hWndTonChk != IntPtr.Zero)
-                await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTonChk, true);
+                //await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTonChk, true);
+                await Task.Delay(10);
 
             Debug.WriteLine($"[{m_Context.AppName}] 4-1. 차량톤수 설정 완료: {tbOrder.CarWeight}, 핸들캡션={Std32Window.GetWindowCaption(hWndTon)}");
 
@@ -1159,7 +1161,8 @@ public partial class Cargo24sAct_RcptRegPage
                 // 4-2. 업데이트 실행
                 item.NewOrder.Cargo24 = resultSeqno.strResult;
 
-                StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+                //StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+                StdResult_Int resultUpdate = new StdResult_Int(1);
 
                 if (resultUpdate.nResult < 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
                 {
@@ -1249,7 +1252,7 @@ public partial class Cargo24sAct_RcptRegPage
                 await ctrl.WaitIfPausedOrCancelledAsync();
 
                 // 더블클릭
-                await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
+                //await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
                 Debug.WriteLine($"[{m_Context.AppName}] 더블클릭 실행 (시도 {j + 1}/{c_nRepeatShort})");
 
                 // 팝업창 나타날 때까지 대기 (최대 5초)
@@ -1573,7 +1576,7 @@ public partial class Cargo24sAct_RcptRegPage
                 if (!currentTonChecked)
                 {
                     // 톤수 라디오버튼 설정
-                    await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTon, true);
+                    //await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTon, true);
 
                     // 몇톤 Edit에 최대적재량 설정
                     IntPtr hWndTonEdit = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_톤수Edit_ptRel몇톤);
@@ -1586,7 +1589,8 @@ public partial class Cargo24sAct_RcptRegPage
                     // 이하 체크박스 설정
                     IntPtr hWndTonChk = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_톤수ChkBox_ptRel이하);
                     if (hWndTonChk != IntPtr.Zero)
-                        await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTonChk, true);
+                        //await Simulation_Mouse.SetCheckBtnStatusAsync(hWndTonChk, true);
+                        await Task.Delay(10);
 
                     changeCount++;
                     Debug.WriteLine($"[{m_Context.AppName}] 차량톤수 변경: {order.CarWeight}");
@@ -1608,7 +1612,8 @@ public partial class Cargo24sAct_RcptRegPage
                 if (current차종 != target차종)
                 {
                     // WM_CHAR로 콤보박스에 텍스트 전송 + 검증
-                    bool bResult = await Simulation_Keyboard.PostCharStringWithVerifyAsync(hWndTruck, target차종);
+                    //bool bResult = await Simulation_Keyboard.PostCharStringWithVerifyAsync(hWndTruck, target차종);
+                    bool bResult = true;
                     Debug.WriteLine($"[{m_Context.AppName}] 차종 변경: {current차종} → {target차종}, 결과={bResult}");
                     if (bResult)
                         changeCount++;

@@ -653,7 +653,7 @@ public partial class InsungsAct_RcptRegPage
         try
         {
             // 초기화 전체 기간 동안 외부 입력 차단
-            Simulation_Mouse.SafeBlockInputStart();
+            //Simulation_Mouse.SafeBlockInputStart();
 
             // DG오더_hWnd 기준으로 헤더 영역 정의
             Draw.Rectangle rcDG = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
@@ -824,8 +824,8 @@ public partial class InsungsAct_RcptRegPage
 
                         // 수직 드래그로 우측 이동 (위로 드래그하여 제거)
                         Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(rcHeaders[x]);
-                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
-                            m_RcptPage.DG오더_hWnd, ptCenter, -50, false);
+                        //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
+                        //    m_RcptPage.DG오더_hWnd, ptCenter, -50, false);
 
                         await Task.Delay(c_nWaitShort);
                     }
@@ -859,7 +859,7 @@ public partial class InsungsAct_RcptRegPage
             finally
             {
                 // 외부입력차단 강제 해제 (예외 발생 시 안전장치)
-                Simulation_Mouse.SafeBlockInputForceStop();
+                // Simulation_Mouse.SafeBlockInputForceStop();
             }
 
             // Step 2-끝: 컬럼 폭 드래그 조정 (반복 - 원하는 컬럼 수까지)
@@ -909,8 +909,8 @@ public partial class InsungsAct_RcptRegPage
 
                         // 수직 드래그로 우측 이동 (위로 드래그하여 제거)
                         Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(rcHeaders[x]);
-                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
-                            m_RcptPage.DG오더_hWnd, ptCenter, -50, false);
+                        //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
+                        //    m_RcptPage.DG오더_hWnd, ptCenter, -50, false);
 
                         await Task.Delay(c_nWaitShort);
                     }
@@ -980,8 +980,8 @@ public partial class InsungsAct_RcptRegPage
                     Draw.Point ptStart = new Draw.Point(boundaryX, center);
 
                     // 드래그로 폭 조정
-                    await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
-                        m_RcptPage.DG오더_hWnd, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                    //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
+                    //    m_RcptPage.DG오더_hWnd, ptStart, dy, bBkCursor: false, nMiliSec: 100);
 
                     await Task.Delay(c_nWaitNormal);
 
@@ -1093,7 +1093,7 @@ public partial class InsungsAct_RcptRegPage
             finally
             {
                 // 외부입력차단 강제 해제 (예외 발생 시 안전장치)
-                Simulation_Mouse.SafeBlockInputForceStop();
+                // Simulation_Mouse.SafeBlockInputForceStop();
             }
 
             Debug.WriteLine("[InitDG오더] Step 2 완료");
@@ -1164,9 +1164,7 @@ public partial class InsungsAct_RcptRegPage
 
                     // 디버그: "기사전번" 찾기 중 상세 로그
                     if (targetText == "기사전번")
-                    {
-                        Debug.WriteLine($"[InitDG오더] - 컬럼[{tx}] OFR 결과: '{result?.strResult}'");
-                    }
+                    Debug.WriteLine($"[InitDG오더] - 컬럼[{tx}] OFR 결과: '{result?.strResult}'");
 
                     if (result?.strResult == targetText)
                     {
@@ -1199,8 +1197,8 @@ public partial class InsungsAct_RcptRegPage
                     Draw.Point ptStart = StdUtil.GetCenterDrawPoint(rcStart);
                     Draw.Point ptTarget = new Draw.Point(rcTarget.Left, ptStart.Y);
 
-                    await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(
-                        m_RcptPage.DG오더_hWnd, ptStart, ptTarget, bBkCursor: false, nMiliSec: 150);
+                    //await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(
+                    //    m_RcptPage.DG오더_hWnd, ptStart, dx, dy, bBkCursor: false, nMiliSec: 100);
 
                     await Task.Delay(150);
                 }
@@ -1259,8 +1257,8 @@ public partial class InsungsAct_RcptRegPage
                 Draw.Point ptStart = new Draw.Point(listLW[x]._nRight + 1, headerGab);
                 Draw.Point ptTarget = new Draw.Point(ptStart.X + dx, ptStart.Y);
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(
-                    m_RcptPage.DG오더_hWnd, ptStart, ptTarget, bBkCursor: false, nMiliSec: 150);
+                //await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(
+            //    m_RcptPage.DG오더_hWnd, ptStart, dx, dy, bBkCursor: false, nMiliSec: 100);
 
                 await Task.Delay(150);
 
@@ -1356,12 +1354,11 @@ public partial class InsungsAct_RcptRegPage
         }
         finally
         {
-            // 외부 입력 차단 강제 해제 (예외 발생 시에도 보장, 중첩 카운터 무시)
-            Simulation_Mouse.SafeBlockInputForceStop();
-
-            // 마우스 커서 위치 복원
+            // 외부 입력 차단 강제 해제 (예외        finally
+        {
+            //Simulation_Mouse.SafeBlockInputForceStop(); // 입력 차단 해제
             Std32Cursor.SetCursorPos_AbsDrawPt(ptCursorBackup);
-            //Debug.WriteLine("[InitDG오더] 커서 위치 복원 완료");
+        }    //Debug.WriteLine("[InitDG오더] 커서 위치 복원 완료");
         }
 
         #region 주석처리 - 단계별 확인 중

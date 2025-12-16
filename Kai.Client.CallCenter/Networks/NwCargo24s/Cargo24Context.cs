@@ -25,10 +25,10 @@ public class Cargo24Context
     /// </summary>
     public string Pw { get; set; } = string.Empty;
 
-    /// <summary>
-    /// 앱 상태
-    /// </summary>
-    public CEnum_AppUsing AppStatus { get; set; } = CEnum_AppUsing.NotUse;
+    ///// <summary>
+    ///// 앱 상태
+    ///// </summary>
+    //public CEnum_AppUsing AppStatus { get; set; } = CEnum_AppUsing.NotUse;
     #endregion
 
     #region 정보 객체들
@@ -69,7 +69,7 @@ public class Cargo24Context
         AppName = appName;
         Id = id;
         Pw = pw;
-        AppStatus = CEnum_AppUsing.NotUse;
+        //AppStatus = CEnum_AppUsing.NotUse;
 
         // FileInfo 생성
         FileInfo = new Cargo24sInfo_File();

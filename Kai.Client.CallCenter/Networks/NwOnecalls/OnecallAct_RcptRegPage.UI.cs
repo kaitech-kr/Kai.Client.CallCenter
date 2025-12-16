@@ -120,7 +120,7 @@ public partial class OnecallAct_RcptRegPage
 
             // 2. Ctrl+A 전체 선택
             await Task.Delay(c_nWaitUltraShort);
-            await Simulation_Keyboard.KeyPost_CtrlA_SelectAllAsync(mRcpt.접수섹션_hWnd화물중량);
+            //await Simulation_Keyboard.KeyPost_CtrlA_SelectAllAsync(mRcpt.접수섹션_hWnd화물중량);
 
             // 3. VK로 문자열 입력
             await Task.Delay(c_nWaitUltraShort);

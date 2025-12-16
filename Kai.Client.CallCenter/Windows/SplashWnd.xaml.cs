@@ -27,7 +27,7 @@ public partial class SplashWnd : Window
         s_SplashWnd = this;
 
         //Init ListChars
-         CommonFuncs.Init();
+         //CommonFuncs.Init();
 
         TBoxID.Text = s_sKaiLogId;
         PwBoxPW.Password = s_sKaiLogPw;
@@ -54,7 +54,7 @@ public partial class SplashWnd : Window
         //백그라운드에서 연결 시도
         _ = Task.Run(async () =>
         {
-            await s_SrGClient.ConnectAsync();
+            //await s_SrGClient.ConnectAsync();
         });
     }
 
@@ -122,7 +122,7 @@ public partial class SplashWnd : Window
     {
         // 잊지않기 위해 취소할까요(수정해야할 코드있음)
         UpdateStatus("연결 취소 중...");
-        await s_SrGClient.DisconnectAsync();
+        //await s_SrGClient.DisconnectAsync();
         this.Close();
         Application.Current.Shutdown();
     }

@@ -42,8 +42,9 @@ public class CommonVars
     public static readonly string s_sCurDir = Directory.GetCurrentDirectory();
     public static readonly string s_sDataDir = Path.Combine(s_sCurDir, "Data");
     public static readonly string s_sLogDir = Path.Combine(s_sCurDir, "Log");
-    public static readonly string s_sX86ExecPath = //$"{s_sX86ProcName}.exe";
-        $@"D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.X86ComBroker\Kai.Client.X86ComBroker\bin\x86\Debug\net8.0-windows\{s_sX86ProcName}.exe";
+    //public static readonly string s_sX86ExecPath = //$"{s_sX86ProcName}.exe";
+    //    $@"D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.X86ComBroker\Kai.Client.X86ComBroker\bin\x86\Debug\net8.0-windows\{s_sX86ProcName}.exe";
+    public static readonly string s_sX86ExecPath = $"{s_sX86ProcName}.exe"; // Adjusted for build
     public static readonly string s_sImgFilesPath = @"D:\CodeWork\Common\Resource\StrImages";
     public static readonly Regex s_RegexOnlyNum = new Regex("[^0-9]+"); // 숫자가 아니면 true
 
@@ -64,7 +65,6 @@ public class CommonVars
     public static bool s_bDebugMode = false;
     public static string s_sKaiLogId = "";
     public static string s_sKaiLogPw = "";
-    //public static bool s_bAutoReceipt = true; // 나중에 적재방식 수정...
     public static bool s_bAutoAlloc = false; // appsettings.json으로 이동 (LoadExternalAppsConfig에서 로드)
 
     // Pointer
@@ -82,7 +82,7 @@ public class CommonVars
     public static readonly SrGlobalClient s_SrGClient = new SrGlobalClient();  // SignalR - Global
     public static readonly SrLocalClient s_SrLClient = new SrLocalClient();  // SignalR - Local
     public static List<TbTel070Info> s_ListTel070Info = new List<TbTel070Info>(); // 전화번호 정보
-    public static readonly FrmRegistry s_KaiReg = new FrmRegistry("Kai.Client.CallCenter"); // Registry
+    //public static readonly FrmRegistry s_KaiReg = new FrmRegistry("Kai.Client.CallCenter"); // Registry
     public static FrmSystemDisplays s_Screens = new FrmSystemDisplays(); // 시스템(화면)정보를 얻는다
     public static NetWndSimple s_WndMsgSimple = null;
 

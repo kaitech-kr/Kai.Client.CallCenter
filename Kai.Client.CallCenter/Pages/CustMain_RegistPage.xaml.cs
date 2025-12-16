@@ -481,7 +481,8 @@ public partial class CustMain_RegistPage : Page
             {
                 Debug.WriteLine("[CustMain_RegistPage] 전체 고객 검색 시작");
                 NetLoadingWnd.ShowLoading(s_MainWnd, "고객정보를 로딩중입니다...");
-                result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using(use);
+                //result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using(use);
+                result = new PostgResult_AllWithList();
             }
             // 조건 검색
             else
@@ -497,15 +498,16 @@ public partial class CustMain_RegistPage : Page
                 Debug.WriteLine($"[CustMain_RegistPage] 조건별 고객 검색 시작: 고객명={TBoxCustName.Text}, 전화번호={TBoxTelNo.Text}");
                 NetLoadingWnd.ShowLoading(s_MainWnd, "고객정보를 로딩중입니다...");
 
-                result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11(
-                    use,
-                    TBoxCustName.Text,
-                    TBoxDeptName.Text,
-                    TBoxChargeName.Text,
-                    TBoxTelNo.Text,
-                    TBoxDongDetail.Text,
-                    TBoxInternetID.Text,
-                    TBoxCompName.Text);
+                //result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11(
+                //    use,
+                //    TBoxCustName.Text,
+                //    TBoxDeptName.Text,
+                //    TBoxChargeName.Text,
+                //    TBoxTelNo.Text,
+                //    TBoxDongDetail.Text,
+                //    TBoxInternetID.Text,
+                //    TBoxCompName.Text);
+                result = new PostgResult_AllWithList();
 
                 // TODO: TBoxCompName을 CompCode(Key)로 변경 필요
             }

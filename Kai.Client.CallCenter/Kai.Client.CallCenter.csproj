@@ -128,7 +128,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl.csproj" />
+
     <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.FrmDll_WpfCtrl\Kai.Common.FrmDll_WpfCtrl\Kai.Common.FrmDll_WpfCtrl.csproj" />
     <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.NetDll_WpfCtrl\Kai.Common.NetDll_WpfCtrl\Kai.Common.NetDll_WpfCtrl.csproj" />
     <ProjectReference Include="..\..\..\Kai.Common\Kai.Common.StdDll_Common\Kai.Common.StdDll_Common\Kai.Common.StdDll_Common.csproj" />

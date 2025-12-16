@@ -47,7 +47,7 @@ public partial class Order_StatusPage : Page
         MinuteTimer.Start();
 
         // SignalR - Local Client
-        SrLocalClient.SrLocalClient_Tel070_AnswerEvent += SrLocalClient_Tel070_AnswerEvent;
+        //SrLocalClient.SrLocalClient_Tel070_AnswerEvent += SrLocalClient_Tel070_AnswerEvent;
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -93,7 +93,8 @@ public partial class Order_StatusPage : Page
     /// </summary>
     private async void MinuteTimer_Tick(object sender, EventArgs e)
     {
-        StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
+        //StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
+        StdResult_Int result = new StdResult_Int(1);
 
         if (result.nResult < 0) // Error
         {
@@ -401,7 +402,7 @@ public partial class Order_StatusPage : Page
     {
         if (DatePickerStart.SelectedDate.HasValue && DatePickerStart.SelectedDate.Value.Date != DateTime.Today)
         {
-            CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+            //CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
         }
     }
 
@@ -412,7 +413,7 @@ public partial class Order_StatusPage : Page
     {
         if (DatePickerEnd.SelectedDate.HasValue && DatePickerEnd.SelectedDate.Value.Date != DateTime.Today)
         {
-            CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+            //CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
         }
     }
 
@@ -651,7 +652,7 @@ public partial class Order_StatusPage : Page
 
             case "취소":
             case "대기":
-                await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "접수");
+                //await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "접수");
                 break;
 
             default:
@@ -676,7 +677,7 @@ public partial class Order_StatusPage : Page
 
             case "취소":
             case "접수":
-                await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "대기");
+                //await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "대기");
                 break;
 
             default:
@@ -704,7 +705,7 @@ public partial class Order_StatusPage : Page
             case "대기":
             case "운행":
             case "완료":
-                await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "취소");
+                //await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "취소");
                 break;
 
             default:
@@ -732,7 +733,8 @@ public partial class Order_StatusPage : Page
 
         tbNew.OrderState = "접수";
 
-        StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
+        //StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
+        StdResult_Long result = new StdResult_Long(1);
         if (result.lResult <= 0)
         {
             ErrMsgBox($"접수 콜복사 실패\n{result.sErrNPos}", "OrderContext_CopyToReceipt_Click");
@@ -758,7 +760,8 @@ public partial class Order_StatusPage : Page
 
         tbNew.OrderState = "대기";
 
-        StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
+        //StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbNew);
+        StdResult_Long result = new StdResult_Long(1);
         if (result.lResult <= 0)
         {
             ErrMsgBox($"대기 콜복사 실패\n{result.sErrNPos}", "OrderContext_CopyToWait_Click");
@@ -821,7 +824,8 @@ public partial class Order_StatusPage : Page
             Debug.WriteLine($"  → [DB 업데이트] 시작: KeyCode={item.KeyCode}");
             Debug.WriteLine($"      OrderState: '{item.NewOrder.OrderState}', DriverTelNo: '{item.NewOrder.DriverTelNo}'");
 
-            StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            //StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            StdResult_Int resultUpdate = new StdResult_Int(1);
 
             if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
             {
@@ -874,7 +878,8 @@ public partial class Order_StatusPage : Page
             string originalState = item.NewOrder.OrderState;
             item.NewOrder.OrderState = "완료";
 
-            StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            //StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            StdResult_Int resultUpdate = new StdResult_Int(1);
 
             if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
             {
@@ -1004,7 +1009,7 @@ public partial class Order_StatusPage : Page
         }
 
         // 주문 취소 처리
-         await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "취소");
+         //await s_SrGClient.SrMsgBox_OnlyOrderState_UpdateRowAsync_Today(tb, "취소");
     }
 
     private void BtnOrderDriver_Click(object sender, RoutedEventArgs e)
@@ -1248,7 +1253,8 @@ public partial class Order_StatusPage : Page
     /// </summary>
     private async Task<bool> SearchTodayOrdersAsync()
     {
-        PostgResult_TbOrderList result = await s_SrGClient.SrResult_Order_SelectRowsAsync_Today_CenterCode();
+        //PostgResult_TbOrderList result = await s_SrGClient.SrResult_Order_SelectRowsAsync_Today_CenterCode();
+        PostgResult_TbOrderList result = new PostgResult_TbOrderList();
         if (!string.IsNullOrEmpty(result.sErr))
         {
             ErrMsgBox($"오늘 주문 조회 실패: {result.sErr}", "Order_StatusPage/SearchTodayOrdersAsync");
@@ -1268,8 +1274,9 @@ public partial class Order_StatusPage : Page
     /// </summary>
     private async Task<bool> SearchRangeOrdersAsync(DateTime dtStart, DateTime dtEnd)
     {
-        PostgResult_TbOrderList result =
-            await s_SrGClient.SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(dtStart.Date, dtEnd.Date, FilterBtnStatus);
+        //PostgResult_TbOrderList result =
+        //    await s_SrGClient.SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(dtStart.Date, dtEnd.Date, FilterBtnStatus);
+        PostgResult_TbOrderList result = new PostgResult_TbOrderList();
 
         if (!string.IsNullOrEmpty(result.sErr))
         {

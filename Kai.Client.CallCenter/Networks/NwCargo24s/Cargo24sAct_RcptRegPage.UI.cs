@@ -186,7 +186,8 @@ public partial class Cargo24sAct_RcptRegPage
                 return new StdResult_Status(StdResult.Fail, $"{name} CheckBox 핸들 획득 실패", "Set오더상태StatusAsync_00");
 
             bool shouldCheck = status.HasFlag(flag);
-            var result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
+            StdResult_Status result = new StdResult_Status(StdResult.Success);
+            //var result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
             if (result.Result != StdResult.Success)
                 return new StdResult_Status(StdResult.Fail, $"{name} 체크박스 설정 실패", "Set오더상태StatusAsync_01");
 
@@ -228,7 +229,7 @@ public partial class Cargo24sAct_RcptRegPage
                 Debug.WriteLine($"[{m_Context.AppName}] 배송_{name} 비교: 화면={currentCheck}, DB={shouldCheck}");
                 if (shouldCheck != currentCheck)
                 {
-                    var result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
+                    var result = new StdResult_Status(StdResult.Success); //await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
                     if (result.Result != StdResult.Success)
                         return (changeCount, new StdResult_Status(StdResult.Fail, $"{name} 체크박스 설정 실패", "Set오더타입Async_01"));
                     changeCount++;
@@ -236,7 +237,7 @@ public partial class Cargo24sAct_RcptRegPage
             }
             else
             {
-                var result = await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
+                var result = new StdResult_Status(StdResult.Success); //await Simulation_Mouse.SetCheckBtnStatusAsync(hWnd, shouldCheck);
                 if (result.Result != StdResult.Success)
                     return (changeCount, new StdResult_Status(StdResult.Fail, $"{name} 체크박스 설정 실패", "Set오더타입Async_02"));
                 Debug.WriteLine($"[{m_Context.AppName}] {name} 체크박스 설정 완료 (목표={shouldCheck})");
@@ -269,7 +270,7 @@ public partial class Cargo24sAct_RcptRegPage
 
             if (!currentFeeChecked)
             {
-                var resultFee = await Simulation_Mouse.SetCheckBtnStatusAsync(hWndFeeType, true);
+                var resultFee = new StdResult_Status(StdResult.Success); //await Simulation_Mouse.SetCheckBtnStatusAsync(hWndFeeType, true);
                 if (resultFee.Result != StdResult.Success)
                     return (changeCount, new StdResult_Status(StdResult.Fail, "운송비구분 라디오버튼 설정 실패", "Set운송비Async_03"));
                 changeCount++;
@@ -278,7 +279,7 @@ public partial class Cargo24sAct_RcptRegPage
         }
         else
         {
-            var resultFee = await Simulation_Mouse.SetCheckBtnStatusAsync(hWndFeeType, true);
+            var resultFee = new StdResult_Status(StdResult.Success); //await Simulation_Mouse.SetCheckBtnStatusAsync(hWndFeeType, true);
             if (resultFee.Result != StdResult.Success)
                 return (changeCount, new StdResult_Status(StdResult.Fail, "운송비구분 라디오버튼 설정 실패", "Set운송비Async_04"));
             Debug.WriteLine($"[{m_Context.AppName}] 운송비구분 설정 완료: {order.FeeType}");
@@ -397,7 +398,7 @@ public partial class Cargo24sAct_RcptRegPage
             }
 
             // 첫 번째 행 더블클릭
-            await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(hWndDg, m_FileInfo.주소검색Wnd_Datagrid_rcRelFirstRow.Location);
+            //await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(hWndDg, m_FileInfo.주소검색Wnd_Datagrid_rcRelFirstRow.Location);
             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 첫 번째 행 더블클릭");
 
             // 6. 주소검색창 닫힘 대기

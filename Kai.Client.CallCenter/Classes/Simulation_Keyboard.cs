@@ -1,113 +1,106 @@
-using Kai.Common.StdDll_Common;
-using Kai.Common.StdDll_Common.StdWin32;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using static Kai.Client.CallCenter.Classes.CommonVars;
+using Kai.Common.StdDll_Common;
+//using Kai.Common.StdDll_Common.StdVar;
 
-namespace Kai.Client.CallCenter.Classes;
-
-/// <summary>
-/// 키보드 시뮬레이션 헬퍼 클래스
-/// - Modifier 키(Ctrl, Shift, Alt)와 함께 키 입력
-/// </summary>
-public static class Simulation_Keyboard
+namespace Kai.Client.CallCenter.Classes
 {
-    /// <summary>
-    /// Ctrl+A (전체 선택) 단축키
-    /// </summary>
-    public static async Task KeyPost_CtrlA_SelectAllAsync(IntPtr hWnd, int delay = 20)
+    public class Simulation_Keyboard
     {
-        StdWin32.PostMessage(hWnd, StdCommon32.WM_CHAR, 0x01, IntPtr.Zero);
-        await Task.Delay(delay);
-    }
-
-    /// <summary>
-    /// Ctrl+C (복사) 단축키
-    /// </summary>
-    public static async Task KeyPost_CtrlC_CopyAsync(IntPtr hWnd, int delay = 20)
-    {
-        StdWin32.PostMessage(hWnd, StdCommon32.WM_CHAR, 0x03, IntPtr.Zero);
-        await Task.Delay(delay);
-    }
-
-    /// <summary>
-    /// Ctrl+V (붙여넣기) 단축키
-    /// </summary>
-    public static async Task KeyPost_CtrlV_PasteAsync(IntPtr hWnd, int delay = 20)
-    {
-        StdWin32.PostMessage(hWnd, StdCommon32.WM_CHAR, 0x16, IntPtr.Zero);
-        await Task.Delay(delay);
-    }
-
-    /// <summary>
-    /// Ctrl+X (잘라내기) 단축키
-    /// </summary>
-    public static async Task KeyPost_CtrlX_CutAsync(IntPtr hWnd, int delay = 20)
-    {
-        StdWin32.PostMessage(hWnd, StdCommon32.WM_CHAR, 0x18, IntPtr.Zero);
-        await Task.Delay(delay);
-    }
-
-    /// <summary>
-    /// Ctrl+Z (취소) 단축키
-    /// </summary>
-    public static async Task KeyPost_CtrlZ_BackAsync(IntPtr hWnd, int delay = 20)
-    {
-        StdWin32.PostMessage(hWnd, StdCommon32.WM_CHAR, 0x1A, IntPtr.Zero);
-        await Task.Delay(delay);
-    }
-
-    /// <summary>
-    /// WM_CHAR로 문자열 전송 후 캡션 검증
-    /// - SetFocus로 포커스 설정 후 WM_CHAR로 각 문자 전송
-    /// - 캡션이 target과 일치하는지 검증
-    /// </summary>
-    public static async Task<bool> PostCharStringWithVerifyAsync(IntPtr hWnd, string sTarget, int nDelay = 20, int nRepeat = c_nRepeatShort)
-    {
-        if (hWnd == IntPtr.Zero || string.IsNullOrEmpty(sTarget)) return false;
-
-        // 캡션 검증 (반복)
-        for (int i = 0; i < nRepeat; i++)
+        /*
+        #region Send - Key
+        /// <summary>
+        /// 키 입력 시뮬레이션 (비동기)
+        /// </summary>
+        /// <param name="vKey">가상 키 코드 (예: StdCommon32.VK_RETURN)</param>
+        /// <param name="nMiliSec">입력 전 대기 시간 (ms)</param>
+        public static async Task SafeKeySend_Async(int vKey, int nMiliSec = CommonVars.c_nWaitVeryShort)
         {
-            // WM_CHAR로 문자열 전송
-            bool bResult = await Std32Key_Msg.PostCharStringAsync(hWnd, sTarget, nDelay);
-            if (!bResult)
+            try
             {
-                await Task.Delay(c_nWaitNormal);
-                continue;
+                await Task.Delay(nMiliSec);
+                Std32Key.KeyClick((byte)vKey);
             }
-
-            string sCaption = Std32Window.GetWindowCaption(hWnd) ?? "";
-            if (sCaption == sTarget) return true;
-
-            await Task.Delay(c_nWaitNormal);
+            catch (Exception ex)
+            {
+                // 로그 처리 필요 시 추가
+                Debug.WriteLine($"SafeKeySend_Async 오류: {ex.Message}");
+            }
         }
 
-        return false;
-    }
-
-    public static async Task<bool> PostFeeWithVerifyAsync(IntPtr hWnd, int nTarget, int nDelay = 20, int nRepeat = c_nRepeatShort)
-    {
-        if (hWnd == IntPtr.Zero) return false;
-
-        string sTarget = nTarget.ToString();
-
-        // 캡션 검증 (반복)
-        for (int i = 0; i < nRepeat; i++)
+        /// <summary>
+        /// Modifier Key 포함 키 입력 시뮬레이션 (예: Ctrl+C)
+        /// </summary>
+        /// <param name="vModifier">제어 키 (예: StdCommon32.VK_CONTROL)</param>
+        /// <param name="vKey">일반 키 (예: 'C')</param>
+        /// <param name="nMiliSec">입력 전 대기 시간 (ms)</param>
+        public static async Task SafeKeySend_WithAsync(int vModifier, int vKey, int nMiliSec = CommonVars.c_nWaitVeryShort)
         {
-            // WM_CHAR로 문자열 전송
-            bool bResult = await Std32Key_Msg.PostCharStringAsync(hWnd, sTarget, nDelay);
-            if (!bResult)
+            try
             {
-                await Task.Delay(c_nWaitNormal);
-                continue;
+                await Task.Delay(nMiliSec);
+                Std32Key.KeyClick_With((byte)vModifier, (byte)vKey);
             }
-
-            string sCaption = Std32Window.GetWindowCaption(hWnd) ?? "";
-            if (StdConvert.StringWonFormatToInt(sCaption) == nTarget) return true;
-
-            await Task.Delay(c_nWaitNormal);
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"SafeKeySend_WithAsync 오류: {ex.Message}");
+            }
         }
 
-        return false;
+        /// <summary>
+        /// 문자열 입력 시뮬레이션 (클립보드 복사 + 붙여넣기 이용)
+        /// </summary>
+        /// <param name="sText">입력할 문자열</param>
+        /// <param name="nMiliSec">입력 전 대기 시간 (ms)</param>
+        public static async Task SafeKeySend_StringAsync(string sText, int nMiliSec = CommonVars.c_nWaitVeryShort)
+        {
+            try
+            {
+                await Task.Delay(nMiliSec);
+                
+                // UI 스레드에서 클립보드 접근 필요
+                await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    System.Windows.Forms.Clipboard.SetText(sText);
+                });
+
+                // Ctrl + V
+                Std32Key.KeyClick_With(StdCommon32.VK_CONTROL, (byte)'V');
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"SafeKeySend_StringAsync 오류: {ex.Message}");
+            }
+        }
+        #endregion
+
+        #region Verification
+        /// <summary>
+        /// 현재 활성 윈도우의 캡션(제목)을 확인하여 올바른 창인지 검증
+        /// </summary>
+        /// <param name="sExpectedCaption">기대하는 창 제목 (일부분만 일치해도 통과)</param>
+        /// <returns>일치 여부</returns>
+        public static bool VerifyActiveWindow(string sExpectedCaption)
+        {
+            try
+            {
+                IntPtr hWnd = StdWin32.GetForegroundWindow();
+                string sCaption = Std32Window.GetWindowText(hWnd);
+
+                if (string.IsNullOrEmpty(sCaption)) return false;
+
+                return sCaption.Contains(sExpectedCaption);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        #endregion
+        */
     }
 }

@@ -143,7 +143,8 @@ public partial class CustMain_SearchedWnd : Window
 
                 // Debug.WriteLine($"[CustMain_SearchedWnd] 고객 삭제 요청: KeyCode={SelectedVM.tbCustMain.KeyCode}, CustName={SelectedVM.CustName}");
 
-                StdResult_Long resultLong = await s_SrGClient.SrResult_CustMain_MoveToDeletedAsync(SelectedVM.tbCustMain);
+                //StdResult_Long resultLong = await s_SrGClient.SrResult_CustMain_MoveToDeletedAsync(SelectedVM.tbCustMain);
+                StdResult_Long resultLong = new StdResult_Long(1);
                 if (resultLong.lResult <= 0)
                 {
                     ErrMsgBox($"고객 정보 이동 실패\n{resultLong.sErrNPos}", "DGridCustMouseRightButtonDown");

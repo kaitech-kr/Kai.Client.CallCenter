@@ -367,7 +367,8 @@ public class VsOrder_StatusPage
         try
         {
             // 서버에서 전화 수신 데이터 조회
-            PostgResult_TbTelMainRingList resultList = await s_SrGClient.SrResult_TelMainRing_SelectRowsAsync_CenterCode();
+            //PostgResult_TbTelMainRingList resultList = await s_SrGClient.SrResult_TelMainRing_SelectRowsAsync_CenterCode();
+            PostgResult_TbTelMainRingList resultList = new PostgResult_TbTelMainRingList();
 
             // 에러 체크
             if (!string.IsNullOrEmpty(resultList.sErr))

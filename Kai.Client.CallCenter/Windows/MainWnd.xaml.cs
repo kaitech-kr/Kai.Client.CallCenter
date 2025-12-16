@@ -9,7 +9,7 @@ using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 using Ctrl = System.Windows.Controls;
 
-using Kai.Common.FrmDll_FormCtrl;
+// using Kai.Common.FrmDll_FormCtrl;
 using Kai.Common.FrmDll_WpfCtrl;
 using Kai.Common.NetDll_WpfCtrl;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
@@ -23,7 +23,6 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Results;
 
 using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
-//using Kai.Client.CallCenter.Networks.NwInsungs;
 using Kai.Client.CallCenter.Pythons;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Client.CallCenter.Classes.SrGlobalClient;
@@ -38,6 +37,11 @@ public partial class MainWnd : Window
     #region variables
     // Local
     private bool _isShuttingDown = false; // 중복 close 방지
+
+    // Page Cache - Dictionary 기반 O(1) 검색 + LRU
+    private const int MaxCachedTabs = 5; // 최대 캐시 탭 개수
+    private readonly Dictionary<string, TabItem> _pageCache = new();
+    private readonly LinkedList<string> _pageLruList = new(); // LRU 순서 추적
 
     // AllPages
     public TabItem Customer_CustRegistTab = null;
@@ -58,7 +62,7 @@ public partial class MainWnd : Window
         // CommonFuncs 초기화 (SplashWnd를 건너뛴 경우 대비)
         if (string.IsNullOrEmpty(s_sKaiLogId))
         {
-            CommonFuncs.Init();
+            //CommonFuncs.Init();
             Debug.WriteLine("[MainWnd] CommonFuncs.Init() 호출 (SplashWnd 건너뜀)");
         }
 
@@ -67,7 +71,7 @@ public partial class MainWnd : Window
         #region 폴더, 파일 체크 
         if (!File.Exists("Kai.Common.CppDll_Common.dll"))
         {
-            FormFuncs.ErrMsgBox($"현재 디렉토리({s_sCurDir})에서 Kai.Common.CppDll_Common.dll를 찾을 수 없습니다.", "MainWnd/MainWnd_01");
+            ErrMsgBox($"현재 디렉토리({s_sCurDir})에서 Kai.Common.CppDll_Common.dll를 찾을 수 없습니다.", "MainWnd/MainWnd_01");
             Application.Current.Shutdown();
             return;
         }
@@ -75,7 +79,7 @@ public partial class MainWnd : Window
         // 현재 작업(bin)디렉토리에 Kai.X86ComHostClient.exe 없으면 종료
         if (!File.Exists("Kai.Client.X86ComBroker.exe"))
         {
-            FormFuncs.ErrMsgBox($"현재 디렉토리({s_sCurDir})에서 Kai.Client.X86ComBroker.exe를 찾을 수 없습니다.", "MainWnd/MainWnd_02");
+            ErrMsgBox($"현재 디렉토리({s_sCurDir})에서 Kai.Client.X86ComBroker.exe를 찾을 수 없습니다.", "MainWnd/MainWnd_02");
             Application.Current.Shutdown();
             return;
         }
@@ -96,7 +100,7 @@ public partial class MainWnd : Window
 
             if (StdProcess.Find(s_sX86ProcName))
             {
-                FormFuncs.ErrMsgBox($"[{s_sX86ProcName}]를 종료할수 없읍니다.", "MainWnd/MainWnd_03");
+                ErrMsgBox($"[{s_sX86ProcName}]를 종료할수 없읍니다.", "MainWnd/MainWnd_03");
                 Application.Current.Shutdown();
                 return;
             }
@@ -105,7 +109,7 @@ public partial class MainWnd : Window
         // 현재 작업(bin)디렉토리에 VirtualMonitor ExeFolder(usbmmidd_v2)가 없으면 종료
         if (Directory.Exists(s_sCurDir + "\\" + FrmVirtualMonitor.c_sExeFolder) == false)
         {
-            FormFuncs.ErrMsgBox($"현재 디렉토리에서 {FrmVirtualMonitor.c_sExeFolder}를 찾을 수 없습니다.", "MainWnd/MainWnd_04");
+            ErrMsgBox($"현재 디렉토리에서 {FrmVirtualMonitor.c_sExeFolder}를 찾을 수 없습니다.", "MainWnd/MainWnd_04");
             Application.Current.Shutdown();
             return;
         }
@@ -113,7 +117,7 @@ public partial class MainWnd : Window
         // 현재 작업(bin)디렉토리에 Data가 없으면 종료
         if (Directory.Exists(s_sCurDir + "\\" + "Data") == false)
         {
-            FormFuncs.ErrMsgBox("현재 디렉토리에서 Data폴더를 찾을 수 없습니다.", "MainWnd/MainWnd_05");
+            ErrMsgBox("현재 디렉토리에서 Data폴더를 찾을 수 없습니다.", "MainWnd/MainWnd_05");
             Application.Current.Shutdown();
             return;
         }
@@ -126,7 +130,7 @@ public partial class MainWnd : Window
 
         if (File.Exists(@"D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Resources\Sounds\Alim.wav") == false)
         {
-            FormFuncs.ErrMsgBox("Alarm.wav를 찾을 수 없습니다.", "MainWnd/MainWnd_05_1");
+            ErrMsgBox("Alarm.wav를 찾을 수 없습니다.", "MainWnd/MainWnd_05_1");
             Application.Current.Shutdown();
             return;
         }
@@ -137,11 +141,11 @@ public partial class MainWnd : Window
         StdResult_Bool result = Py309Common.Create();
         if (!result.bResult)
         {
-            FormFuncs.ErrMsgBox($"{result}", "MainWnd/MainWnd_06");
+            ErrMsgBox($"{result}", "MainWnd/MainWnd_06");
             return;
         }
 
-        #region Python Test
+        #region Python Test - 주석처리
         //s_PyTest.Test();
         //s_PyMouse.MoveTo(0, 0, 3); // Python Function Test 
         //PyResult_MonitorNum_Coordinate pyResult = PyImage.GetMonitorNumAndCoordinates(-1920, 0);
@@ -156,12 +160,10 @@ public partial class MainWnd : Window
         #endregion
 
         // SignalR - Local Client
-        SrLocalClient_ConnectedEvent += OnSrLocalClient_Connected;
-        SrLocalClient_ClosedEvent += OnSrLocalClient_Closed; // Reserved
+        //SrLocalClient_ConnectedEvent += OnSrLocalClient_Connected;
+        //SrLocalClient_ClosedEvent += OnSrLocalClient_Closed; // Reserved
 
         // SignalR - Global Client
-        //SrGlobalClient_LoginEvent += OnSrGlobalClient_LoginAgain; // Reserved
-        //SrGlobalClient_MultiLoginEvent += OnSrGlobalClient_MultiLogin; // Reserved
         SrGlobalClient_ClosedEvent += OnSrGlobalClient_Closed; // Reserved 
         #endregion
     }
@@ -177,22 +179,22 @@ public partial class MainWnd : Window
         s_X86Proc = StdProcess.OpenProcess(s_sX86ExecPath);
         if (s_X86Proc == null)
         {
-            FormFuncs.ErrMsgBox($"{s_sX86ExecPath} 실행실패", "MainWnd/MainWnd_09");
+            ErrMsgBox($"{s_sX86ExecPath} 실행실패", "MainWnd/MainWnd_09");
             Application.Current.Shutdown();
             goto ERR_EXIT;
         }
-        await s_SrLClient.ConnectAsync();
+        //await s_SrLClient.ConnectAsync();
 
         ////WindowProc
         //CtrlCppFuncs.GetHWndSource(this).AddHook(WindowProc);
         //if (!CtrlCppFuncs.SetMouseHook(s_hWndMain, MYMSG_MOUSEHOOK)) // Start Mouse Hooking
         //{
-        //    FormFuncs.ErrMsgBox("마우스후킹 실패.", "MainWnd/MainWnd_07");
+        //    ErrMsgBox("마우스후킹 실패.", "MainWnd/MainWnd_07");
         //    goto ERR_EXIT;
         //}
         //if (!CtrlCppFuncs.SetKeyboardHook(s_hWndMain, MYMSG_KEYBOARDHOOK)) // Start Keyboard Hooking
         //{
-        //    FormFuncs.ErrMsgBox("키보드후킹 실패.", "MainWnd/MainWnd_08");
+        //    ErrMsgBox("키보드후킹 실패.", "MainWnd/MainWnd_08");
         //    goto ERR_EXIT;
         //}
         #endregion
@@ -208,7 +210,7 @@ public partial class MainWnd : Window
 
             if (result.Result != StdResult.Success)
             {
-                FormFuncs.ErrMsgBox($"Master 모드 초기화 실패: {result}", "MainWnd/Window_Loaded_Master");
+                ErrMsgBox($"Master 모드 초기화 실패: {result}", "MainWnd/Window_Loaded_Master");
                 goto ERR_EXIT;
             }
             Debug.WriteLine("[MainWnd] Master 모드 초기화 완료");
@@ -241,11 +243,11 @@ public partial class MainWnd : Window
     private void Window_Unloaded(object sender, RoutedEventArgs e) // 이거 잘못사용하면 디버그종료 안함.
     {
         //SignalR - Local Client
-        SrLocalClient_ConnectedEvent -= OnSrLocalClient_Connected;
-        SrLocalClient_ClosedEvent -= OnSrLocalClient_Closed; // Reserved
+        //SrLocalClient_ConnectedEvent -= OnSrLocalClient_Connected;
+        //SrLocalClient_ClosedEvent -= OnSrLocalClient_Closed; // Reserved
 
         //SignalR - Global Client
-        SrGlobalClient_ClosedEvent -= OnSrGlobalClient_Closed; // Reserved
+        //SrGlobalClient_ClosedEvent -= OnSrGlobalClient_Closed; // Reserved
 
         // Python 종료
         try
@@ -258,7 +260,7 @@ public partial class MainWnd : Window
         }
 
         // Close NetMsgWnd
-         CommonFuncs.CloseExtMsgWndSimple();
+         //CommonFuncs.CloseExtMsgWndSimple();
 
         if (Application.Current != null)
         {
@@ -294,15 +296,15 @@ public partial class MainWnd : Window
         try
         {
             //사용자에게 종료 중 안내(가능하면 비모달/ 오버레이 권장)
-             CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료중 입니다...");
+             //CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료중 입니다...");
 
             //SignalR 연결 종료(동기적으로)
             try
             {
                 if (s_SrGClient != null)
                 {
-                    s_SrGClient.StopReconnection(); // 재접속 중지 플래그 설정
-                    s_SrGClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
+                    //s_SrGClient.StopReconnection(); // 재접속 중지 플래그 설정
+                    //s_SrGClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
                     Debug.WriteLine("SrGlobalClient 종료 완료");
                 }
             }
@@ -315,8 +317,8 @@ public partial class MainWnd : Window
             {
                 if (s_SrLClient != null)
                 {
-                    s_SrLClient.StopReconnection(); // 재접속 중지 플래그 설정
-                    s_SrLClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
+                    //s_SrLClient.StopReconnection(); // 재접속 중지 플래그 설정
+                    //s_SrLClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
                     Debug.WriteLine("SrLocalClient 종료 완료");
                 }
             }
@@ -330,17 +332,17 @@ public partial class MainWnd : Window
             {
                 if (s_X86Proc != null)
                 {
-                    var r = s_SrLClient.SrResult_ComBroker_Close();
-                    if (!r.bResult)
-                    {
-                        string err = StdProcess.Kill(s_sX86ProcName);
-                        if (!string.IsNullOrEmpty(err)) ErrMsgBox(err);
-                        else s_X86Proc = null;
-                    }
-                    else
-                    {
-                        s_X86Proc = null;
-                    }
+                    //var r = s_SrLClient.SrResult_ComBroker_Close();
+                    //if (!r.bResult)
+                    //{
+                    //    string err = StdProcess.Kill(s_sX86ProcName);
+                    //    if (!string.IsNullOrEmpty(err)) ErrMsgBox(err);
+                    //    else s_X86Proc = null;
+                    //}
+                    //else
+                    //{
+                    //    s_X86Proc = null;
+                    //}
                 }
             }
             catch (Exception ex) { Debug.WriteLine($"X86Proc close error: {ex.Message}"); }
@@ -349,7 +351,7 @@ public partial class MainWnd : Window
             try { m_WndForVirtualMonitor?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
             try { s_TransparentWnd?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
 
-            try { s_SrGClient?.Dispose(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            //try { s_SrGClient?.Dispose(); } catch (Exception ex) { Debug.WriteLine(ex); }
 
             // 5) 훅/리소스 해제 (필요 시 주석 해제)
             // try { CtrlCppFuncs.ReleaseMouseHook(); } catch {}
@@ -438,6 +440,15 @@ public partial class MainWnd : Window
     {
         if (sender is Button button && button.Parent is StackPanel panel && panel.Parent is TabItem tab)
         {
+            // 캐시 및 LRU 리스트에서 제거
+            var pageName = tab.Tag?.ToString();
+            if (pageName != null)
+            {
+                _pageCache.Remove(pageName);
+                _pageLruList.Remove(pageName);
+                Debug.WriteLine($"[MainWnd] 페이지 캐시 제거: {pageName} (캐시 크기: {_pageCache.Count}/{MaxCachedTabs})");
+            }
+            
             MainTabCtrl.Items.Remove(tab);
         }
     }
@@ -475,12 +486,13 @@ public partial class MainWnd : Window
     public async void OnSrLocalClient_Connected() // Local SignalRServer에 연결되면...
     {
         #region Tel070 - DB에서 Local 인터넷전화 정보 가져와서 s_sX86ProcName에 정보설정.
-        PostgResult_TbTel070InfoList result = await s_SrGClient.SrResult_Tel070Info_SelectRowsAsync_Charge_NotMainTel();
+        //PostgResult_TbTel070InfoList result = await s_SrGClient.SrResult_Tel070Info_SelectRowsAsync_Charge_NotMainTel();
+        PostgResult_TbTel070InfoList result = new PostgResult_TbTel070InfoList();
         if (string.IsNullOrEmpty(result.sErr)) // 로컬 070전화 등록
         {
             s_ListTel070Info = result.listTb;
             //MsgBox($"No Err: {s_ListTel070Info.Count}, {s_ListTel070Info[0].TelNum}"); // Test
-            await s_SrLClient.SrReport_Tel070Info_SetLocalsAsync(s_ListTel070Info);
+            //await s_SrLClient.SrReport_Tel070Info_SetLocalsAsync(s_ListTel070Info);
         }
         else
         {
@@ -502,7 +514,7 @@ public partial class MainWnd : Window
 
                 if (TblockConnLocal != null && s_SrLClient != null)
                 {
-                    TblockConnLocal.Text = s_SrLClient.m_sConnSignslR;
+                    TblockConnLocal.Text = ""; //s_SrLClient.m_sConnSignslR;
                 }
             });
         }
@@ -523,7 +535,7 @@ public partial class MainWnd : Window
     //        this.Title = $"Login At SignalRServer In MainWindow: Not Coded...";
     //    });
 
-    //    FormFuncs.ErrMsgBox("Login At SignalRServer In MainWindow: Not Coded...");
+    //    ErrMsgBox("Login At SignalRServer In MainWindow: Not Coded...");
     //}
 
     //// MultiLogin - Reserved
@@ -557,18 +569,19 @@ public partial class MainWnd : Window
     #endregion
 
     #region Methods
-    // TabItem
+    // TabItem - Dictionary 기반 O(1) 검색 + LRU
     public TabItem AddOrFocusPageInMainTabCtrl(string header, string pageName)
     {
-        // Check if the page is already opened in the TabControl
-        foreach (TabItem existingTab in MainTabCtrl.Items)
+        // Dictionary 캐시에서 O(1) 검색
+        if (_pageCache.TryGetValue(pageName, out var existingTab))
         {
-            if (existingTab.Tag != null && existingTab.Tag.ToString() == pageName)
-            {
-                // If found, focus the existing tab
-                existingTab.Focus();
-                return existingTab; // Return the focused tab
-            }
+            // LRU: 최근 사용으로 이동
+            _pageLruList.Remove(pageName);
+            _pageLruList.AddLast(pageName);
+            
+            MainTabCtrl.SelectedItem = existingTab;
+            Debug.WriteLine($"[MainWnd] 캐시에서 페이지 재사용: {pageName}");
+            return existingTab;
         }
 
         // If the page is not already open, create a new tab for it
@@ -606,17 +619,37 @@ public partial class MainWnd : Window
             tabItem.Header = headerPanel;
             tabItem.Content = new Frame { Source = new Uri($"Pages/{pageName}.xaml", UriKind.RelativeOrAbsolute) };
 
-            this.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            // LRU: 최대 개수 초과 시 가장 오래된 탭 제거
+            if (_pageCache.Count >= MaxCachedTabs)
             {
-                MainTabCtrl.Items.Add(tabItem);
-                tabItem.Focus();
-            }));
+                var oldestPageName = _pageLruList.First?.Value;
+                if (oldestPageName != null)
+                {
+                    if (_pageCache.TryGetValue(oldestPageName, out var oldestTab))
+                    {
+                        _pageCache.Remove(oldestPageName);
+                        _pageLruList.RemoveFirst();
+                        MainTabCtrl.Items.Remove(oldestTab);
+                        Debug.WriteLine($"[MainWnd] LRU: 오래된 탭 제거 - {oldestPageName}");
+                    }
+                }
+            }
+            
+            // 캐시에 추가
+            _pageCache[pageName] = tabItem;
+            _pageLruList.AddLast(pageName);
+            
+            // TabControl에 추가 및 선택
+            MainTabCtrl.Items.Add(tabItem);
+            MainTabCtrl.SelectedItem = tabItem;
+            
+            Debug.WriteLine($"[MainWnd] 새 페이지 생성 및 캐시 추가: {pageName} (캐시 크기: {_pageCache.Count}/{MaxCachedTabs})");
 
             return tabItem;
         }
         catch (Exception ex)
         {
-            FormFuncs.ErrMsgBox(ex.Message, "에러: 탭콘트롤에 추가실패");
+            ErrMsgBox(ex.Message, "에러: 탭콘트롤에 추가실패");
             return null;
         }
     }

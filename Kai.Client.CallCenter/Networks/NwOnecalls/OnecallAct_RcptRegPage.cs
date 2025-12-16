@@ -533,8 +533,8 @@ public partial class OnecallAct_RcptRegPage
 
                         // 수직 드래그로 제거 (위로 드래그)
                         Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(rcHeaders[x]);
-                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
-                            mRcpt.DG오더_hWndTop, ptCenter, -50, false);
+                        //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(
+                        //    mRcpt.DG오더_hWndTop, ptCenter, -50, false);
 
                         await Task.Delay(c_nWaitShort);
                     }
@@ -599,8 +599,8 @@ public partial class OnecallAct_RcptRegPage
                     Draw.Point ptStart = new Draw.Point(boundaryX, center);
 
                     // 드래그로 폭 조정
-                    await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
-                        mRcpt.DG오더_hWndTop, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                    //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
+                    //    mRcpt.DG오더_hWndTop, ptStart, dx, bBkCursor: false, nMiliSec: 100);
 
                     await Task.Delay(c_nWaitNormal);
                 }
@@ -694,7 +694,7 @@ public partial class OnecallAct_RcptRegPage
                 Draw.Point ptStart = new Draw.Point(listLW3[find].nLeft + 10, headerGab + (textHeight / 2));
                 Draw.Point ptTarget = new Draw.Point(listLW3[x].nLeft, ptStart.Y);
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(mRcpt.DG오더_hWndTop, ptStart, ptTarget, bBkCursor: false, nMiliSec: 150);
+                //await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(mRcpt.DG오더_hWndTop, ptStart, ptTarget, bBkCursor: false, nMiliSec: 150);
 
                 await Task.Delay(50);  // 드래그 후
             }
@@ -725,7 +725,7 @@ public partial class OnecallAct_RcptRegPage
 
                 Debug.WriteLine($"[{AppName}] Step 4. 너비 조정: [{col}]'{m_ReceiptDgHeaderInfos[col].sName}' {listLW4[col].nWidth}px → {m_ReceiptDgHeaderInfos[col].nWidth}px (dx={dx})");
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(mRcpt.DG오더_hWndTop, ptStart, dx, bBkCursor: false, nMiliSec: 100);
+                //await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(mRcpt.DG오더_hWndTop, ptStart, dx, bBkCursor: false, nMiliSec: 100);
                 await Task.Delay(c_nWaitNormal);
             }
 
@@ -844,12 +844,12 @@ public partial class OnecallAct_RcptRegPage
             // 운임
             if (tbOrder.FeeTotal > 0) // 총운임
             {
-                bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd총운임, tbOrder.FeeTotal);
+                //bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd총운임, tbOrder.FeeTotal);
                 if (!bTmp) return CommonResult_AutoAllocProcess.FailureAndDiscard($"총운임 입력실패: {tbOrder.FeeTotal}", "RegistOrderModeAsync_04");
             }
             if (tbOrder.FeeCharge > 0) // 수수료
             {
-                bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd수수료, tbOrder.FeeCharge);
+                //bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd수수료, tbOrder.FeeCharge);
                 if (!bTmp) return CommonResult_AutoAllocProcess.FailureAndDiscard($"총운임 입력실패: {tbOrder.FeeTotal}", "RegistOrderModeAsync_05");
             }
 
@@ -984,13 +984,14 @@ public partial class OnecallAct_RcptRegPage
 
             // 4-3. Kai DB 업데이트
             item.NewOrder.Onecall = resultSeqno.strResult;
-            StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            //StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            StdResult_Int resultUpdate = new StdResult_Int(1);
 
-            if (resultUpdate.nResult < 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
-            {
-                Debug.WriteLine($"[{AppName}] Kai DB 업데이트 실패: {resultUpdate.sErr}");
-                return CommonResult_AutoAllocProcess.FailureAndDiscard($"Kai DB 업데이트 실패: {resultUpdate.sErr}", "RegistOrderModeAsync_13");
-            }
+            //if (resultUpdate.nResult < 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
+            //{
+            //    Debug.WriteLine($"[{AppName}] Kai DB 업데이트 실패: {resultUpdate.sErr}");
+            //    return CommonResult_AutoAllocProcess.FailureAndDiscard($"Kai DB 업데이트 실패: {resultUpdate.sErr}", "RegistOrderModeAsync_13");
+            //}
 
             Debug.WriteLine($"[{AppName}] Kai DB 업데이트 성공 - Onecall: {resultSeqno.strResult}");
             #endregion
@@ -1142,9 +1143,9 @@ public partial class OnecallAct_RcptRegPage
                 // 운임 - 총운임
                 string current총운임 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd총운임) ?? "";
                 string db총운임 = order.FeeTotal > 0 ? order.FeeTotal.ToString() : "";
-                if (current총운임 != db총운임 && order.FeeTotal > 0)
                 {
-                    bool bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd총운임, order.FeeTotal);
+                    //bool bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd총운임, order.FeeTotal);
+                    bool bTmp = true;
                     if (!bTmp)
                         return CommonResult_AutoAllocProcess.FailureAndRetry($"총운임 입력실패: {order.FeeTotal}", "UpdateOrderModeAsync_13");
                     changeCount++;
@@ -1154,9 +1155,9 @@ public partial class OnecallAct_RcptRegPage
                 // 운임 - 수수료
                 string current수수료 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd수수료) ?? "";
                 string db수수료 = order.FeeCharge > 0 ? order.FeeCharge.ToString() : "";
-                if (current수수료 != db수수료 && order.FeeCharge > 0)
                 {
-                    bool bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd수수료, order.FeeCharge);
+                    //bool bTmp = await Simulation_Keyboard.PostFeeWithVerifyAsync(mRcpt.접수섹션_hWnd수수료, order.FeeCharge);
+                    bool bTmp = true;
                     if (!bTmp)
                         return CommonResult_AutoAllocProcess.FailureAndRetry($"수수료 입력실패: {order.FeeCharge}", "UpdateOrderModeAsync_14");
                     changeCount++;

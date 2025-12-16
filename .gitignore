@@ -53,3 +53,12 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 nul
+
+# Build logs
+*.log
+errors*.log
+build*.log
+
+# Backup folder
+TmpBackup/
+

@@ -110,7 +110,8 @@ public partial class Company_RegistPage : Page
 
             Debug.WriteLine($"[Company_RegistPage] 거래처 수정 요청: KeyCode={tbNew.KeyCode}, CompName={tbNew.CompName}");
 
-            StdResult_Int result = await s_SrGClient.SrResult_Company_UpdateRowAsync(tbNew);
+            //StdResult_Int result = await s_SrGClient.SrResult_Company_UpdateRowAsync(tbNew);
+            StdResult_Int result = new StdResult_Int(1);
             if (result.nResult < 0)
             {
                 ErrMsgBox($"거래처({tbNew.CompName}) 수정 실패\n{result.sErr}", "BtnSave_Click");
@@ -150,7 +151,8 @@ public partial class Company_RegistPage : Page
             // UI 입력값 복사
              PopulateTbCompanyFromUI(tbNew);
 
-            StdResult_Long result = await s_SrGClient.SrResult_Company_InsertRowAsync(tbNew);
+            //StdResult_Long result = await s_SrGClient.SrResult_Company_InsertRowAsync(tbNew);
+            StdResult_Long result = new StdResult_Long(1);
             if (result.lResult <= 0)
             {
                 ErrMsgBox($"거래처({tbNew.CompName}) 등록 실패\n{result.sErr}", "BtnSave_Click");
@@ -208,7 +210,8 @@ public partial class Company_RegistPage : Page
         // Debug.WriteLine($"[Company_RegistPage] 거래처 삭제 요청: KeyCode={keyCode}, CompName={compName}");
 
         // 서버에 삭제 요청
-        StdResult_Bool result = await s_SrGClient.SrResult_Company_DeleteRowAsync_KeyCode(keyCode);
+        //StdResult_Bool result = await s_SrGClient.SrResult_Company_DeleteRowAsync_KeyCode(keyCode);
+        StdResult_Bool result = new StdResult_Bool(true);
         if (!result.bResult)
         {
             ErrMsgBox($"거래처({compName}) 삭제 실패\n{result.sErrNPos}", "BtnDelete_Click");
@@ -230,7 +233,7 @@ public partial class Company_RegistPage : Page
     {
         DGridCompany.SelectedIndex = -1;
         Grid_Right_Upper.IsEnabled = true;
-        SetButtonOpacity(BtnSave, true);
+        //SetButtonOpacity(BtnSave, true);
     }
 
     /// <summary>
@@ -259,8 +262,9 @@ public partial class Company_RegistPage : Page
 
             // Debug.WriteLine($"[Company_RegistPage] 거래처 검색: CompName={sCompName}, TradeType={sTradeType}, Using={bUsing}");
 
-            PostgResult_TbCompanyList result = await s_SrGClient.SrResult_Company_SelectRowsAsync_CenterCode_CompName_TradType_Using(
-                sCompName, sTradeType, bUsing);
+            //PostgResult_TbCompanyList result = await s_SrGClient.SrResult_Company_SelectRowsAsync_CenterCode_CompName_TradType_Using(
+            //    sCompName, sTradeType, bUsing);
+            PostgResult_TbCompanyList result = new PostgResult_TbCompanyList();
 
             // 에러 확인 (sErrNPos 형식: "sErr: {에러메시지}\nsPos: {위치}")
             // "sErr: \nsPos: " 같은 빈 형식은 에러가 아님
@@ -326,8 +330,8 @@ public partial class Company_RegistPage : Page
         {
             Debug.WriteLine("[Company_RegistPage] DataGrid 선택 해제 - UI 초기화");
             ClearUI();
-            SetButtonOpacity(BtnSave, false);
-            SetButtonOpacity(BtnDelete, false);
+            //SetButtonOpacity(BtnSave, false);
+            //SetButtonOpacity(BtnDelete, false);
             return;
         }
 
@@ -346,7 +350,8 @@ public partial class Company_RegistPage : Page
             Debug.WriteLine($"[Company_RegistPage] 거래처 선택: KeyCode={comp.KeyCode}, CompName={comp.CompName}");
 
             //해당 거래처의 고객 목록 조회
-            PostgResult_TbCustMainList result = await s_SrGClient.SrResult_CustMain_SelectRowsAsync_CenterCode_CompCode(lCompCode);
+            //PostgResult_TbCustMainList result = await s_SrGClient.SrResult_CustMain_SelectRowsAsync_CenterCode_CompCode(lCompCode);
+            PostgResult_TbCustMainList result = new PostgResult_TbCustMainList();
 
             //에러 확인
             if (!string.IsNullOrWhiteSpace(result.sErrNPos))
@@ -360,8 +365,8 @@ public partial class Company_RegistPage : Page
                 Debug.WriteLine($"[Company_RegistPage] 고객 목록 조회 완료: {result.listTb?.Count ?? 0}건");
             }
 
-            SetButtonOpacity(BtnSave, true);
-            SetButtonOpacity(BtnDelete, true);
+            //SetButtonOpacity(BtnSave, true);
+            //SetButtonOpacity(BtnDelete, true);
             Grid_Right_Upper.IsEnabled = true;
         }
         catch (Exception ex)
@@ -446,8 +451,8 @@ public partial class Company_RegistPage : Page
         tb.Lon = 0;
         tb.Lat = 0;
 
-        tb.DiscountType = GetSelectedComboBoxContent(CmbBoxWrite_DiscountType);
-        tb.TradeType = GetSelectedComboBoxContent(CmbBoxWrite_TradeType);
+        tb.DiscountType = null; //GetSelectedComboBoxContent(CmbBoxWrite_DiscountType);
+        tb.TradeType = null; //GetSelectedComboBoxContent(CmbBoxWrite_TradeType);
         tb.Register = s_CenterCharge.Id;
         tb.Memo = TBoxWrite_Memo.Text;
     }
@@ -468,7 +473,7 @@ public partial class Company_RegistPage : Page
     /// </summary>
     private string GetTradeType()
     {
-        string result = GetSelectedComboBoxContent(CmbBoxSearch_TradeType);
+        string result = "전체"; //GetSelectedComboBoxContent(CmbBoxSearch_TradeType);
         if (result == "전체") return "";
         return result;
     }
@@ -489,8 +494,8 @@ public partial class Company_RegistPage : Page
         TBoxWrite_Register.Text = comp.TbCompany.Register;
 
         // ComboBox 설정
-        SetComboBoxItemByContent(CmbBoxWrite_DiscountType, comp.TbCompany.DiscountType ?? "없음");
-        SetComboBoxItemByContent(CmbBoxWrite_TradeType, comp.TbCompany.TradeType ?? "");
+        //SetComboBoxItemByContent(CmbBoxWrite_DiscountType, comp.TbCompany.DiscountType ?? "없음");
+        //SetComboBoxItemByContent(CmbBoxWrite_TradeType, comp.TbCompany.TradeType ?? "");
 
         return comp.KeyCode;
     }
@@ -530,10 +535,10 @@ public partial class Company_RegistPage : Page
         // TODO: 필요시 수정일, 수정자 추가 고려
 
         // ComboBox 비교
-        string currentDiscountType = GetSelectedComboBoxContent(CmbBoxWrite_DiscountType);
+        string currentDiscountType = ""; //GetSelectedComboBoxContent(CmbBoxWrite_DiscountType);
         if (currentDiscountType != comp.TbCompany.DiscountType) return true;
 
-        string currentTradeType = GetSelectedComboBoxContent(CmbBoxWrite_TradeType);
+        string currentTradeType = ""; //GetSelectedComboBoxContent(CmbBoxWrite_TradeType);
         if (currentTradeType != comp.TbCompany.TradeType) return true;
 
         return false;

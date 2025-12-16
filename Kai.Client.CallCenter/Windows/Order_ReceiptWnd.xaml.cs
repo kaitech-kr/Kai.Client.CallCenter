@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 
 using Kai.Common.StdDll_Common;
-using Kai.Common.FrmDll_FormCtrl;
+// using Kai.Common.FrmDll_FormCtrl;
 using Kai.Common.NetDll_WpfCtrl.NetUtils;
 using Kai.Common.NetDll_WpfCtrl.NetWnds;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
@@ -719,7 +719,8 @@ public partial class Order_ReceiptWnd : Window
         UpdateNewTbOrderByUiData();
 
         // 3. 서버에 저장
-        StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbOrderNew);
+        //StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbOrderNew);
+        StdResult_Long result = new StdResult_Long(1);
         if (!string.IsNullOrEmpty(result.sErr))
         {
             ErrMsgBox($"{actionName} 실패: {result.sErr}", $"Order_ReceiptWnd/SaveOrderAsync_{orderState}");
@@ -747,7 +748,8 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.UpdateDate = DateTime.Now.ToString(StdConst_Var.DTFORMAT_EXCEPT_SEC);
 
         // 4. 서버로 업데이트 전송
-        StdResult_Int result = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(tbOrderNew);
+        //StdResult_Int result = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(tbOrderNew);
+        StdResult_Int result = new StdResult_Int(1);
         if (result.nResult < 0)
         {
             ErrMsgBox($"수정 저장 실패: {result.sErrNPos}", "Order_ReceiptWnd/UpdateOrderAsync");
@@ -911,8 +913,8 @@ public partial class Order_ReceiptWnd : Window
     {
         SetFeeType(tbOrderOrg.FeeType);
         SetCarType(tbOrderOrg.CarType);
-        SetComboBoxItemByContent(CmbBoxCarWeight, tbOrderOrg.CarWeight);
-        SetComboBoxItemByContent(CmbBoxTruckDetail, tbOrderOrg.TruckDetail);
+        //SetComboBoxItemByContent(CmbBoxCarWeight, tbOrderOrg.CarWeight);
+        //SetComboBoxItemByContent(CmbBoxTruckDetail, tbOrderOrg.TruckDetail);
         SetDeliverType(tbOrderOrg.DeliverType);
     }
 
@@ -1007,8 +1009,8 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.FeeTotal = StdConvert.StringWonFormatToInt(TBoxFee_Tot.Text); // UiData
         tbOrderNew.FeeType = GetFeeType(); // UiData
         tbOrderNew.CarType = GetCarType(); // UiData
-        tbOrderNew.CarWeight = GetSelectedComboBoxContent(CmbBoxCarWeight); // UiData
-        tbOrderNew.TruckDetail = GetSelectedComboBoxContent(CmbBoxTruckDetail); // UiData
+        tbOrderNew.CarWeight = ""; //GetSelectedComboBoxContent(CmbBoxCarWeight); // UiData
+        tbOrderNew.TruckDetail = ""; //GetSelectedComboBoxContent(CmbBoxTruckDetail); // UiData
         tbOrderNew.DeliverType = GetDeliverType(); // UiData
                                                    //tbOrderNew.DriverCode = ; // UiData - 연구과제
                                                    //tbOrderNew.DriverId = ; // UiData - 연구과제
@@ -1680,7 +1682,8 @@ public partial class Order_ReceiptWnd : Window
         }
 
         // 고객 정보 검색
-        PostgResult_AllWithList result = await s_SrGClient.SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash(searchText, isLocationSearch);
+        //PostgResult_AllWithList result = await s_SrGClient.SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash(searchText, isLocationSearch);
+        PostgResult_AllWithList result = new PostgResult_AllWithList();
 
         if (!string.IsNullOrEmpty(result.sErr))
         {
