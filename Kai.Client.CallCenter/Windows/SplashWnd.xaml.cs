@@ -1,11 +1,12 @@
-using Kai.Common.StdDll_Common;
 using System.Windows;
 using System.Windows.Input;
+
 using Kai.Client.CallCenter.Classes;
+using static Kai.Common.StdDll_Common.StdDelegate;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
+
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Client.CallCenter.Classes.SrGlobalClient;
-using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
-using static Kai.Common.StdDll_Common.StdDelegate;
 
 namespace Kai.Client.CallCenter.Windows;
 public partial class SplashWnd : Window
@@ -27,7 +28,7 @@ public partial class SplashWnd : Window
         s_SplashWnd = this;
 
         //Init ListChars
-         //CommonFuncs.Init();
+        CommonFuncs.Init();
 
         TBoxID.Text = s_sKaiLogId;
         PwBoxPW.Password = s_sKaiLogPw;
@@ -45,23 +46,23 @@ public partial class SplashWnd : Window
             {
                 await Application.Current.Dispatcher.BeginInvoke(() =>
                  {
-            if (BtnCancel != null)
-                BtnCancel.Visibility = Visibility.Visible;
-        });
+                     if (BtnCancel != null)
+                         BtnCancel.Visibility = Visibility.Visible;
+                 });
             }
         });
 
         //백그라운드에서 연결 시도
         _ = Task.Run(async () =>
         {
-            //await s_SrGClient.ConnectAsync();
+            await s_SrGClient.ConnectAsync();
         });
     }
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        // SrGlobalClient_LoginEvent -= OnSignalRLogin;
-         SrGlobalClient_RetryEvent -= OnSignalRClosed;
+        SrGlobalClient_LoginEvent -= OnSignalRLogin;
+        SrGlobalClient_RetryEvent -= OnSignalRClosed;
     }
     #endregion
 
@@ -80,7 +81,7 @@ public partial class SplashWnd : Window
     #region SignalR Event
     public async void OnSignalRLogin(object sender, BoolEventArgs e)
     {
-        await Application.Current.Dispatcher.BeginInvoke(() =>
+        await Application.Current.Dispatcher.BeginInvoke(async () =>
         {
             if (!e.bValue)
             {
@@ -89,7 +90,9 @@ public partial class SplashWnd : Window
             }
 
             SrGlobalClient_LoginEvent -= OnSignalRLogin;
-            UpdateStatus("로그인 성공! 메인 화면 여는 중...");
+            UpdateStatus($"로그인 성공! ({SrGlobalClient.s_nLoginRetryCount}번째) 화면 준비 중...");
+
+            await Task.Delay(c_nRepeatVeryMany);
 
             MainWnd wnd = new MainWnd();
             wnd.Show();
@@ -118,11 +121,11 @@ public partial class SplashWnd : Window
          MsgBox("PwBoxPW_KeyDown");
     }
 
-    private async void BtnCancel_Click(object sender, RoutedEventArgs e)
+    private void BtnCancel_Click(object sender, RoutedEventArgs e)
     {
         // 잊지않기 위해 취소할까요(수정해야할 코드있음)
         UpdateStatus("연결 취소 중...");
-        //await s_SrGClient.DisconnectAsync();
+        //await s_SrGClient.DisconnectAsync(); -> 해제 불필요 - 미접속상태
         this.Close();
         Application.Current.Shutdown();
     }

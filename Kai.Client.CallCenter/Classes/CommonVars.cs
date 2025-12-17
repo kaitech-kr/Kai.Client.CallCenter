@@ -17,11 +17,13 @@ public class CommonVars
     // Constants
     //public const uint MYMSG_MOUSEHOOK = 1027; // 지금은 W
     //public const uint MYMSG_KEYBOARDHOOK = 1028;
-    public const int c_nRepeatShort = 3; // 일반적인 반복횟수 - 3회
-    public const int c_nRepeatNormal = 10; // 많은 반복횟수 - 10회
-    public const int c_nRepeatMany = 50; // 많은 반복횟수 - 50회
-    public const int c_nRepeatVeryMany = 100; // 많은 반복횟수 - 100회
-    public const int c_nRepeatUltraMany = 250; // 많은 반복횟수 - 250회
+    public const int c_nRepeatUltraShort = 3; // 극도로짧은 반복횟수 - 3회
+    public const int c_nRepeatVeryShort = 10; // 매우짧은 반복횟수 - 10회
+    public const int c_nRepeatShort = 50; // 짧은반복횟수 - 50회
+    public const int c_nRepeatNormal = 100; // 일반적인 반복횟수 - 100회
+    public const int c_nRepeatMany = 250; // 많은 반복횟수 - 250회
+    public const int c_nRepeatVeryMany = 500; // 매우많은 반복횟수 - 500회
+    public const int c_nRepeatUltraMany = 1000; // 극도로많은 반복횟수 - 1000회
 
     public const int c_nWaitUltraShort = 20;
     public const int c_nWaitVeryShort = 30;
@@ -29,6 +31,7 @@ public class CommonVars
     public const int c_nWaitNormal = 100;
     public const int c_nWaitLong = 250;
     public const int c_nWaitVeryLong = 500;
+    public const int c_nWaitUltraLong = 1000;
 
     // Events
     public static LongNIntEventDelegate s_OrderUpdatedEventHandler = null; // OrderUpdated
@@ -48,18 +51,18 @@ public class CommonVars
     public static readonly string s_sImgFilesPath = @"D:\CodeWork\Common\Resource\StrImages";
     public static readonly Regex s_RegexOnlyNum = new Regex("[^0-9]+"); // 숫자가 아니면 true
 
-    public static readonly string s_sCharSetDir = @"D:\Database\CharSetForDB";
-    public static readonly string s_sHanPath = $"{s_sCharSetDir}\\chars_han.txt";
-    public static readonly string s_sEngPath = $"{s_sCharSetDir}\\chars_eng.txt";
-    public static readonly string s_sNumPath = $"{s_sCharSetDir}\\chars_num.txt";
-    public static readonly string s_sSpecialPath = $"{s_sCharSetDir}\\chars_special.txt";
+    //public static readonly string s_sCharSetDir = @"D:\Database\CharSetForDB";
+    //public static readonly string s_sHanPath = $"{s_sCharSetDir}\\chars_han.txt";
+    //public static readonly string s_sEngPath = $"{s_sCharSetDir}\\chars_eng.txt";
+    //public static readonly string s_sNumPath = $"{s_sCharSetDir}\\chars_num.txt";
+    //public static readonly string s_sSpecialPath = $"{s_sCharSetDir}\\chars_special.txt";
 
-    public static readonly string[] s_sCharTypes = { "H", "E", "N", "S" };
-    public static List<List<char>> s_ListCharGroup = new List<List<char>>();
-    public static List<char> s_ListHan = new List<char>();
-    public static List<char> s_ListEng = new List<char>();
-    public static List<char> s_ListNum = new List<char>();
-    public static List<char> s_ListSpecial = new List<char>();
+    //public static readonly string[] s_sCharTypes = { "H", "E", "N", "S" };
+    //public static List<List<char>> s_ListCharGroup = new List<List<char>>();
+    //public static List<char> s_ListHan = new List<char>();
+    //public static List<char> s_ListEng = new List<char>();
+    //public static List<char> s_ListNum = new List<char>();
+    //public static List<char> s_ListSpecial = new List<char>();
 
     // Simple Static Variables
     public static bool s_bDebugMode = false;

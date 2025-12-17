@@ -65,45 +65,45 @@ public class CommonResult_AutoAllocProcess : StdResult_Error
 
     #region Static Factory Methods
 
-    /// <summary>
-    /// 성공 + 재적재 (계속 관리)
-    /// </summary>
-    public static CommonResult_AutoAllocProcess SuccessAndReEnqueue(AutoAllocModel item = null, PostgService_Common_OrderState? stateFlag = null)
-    {
-        if (item != null && stateFlag.HasValue)
-        {
-            item.StateFlag = stateFlag.Value;
-        }
-        return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.SuccessAndReEnqueue);
-    }
+    ///// <summary>
+    ///// 성공 + 재적재 (계속 관리)
+    ///// </summary>
+    //public static CommonResult_AutoAllocProcess SuccessAndReEnqueue(AutoAllocModel item = null, PostgService_Common_OrderState? stateFlag = null)
+    //{
+    //    if (item != null && stateFlag.HasValue)
+    //    {
+    //        item.StateFlag = stateFlag.Value;
+    //    }
+    //    return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.SuccessAndReEnqueue);
+    //}
 
-    /// <summary>
-    /// 성공 + 비적재 (완료) - 객체 파괴
-    /// </summary>
-    public static CommonResult_AutoAllocProcess SuccessAndDestroy(AutoAllocModel item)
-    {
-        // 플래그 초기화 (Empty 상태로 파괴)
-        item.StateFlag = 0; // Empty
-        item.RunStartTime = null;
-        item.DriverPhone = null;
-        return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.SuccessAndComplete);
-    }
+    ///// <summary>
+    ///// 성공 + 비적재 (완료) - 객체 파괴
+    ///// </summary>
+    //public static CommonResult_AutoAllocProcess SuccessAndDestroy(AutoAllocModel item)
+    //{
+    //    // 플래그 초기화 (Empty 상태로 파괴)
+    //    item.StateFlag = 0; // Empty
+    //    item.RunStartTime = null;
+    //    item.DriverPhone = null;
+    //    return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.SuccessAndComplete);
+    //}
 
-    /// <summary>
-    /// 실패 + 재적재 (재시도)
-    /// </summary>
-    public static CommonResult_AutoAllocProcess FailureAndRetry(string errorMessage = "", string errorPosition = "", string logDirPath = "")
-    {
-        return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.FailureAndRetry, errorMessage, errorPosition, logDirPath);
-    }
+    ///// <summary>
+    ///// 실패 + 재적재 (재시도)
+    ///// </summary>
+    //public static CommonResult_AutoAllocProcess FailureAndRetry(string errorMessage = "", string errorPosition = "", string logDirPath = "")
+    //{
+    //    return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.FailureAndRetry, errorMessage, errorPosition, logDirPath);
+    //}
 
-    /// <summary>
-    /// 실패 + 비적재 (복구 불가능)
-    /// </summary>
-    public static CommonResult_AutoAllocProcess FailureAndDiscard(string errorMessage = "", string errorPosition = "", string logDirPath = "")
-    {
-        return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.FailureAndDiscard, errorMessage, errorPosition, logDirPath);
-    }
+    ///// <summary>
+    ///// 실패 + 비적재 (복구 불가능)
+    ///// </summary>
+    //public static CommonResult_AutoAllocProcess FailureAndDiscard(string errorMessage = "", string errorPosition = "", string logDirPath = "")
+    //{
+    //    return new CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult.FailureAndDiscard, errorMessage, errorPosition, logDirPath);
+    //}
 
     #endregion
 

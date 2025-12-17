@@ -331,7 +331,7 @@ namespace Kai.Client.CallCenter.Classes
                 {
                     await Std32Mouse_Post.MousePostAsync_ClickLeft_Center(hWnd);
 
-                    for (int j = 0; j < c_nRepeatMany; j++)
+                    for (int j = 0; j < c_nRepeatShort; j++)
                     {
                         await Task.Delay(c_nWaitUltraShort);
 

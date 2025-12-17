@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Windows;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
+using System.ComponentModel;
 using System.Windows.Threading;
-using Kai.Client.CallCenter.Classes;
-using Kai.Common;
-using Kai.Common.StdDll_Common;
-//using Kai.Common.StdDll_Common.StdVar;
 using Microsoft.AspNetCore.SignalR.Client;
+
+using Kai.Common.StdDll_Common;
 using static Kai.Common.StdDll_Common.StdDelegate;
+using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
+using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+
+using static Kai.Client.CallCenter.Classes.CommonVars;
 
 namespace Kai.Client.CallCenter.Classes
 {
 #nullable disable
     public class SrLocalClient : INotifyPropertyChanged, IDisposable
     {
-        /*
         #region Dispose
         private bool disposedValue;
 
@@ -184,7 +179,7 @@ namespace Kai.Client.CallCenter.Classes
                         Debug.WriteLine($"StackTrace: {ex.StackTrace}");
                         Debug.WriteLine($"===== {c_nReconnectDelay / 1000}초 후 재시도... =====");
 
-                        //switch (ex.HResult)
+                        //switch (ex.HResult) // AI가 주석처리를 권고 함.
                         //{
                         //    case -2146233088: // 서버 없음(연결거부)
                         //    case -2147467259:
@@ -288,7 +283,6 @@ namespace Kai.Client.CallCenter.Classes
 
         public async Task SrReport_Tel070Info_SetLocalsAsync(List<TbTel070Info> listTel070)
         {
-            //ThreadMsgBox($"SrReport_Tel070Info_SetLocalsAsync: {listTel070.Count}"); // Test
             await HubConn.InvokeCoreAsync<List<TbTel070Info>>(StdConst_FuncName.SrReport.Tel070Info_SetLocalsAsync, new[] { (object)listTel070 });
         }
         #endregion
@@ -334,18 +328,6 @@ namespace Kai.Client.CallCenter.Classes
             }
         }
         #endregion
-        */
-
-        public void Dispose()
-        {
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        
-        // Dummy properties/methods to allow compilation if they are referenced elsewhere
-        // If they are not referenced, empty class body is fine. 
-        // If referenced, adding minimal stubs or commenting out caller sites is needed.
-        // User instruction: comment out the failing code. So I comment out the implementation.
     }
 #nullable restore
 }

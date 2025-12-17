@@ -19,140 +19,140 @@ namespace Kai.Client.CallCenter.Classes;
 public class CommonFuncs : CommonVars
 {
     #region Basics
-//    public static void Init()
-//    {
-//        // 콘솔 출력 인코딩 설정 (한글 깨짐 방지)
-//        try
-//        {
-//            Console.OutputEncoding = System.Text.Encoding.UTF8;
-//            Console.InputEncoding = System.Text.Encoding.UTF8;
-//        }
-//        catch { /* 인코딩 설정 실패해도 무시 */ }
+    public static void Init()
+    {
+        // 콘솔 출력 인코딩 설정 (한글 깨짐 방지)
+        try
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.InputEncoding = System.Text.Encoding.UTF8;
+        }
+        catch { /* 인코딩 설정 실패해도 무시 */ }
 
-//        try
-//        {
-//            s_sKaiLogId = JsonFileManager.GetValue("Kaitech_LoginInfo:Kaitech_sId");
-//            s_sKaiLogPw = JsonFileManager.GetValue("Kaitech_LoginInfo:Kaitech_sPw");
+        try
+        {
+            s_sKaiLogId = JsonFileManager.GetValue("Kaitech_LoginInfo:Kaitech_sId");
+            s_sKaiLogPw = JsonFileManager.GetValue("Kaitech_LoginInfo:Kaitech_sPw");
 
-//            // Load ExternalApps Configuration
-//            LoadExternalAppsConfig();
+            // Load ExternalApps Configuration
+            LoadExternalAppsConfig();
 
-//            // Init Chars
-//            InitListChars();
+            // Init Chars
+            //InitListChars();
 
-//#if DEBUG
-//            CommonVars.s_bDebugMode = true;
-//#endif
-//            //FormFuncs.MsgBox("Here2");
-//        }
-//        catch (Exception ex)
-//        {
-//            Debug.WriteLine($"[CommonFuncs] Init 오류: {ex.Message}");
-//            Debug.WriteLine($"[CommonFuncs] StackTrace: {ex.StackTrace}");
-//        }
-//    }
+#if DEBUG
+            CommonVars.s_bDebugMode = true;
+#endif
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[CommonFuncs] Init 오류: {ex.Message}");
+            Debug.WriteLine($"[CommonFuncs] StackTrace: {ex.StackTrace}");
+        }
+    }
 
-//    private static void LoadExternalAppsConfig()
-//    {
-//        Debug.WriteLine("[CommonFuncs] LoadExternalAppsConfig 실행");
+    private static void LoadExternalAppsConfig()
+    {
+        Debug.WriteLine("[CommonFuncs] LoadExternalAppsConfig 실행");
 
-//        // AutoAlloc 설정 로드
-//        string sAutoAlloc = JsonFileManager.GetValue("ExternalApps:AutoAlloc");
-//        s_bAutoAlloc = StdConvert.StringToBool(sAutoAlloc);
-//        Debug.WriteLine($"[CommonFuncs] AutoAlloc 설정 로드: {s_bAutoAlloc}");
+        // AutoAlloc 설정 로드
+        string sAutoAlloc = JsonFileManager.GetValue("ExternalApps:AutoAlloc");
+        s_bAutoAlloc = StdConvert.StringToBool(sAutoAlloc);
+        Debug.WriteLine($"[CommonFuncs] AutoAlloc 설정 로드: {s_bAutoAlloc}");
 
-//        // Insung01 설정 로드
-//        string sUse = JsonFileManager.GetValue("ExternalApps:Insung01:Use");
-//        Debug.WriteLine($"[CommonFuncs] sUse 확인: '{sUse}'");
+        // Insung01 설정 로드
+        string sUse = JsonFileManager.GetValue("ExternalApps:Insung01:Use");
+        Debug.WriteLine($"[CommonFuncs] sUse 확인: '{sUse}'");
 
-//        NwInsung01.s_Use = StdConvert.StringToBool(sUse);
-//        NwInsung01.s_Id = JsonFileManager.GetValue("ExternalApps:Insung01:Id");
-//        NwInsung01.s_Pw = JsonFileManager.GetValue("ExternalApps:Insung01:Pw");
-//        NwInsung01.s_AppPath = JsonFileManager.GetValue("ExternalApps:Insung01:AppPath");
+        NwInsung01.s_Use = StdConvert.StringToBool(sUse);
+        NwInsung01.s_Id = JsonFileManager.GetValue("ExternalApps:Insung01:Id");
+        NwInsung01.s_Pw = JsonFileManager.GetValue("ExternalApps:Insung01:Pw");
+        NwInsung01.s_AppPath = JsonFileManager.GetValue("ExternalApps:Insung01:AppPath");
 
-//        Debug.WriteLine($"[CommonFuncs] Insung01 설정 로드: Use={NwInsung01.s_Use}, Id={NwInsung01.s_Id}, AppPath={NwInsung01.s_AppPath} -----------------------");
+        Debug.WriteLine($"[CommonFuncs] Insung01 설정 로드: Use={NwInsung01.s_Use}, Id={NwInsung01.s_Id}, AppPath={NwInsung01.s_AppPath} -----------------------");
 
-//        // Insung02 설정 로드
-//        string sUse02 = JsonFileManager.GetValue("ExternalApps:Insung02:Use");
-//        NwInsung02.s_Use = StdConvert.StringToBool(sUse02);
-//        NwInsung02.s_Id = JsonFileManager.GetValue("ExternalApps:Insung02:Id");
-//        NwInsung02.s_Pw = JsonFileManager.GetValue("ExternalApps:Insung02:Pw");
-//        NwInsung02.s_AppPath = JsonFileManager.GetValue("ExternalApps:Insung02:AppPath");
+        // Insung02 설정 로드
+        string sUse02 = JsonFileManager.GetValue("ExternalApps:Insung02:Use");
+        NwInsung02.s_Use = StdConvert.StringToBool(sUse02);
+        NwInsung02.s_Id = JsonFileManager.GetValue("ExternalApps:Insung02:Id");
+        NwInsung02.s_Pw = JsonFileManager.GetValue("ExternalApps:Insung02:Pw");
+        NwInsung02.s_AppPath = JsonFileManager.GetValue("ExternalApps:Insung02:AppPath");
 
-//        Debug.WriteLine($"[CommonFuncs] Insung02 설정 로드: Use={NwInsung02.s_Use}, Id={NwInsung02.s_Id}, AppPath={NwInsung02.s_AppPath} -----------------------");
+        Debug.WriteLine($"[CommonFuncs] Insung02 설정 로드: Use={NwInsung02.s_Use}, Id={NwInsung02.s_Id}, AppPath={NwInsung02.s_AppPath} -----------------------");
 
-//        // Cargo24 설정 로드
-//        string sUseCargo24 = JsonFileManager.GetValue("ExternalApps:Cargo24:Use");
-//        NwCargo24.s_Use = StdConvert.StringToBool(sUseCargo24);
-//        NwCargo24.s_Id = JsonFileManager.GetValue("ExternalApps:Cargo24:Id");
-//        NwCargo24.s_Pw = JsonFileManager.GetValue("ExternalApps:Cargo24:Pw");
-//        NwCargo24.s_AppPath = JsonFileManager.GetValue("ExternalApps:Cargo24:AppPath");
+        // Cargo24 설정 로드
+        string sUseCargo24 = JsonFileManager.GetValue("ExternalApps:Cargo24:Use");
+        NwCargo24.s_Use = StdConvert.StringToBool(sUseCargo24);
+        NwCargo24.s_Id = JsonFileManager.GetValue("ExternalApps:Cargo24:Id");
+        NwCargo24.s_Pw = JsonFileManager.GetValue("ExternalApps:Cargo24:Pw");
+        NwCargo24.s_AppPath = JsonFileManager.GetValue("ExternalApps:Cargo24:AppPath");
 
-//        Debug.WriteLine($"[CommonFuncs] Cargo24 설정 로드: Use={NwCargo24.s_Use}, Id={NwCargo24.s_Id}, AppPath={NwCargo24.s_AppPath} -----------------------");
+        Debug.WriteLine($"[CommonFuncs] Cargo24 설정 로드: Use={NwCargo24.s_Use}, Id={NwCargo24.s_Id}, AppPath={NwCargo24.s_AppPath} -----------------------");
 
-//        // Onecall 설정 로드
-//        string sUseOnecall = JsonFileManager.GetValue("ExternalApps:Onecall:Use");
-//        NwOnecall.s_Use = StdConvert.StringToBool(sUseOnecall);
-//        NwOnecall.s_Id = JsonFileManager.GetValue("ExternalApps:Onecall:Id");
-//        NwOnecall.s_Pw = JsonFileManager.GetValue("ExternalApps:Onecall:Pw");
-//        NwOnecall.s_AppPath = JsonFileManager.GetValue("ExternalApps:Onecall:AppPath");
+        // Onecall 설정 로드
+        string sUseOnecall = JsonFileManager.GetValue("ExternalApps:Onecall:Use");
+        NwOnecall.s_Use = StdConvert.StringToBool(sUseOnecall);
+        NwOnecall.s_Id = JsonFileManager.GetValue("ExternalApps:Onecall:Id");
+        NwOnecall.s_Pw = JsonFileManager.GetValue("ExternalApps:Onecall:Pw");
+        NwOnecall.s_AppPath = JsonFileManager.GetValue("ExternalApps:Onecall:AppPath");
 
-//        Debug.WriteLine($"[CommonFuncs] Onecall 설정 로드: Use={NwOnecall.s_Use}, Id={NwOnecall.s_Id}, AppPath={NwOnecall.s_AppPath} -----------------------");
-//    }
+        Debug.WriteLine($"[CommonFuncs] Onecall 설정 로드: Use={NwOnecall.s_Use}, Id={NwOnecall.s_Id}, AppPath={NwOnecall.s_AppPath} -----------------------");
+    }
 
-//    private static bool InitListChars()
-//    {
-//        // 파일이 존재하는지 확인
-//        if (!File.Exists(s_sHanPath))
-//        {
-//            MessageBox.Show("File not found: " + s_sHanPath);
-//            return false;
-//        }
+    //private static bool InitListChars()
+    //{
+    //    // 파일이 존재하는지 확인
+    //    if (!File.Exists(s_sHanPath))
+    //    {
+    //        MessageBox.Show("File not found: " + s_sHanPath);
+    //        return false;
+    //    }
 
-//        if (!File.Exists(s_sEngPath))
-//        {
-//            MessageBox.Show("File not found: " + s_sEngPath);
-//            return false;
-//        }
+    //    if (!File.Exists(s_sEngPath))
+    //    {
+    //        MessageBox.Show("File not found: " + s_sEngPath);
+    //        return false;
+    //    }
 
-//        if (!File.Exists(s_sNumPath))
-//        {
-//            MessageBox.Show("File not found: " + s_sNumPath);
-//            return false;
-//        }
+    //    if (!File.Exists(s_sNumPath))
+    //    {
+    //        MessageBox.Show("File not found: " + s_sNumPath);
+    //        return false;
+    //    }
 
-//        if (!File.Exists(s_sSpecialPath))
-//        {
-//            MessageBox.Show("File not found: " + s_sSpecialPath);
-//            return false;
-//        }
+    //    if (!File.Exists(s_sSpecialPath))
+    //    {
+    //        MessageBox.Show("File not found: " + s_sSpecialPath);
+    //        return false;
+    //    }
 
-//        // ������ �о� ����Ʈ�� ����
-//        s_ListHan = File.ReadAllText(s_sHanPath).ToCharArray().ToList();
-//        s_ListEng = File.ReadAllText(s_sEngPath).ToCharArray().ToList();
-//        s_ListNum = File.ReadAllText(s_sNumPath).ToCharArray().ToList();
-//        s_ListSpecial = File.ReadAllText(s_sSpecialPath).ToCharArray().ToList();
+    //    폰트 로드(변수가 주석 처리되어 있으므로 여기도 주석 처리해야 함)
+    //    s_ListHan = File.ReadAllText(s_sHanPath).ToCharArray().ToList();
+    //    s_ListEng = File.ReadAllText(s_sEngPath).ToCharArray().ToList();
+    //    s_ListNum = File.ReadAllText(s_sNumPath).ToCharArray().ToList();
+    //    s_ListSpecial = File.ReadAllText(s_sSpecialPath).ToCharArray().ToList();
 
-//        s_ListCharGroup.Add(s_ListHan);
-//        s_ListCharGroup.Add(s_ListEng);
-//        s_ListCharGroup.Add(s_ListNum);
-//        s_ListCharGroup.Add(s_ListSpecial);
+    //    s_ListCharGroup.Add(s_ListHan);
+    //    s_ListCharGroup.Add(s_ListEng);
+    //    s_ListCharGroup.Add(s_ListNum);
+    //    s_ListCharGroup.Add(s_ListSpecial);
 
-//        return true;
-//    }
+    //    return true;
+    //}
 
-//    public static string LoadAppMode()
-//    {
-//        if (!File.Exists("appsettings.json")) return "Sub";
+    // 마스터모드, 서브모드 결정
+    public static string LoadAppMode()
+    {
+        if (!File.Exists("appsettings.json")) return "Sub";
 
-//        string json = File.ReadAllText("appsettings.json");
-//        using JsonDocument doc = JsonDocument.Parse(json);
+        string json = File.ReadAllText("appsettings.json");
+        using JsonDocument doc = JsonDocument.Parse(json);
 
-//        if (doc.RootElement.TryGetProperty("AppMode", out JsonElement mode))
-//            return mode.GetString() ?? "Sub";
+        if (doc.RootElement.TryGetProperty("AppMode", out JsonElement mode))
+            return mode.GetString() ?? "Sub";
 
-//        return "Sub";
-//    }
+        return "Sub";
+    }
     #endregion
 
     #region WPF Controls
