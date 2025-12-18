@@ -77,7 +77,7 @@ public class Cargo24sAct_MainWnd
 
     //        if (m_Main.TopWnd_hWnd == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/MainWnd]메인윈도 찾기실패",
     //                "Cargo24sAct_MainWnd/InitializeAsync_01", bWrite, bMsgBox);
     //        }
@@ -120,7 +120,7 @@ public class Cargo24sAct_MainWnd
     //        {
     //            string capMain = Std32Window.GetWindowCaption(m_Main.TopWnd_hWnd);
     //            string capFind = Std32Window.GetWindowCaption(hWndFind);
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/MainWnd]이동실패: {m_Main.TopWnd_hWnd:X}, {hWndFind:X}, {ptTarget}, {capMain}, {capFind}",
     //                "Cargo24sAct_MainWnd/InitializeAsync_02", bWrite, bMsgBox);
     //        }
@@ -161,7 +161,7 @@ public class Cargo24sAct_MainWnd
     //        // 개별 에러 체크
     //        if (m_Main.FirstLayer_ChildWnds == null || m_Main.FirstLayer_ChildWnds.Count == 0)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/MainWnd]자식윈도 못찾음",
     //                "Cargo24sAct_MainWnd/InitializeAsync_03", bWrite, bMsgBox);
     //        }
@@ -169,21 +169,21 @@ public class Cargo24sAct_MainWnd
 
     //        if (m_Main.WndInfo_MainMenu == null)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/MainWnd]메인메뉴 못찾음",
     //                "Cargo24sAct_MainWnd/InitializeAsync_04", bWrite, bMsgBox);
     //        }
 
     //        if (m_Main.WndInfo_BarMenu == null)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/MainWnd]바메뉴 못찾음",
     //                "Cargo24sAct_MainWnd/InitializeAsync_05", bWrite, bMsgBox);
     //        }
 
     //        if (m_Main.WndInfo_MdiClient == null)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/MainWnd]MdiClient 못찾음",
     //                "Cargo24sAct_MainWnd/InitializeAsync_06", bWrite, bMsgBox);
     //        }
@@ -194,7 +194,7 @@ public class Cargo24sAct_MainWnd
     //    }
     //    catch (Exception ex)
     //    {
-    //        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //        return new StdResult_Error(
     //            $"[{m_Context.AppName}/MainWnd]예외발생: {ex.Message}",
     //            "Cargo24sAct_MainWnd/InitializeAsync_999", bWrite, bMsgBox);
     //    }

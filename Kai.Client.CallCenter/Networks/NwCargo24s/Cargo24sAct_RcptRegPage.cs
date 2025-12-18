@@ -34,30 +34,30 @@ public partial class Cargo24sAct_RcptRegPage
     ///// <summary>
     ///// Datagrid 컬럼 헤더 정보 배열 (22개)
     ///// </summary>
-    //public readonly NwCommon_DgColumnHeader[] m_ReceiptDgHeaderInfos = new NwCommon_DgColumnHeader[]
+    //public readonly CModel_DgColumnHeader[] m_ReceiptDgHeaderInfos = new CModel_DgColumnHeader[]
     //{
-    //    new NwCommon_DgColumnHeader() { sName = "0", bOfrSeq = true, nWidth = 0 },
-    //    new NwCommon_DgColumnHeader() { sName = "상태", bOfrSeq = false, nWidth = 40 },
-    //    new NwCommon_DgColumnHeader() { sName = "화물번호", bOfrSeq = true, nWidth = 80 },
-    //    new NwCommon_DgColumnHeader() { sName = "처리시간", bOfrSeq = true, nWidth = 70 },
-    //    new NwCommon_DgColumnHeader() { sName = "고객명", bOfrSeq = false, nWidth = 120 },
-    //    new NwCommon_DgColumnHeader() { sName = "고객전화", bOfrSeq = true, nWidth = 90 },
-    //    new NwCommon_DgColumnHeader() { sName = "차주전화", bOfrSeq = true, nWidth = 90 },
-    //    new NwCommon_DgColumnHeader() { sName = "상차지", bOfrSeq = false, nWidth = 100 },
-    //    new NwCommon_DgColumnHeader() { sName = "하차지", bOfrSeq = false, nWidth = 100 },
-    //    new NwCommon_DgColumnHeader() { sName = "운송료", bOfrSeq = true, nWidth = 50 },
-    //    new NwCommon_DgColumnHeader() { sName = "수수료", bOfrSeq = true, nWidth = 50 },
-    //    new NwCommon_DgColumnHeader() { sName = "공유", bOfrSeq = false, nWidth = 40 },
-    //    new NwCommon_DgColumnHeader() { sName = "SMS", bOfrSeq = false, nWidth = 40 },
-    //    new NwCommon_DgColumnHeader() { sName = "혼적", bOfrSeq = false, nWidth = 40 },
-    //    new NwCommon_DgColumnHeader() { sName = "요금구분", bOfrSeq = false, nWidth = 60 },
-    //    new NwCommon_DgColumnHeader() { sName = "계산서금액", bOfrSeq = true, nWidth = 70 },
-    //    new NwCommon_DgColumnHeader() { sName = "차량톤수", bOfrSeq = true, nWidth = 60 },
-    //    new NwCommon_DgColumnHeader() { sName = "톤수", bOfrSeq = false, nWidth = 50 },
-    //    new NwCommon_DgColumnHeader() { sName = "차종", bOfrSeq = false, nWidth = 60 },
-    //    new NwCommon_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 100 },
-    //    new NwCommon_DgColumnHeader() { sName = "차량종류", bOfrSeq = false, nWidth = 60 },
-    //    new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 150 },
+    //    new CModel_DgColumnHeader() { sName = "0", bOfrSeq = true, nWidth = 0 },
+    //    new CModel_DgColumnHeader() { sName = "상태", bOfrSeq = false, nWidth = 40 },
+    //    new CModel_DgColumnHeader() { sName = "화물번호", bOfrSeq = true, nWidth = 80 },
+    //    new CModel_DgColumnHeader() { sName = "처리시간", bOfrSeq = true, nWidth = 70 },
+    //    new CModel_DgColumnHeader() { sName = "고객명", bOfrSeq = false, nWidth = 120 },
+    //    new CModel_DgColumnHeader() { sName = "고객전화", bOfrSeq = true, nWidth = 90 },
+    //    new CModel_DgColumnHeader() { sName = "차주전화", bOfrSeq = true, nWidth = 90 },
+    //    new CModel_DgColumnHeader() { sName = "상차지", bOfrSeq = false, nWidth = 100 },
+    //    new CModel_DgColumnHeader() { sName = "하차지", bOfrSeq = false, nWidth = 100 },
+    //    new CModel_DgColumnHeader() { sName = "운송료", bOfrSeq = true, nWidth = 50 },
+    //    new CModel_DgColumnHeader() { sName = "수수료", bOfrSeq = true, nWidth = 50 },
+    //    new CModel_DgColumnHeader() { sName = "공유", bOfrSeq = false, nWidth = 40 },
+    //    new CModel_DgColumnHeader() { sName = "SMS", bOfrSeq = false, nWidth = 40 },
+    //    new CModel_DgColumnHeader() { sName = "혼적", bOfrSeq = false, nWidth = 40 },
+    //    new CModel_DgColumnHeader() { sName = "요금구분", bOfrSeq = false, nWidth = 60 },
+    //    new CModel_DgColumnHeader() { sName = "계산서금액", bOfrSeq = true, nWidth = 70 },
+    //    new CModel_DgColumnHeader() { sName = "차량톤수", bOfrSeq = true, nWidth = 60 },
+    //    new CModel_DgColumnHeader() { sName = "톤수", bOfrSeq = false, nWidth = 50 },
+    //    new CModel_DgColumnHeader() { sName = "차종", bOfrSeq = false, nWidth = 60 },
+    //    new CModel_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 100 },
+    //    new CModel_DgColumnHeader() { sName = "차량종류", bOfrSeq = false, nWidth = 60 },
+    //    new CModel_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 150 },
     //};
 
     #region 1-1. Constants - 상수
@@ -259,7 +259,7 @@ public partial class Cargo24sAct_RcptRegPage
     //    }
     //    catch (Exception ex)
     //    {
-    //        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //        return new StdResult_Error(
     //            $"[{m_Context.AppName}/RcptRegPage]예외발생: {ex.Message}",
     //            "Cargo24sAct_RcptRegPage/InitializeAsync_999", bWrite, bMsgBox);
     //    }
@@ -284,7 +284,7 @@ public partial class Cargo24sAct_RcptRegPage
     //        m_RcptPage.DG오더_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(hWndMain, m_FileInfo.접수등록Page_DG오더_ptChkRel);
     //        if (m_RcptPage.DG오더_hWnd == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]Datagrid 핸들 못찾음", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_01", bWrite, bMsgBox);
+    //            return new StdResult_Error($"[{m_Context.AppName}/SetDG오더]Datagrid 핸들 못찾음", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_01", bWrite, bMsgBox);
     //        }
     //        Debug.WriteLine($"[Cargo24sAct_RcptRegPage] Datagrid 핸들 찾음: {m_RcptPage.DG오더_hWnd:X}");
 
@@ -292,7 +292,7 @@ public partial class Cargo24sAct_RcptRegPage
     //        sTmp = Std32Window.GetWindowClassName(m_RcptPage.DG오더_hWnd);
     //        if (sTmp != m_FileInfo.접수등록Page_DG오더_sClassName)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]Datagrid 클래스명 불일치: {sTmp} != {m_FileInfo.접수등록Page_DG오더_sClassName}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_02", bWrite, bMsgBox);
+    //            return new StdResult_Error($"[{m_Context.AppName}/SetDG오더]Datagrid 클래스명 불일치: {sTmp} != {m_FileInfo.접수등록Page_DG오더_sClassName}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_02", bWrite, bMsgBox);
     //        }
     //        Debug.WriteLine($"[Cargo24sAct_RcptRegPage] Datagrid ClassName 검증 완료: {sTmp}");
 
@@ -309,7 +309,7 @@ public partial class Cargo24sAct_RcptRegPage
 
     //            if (bmpDG == null)
     //            {
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 영역 캡처 실패", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_03", bWrite, bMsgBox);
+    //                return new StdResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 영역 캡처 실패", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_03", bWrite, bMsgBox);
     //            }
     //            Debug.WriteLine($"[Cargo24/SetDG오더] 헤더 영역 캡처 성공: {bmpDG.Width}x{bmpDG.Height}");
 
@@ -318,7 +318,7 @@ public partial class Cargo24sAct_RcptRegPage
     //            if (maxBrightness == 0)
     //            {
     //                bmpDG?.Dispose();
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 행 최대 밝기 검출 실패: targetRow={TARGET_ROW}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_04", bWrite, bMsgBox);
+    //                return new StdResult_Error($"[{m_Context.AppName}/SetDG오더]헤더 행 최대 밝기 검출 실패: targetRow={TARGET_ROW}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_04", bWrite, bMsgBox);
     //            }
 
     //            maxBrightness -= BRIGHTNESS_OFFSET; // 배경보다 약간 어두운 것을 경계로 인식
@@ -328,7 +328,7 @@ public partial class Cargo24sAct_RcptRegPage
     //            if (boolArr == null || boolArr.Length == 0)
     //            {
     //                bmpDG?.Dispose();
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]Bool 배열 생성 실패: targetRow={TARGET_ROW}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_05", bWrite, bMsgBox);
+    //                return new StdResult_Error($"[{m_Context.AppName}/SetDG오더]Bool 배열 생성 실패: targetRow={TARGET_ROW}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_05", bWrite, bMsgBox);
     //            }
 
     //            // 4-3-2. 컬럼 경계 리스트 추출
@@ -336,7 +336,7 @@ public partial class Cargo24sAct_RcptRegPage
     //            if (listLW == null || listLW.Count == 0)
     //            {
     //                bmpDG?.Dispose();
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]컬럼 경계 검출 실패: 검출된 리스트 수=0", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_06", bWrite, bMsgBox);
+    //                return new StdResult_Error($"[{m_Context.AppName}/SetDG오더]컬럼 경계 검출 실패: 검출된 리스트 수=0", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_06", bWrite, bMsgBox);
     //            }
 
     //            // 4-3-3. 마지막 항목 제거 (오른쪽 끝 경계)
@@ -368,7 +368,7 @@ public partial class Cargo24sAct_RcptRegPage
 
     //                    if (retry == MAX_RETRY)
     //                    {
-    //                        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //                        return new StdResult_Error(
     //                            $"[{m_Context.AppName}/SetDG오더]컬럼 개수 부족: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개\n상세: {initResult.sErr}\n(재시도 {MAX_RETRY}회 초과)",
     //                            "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_07", bWrite, bMsgBox);
     //                    }
@@ -413,7 +413,7 @@ public partial class Cargo24sAct_RcptRegPage
 
     //                    if (retry == MAX_RETRY)
     //                    {
-    //                        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //                        return new StdResult_Error(
     //                            $"[{m_Context.AppName}/SetDG오더]Datagrid 상태 검증 실패: {validationIssues}\n상세: {initResult.sErr}\n(재시도 {MAX_RETRY}회 초과)",
     //                            "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_Validation", bWrite, bMsgBox);
     //                    }
@@ -467,13 +467,13 @@ public partial class Cargo24sAct_RcptRegPage
     //        }
 
     //        // 최대 재시도 초과
-    //        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //        return new StdResult_Error(
     //            $"[{m_Context.AppName}/SetDG오더]Datagrid 초기화 실패 (재시도 {MAX_RETRY}회 초과)",
     //            "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_MaxRetry", bWrite, bMsgBox);
     //    }
     //    catch (Exception ex)
     //    {
-    //        return CommonFuncs_StdResult.ErrMsgResult_Error($"[{m_Context.AppName}/SetDG오더]예외발생: {ex.Message}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_999", bWrite, bMsgBox);
+    //        return new StdResult_Error($"[{m_Context.AppName}/SetDG오더]예외발생: {ex.Message}", "Cargo24sAct_RcptRegPage/SetDG오더RectsAsync_999", bWrite, bMsgBox);
     //    }
     //    finally
     //    {
@@ -498,7 +498,7 @@ public partial class Cargo24sAct_RcptRegPage
 
     //        if (m_RcptPage.리스트항목_hWnd원래대로 == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/InitDG오더]원래대로 버튼 핸들 없음",
     //                "Cargo24sAct_RcptRegPage/InitDG오더Async_01", bWrite, bMsgBox);
     //        }
@@ -516,7 +516,7 @@ public partial class Cargo24sAct_RcptRegPage
     //        bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
     //        if (bmpHeader == null)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/InitDG오더]헤더 캡처 실패",
     //                "Cargo24sAct_RcptRegPage/InitDG오더Async_Step2_01", bWrite, bMsgBox);
     //        }
@@ -560,7 +560,7 @@ public partial class Cargo24sAct_RcptRegPage
     //            bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
     //            if (bmpHeader == null)
     //            {
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //                return new StdResult_Error(
     //                    $"[{m_Context.AppName}/InitDG오더]Step3 헤더 캡처 실패",
     //                    "Cargo24sAct_RcptRegPage/InitDG오더Async_Step3_01", bWrite, bMsgBox);
     //            }
@@ -580,7 +580,7 @@ public partial class Cargo24sAct_RcptRegPage
 
     //            if (find < 0)
     //            {
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //                return new StdResult_Error(
     //                    $"[{m_Context.AppName}/InitDG오더]컬럼[{x}] '{m_ReceiptDgHeaderInfos[x].sName}' 못찾음",
     //                    "Cargo24sAct_RcptRegPage/InitDG오더Async_Step3_02", bWrite, bMsgBox);
     //            }
@@ -614,7 +614,7 @@ public partial class Cargo24sAct_RcptRegPage
     //        bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
     //        if (bmpHeader == null)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/InitDG오더]Step4 헤더 캡처 실패",
     //                "Cargo24sAct_RcptRegPage/InitDG오더Async_Step4_01", bWrite, bMsgBox);
     //        }
@@ -645,7 +645,7 @@ public partial class Cargo24sAct_RcptRegPage
     //        bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
     //        if (bmpHeader == null)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/InitDG오더]확인작업 헤더 캡처 실패", "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_01", bWrite, bMsgBox);
     //        }
 
@@ -657,7 +657,7 @@ public partial class Cargo24sAct_RcptRegPage
     //        if (m_ReceiptDgHeaderInfos.Length > columns)
     //        {
     //            bmpHeader?.Dispose();
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/InitDG오더]컬럼 수 부족: 예상={m_ReceiptDgHeaderInfos.Length}, 검출={columns}",
     //                "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_02", bWrite, bMsgBox);
     //        }
@@ -672,14 +672,14 @@ public partial class Cargo24sAct_RcptRegPage
     //            if (string.IsNullOrEmpty(resultChSet.strResult))
     //            {
     //                bmpHeader?.Dispose();
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //                return new StdResult_Error(
     //                    $"[{m_Context.AppName}/InitDG오더]컬럼[{x}] OFR 실패: {resultChSet.sErr}", "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_03", bWrite, bMsgBox);
     //            }
 
     //            if (resultChSet.strResult != m_ReceiptDgHeaderInfos[x].sName)
     //            {
     //                bmpHeader?.Dispose();
-    //                return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //                return new StdResult_Error(
     //                    $"[{m_Context.AppName}/InitDG오더]컬럼[{x}] 불일치: 예상={m_ReceiptDgHeaderInfos[x].sName}, 검출={resultChSet.strResult}",
     //                    "Cargo24sAct_RcptRegPage/InitDG오더Async_Verify_04", bWrite, bMsgBox);
     //            }
@@ -740,13 +740,13 @@ public partial class Cargo24sAct_RcptRegPage
 
     //        if (hWndDlg == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/InitDG오더]저장 대화상자 못찾음", "Cargo24sAct_RcptRegPage/InitDG오더Async_Step5_01", bWrite, bMsgBox);
     //        }
 
     //        if (StdWin32.IsWindow(hWndDlg))
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/InitDG오더]저장 대화상자 사라지지 않음", "Cargo24sAct_RcptRegPage/InitDG오더Async_Step5_02", bWrite, bMsgBox);
     //        }
 
@@ -757,7 +757,7 @@ public partial class Cargo24sAct_RcptRegPage
     //    }
     //    catch (Exception ex)
     //    {
-    //        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //        return new StdResult_Error(
     //            $"[{m_Context.AppName}/InitDG오더]예외발생: {ex.Message}", "Cargo24sAct_RcptRegPage/InitDG오더Async_999", bWrite, bMsgBox);
     //    }
     //    finally

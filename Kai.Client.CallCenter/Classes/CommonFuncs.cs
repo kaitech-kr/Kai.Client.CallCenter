@@ -156,11 +156,7 @@ public class CommonFuncs : CommonVars
     #endregion
 
     #region WPF Controls
-    ///// <summary>
-    ///// ComboBox에서 선택된 항목의 텍스트 가져오기
-    ///// </summary>
-    ///// <param name="comboBox">대상 ComboBox</param>
-    ///// <returns>선택된 항목의 텍스트, 없으면 빈 문자열</returns>
+    // ComboBox에서 선택된 항목의 텍스트 가져오기
     //public static string GetSelectedComboBoxContent(ComboBox comboBox)
     //{
     //    return Application.Current.Dispatcher.Invoke(() =>
@@ -180,12 +176,7 @@ public class CommonFuncs : CommonVars
     //    });
     //}
 
-    ///// <summary>
-    ///// ComboBox에서 특정 텍스트를 가진 항목의 인덱스 찾기
-    ///// </summary>
-    ///// <param name="comboBox">대상 ComboBox</param>
-    ///// <param name="targetValue">찾을 텍스트</param>
-    ///// <returns>항목의 인덱스, 찾지 못하면 -1</returns>
+    // ComboBox에서 특정 텍스트를 가진 항목의 인덱스 찾기
     //public static int GetComboBoxItemIndex(ComboBox comboBox, string targetValue)
     //{
     //    return Application.Current.Dispatcher.Invoke(() =>
@@ -212,12 +203,7 @@ public class CommonFuncs : CommonVars
     //    });
     //}
 
-    ///// <summary>
-    ///// ComboBox에서 특정 텍스트를 가진 항목을 선택
-    ///// </summary>
-    ///// <param name="comboBox">대상 ComboBox</param>
-    ///// <param name="content">선택할 항목의 텍스트</param>
-    ///// <returns>설정된 인덱스, 찾지 못하면 -1</returns>
+    // ComboBox에서 특정 텍스트를 가진 항목을 선택 (설정된 인덱스 반환, 실패 시 -1)
     //public static int SetComboBoxItemByContent(ComboBox comboBox, string content)
     //{
     //    return Application.Current.Dispatcher.Invoke(() =>
@@ -235,11 +221,7 @@ public class CommonFuncs : CommonVars
     //    });
     //}
 
-    ///// <summary>
-    ///// Button의 Opacity를 설정하여 활성화/비활성화 표시
-    ///// </summary>
-    ///// <param name="btn">대상 Button</param>
-    ///// <param name="bEnable">true면 활성화, false면 비활성화</param>
+    // Button의 Opacity를 설정하여 활성화/비활성화 표시
     //public static void SetButtonOpacity(Button btn, bool bEnable)
     //{
     //    Application.Current.Dispatcher.Invoke(() =>
@@ -283,153 +265,153 @@ public class CommonFuncs : CommonVars
     #endregion
 }
 
-// CommonFuncs_StdResult
-public class CommonFuncs_StdResult
-{
-    // ErrMsgResult_Bool
-    public static StdResult_Bool ErrMsgResult_Bool(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//// CommonFuncs_StdResult
+//public class CommonFuncs_StdResult
+//{
+//    // ErrMsgResult_Bool
+//    public static StdResult_Bool ErrMsgResult_Bool(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new StdResult_Bool(sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static StdResult_Error ErrMsgResult_Bool(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new StdResult_Bool(sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static StdResult_Error ErrMsgResult_Bool(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
+//        return result;
+//    }
 
-    // ErrMsgResult_NulBool
-    public static StdResult_NulBool ErrMsgResult_NulBool(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//    // ErrMsgResult_NulBool
+//    public static StdResult_NulBool ErrMsgResult_NulBool(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new StdResult_NulBool(sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static StdResult_NulBool ErrMsgResult_NulBool(StdResult_NulBool result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new StdResult_NulBool(sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static StdResult_NulBool ErrMsgResult_NulBool(StdResult_NulBool result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
+//        return result;
+//    }
 
-    // ErrMsgResult_Error
-    public static StdResult_Error ErrMsgResult_Error(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//    // ErrMsgResult_Error
+//    public static StdResult_Error ErrMsgResult_Error(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new StdResult_Error(sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static StdResult_Error ErrMsgResult_Error(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new StdResult_Error(sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static StdResult_Error ErrMsgResult_Error(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
+//        return result;
+//    }
 
-    // ErrMsgResult_Status
-    public static StdResult_Status ErrMsgResult_Status(StdResult result, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//    // ErrMsgResult_Status
+//    public static StdResult_Status ErrMsgResult_Status(StdResult result, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new StdResult_Status(result, sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static StdResult_Status ErrMsgResult_Status(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new StdResult_Status(result, sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static StdResult_Status ErrMsgResult_Status(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
+//        return result;
+//    }
 
-    // ErrMsgResult_Object
-    public static StdResult_Object ErrMsgResult_Object(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//    // ErrMsgResult_Object
+//    public static StdResult_Object ErrMsgResult_Object(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new StdResult_Object(sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static StdResult_Object ErrMsgResult_Object(StdResult_Object result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new StdResult_Object(sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static StdResult_Object ErrMsgResult_Object(StdResult_Object result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
+//        return result;
+//    }
 
-    // ErrMsgResult_String
-    public static StdResult_String ErrMsgResult_String(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//    // ErrMsgResult_String
+//    public static StdResult_String ErrMsgResult_String(string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new StdResult_String(sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static StdResult_String ErrMsgResult_String(StdResult_String result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new StdResult_String(sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static StdResult_String ErrMsgResult_String(StdResult_String result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
-}
+//        return result;
+//    }
+//}
 
-// CommonFuncs_PostgResult
-public class CommonFuncs_PostgResult
-{
-    // ErrMsgResult_Status
-    public static StdResult_Status ErrMsgResult_Status(StdResult result, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//// CommonFuncs_PostgResult
+//public class CommonFuncs_PostgResult
+//{
+//    // ErrMsgResult_Status
+//    public static StdResult_Status ErrMsgResult_Status(StdResult result, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new StdResult_Status(result, sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static StdResult_Status ErrMsgResult_Status(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new StdResult_Status(result, sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static StdResult_Status ErrMsgResult_Status(StdResult_Status result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
-}
+//        return result;
+//    }
+//}
 
-// CommonFuncs_OfrResult
-public class CommonFuncs_OfrResult
-{
-    // ErrMsgResult_TbText
-    public static OfrResult_TbText ErrMsgResult_TbText(TbText tb, OfrModel_BitmapAnalysis analy, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//// CommonFuncs_OfrResult
+//public class CommonFuncs_OfrResult
+//{
+//    // ErrMsgResult_TbText
+//    public static OfrResult_TbText ErrMsgResult_TbText(TbText tb, OfrModel_BitmapAnalysis analy, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new OfrResult_TbText(analy, sErr, sPos, CommonVars.s_sLogDir);
-    }
+//        return new OfrResult_TbText(analy, sErr, sPos, CommonVars.s_sLogDir);
+//    }
 
-    // ErrMsgResult_TbCharSet
-    public static OfrResult_TbCharSetList ErrMsgResult_TbCharSetList(Draw.Bitmap bmpCapture, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
+//    // ErrMsgResult_TbCharSet
+//    public static OfrResult_TbCharSetList ErrMsgResult_TbCharSetList(Draw.Bitmap bmpCapture, string sErr, string sPos, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
 
-        return new OfrResult_TbCharSetList(bmpCapture, sErr, sPos, CommonVars.s_sLogDir);
-    }
-    public static OfrResult_TbCharSetList ErrMsgResult_TbCharSetList(OfrResult_TbCharSetList result, bool bWrite = true, bool bMsgBox = true)
-    {
-        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
-        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
+//        return new OfrResult_TbCharSetList(bmpCapture, sErr, sPos, CommonVars.s_sLogDir);
+//    }
+//    public static OfrResult_TbCharSetList ErrMsgResult_TbCharSetList(OfrResult_TbCharSetList result, bool bWrite = true, bool bMsgBox = true)
+//    {
+//        if (bWrite) Debug.WriteLine($"sErr: {result.sErr}, sPos: {result.sPos}");
+//        // if (bMsgBox) FormFuncs.ErrMsgBox(result.sErr, result.sPos);
 
-        return result;
-    }
-}
+//        return result;
+//    }
+//}
 
 #nullable enable

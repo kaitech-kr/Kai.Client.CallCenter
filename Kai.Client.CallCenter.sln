@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루�
 		Kai.Client.CallCenter\appsettings.json = Kai.Client.CallCenter\appsettings.json
 		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwCargo24s\Cargo24Act_ReceiptRegPage.cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwCargo24s\Cargo24Act_ReceiptRegPage.cs
 		..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt = ..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt
+		AppBackup\Kai.Client.CallCenter\Networks\NwInsungs\InsungsAct_App.cs = AppBackup\Kai.Client.CallCenter\Networks\NwInsungs\InsungsAct_App.cs
 		Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt = Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt
 		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallAct_ReceiptRegPage.cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallAct_ReceiptRegPage.cs
 		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\Onecall_ReceiptRegPage(Tmp).cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\Onecall_ReceiptRegPage(Tmp).cs

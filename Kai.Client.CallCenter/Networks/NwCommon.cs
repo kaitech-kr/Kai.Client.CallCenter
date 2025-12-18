@@ -112,13 +112,5 @@ public class NwCommon
     //}
 }
 
-/// <summary>
-/// Datagrid 컬럼 헤더 정보
-/// </summary>
-public class NwCommon_DgColumnHeader
-{
-    //public string sName = string.Empty;
-    //public bool bOfrSeq = false; // Ofr시 Multi, Seq처리 여부
-    //public int nWidth = 0;
-}
+
 #nullable enable

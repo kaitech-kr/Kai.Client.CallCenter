@@ -49,7 +49,7 @@ public partial class Cargo24sAct_RcptRegPage
     //    }
 
     //    // ã�� ����
-    //    var error = CommonFuncs_StdResult.ErrMsgResult_Error(
+    //    var error = new StdResult_Error(
     //        $"[{m_Context.AppName}/RcptRegPage]{buttonName}��ư ã�����: {checkPoint}",
     //        errorCode, bWrite, bMsgBox);
     //    return (IntPtr.Zero, error);

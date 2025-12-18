@@ -96,7 +96,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     }
 
     public List<int> m_ListIgnoreSeqno = new List<int>();
-    public static int s_nLoginRetryCount = 0; // 로그인 재시도 횟수
+    public static int s_nLoginRetryCount = 1; // 로그인 시도 횟수 (1부터 시작)
 
     // Request ID 관리 (자동배차 업데이트 필터링용)
     private HashSet<string> m_PendingRequestIds = new HashSet<string>();
@@ -378,17 +378,15 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             // 로그인 실패시 재시도 횟수 증가
             if (!boolEventArgs.bValue)
             {
+                Debug.WriteLine($"***** 로그인 실패! 시도 횟수: {s_nLoginRetryCount}번째 *****");
+                SrGlobalClient_LoginEvent?.Invoke(this, boolEventArgs);
                 s_nLoginRetryCount++;
-                Debug.WriteLine($"***** 로그인 실패! 재시도 횟수: {s_nLoginRetryCount}번째 *****");
             }
             else
             {
-                //s_nLoginRetryCount = 0; // 성공시 초기화 - 횟수 사용하므로 초기화금지
-                Debug.WriteLine($"***** 로그인 성공! 재시도 횟수 초기화 *****");
+                Debug.WriteLine($"***** 로그인 성공! ({s_nLoginRetryCount}번째) *****");
+                SrGlobalClient_LoginEvent?.Invoke(this, boolEventArgs);
             }
-
-            Debug.WriteLine($"boolEventArgs={boolEventArgs}");
-            SrGlobalClient_LoginEvent?.Invoke(this, boolEventArgs);
         }
     }
 

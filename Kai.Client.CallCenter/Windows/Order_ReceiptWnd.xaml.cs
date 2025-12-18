@@ -48,23 +48,23 @@ public partial class Order_ReceiptWnd : Window
     {
         InitializeComponent();
 
-        TBlkRegister.Text = s_CenterCharge.Id;
-        TBlkRegistPlace.Text = s_CallCenter.CenterName;
+        // TBlkRegister.Text = s_CenterCharge.Id;
+        // TBlkRegistPlace.Text = s_CallCenter.CenterName;
         tbOrderOrg = tbOrder;
 
         // 모드에 따라 버튼그룹 보이기
-        if (tbOrderOrg == null) // 신규 등록 모드
-        {
-            ColumnRegist.Visibility = Visibility.Visible;
-            ColumnModify.Visibility = Visibility.Collapsed;
-
-            RadioBtn_편도.IsChecked = true; // 체크 대상
-        }
-        else // 수정 모드
-        {
-            ColumnRegist.Visibility = Visibility.Collapsed;
-            ColumnModify.Visibility = Visibility.Visible;
-        }
+        // if (tbOrderOrg == null) // 신규 등록 모드
+        // {
+        //     ColumnRegist.Visibility = Visibility.Visible;
+        //     ColumnModify.Visibility = Visibility.Collapsed;
+        // 
+        //     RadioBtn_편도.IsChecked = true; // 체크 대상
+        // }
+        // else // 수정 모드
+        // {
+        //     ColumnRegist.Visibility = Visibility.Collapsed;
+        //     ColumnModify.Visibility = Visibility.Visible;
+        // }
     }
 
     public Order_ReceiptWnd(string sTelNo)
@@ -82,35 +82,7 @@ public partial class Order_ReceiptWnd : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        //this.TBoxHeader_Search.Focus();
-
-        //if (tbOrderOrg != null) // 업데이트 모드면 오더정보 로드
-        //{
-        //    TbOrderOrgToUiData();
-        //    의뢰자정보Mode(tbOrderOrg.CallCustCodeK);
-        //}
-        //else // 신규 등록 모드
-        //{
-        //    if (string.IsNullOrEmpty(TBoxHeader_Search.Text))
-        //    {
-        //        의뢰자정보Mode(0);
-        //    }
-        //    else
-        //    {
-        //        var ee = new KeyEventArgs(
-        //        Keyboard.PrimaryDevice,
-        //        PresentationSource.FromVisual(TBoxHeader_Search), // 대상 컨트롤 기준
-        //        0,
-        //        Key.Enter
-        //        )
-        //        {
-        //            RoutedEvent = Keyboard.KeyDownEvent
-        //        };
-
-        //        //이벤트 핸들러 직접 호출
-        //        TBoxHeader_Search_KeyDown(TBoxHeader_Search, ee);
-        //    }
-        //}
+        // ... 주석 처리
     }
 
     private void Window_Unloaded(object sender, RoutedEventArgs e)
@@ -122,14 +94,14 @@ public partial class Order_ReceiptWnd : Window
     // 의뢰자 고객수정 버튼
     private void BtnCommon_CustUpdate_Click(object sender, RoutedEventArgs e)
     {
-        //if (CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
+        if (CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
 
-        //CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(CallCustCodeK);
-        //bool result = (bool)SafeShowDialog.WithMainWindowToOwner(wnd, this);
-        //if (!result) return;
+        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(CallCustCodeK);
+        bool result = (bool)SafeShowDialog.WithMainWindowToOwner(wnd, this);
+        if (!result) return;
 
-        //// Table To 의뢰자
-        //TbAllTo의뢰자(wnd.tbAllWithNew);
+        // Table To 의뢰자
+        // TbAllTo의뢰자(wnd.tbAllWithNew);
     }
 
     // 요금저장
@@ -170,106 +142,38 @@ public partial class Order_ReceiptWnd : Window
 
     #endregion
 
-    #region Click - 주버튼(등록그룹)
-    // 의뢰자 고객등록 버튼
-    private void BtnReg_CustRegist_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    // 접수저장
-    /// <summary>
-    /// 접수 저장 버튼 클릭
-    /// </summary>
+    #region Button Clicks - Commented
+    /*
     private async void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e)
     {
-        //bool success = await SaveOrderAsync("접수", "접수저장");
-        //if (success)
-        //{
-        //    DialogResult = true;
-        //    Close();
-        //}
+        bool success = await SaveOrderAsync("접수", "접수저장");
+        if (success)
+        {
+            DialogResult = true;
+            Close();
+        }
     }
 
-    /// <summary>
-    /// 대기 저장 버튼 클릭
-    /// </summary>
     private async void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e)
     {
-        //bool success = await SaveOrderAsync("대기", "대기저장");
-        //if (success)
-        //{
-        //    DialogResult = true;
-        //    Close();
-        //}
-    }
-
-    // 문의
-    private void BtnMod_Ask_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-    #endregion
-
-    #region Click - 주버튼(수정그룹)
-    // 배차
-    private void BtnMod_Allocation_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    // 송장인쇄
-    private void BtnMod_PrintBill_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    // 처리완료
-    private void BtnMod_Finish_Click(object sender, RoutedEventArgs e)
-    {
-        if (tbOrderOrg == null || tbOrderOrg.DriverCode == 0)
+        bool success = await SaveOrderAsync("대기", "대기저장");
+        if (success)
         {
-            ErrMsgBox("기사정보가 없읍니다.");
-            return;
+            DialogResult = true;
+            Close();
         }
-
-        sStatus_OrderSave = "완료";
-        GridOrderState.Background = (Brush)FindResource("AppBrushLightFinish");
     }
 
-    // 대기
-    private void BtnMod_Wait_Click(object sender, RoutedEventArgs e)
-    {
-        sStatus_OrderSave = "대기";
-        GridOrderState.Background = (Brush)FindResource("AppBrushLightWait");
-    }
-
-    // BtnMod_Cancel_Click
-    private void BtnMod_Cancel_Click(object sender, RoutedEventArgs e)
-    {
-        sStatus_OrderSave = "취소";
-        GridOrderState.Background = (Brush)FindResource("AppBrushLightCancel");
-    }
-
-    // 접수상태
-    private void BtnMod_Receipt_Click(object sender, RoutedEventArgs e)
-    {
-        sStatus_OrderSave = "접수";
-        GridOrderState.Background = (Brush)FindResource("AppBrushLightReceipt");
-    }
-
-    /// <summary>
-    /// 수정 저장 버튼 클릭
-    /// </summary>
     private async void BtnMod_Save_Click(object sender, RoutedEventArgs e)
     {
-        //bool success = await UpdateOrderAsync();
-        //if (success)
-        //{
-        //    DialogResult = true;
-        //    Close();
-        //}
+        bool success = await UpdateOrderAsync();
+        if (success)
+        {
+            DialogResult = true;
+            Close();
+        }
     }
+    */
     #endregion
 
     #region Click - 서브버튼
@@ -400,55 +304,50 @@ public partial class Order_ReceiptWnd : Window
         }
     }
 
-    /// <summary>
-    /// 의뢰자 검색 (Enter 키)
-    /// </summary>
+    #region KeyDown Events - Commented
+    /*
     private async void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e)
     {
-        //if (e.Key != Key.Enter) return;
-        //if (string.IsNullOrEmpty(TBoxHeader_Search.Text)) return;
+        if (e.Key != Key.Enter) return;
+        if (string.IsNullOrEmpty(TBoxHeader_Search.Text)) return;
 
-        //// 고객 검색 및 로드
-        //long lCallCustCode = await SearchAndLoadCustomerAsync(TBoxHeader_Search.Text, LocationType.Caller, null);
+        // 고객 검색 및 로드
+        long lCallCustCode = await SearchAndLoadCustomerAsync(TBoxHeader_Search.Text, LocationType.Caller, null);
 
-        //if (lCallCustCode > 0)
-        //{
-        //    의뢰자정보Mode(lCallCustCode);
-        //    Keyboard.Focus(Start_TBoxSearch);
-        //}
+        if (lCallCustCode > 0)
+        {
+            의뢰자정보Mode(lCallCustCode);
+            Keyboard.Focus(Start_TBoxSearch);
+        }
     }
 
-    /// <summary>
-    /// 출발지 검색 (Enter 키)
-    /// </summary>
     private async void Start_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
     {
-        // if (e.Key != Key.Enter) return;
+         if (e.Key != Key.Enter) return;
 
-        //// 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
-        // long lStartCustCode = await SearchAndLoadCustomerAsync(Start_TBoxSearch.Text, LocationType.Start, true);
+        // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
+         long lStartCustCode = await SearchAndLoadCustomerAsync(Start_TBoxSearch.Text, LocationType.Start, true);
 
-        //if (lStartCustCode > 0)
-        //{
-        //    Keyboard.Focus(Dest_TBoxSearch);
-        //}
+        if (lStartCustCode > 0)
+        {
+            Keyboard.Focus(Dest_TBoxSearch);
+        }
     }
 
-    /// <summary>
-    /// 도착지 검색 (Enter 키)
-    /// </summary>
     private async void Dest_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
     {
-        // if (e.Key != Key.Enter) return;
+         if (e.Key != Key.Enter) return;
 
-        //// 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
-        //long lDestCustCode = await SearchAndLoadCustomerAsync(Dest_TBoxSearch.Text, LocationType.Dest, true);
+        // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
+        long lDestCustCode = await SearchAndLoadCustomerAsync(Dest_TBoxSearch.Text, LocationType.Dest, true);
 
-        //if (lDestCustCode > 0)
-        //{
-        //    Keyboard.Focus(TBoxFee_Basic);
-        //}
+        if (lDestCustCode > 0)
+        {
+            Keyboard.Focus(TBoxFee_Basic);
+        }
     }
+    */
+    #endregion
 
     // BasicFee
     private void Fee_TBoxBasic_KeyDown(object sender, KeyEventArgs e)
@@ -1780,6 +1679,23 @@ public partial class Order_ReceiptWnd : Window
     #endregion
 
     // ComboBox 헬퍼 메서드는 CommonFuncs로 이동됨
+
+    #region Empty Stubs for XAML
+    private void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e) { }
+    private void Start_TBoxSearch_KeyDown(object sender, KeyEventArgs e) { }
+    private void Dest_TBoxSearch_KeyDown(object sender, KeyEventArgs e) { }
+    private void BtnReg_CustRegist_Click(object sender, RoutedEventArgs e) { }
+    private void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e) { }
+    private void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_Ask_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_Allocation_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_PrintBill_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_Finish_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_Wait_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_Cancel_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_Receipt_Click(object sender, RoutedEventArgs e) { }
+    private void BtnMod_Save_Click(object sender, RoutedEventArgs e) { }
+    #endregion
 }
 #nullable enable
 

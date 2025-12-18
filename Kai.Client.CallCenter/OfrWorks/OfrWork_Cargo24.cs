@@ -31,7 +31,7 @@ public class OfrWork_Cargo24 : OfrWork_Common
     //    Cargo24Info_Mem mInfo = c.mInfo;
     //    Cargo24Info_Mem.RcptRegPage mRcpt = mInfo.RcptPage;
 
-    //    NwCommon_DgColumnHeader colHeader = c.m_ReceiptDgHeaderInfos[x] as NwCommon_DgColumnHeader;
+    //    CModel_DgColumnHeader colHeader = c.m_ReceiptDgHeaderInfos[x] as CModel_DgColumnHeader;
     //    string sName = c.m_ReceiptDgHeaderInfos[x].sName;
     //    Draw.Rectangle rc = mRcpt.DG오더_rcRelCells[x, y];
 

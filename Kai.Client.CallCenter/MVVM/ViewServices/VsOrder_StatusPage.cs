@@ -314,7 +314,7 @@ public class VsOrder_StatusPage
     //public static List<TbOrder> Order_GetTodayCarOrderList()
     //{
     //    // 현재 화면에 표시된 오더들만 가져온다.
-    //    List<TbOrder> list = VsOrder_StatusPage.s_listTbOrderToday.Where(u => u.CarType == "트럭").ToList();
+    //    List<TbOrder> list = VsOrder_StatusPage.s_listTbOrderToday.Where(u => u.CarTypeCode == (int)CarTypes.Cargo).ToList();
     //    return list;
     //}
     #endregion

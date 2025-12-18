@@ -19,17 +19,17 @@ namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 public class OnecallAct_App
 {
     #region Private Fields
-    //private readonly OnecallContext m_Context;
-    //private OnecallInfo_File fInfo => m_Context.FileInfo;
-    //private OnecallInfo_Mem mInfo => m_Context.MemInfo;
-    //private string AppName => m_Context.AppName;
+    private readonly OnecallContext m_Context;
+    private OnecallInfo_File fInfo => m_Context.FileInfo;
+    private OnecallInfo_Mem mInfo => m_Context.MemInfo;
+    private string AppName => m_Context.AppName;
     #endregion
 
     #region 생성자
-    //public OnecallAct_App(OnecallContext context)
-    //{
-    //    m_Context = context;
-    //}
+    public OnecallAct_App(OnecallContext context)
+    {
+        m_Context = context;
+    }
     #endregion
 
     #region UpdaterWorkAsync

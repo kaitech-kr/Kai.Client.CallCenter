@@ -9,7 +9,6 @@ using Kai.Client.CallCenter.Windows;
 using Kai.Client.CallCenter.Networks;
 using Kai.Client.CallCenter.Networks.NwInsungs;
 using static Kai.Client.CallCenter.Classes.CommonVars;
-using static Kai.Client.CallCenter.Classes.CommonFuncs_StdResult;
 
 namespace Kai.Client.CallCenter.OfrWorks;
 #nullable disable
@@ -234,7 +233,7 @@ public class OfrWork_Insungs : OfrWork_Common
 ////    //    InsungsInfo_Mem mInfo = c.mInfo;
 ////    //    InsungsInfo_Mem.RcptRegPage mRcpt = mInfo.RcptPage;
 
-////    //    NwCommon_DgColumnHeader colHeader = c.m_ReceiptDgHeaderInfos[x] as NwCommon_DgColumnHeader;
+////    //    CModel_DgColumnHeader colHeader = c.m_ReceiptDgHeaderInfos[x] as CModel_DgColumnHeader;
 ////    //    string sName = mRcpt.DG오더_ColumnTexts[x];
 ////    //    Draw.Rectangle rc = mRcpt.DG오더_RelChildRects[x, y];
 

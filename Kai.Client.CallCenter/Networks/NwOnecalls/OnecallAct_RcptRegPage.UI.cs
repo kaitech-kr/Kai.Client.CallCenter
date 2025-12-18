@@ -18,65 +18,52 @@ namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 public partial class OnecallAct_RcptRegPage
 {
     #region 1. Helpers - 공용 헬퍼
-    /// <summary>
-    /// Onecall SeqNo 가져오기
-    /// </summary>
-    //private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
+    // Onecall SeqNo 가져오기
+    private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
 
-    /// <summary>
-    /// 포커스 탈출 (빈 영역 클릭)
-    /// </summary>
+    // 포커스 탈출 (빈 영역 클릭)
     //private async Task EscapeFocusAsync(CancellationToken ct = default, int nDelay = c_nWaitVeryShort)
     //{
     //    await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
     //    await Task.Delay(nDelay, ct);
     //}
 
-    /// <summary>
-    /// 데이터그리드 로우 클릭 (클릭 후 포커스 탈출 - 점선 테두리 제거)
-    /// - 원콜 DG오더_rcRelSmallCells는 row=0부터 데이터 (헤더 없음)
-    /// </summary>
+    // 데이터그리드 로우 클릭 (원콜 DG오더_rcRelSmallCells는 row=0부터 데이터)
     /// <param name="nRowIndex">로우 인덱스 (0-based)</param>
     //public async Task<bool> ClickDatagridRowAsync(int nRowIndex)
     //{
     //    Draw.Rectangle[,] rects = mRcpt.DG오더_rcRelSmallCells;
     //    Draw.Rectangle rcRow = rects[c_nCol클릭, nRowIndex];
     //    Draw.Point ptClick = new Draw.Point(rcRow.Left + 4, rcRow.Top + 4);
-    //
+
     //    await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(mRcpt.DG오더_hWndTop, ptClick);
     //    await Task.Delay(c_nWaitUltraShort);
     //    await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
     //    await Task.Delay(c_nWaitShort);
-    //
+
     //    int brightness = Std32Pixcel.GetBrightness_PerPixel(mRcpt.DG오더_hWndTop, ptClick.X, ptClick.Y);
-    //
+
     //    return brightness < fInfo.접수등록Page_DG오더_nSelectdBright;
     //}
 
-    /// <summary>
-    /// 로우 선택 여부 확인 (명도 기반)
-    /// - 선택됨: 어두움 (명도 < 임계값)
-    /// - 선택안됨: 밝음 (명도 >= 임계값)
-    /// </summary>
+    // 로우 선택 여부 확인 (명도 기반)
     //public bool IsSelectedRow(int nRowIndex)
     //{
     //    Draw.Rectangle[,] rects = mRcpt.DG오더_rcRelSmallCells;
     //    Draw.Rectangle rcRow = rects[c_nCol클릭, nRowIndex];
     //    Draw.Point ptCheck = new Draw.Point(rcRow.Left + 4, rcRow.Top + 4);
-    //
+
     //    int brightness = Std32Pixcel.GetBrightness_PerPixel(mRcpt.DG오더_hWndTop, ptCheck.X, ptCheck.Y);
-    //
+
     //    return brightness < fInfo.접수등록Page_DG오더_nSelectdBright;
     //}
 
-    /// <summary>
-    /// 버튼 클릭 → 확인창("예") 처리 → 버튼 Disabled 대기
-    /// </summary>
+    // 버튼 클릭 → 확인창("예") 처리 → 버튼 Disabled 대기
     //private async Task<bool> Click버튼WaitDisableAsync(IntPtr hTarget, string buttonName, CancelTokenControl ctrl)
     //{
     //    // 1. 버튼 클릭
     //    await Std32Mouse_Post.MousePostAsync_ClickLeft(hTarget);
-    //
+
     //    // 2. 확인창 찾기 → "예" 클릭
     //    (IntPtr hWndParent, IntPtr hWndYesBtn) = (IntPtr.Zero, IntPtr.Zero);
     //    for (int i = 0; i < c_nRepeatShort; i++)
@@ -90,9 +77,9 @@ public partial class OnecallAct_RcptRegPage
     //        Debug.WriteLine($"[{AppName}] {buttonName} 확인창 찾기 실패");
     //        return false;
     //    }
-    //
+
     //    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYesBtn);
-    //
+
     //    // 3. 버튼 Disabled 대기
     //    for (int i = 0; i < c_nRepeatShort; i++)
     //    {
@@ -103,29 +90,27 @@ public partial class OnecallAct_RcptRegPage
     //            return true;
     //        }
     //    }
-    //
+
     //    Debug.WriteLine($"[{AppName}] {buttonName} 버튼 Disabled 대기 실패");
     //    return false;
     //}
 
-    /// <summary>
-    /// 화물중량 설정 (검증 포함, 최대 3회 반복)
-    /// </summary>
+    // 화물중량 설정 (검증 포함, 최대 3회 반복)
     //private async Task<StdResult_Status> Set화물중량Async(string maxWeight, CancelTokenControl ctrl, int nRepeate = c_nRepeatShort)
     //{
     //    for (int retry = 0; retry < nRepeate; retry++)
     //    {
     //        // 1. 맨 앞에 클릭
     //        await Std32Mouse_Post.MousePostAsync_ClickLeft_RightBottom(mRcpt.접수섹션_hWnd화물중량, 1, 1);
-    //
+
     //        // 2. Ctrl+A 전체 선택
     //        await Task.Delay(c_nWaitUltraShort);
     //        //await Simulation_Keyboard.KeyPost_CtrlA_SelectAllAsync(mRcpt.접수섹션_hWnd화물중량);
-    //
+
     //        // 3. VK로 문자열 입력
     //        await Task.Delay(c_nWaitUltraShort);
     //        await Std32Key_Msg.PostKeyDown_VkStringAsync(mRcpt.접수섹션_hWnd화물중량, maxWeight);
-    //
+
     //        // 4. 검증
     //        await Task.Delay(c_nWaitShort);
     //        string current = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd화물중량) ?? "";
@@ -134,27 +119,25 @@ public partial class OnecallAct_RcptRegPage
     //            Debug.WriteLine($"[{AppName}] 화물중량 설정 성공: {maxWeight}");
     //            return new StdResult_Status(StdResult.Success);
     //        }
-    //
+
     //        Debug.WriteLine($"[{AppName}] 화물중량 검증 실패 ({retry + 1}/3): 예상={maxWeight}, 실제={current}");
     //    }
-    //
+
     //    return new StdResult_Status(StdResult.Fail, $"화물중량 설정 실패: {maxWeight}");
     //}
 
-    /// <summary>
-    /// 저장 버튼 클릭 → (확인창 있으면 "예" 클릭) → 상/하차지 클리어 대기
-    /// </summary>
+    // 저장 버튼 클릭 → (확인창 있으면 "예" 클릭) → 상/하차지 클리어 대기
     //private async Task<StdResult_Status> SaveOrderAsync(CancelTokenControl ctrl)
     //{
     //    // 1. 저장 버튼 클릭
     //    await ctrl.WaitIfPausedOrCancelledAsync();
     //    await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.접수섹션_hWnd저장버튼);
-    //
+
     //    // 2. 상/하차지 클리어 대기 (+ 확인창 처리)
     //    for (int i = 0; i < c_nRepeatShort; i++)
     //    {
     //        await Task.Delay(c_nWaitShort, ctrl.Token);
-    //
+
     //        // 확인창 있으면 "예" 클릭
     //        var (hWndParent, hWndYesBtn) = Std32Window.FindMainWindow_EmptyCaption_HavingChildButton(
     //            mInfo.Splash.TopWnd_uProcessId, "예");
@@ -163,7 +146,7 @@ public partial class OnecallAct_RcptRegPage
     //            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndYesBtn);
     //            await Task.Delay(c_nWaitShort, ctrl.Token);
     //        }
-    //
+
     //        // 상/하차지 클리어 확인
     //        string caption상차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소);
     //        string caption하차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd하차지주소);
@@ -173,23 +156,21 @@ public partial class OnecallAct_RcptRegPage
     //            return new StdResult_Status(StdResult.Success);
     //        }
     //    }
-    //
+
     //    return new StdResult_Status(StdResult.Fail, "저장 확인 실패");
     //}
 
-    /// <summary>
-    /// Edit 필드 비교 → 다르면 수정 → 검증
-    /// </summary>
+    // Edit 필드 비교 → 다르면 수정 → 검증
     //private async Task<(bool changed, StdResult_Status result)> UpdateEditIfChangedAsync(IntPtr hWnd, string dbValue, string fieldName, CancelTokenControl ctrl)
     //{
     //    string currentValue = Std32Window.GetWindowCaption(hWnd) ?? "";
     //    if (currentValue == dbValue)
     //        return (false, new StdResult_Status(StdResult.Success));
-    //
+
     //    // 수정
     //    Std32Window.SetWindowCaption(hWnd, dbValue ?? "");
     //    await Task.Delay(c_nWaitShort, ctrl.Token);
-    //
+
     //    // 검증
     //    string afterValue = Std32Window.GetWindowCaption(hWnd) ?? "";
     //    if (afterValue != (dbValue ?? ""))
@@ -197,15 +178,13 @@ public partial class OnecallAct_RcptRegPage
     //        Debug.WriteLine($"[{AppName}] {fieldName} 입력 검증 실패: 예상={dbValue}, 실제={afterValue}");
     //        return (true, new StdResult_Status(StdResult.Fail, $"{fieldName} 입력 검증 실패"));
     //    }
-    //
+
     //    Debug.WriteLine($"[{AppName}] {fieldName} 수정: {currentValue} → {dbValue}");
     //    return (true, new StdResult_Status(StdResult.Success));
     //}
 
-    /// <summary>
-    /// ComboBox 필드 비교 → 다르면 수정 (SelectComboBoxItemAsync가 검증 포함)
-    /// </summary>
-    //private async Task<(bool changed, StdResult_Status result)> UpdateComboIfChangedAsync(IntPtr hWnd, CommonModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerify, string fieldName, CancelTokenControl ctrl)
+    // ComboBox 필드 비교 → 다르면 수정 (SelectComboBoxItemAsync가 검증 포함)
+    //private async Task<(bool changed, StdResult_Status result)> UpdateComboIfChangedAsync(IntPtr hWnd, CModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerify, string fieldName, CancelTokenControl ctrl)
     //{
     //    // 현재값 OFR로 읽기
     //    using (Draw.Bitmap bmpVerify = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcVerify))
@@ -217,7 +196,7 @@ public partial class OnecallAct_RcptRegPage
     //                return (false, new StdResult_Status(StdResult.Success));
     //        }
     //    }
-    //
+
     //    // 수정 (SelectComboBoxItemAsync가 검증 포함)
     //    await EscapeFocusAsync(ctrl.Token);
     //    var result = await SelectComboBoxItemAsync(hWnd, model, hWndTop, rcVerify);
@@ -226,81 +205,78 @@ public partial class OnecallAct_RcptRegPage
     //        Debug.WriteLine($"[{AppName}] {fieldName} 선택 실패: {result.sErr}");
     //        return (true, result);
     //    }
-    //
+
     //    Debug.WriteLine($"[{AppName}] {fieldName} 수정: → {model.sYourName}");
     //    return (true, new StdResult_Status(StdResult.Success));
     //}
 
-    /// <summary>
-    /// CheckBox 필드 비교 → 다르면 수정 (SetCheckBoxAsync가 검증 포함)
-    /// </summary>
+    // CheckBox 필드 비교 → 다르면 수정 (SetCheckBoxAsync가 검증 포함)
     //private async Task<(bool changed, StdResult_Status result)> UpdateCheckBoxIfChangedAsync(IntPtr hWnd, Draw.Rectangle rcOfrRelS, bool dbValue, string fieldName, CancelTokenControl ctrl)
     //{
-    //    // 현재값 OFR로 읽기
+    //    // 현재 상태 읽기 (기존 SetCheckBoxAsync 로직 활용)
+    //    // 여기서는 OFR로 읽지 않고 SetCheckBoxAsync 내부에서 처리하도록 위임하거나
+    //    // 직접 읽어서 비교 후 호출. 
+    //    // 효율성을 위해 먼저 읽고 다를 때만 SetCheckBoxAsync 호출
+        
+    //    // 1. 현재 상태 읽기
     //    var resultChk = await OfrWork_Insungs.OfrImgReChkValue_RectInHWndAsync(mRcpt.접수섹션_hWndTop, rcOfrRelS, true);
     //    if (resultChk.bResult == dbValue)
     //        return (false, new StdResult_Status(StdResult.Success));
-    //
-    //    // 수정 (SetCheckBoxAsync가 검증 포함)
+
+    //    // 2. 수정 (SetCheckBoxAsync가 검증 포함)
     //    var result = await SetCheckBoxAsync(hWnd, rcOfrRelS, dbValue, fieldName);
     //    if (result.Result != StdResult.Success)
     //    {
     //        Debug.WriteLine($"[{AppName}] {fieldName} 설정 실패: {result.sErr}");
     //        return (true, result);
     //    }
-    //
+
     //    Debug.WriteLine($"[{AppName}] {fieldName} 수정: → {dbValue}");
     //    return (true, new StdResult_Status(StdResult.Success));
     //}
 
-    /// <summary>
-    /// 헤더 캡처 및 컬럼 경계 검출 헬퍼
-    /// </summary>
+    // 헤더 캡처 및 컬럼 경계 검출 헬퍼
     //private (Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns) CaptureAndDetectColumnBoundaries(Draw.Rectangle rcHeader, int targetRow)
     //{
     //    Draw.Bitmap bmpHeader = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcHeader);
     //    if (bmpHeader == null) return (null, null, 0);
-    //
+
     //    byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpHeader, targetRow);
     //    minBrightness += 2;
-    //
+
     //    bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, targetRow, minBrightness, 2);
     //    List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
-    //
+
     //    if (listLW == null || listLW.Count < 2)
     //        return (bmpHeader, listLW, 0);
-    //
+
     //    // 마지막 경계선 유지 (폭 조정에 필요)
     //    int columns = listLW.Count - 1;
     //    return (bmpHeader, listLW, columns);
     //}
 
-    /// <summary>
-    /// 모든 컬럼 OFR 헬퍼
-    /// </summary>
+    // 모든 컬럼 OFR 헬퍼
     //private async Task<string[]> OfrAllColumnsAsync(Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns, int gab, int height, bool bEdit = false)
     //{
     //    string[] texts = new string[columns];
-    //
+
     //    for (int x = 0; x < columns; x++)
     //    {
     //        Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
-    //
+
     //        var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
-    //
+
     //        texts[x] = result?.strResult;
     //    }
-    //
+
     //    return texts;
     //}
 
-    /// <summary>
-    /// Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)
-    /// </summary>
+    // Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)
     //private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
     //{
     //    CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
-    //
+
     //    // 1. 컬럼 개수 체크
     //    if (columnTexts == null || columnTexts.Length != m_ReceiptDgHeaderInfos.Length)
     //    {
@@ -308,56 +284,52 @@ public partial class OnecallAct_RcptRegPage
     //        Debug.WriteLine($"[ValidateDatagridState] 컬럼 개수 불일치: 실제={columnTexts?.Length}, 예상={m_ReceiptDgHeaderInfos.Length}");
     //        return issues;
     //    }
-    //
+
     //    // 2. 각 컬럼 검증
     //    for (int x = 0; x < columnTexts.Length; x++)
     //    {
     //        string columnText = columnTexts[x];
-    //
+
     //        // 2-1. 컬럼명이 유효한지
     //        int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
-    //
+
     //        if (index < 0)
     //        {
     //            issues |= CEnum_DgValidationIssue.InvalidColumn;
     //            Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}'");
     //            continue;
     //        }
-    //
+
     //        // 2-2. 컬럼 순서가 맞는지
     //        if (index != x)
     //        {
     //            issues |= CEnum_DgValidationIssue.WrongOrder;
     //            Debug.WriteLine($"[ValidateDatagridState] 순서 불일치[{x}]: '{columnText}' (예상 위치={index})");
     //        }
-    //
+
     //        // 2-3. 컬럼 너비가 맞는지
     //        int actualWidth = listLW[x].nWidth;
     //        int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
     //        int widthDiff = Math.Abs(actualWidth - expectedWidth);
-    //
+
     //        if (widthDiff > COLUMN_WIDTH_TOLERANCE)
     //        {
     //            issues |= CEnum_DgValidationIssue.WrongWidth;
     //            Debug.WriteLine($"[ValidateDatagridState] 너비 불일치[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
     //        }
     //    }
-    //
+
     //    if (issues == CEnum_DgValidationIssue.None)
     //    {
     //        Debug.WriteLine($"[ValidateDatagridState] Datagrid 상태 정상");
     //    }
-    //
+
     //    return issues;
     //}
     #endregion
 
     #region 2. DG State - DG오더 UI 상태
-    /// <summary>
-    /// 데이터그리드 확장 상태 확인 (접수섹션 가시성 기준)
-    /// - 확장 상태: 접수섹션 안 보임
-    /// - 축소 상태: 접수섹션 보임
-    /// </summary>
+    // 데이터그리드 확장 상태 확인 (접수섹션 가시성 기준)
     //public bool IsDG오더Expanded()
     //{
     //    bool bVisible = Std32Window.IsWindowVisible(mRcpt.접수섹션_hWndTop);
@@ -366,9 +338,7 @@ public partial class OnecallAct_RcptRegPage
     //    return bExpanded;
     //}
 
-    /// <summary>
-    /// 데이터그리드 확장 (축소 상태일 때만)
-    /// </summary>
+    // 데이터그리드 확장 (축소 상태일 때만)
     //public async Task<bool> ExpandDG오더Async()
     //{
     //    if (IsDG오더Expanded())
@@ -394,9 +364,7 @@ public partial class OnecallAct_RcptRegPage
     //    return false;
     //}
 
-    /// <summary>
-    /// 데이터그리드 축소 (확장 상태일 때만)
-    /// </summary>
+    // 데이터그리드 축소 (확장 상태일 때만)
     //public async Task<bool> CollapseDG오더Async()
     //{
     //    if (!IsDG오더Expanded())
@@ -508,7 +476,7 @@ public partial class OnecallAct_RcptRegPage
     /// <param name="hWndTop">검증용 캡처 기준 핸들</param>
     /// <param name="rcVerifyRelS">검증용 캡처 영역 (hWndTop 기준 상대좌표)</param>
     /// <returns>성공/실패</returns>
-    //private async Task<StdResult_Status> SelectComboBoxItemAsync(IntPtr hWndComboBox, CommonModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerifyRelS)
+    //private async Task<StdResult_Status> SelectComboBoxItemAsync(IntPtr hWndComboBox, CModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerifyRelS)
     //{
     //    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 시작: target={model.sYourName}, hWnd={hWndComboBox:X}");
     //    var sw = System.Diagnostics.Stopwatch.StartNew();
@@ -628,7 +596,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 4. Converters - 데이터 변환
-    //private CommonModel_ComboBox GetCarWeightResult(string sCarType, string sCarWeight)
+    //private CModel_ComboBox GetCarWeightResult(string sCarType, string sCarWeight)
     //{
     //    string my톤수 = Order_StatusPage.GetCarWeightString(sCarType, sCarWeight);
     //    if (string.IsNullOrEmpty(my톤수)) return fInfo.접수등록Page_접수_톤수Open[0];
@@ -640,7 +608,7 @@ public partial class OnecallAct_RcptRegPage
     //
     //    return fInfo.접수등록Page_접수_톤수Open[0];
     //}
-    //private string GetMaxCarWeight(CommonModel_ComboBox c)
+    //private string GetMaxCarWeight(CModel_ComboBox c)
     //{
     //    switch (c.sMyName)
     //    {
@@ -665,7 +633,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    //private CommonModel_ComboBox GetTruckDetailResult(string sCarType, string sCarWeight)
+    //private CModel_ComboBox GetTruckDetailResult(string sCarType, string sCarWeight)
     //{
     //    string myDetail = Order_StatusPage.GetTruckDetailString(sCarType, sCarWeight);
     //    if (string.IsNullOrEmpty(myDetail)) return fInfo.접수등록Page_접수_차종Open[0];
@@ -678,7 +646,7 @@ public partial class OnecallAct_RcptRegPage
     //    return fInfo.접수등록Page_접수_차종Open[0];
     //}
     //
-    //private CommonModel_ComboBox GetFeeTypeResult(string sFeeType)
+    //private CModel_ComboBox GetFeeTypeResult(string sFeeType)
     //{
     //    if (string.IsNullOrEmpty(sFeeType)) return fInfo.접수등록Page_접수_결재Open[4];
     //
@@ -690,7 +658,7 @@ public partial class OnecallAct_RcptRegPage
     //    return fInfo.접수등록Page_접수_결재Open[4];
     //}
     //
-    //private CommonModel_ComboBox GetAutoRefreshResult(string sTime)
+    //private CModel_ComboBox GetAutoRefreshResult(string sTime)
     //{
     //    if (string.IsNullOrEmpty(sTime)) return fInfo.접수등록Page_검색_자동조회Open[0];
     //
@@ -870,10 +838,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// DG오더의 유효 로우 수 반환 (Small 모드 고정)
-    ///// - 배경 밝기 + 10 마진보다 밝으면 데이터 있는 로우로 판단
-    ///// </summary>
+    // DG오더의 유효 로우 수 반환 (Small 모드 고정) - 배경보다 밝으면 데이터 있는 로우로 판단
     //public StdResult_Int GetValidRowCount()
     //{
     //    try
@@ -912,10 +877,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 7. Page Navigation - 페이지 관리
-    /// <summary>
-    /// 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
-    /// - 인성, 화물24시도 동일 로직 사용 가능 (검증 후 공용화 검토)
-    /// </summary>
+    // 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
     /// <param name="nTotRows">총 행 수</param>
     /// <param name="nRowsPerPage">페이지당 행 수</param>
     /// <param name="pageIdx">페이지 인덱스 (0-based)</param>
@@ -943,9 +905,7 @@ public partial class OnecallAct_RcptRegPage
     //    else return nNum - nRowsPerPage + (nTotRows % nRowsPerPage);
     //}
     //
-    ///// <summary>
-    ///// GetExpectedFirstRowNum 테스트 (무한루프 → 메시지박스 → 결과)
-    ///// </summary>
+    // GetExpectedFirstRowNum 테스트 (무한루프 → 메시지박스 → 결과)
     //public async Task Test_GetExpectedFirstRowNumAsync()
     //{
     //    var ctrl = new CancelTokenControl();
@@ -1005,10 +965,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// 순번 컬럼(col=0)에서 첫 로우 번호 읽기 (OFR)
-    ///// - 인성 ReadFirstRowNumAsync 패턴 참조
-    ///// </summary>
+    // 순번 컬럼(col=0)에서 첫 로우 번호 읽기 (OFR)
     ///// <returns>첫 로우 번호 (실패 시 -1)</returns>
     //public async Task<int> ReadFirstRowNumAsync()
     //{
@@ -1051,9 +1008,7 @@ public partial class OnecallAct_RcptRegPage
     //    return firstNum;
     //}
     //
-    ///// <summary>
-    ///// ReadFirstRowNumAsync 테스트 (2중 루프: 외부=새로고침, 내부=페이지별 자동 검증)
-    ///// </summary>
+    // ReadFirstRowNumAsync 테스트 (2중 루프: 외부=새로고침, 내부=페이지별 자동 검증)
     //public async Task Test_ReadFirstRowNumAsync()
     //{
     //    var ctrl = new CancelTokenControl();
@@ -1129,18 +1084,13 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// 스크롤바 핸들 얻기 (1페이지 초과일 때만 호출)
-    ///// - 매번 사용 직전에 DG오더_hWndTop 기준으로 핸들을 새로 얻음
-    ///// </summary>
+    // 스크롤바 핸들 얻기 (1페이지 초과일 때만 호출)
     //private IntPtr GetVScrollBarHandle()
     //{
     //    return Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.DG오더_hWndTop, fInfo.접수등록Page_DG오더VScroll_BarCenter_ptChkRelM);
     //}
     //
-    ///// <summary>
-    ///// 다음 페이지로 이동 (Page Down 클릭)
-    ///// </summary>
+    // 다음 페이지로 이동 (Page Down 클릭)
     //public async Task ScrollPageDownAsync()
     //{
     //    IntPtr hWndScroll = GetVScrollBarHandle();
@@ -1154,9 +1104,7 @@ public partial class OnecallAct_RcptRegPage
     //    await Task.Delay(c_nWaitNormal);
     //}
     //
-    ///// <summary>
-    ///// 이전 페이지로 이동 (Page Up 클릭)
-    ///// </summary>
+    // 이전 페이지로 이동 (Page Up 클릭)
     //public async Task ScrollPageUpAsync()
     //{
     //    IntPtr hWndScroll = GetVScrollBarHandle();
@@ -1170,9 +1118,7 @@ public partial class OnecallAct_RcptRegPage
     //    await Task.Delay(c_nWaitNormal);
     //}
     //
-    ///// <summary>
-    ///// 1로우 아래로 이동 (Row Down 클릭)
-    ///// </summary>
+    // 1로우 아래로 이동 (Row Down 클릭)
     //public async Task ScrollRowDownAsync()
     //{
     //    IntPtr hWndScroll = GetVScrollBarHandle();
@@ -1186,9 +1132,7 @@ public partial class OnecallAct_RcptRegPage
     //    await Task.Delay(c_nWaitShort);
     //}
     //
-    ///// <summary>
-    ///// 1로우 위로 이동 (Row Up 클릭)
-    ///// </summary>
+    // 1로우 위로 이동 (Row Up 클릭)
     //public async Task ScrollRowUpAsync()
     //{
     //    IntPtr hWndScroll = GetVScrollBarHandle();
@@ -1202,10 +1146,7 @@ public partial class OnecallAct_RcptRegPage
     //    await Task.Delay(c_nWaitShort);
     //}
     //
-    ///// <summary>
-    ///// 페이지 검증 및 자동 조정
-    ///// - 인성 VerifyAndAdjustPageAsync 패턴 참조
-    ///// </summary>
+    // 페이지 검증 및 자동 조정
     ///// <param name="nExpectedFirstNum">예상 첫 번호</param>
     ///// <param name="ctrl">취소 토큰</param>
     ///// <param name="nRetryCount">재시도 횟수 (기본값: 3)</param>
@@ -1280,9 +1221,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 8. Row OFR - DG Row 데이터 읽기
-    /// <summary>
-    /// 데이터그리드 Row에서 오더번호 읽기 (숫자 OFR - 단음소)
-    /// </summary>
+    // 데이터그리드 Row에서 오더번호 읽기 (숫자 OFR - 단음소)
     /// <param name="bmpPage">전체 페이지 비트맵 (재사용)</param>
     /// <param name="rectSeqno">오더번호 셀 Rectangle</param>
     /// <param name="bInvertRgb">RGB 반전 여부 (선택된 행인 경우 true)</param>
@@ -1294,9 +1233,7 @@ public partial class OnecallAct_RcptRegPage
     //    return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, c_dOfrWeight); // 영역추출 못할시 가중치조정
     //}
     //
-    ///// <summary>
-    ///// 데이터그리드 Row에서 상태 읽기 (한글 OFR - 다음소)
-    ///// </summary>
+    // 데이터그리드 Row에서 상태 읽기 (한글 OFR - 다음소)
     ///// <param name="bmpPage">전체 페이지 비트맵 (재사용)</param>
     ///// <param name="rowIdx">로우 인덱스</param>
     ///// <returns>상태 문자열</returns>
@@ -1308,10 +1245,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 9. Test Methods - 테스트 함수
-    /// <summary>
-    /// DG오더 셀 영역 시각화 테스트
-    /// TransparantWnd를 사용하여 홀수 행 셀 영역을 두께 1로 그리고 MsgBox 표시
-    /// </summary>
+    // DG오더 셀 영역 시각화 테스트 (TransparantWnd 활용)
     //public void Test_DrawLargeCellRects()
     //{
     //    try
@@ -1375,9 +1309,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// Small 셀 영역 시각화 테스트
-    ///// </summary>
+    // Small 셀 영역 시각화 테스트
     //public void Test_DrawSmallCellRects()
     //{
     //    try
@@ -1424,9 +1356,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// 총계 OFR 영역 시각화 테스트
-    ///// </summary>
+    // 총계 OFR 영역 시각화 테스트
     //public void Test_Draw총계영역()
     //{
     //    if (mRcpt.DG오더_hWndTop == IntPtr.Zero)
@@ -1445,9 +1375,7 @@ public partial class OnecallAct_RcptRegPage
     //    TransparantWnd.DeleteOverlay();
     //}
     //
-    ///// <summary>
-    ///// 총계 OFR 영역 시각화 테스트 (Large/확장 상태)
-    ///// </summary>
+    // 총계 OFR 영역 시각화 테스트 (Large/확장 상태)
     //public void Test_Draw총계영역Large()
     //{
     //    if (mRcpt.DG오더_hWndTop == IntPtr.Zero)
@@ -1466,9 +1394,7 @@ public partial class OnecallAct_RcptRegPage
     //    TransparantWnd.DeleteOverlay();
     //}
     //
-    ///// <summary>
-    ///// 컬럼헤더 셀영역 시각화 테스트
-    ///// </summary>
+    // 컬럼헤더 셀영역 시각화 테스트
     //public async System.Threading.Tasks.Task Test_DrawColumnHeaderRectsAsync()
     //{
     //    try
@@ -1549,9 +1475,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
 
-    /// <summary>
-    /// 상차방법 체크박스 영역 시각화 테스트
-    /// </summary>
+    // 상차방법 체크박스 영역 시각화 테스트
     //public void Test_Draw상차방법Rects()
     //{
     //    try
@@ -1578,9 +1502,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// 상차일시 체크박스 영역 시각화 테스트
-    ///// </summary>
+    // 상차일시 체크박스 영역 시각화 테스트
     //public void Test_Draw상차일시Rects()
     //{
     //    try
@@ -1605,9 +1527,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// 하차방법/하차일시 체크박스 영역 시각화 테스트 (9개)
-    ///// </summary>
+    // 하차방법/하차일시 체크박스 영역 시각화 테스트 (9개)
     //public void Test_Draw하차Rects()
     //{
     //    try
@@ -1641,9 +1561,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// 자동조회 콤보박스 영역 테스트
-    ///// </summary>
+    // 자동조회 콤보박스 영역 테스트
     //public void Test_Draw자동조회Rect()
     //{
     //    if (mRcpt.검색섹션_hWndTop == IntPtr.Zero)
@@ -1660,9 +1578,7 @@ public partial class OnecallAct_RcptRegPage
     //    TransparantWnd.DeleteOverlay();
     //}
     //
-    ///// <summary>
-    ///// 새로고침버튼 테두리 명도 테스트 (점선 패턴 위치)
-    ///// </summary>
+    // 새로고침버튼 테두리 명도 테스트 (점선 패턴 위치)
     //public void Test_새로고침버튼_테두리명도()
     //{
     //    if (mRcpt.검색섹션_hWnd새로고침버튼 == IntPtr.Zero)
@@ -1687,9 +1603,7 @@ public partial class OnecallAct_RcptRegPage
     //    System.Windows.MessageBox.Show(sb.ToString(), "테두리 명도");
     //}
     //
-    ///// <summary>
-    ///// 의뢰자 상호 영역 시각화 테스트
-    ///// </summary>
+    // 의뢰자 상호 영역 시각화 테스트
     //public void Test_Draw의뢰자Rects()
     //{
     //    try

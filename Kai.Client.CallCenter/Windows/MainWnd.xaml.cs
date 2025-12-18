@@ -174,14 +174,18 @@ public partial class MainWnd : Window
         #endregion
 
         #region 실행
+        Debug.WriteLine($"[MainWnd] 프로세스 실행 시도: {s_sX86ExecPath}");
         s_X86Proc = StdProcess.OpenProcess(s_sX86ExecPath);
         if (s_X86Proc == null)
         {
+            Debug.WriteLine($"[MainWnd] 프로세스 실행 실패: {s_sX86ExecPath}");
             ErrMsgBox($"{s_sX86ExecPath} 실행실패", "MainWnd/MainWnd_09");
             Application.Current.Shutdown();
             goto ERR_EXIT;
         }
+        Debug.WriteLine($"[MainWnd] 프로세스 실행 성공. SignalR 연결 시도...");
         await s_SrLClient.ConnectAsync();
+        Debug.WriteLine($"[MainWnd] SignalR ConnectAsync 호출 완료");
 
         ////WindowProc - 아직 사용하지 않음.
         //CtrlCppFuncs.GetHWndSource(this).AddHook(WindowProc);
@@ -218,18 +222,17 @@ public partial class MainWnd : Window
             Debug.WriteLine("[MainWnd] Sub 모드 - Master 기능 비활성화");
         }
 
-        //// 모드 표시 업데이트
-        //TblockAppMode.Text = IsMasterMode ? "Master" : "Sub";
-        //TblockAppMode.Foreground = IsMasterMode ? Brushes.Green : Brushes.Blue;
+        // 모드 표시 업데이트
+        TblockAppMode.Text = IsMasterMode ? "Master" : "Sub";
+        TblockAppMode.Foreground = IsMasterMode ? Brushes.Green : Brushes.Blue;
 
-        //// 최대화
-        //await this.Dispatcher.BeginInvoke((Action)(() =>
-        //{
-        //    if (this.WindowState != WindowState.Maximized) this.WindowState = WindowState.Maximized;
-        //    MenuOrderMng_ReceiptStatus_Click(null, null);
-        //}));
+        // 최대화
+        await this.Dispatcher.BeginInvoke((Action)(() =>
+        {
+            if (this.WindowState != WindowState.Maximized) this.WindowState = WindowState.Maximized;
+            MenuOrderMng_ReceiptStatus_Click(null, null);
+        }));
 
-        // 마무리
         return;
 
     // 에러로 인한 종료
@@ -278,115 +281,115 @@ public partial class MainWnd : Window
     
     private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        //Debug.WriteLine("=== Window_Closing 시작 ===");
+        Debug.WriteLine("=== Window_Closing 시작 ===");
 
-        ////이미 종료 절차 진행 중이면 그대로 통과(두 번째 호출부터는 취소하지 않음)
-        // if (_isShuttingDown)
-        //{
-        //    Debug.WriteLine("_isShuttingDown = true, 그대로 통과");
-        //    return;
-        //}
+        //이미 종료 절차 진행 중이면 그대로 통과(두 번째 호출부터는 취소하지 않음)
+        if (_isShuttingDown)
+        {
+            Debug.WriteLine("_isShuttingDown = true, 그대로 통과");
+            return;
+        }
 
-        ////1) 창 닫기 일단 막고
-        //e.Cancel = true;
-        //_isShuttingDown = true;
+        //1) 창 닫기 일단 막고
+        e.Cancel = true;
+        _isShuttingDown = true;
 
-        //try
-        //{
-        //    //사용자에게 종료 중 안내(가능하면 비모달/ 오버레이 권장)
-        //     //CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료중 입니다...");
+        try
+        {
+            //사용자에게 종료 중 안내(가능하면 비모달/ 오버레이 권장)
+            //CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료중 입니다...");
 
-        //    //SignalR 연결 종료(동기적으로)
-        //    try
-        //    {
-        //        if (s_SrGClient != null)
-        //        {
-        //            //s_SrGClient.StopReconnection(); // 재접속 중지 플래그 설정
-        //            //s_SrGClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
-        //            Debug.WriteLine("SrGlobalClient 종료 완료");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"SrGlobalClient 종료 실패: {ex.Message}");
-        //    }
+            //SignalR 연결 종료(동기적으로)
+            try
+            {
+                if (s_SrGClient != null)
+                {
+                    s_SrGClient.StopReconnection(); // 재접속 중지 플래그 설정
+                    s_SrGClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
+                    Debug.WriteLine("SrGlobalClient 종료 완료");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"SrGlobalClient 종료 실패: {ex.Message}");
+            }
 
-        //    try
-        //    {
-        //        if (s_SrLClient != null)
-        //        {
-        //            //s_SrLClient.StopReconnection(); // 재접속 중지 플래그 설정
-        //            //s_SrLClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
-        //            Debug.WriteLine("SrLocalClient 종료 완료");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"SrLocalClient 종료 실패: {ex.Message}");
-        //    }
+            try
+            {
+                if (s_SrLClient != null)
+                {
+                    s_SrLClient.StopReconnection(); // 재접속 중지 플래그 설정
+                    s_SrLClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
+                    Debug.WriteLine("SrLocalClient 종료 완료");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"SrLocalClient 종료 실패: {ex.Message}");
+            }
 
-        //    // Close s_X86Proc
-        //    try
-        //    {
-        //        if (s_X86Proc != null)
-        //        {
-        //            //var r = s_SrLClient.SrResult_ComBroker_Close();
-        //            //if (!r.bResult)
-        //            //{
-        //            //    string err = StdProcess.Kill(s_sX86ProcName);
-        //            //    if (!string.IsNullOrEmpty(err)) ErrMsgBox(err);
-        //            //    else s_X86Proc = null;
-        //            //}
-        //            //else
-        //            //{
-        //            //    s_X86Proc = null;
-        //            //}
-        //        }
-        //    }
-        //    catch (Exception ex) { Debug.WriteLine($"X86Proc close error: {ex.Message}"); }
+            // Close s_X86Proc
+            try
+            {
+                if (s_X86Proc != null)
+                {
+                    var r = s_SrLClient.SrResult_ComBroker_Close();
+                    if (!r.bResult)
+                    {
+                        string err = StdProcess.Kill(s_sX86ProcName);
+                        if (!string.IsNullOrEmpty(err)) ErrMsgBox(err);
+                        else s_X86Proc = null;
+                    }
+                    else
+                    {
+                        s_X86Proc = null;
+                    }
+                }
+            }
+            catch (Exception ex) { Debug.WriteLine($"X86Proc close error: {ex.Message}"); }
 
-        //    // 4) 서브 윈도우/클라이언트 정리
-        //    try { m_WndForVirtualMonitor?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
-        //    try { s_TransparentWnd?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            // 4) 서브 윈도우/클라이언트 정리
+            try { m_WndForVirtualMonitor?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            try { s_TransparentWnd?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
 
-        //    //try { s_SrGClient?.Dispose(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            try { s_SrGClient?.Dispose(); } catch (Exception ex) { Debug.WriteLine(ex); }
 
-        //    // 5) 훅/리소스 해제 (필요 시 주석 해제)
-        //    // try { CtrlCppFuncs.ReleaseMouseHook(); } catch {}
-        //    // try { CtrlCppFuncs.ReleaseKeyboardHook(); } catch {}
-        //    // try { CtrlCppFuncs.GetHWndSource(this).RemoveHook(WindowProc); } catch {}
+            // 5) 훅/리소스 해제 (필요 시 주석 해제)
+            // try { CtrlCppFuncs.ReleaseMouseHook(); } catch {}
+            // try { CtrlCppFuncs.ReleaseKeyboardHook(); } catch {}
+            // try { CtrlCppFuncs.GetHWndSource(this).RemoveHook(WindowProc); } catch {}
 
-        //    // 6) Python 등 기타 리소스 종료
-        //    try { Py309Common.Destroy(); } catch (Exception ex) { Debug.WriteLine(ex); }
-        //}
-        //finally
-        //{
-        //    //Master 모드 리소스 정리 -가상 모니터 제거(있을 때만)
-        //     try
-        //    {
-        //        if (m_MasterManager != null)
-        //        {
-        //            Debug.WriteLine("[MainWnd] MasterModeManager 정리 시작");
-        //            await m_MasterManager.ShutdownAsync();
-        //            m_MasterManager.Dispose();
-        //            m_MasterManager = null;
-        //            Debug.WriteLine("[MainWnd] MasterModeManager 정리 완료");
-        //        }
-        //    }
-        //    catch (Exception ex) { Debug.WriteLine($"MasterModeManager 정리 실패: {ex.Message}"); }
+            // 6) Python 등 기타 리소스 종료
+            try { Py309Common.Destroy(); } catch (Exception ex) { Debug.WriteLine(ex); }
+        }
+        finally
+        {
+            //Master 모드 리소스 정리 -가상 모니터 제거(있을 때만)
+            try
+            {
+                if (m_MasterManager != null)
+                {
+                    Debug.WriteLine("[MainWnd] MasterModeManager 정리 시작");
+                    await m_MasterManager.ShutdownAsync();
+                    m_MasterManager.Dispose();
+                    m_MasterManager = null;
+                    Debug.WriteLine("[MainWnd] MasterModeManager 정리 완료");
+                }
+            }
+            catch (Exception ex) { Debug.WriteLine($"MasterModeManager 정리 실패: {ex.Message}"); }
 
-        //    // 가상 모니터 제거 (있을 때만)
-        //    if (s_Screens?.m_VirtualMonitor != null) FrmVirtualMonitor.DeleteVirtualMonitor();
+            // 가상 모니터 제거 (있을 때만)
+            if (s_Screens?.m_VirtualMonitor != null) FrmVirtualMonitor.DeleteVirtualMonitor();
 
-        //    //이벤트 핸들러를 제거하고 Dispatcher로 다시 Close 호출
-        //    this.Closing -= Window_Closing;
+            //이벤트 핸들러를 제거하고 Dispatcher로 다시 Close 호출
+            this.Closing -= Window_Closing;
 
-        //    _ = Dispatcher.BeginInvoke(new Action(() =>
-        //    {
-        //        Debug.WriteLine("Dispatcher.BeginInvoke에서 Close() 호출");
-        //        this.Close();
-        //    }), System.Windows.Threading.DispatcherPriority.Normal);
-        //}
+            _ = Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Debug.WriteLine("Dispatcher.BeginInvoke에서 Close() 호출");
+                this.Close();
+            }), System.Windows.Threading.DispatcherPriority.Normal);
+        }
     }
     #endregion
 
@@ -512,7 +515,7 @@ public partial class MainWnd : Window
 
                 if (TblockConnLocal != null && s_SrLClient != null)
                 {
-                    TblockConnLocal.Text = ""; //s_SrLClient.m_sConnSignslR;
+                    TblockConnLocal.Text = ""; //s_SrLClient.m_sConnSignalR;
                 }
             });
         }

@@ -79,21 +79,22 @@ namespace Kai.Client.CallCenter.Classes
             }
         }
 
-        private bool _bConnSignslR = false;
-        public bool m_bConnSignslR
+        private bool _bConnSignalR = false;
+        public bool m_bConnSignalR
         {
-            get => _bConnSignslR;
+            get => _bConnSignalR;
             set
             {
-                _bConnSignslR = value;
-                OnPropertyChanged(nameof(m_bConnSignslR));
+                _bConnSignalR = value;
+                OnPropertyChanged(nameof(m_bConnSignalR));
+                OnPropertyChanged(nameof(m_sConnSignalR)); // 텍스트 프로퍼티도 갱신 알림
             }
         }
-        public string m_sConnSignslR
+        public string m_sConnSignalR
         {
             get
             {
-                if (m_bConnSignslR) return "연결";
+                if (m_bConnSignalR) return "연결";
                 else return "해제";
             }
         }
@@ -231,7 +232,7 @@ namespace Kai.Client.CallCenter.Classes
                 return Task.CompletedTask;
             }
 
-            m_bConnSignslR = false;
+            m_bConnSignalR = false;
             SrLocalClient_ClosedEvent?.Invoke(this, new ExceptionEventArgs(ex));
             return Task.CompletedTask;
         }
@@ -242,10 +243,10 @@ namespace Kai.Client.CallCenter.Classes
         {
             try
             {
-                m_bConnSignslR = true;
+                m_bConnSignalR = true;
                 s_MainWnd.TblockConnLocal.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
                 {
-                    s_MainWnd.TblockConnLocal.Text = m_sConnSignslR;
+                    s_MainWnd.TblockConnLocal.Text = m_sConnSignalR;
                 }));
                 //MsgBox("SrReport_Connected"); // Test
 

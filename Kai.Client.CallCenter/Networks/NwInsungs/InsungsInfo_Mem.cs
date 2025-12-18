@@ -10,47 +10,46 @@ namespace Kai.Client.CallCenter.Networks.NwInsungs;
 public class InsungsInfo_Mem
 {
     #region Variables - 1개만 있고 사용빈도가 있는 Wnd, Page는 미리 할당한다 - 편의성
-    //public SplashWnd Splash = null;
-    //public MainWnd Main = null;
-    //public RcptRegPage RcptPage = null;
-    //public CustRegPage CustPage = null;
+    public SplashWnd Splash = null;
+    public MainWnd Main = null;
+    public RcptRegPage RcptPage = null;
+    public CustRegPage CustPage = null;
     #endregion Variables 끝
 
     #region 생성자
-    //public InsungsInfo_Mem()
-    //{
-    //    Splash = new SplashWnd();
-    //    Main = new MainWnd();
-    //    RcptPage = new RcptRegPage();
-    //    //CustPage = new CustRegPage();
-    //}
+    public InsungsInfo_Mem()
+    {
+        Splash = new SplashWnd();
+        Main = new MainWnd();
+        RcptPage = new RcptRegPage();
+        //CustPage = new CustRegPage();
+    }
     #endregion 생성자 끝
 
     #region Windows
-    //public class SplashWnd
-    //{
-    //    // TopWnd
-    //    public IntPtr TopWnd_hWnd;  // hWnd
-    //    public uint TopWnd_uProcessId = 0; // ProcessId
-    //    public uint TopWnd_uThreadId = 0;  // ThreadId
-    //
-    //    // Sons
-    //    public IntPtr IdWnd_hWnd;  // hWnd
-    //    public IntPtr PwWnd_hWnd;  // hWnd
-    //}
-    //
-    //public class MainWnd
-    //{
-    //    // TopWnd
-    //    public IntPtr TopWnd_hWnd;  // hWnd
-    //
-    //    // ListSonWnd
-    //    public List<StdCommon32_WndInfo> FirstLayer_ChildWnds;
-    //    public StdCommon32_WndInfo WndInfo_MainMenu;
-    //    public StdCommon32_WndInfo WndInfo_BarMenu;
-    //    public StdCommon32_WndInfo WndInfo_MdiClient;
-    //}
-    //
+    public class SplashWnd
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
+        public uint TopWnd_uProcessId = 0; // ProcessId
+        public uint TopWnd_uThreadId = 0;  // ThreadId
+
+        // Sons
+        public IntPtr IdWnd_hWnd;  // hWnd
+        public IntPtr PwWnd_hWnd;  // hWnd
+    }
+
+    public class MainWnd
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
+
+        // ListSonWnd
+        public List<StdCommon32_WndInfo> FirstLayer_ChildWnds;
+        public StdCommon32_WndInfo WndInfo_MainMenu;
+        public StdCommon32_WndInfo WndInfo_BarMenu;
+        public StdCommon32_WndInfo WndInfo_MdiClient;
+    }
     //public class RcptWnd_Common
     //{
     //    // Header
@@ -406,40 +405,45 @@ public class InsungsInfo_Mem
     #endregion Windows 끝
 
     #region Pages
-    //public class RcptRegPage
-    //{
-    //    // TopWnd
-    //    public IntPtr TopWnd_hWnd;  // hWnd
-    //
-    //    // StatusBtn
-    //    public IntPtr StatusBtn_hWnd접수;
-    //    public IntPtr StatusBtn_hWnd배차;
-    //    public IntPtr StatusBtn_hWnd운행;
-    //    public IntPtr StatusBtn_hWnd완료;
-    //    public IntPtr StatusBtn_hWnd취소;
-    //    public IntPtr StatusBtn_hWnd전체;
-    //
-    //    // CommandBtns GroupBox
-    //    public IntPtr CmdBtn_hWnd신규;
-    //    public IntPtr CmdBtn_hWnd조회;
-    //    public IntPtr CmdBtn_hWnd기사;
-    //
-    //    // CallCount
-    //    public IntPtr CallCount_hWnd접수;
-    //    public IntPtr CallCount_hWnd운행;
-    //    public IntPtr CallCount_hWnd취소;
-    //    public IntPtr CallCount_hWnd완료;
-    //    public IntPtr CallCount_hWnd총계;
-    //
-    //    // Datagrid
-    //    public IntPtr DG오더_hWnd;
-    //    public Draw.Rectangle DG오더_AbsRect;
-    //    public Draw.Rectangle[,] DG오더_RelChildRects;
-    //    public string[] DG오더_ColumnTexts;
-    //    public int DG오더_nBackgroundBright = 0;
-    //
-    //    public IntPtr DG오더_hWnd수직스크롤;
-    //}
+    public class RcptRegPage
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
+
+        // StatusBtn
+        public IntPtr StatusBtn_hWnd접수;
+        public IntPtr StatusBtn_hWnd배차;
+        public IntPtr StatusBtn_hWnd운행;
+        public IntPtr StatusBtn_hWnd완료;
+        public IntPtr StatusBtn_hWnd취소;
+        public IntPtr StatusBtn_hWnd전체;
+
+        // CommandBtns GroupBox
+        public IntPtr CmdBtn_hWnd신규;
+        public IntPtr CmdBtn_hWnd조회;
+        public IntPtr CmdBtn_hWnd기사;
+
+        // CallCount
+        public IntPtr CallCount_hWnd접수;
+        public IntPtr CallCount_hWnd운행;
+        public IntPtr CallCount_hWnd취소;
+        public IntPtr CallCount_hWnd완료;
+        public IntPtr CallCount_hWnd총계;
+
+        // Datagrid
+        public IntPtr DG오더_hWnd;
+        public Draw.Rectangle DG오더_AbsRect;
+        public Draw.Rectangle[,] DG오더_RelChildRects;
+        public string[] DG오더_ColumnTexts;
+        public int DG오더_nBackgroundBright = 0;
+
+        public IntPtr DG오더_hWnd수직스크롤;
+    }
+
+    public class CustRegPage
+    {
+        // 필요한 필드 정의
+    }
     #endregion Pages 끝
 }
 #nullable restore

@@ -1,0 +1,2051 @@
+﻿<Window x:Class="Kai.Client.CallCenter.Windows.Order_ReceiptWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
+        mc:Ignorable="d"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="오더접수" Height="745" Width="1013" ResizeMode="CanMinimize"
+        Background="LightGray"
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded">
+    <Window.Resources>
+        <!--Height-->
+        <sys:Double x:Key="LineHeight_Table">22</sys:Double>
+
+        <!--색상-->
+        <Brush x:Key="BackgroundBrush_Left02">#FEBEBE</Brush>
+        <Brush x:Key="BackgroundBrush_Left03">#78E6E6</Brush>
+        <Brush x:Key="BackgroundBrush_Right01">#9BC3FF</Brush>
+        <Brush x:Key="BackgroundBrush_Right02">#FFCCE5</Brush>
+        <Brush x:Key="BackgroundBrush_Right03">#FFDAB9</Brush>
+
+        <!--Thickness-->
+        <Thickness x:Key="Thickness_TRB">0,1,1,1</Thickness>
+        <Thickness x:Key="Thickness_LRB">1,0,1,1</Thickness>
+        <Thickness x:Key="Thickness_LTR">1,1,1,0</Thickness>
+
+        <Thickness x:Key="Thickness_TR">0,1,1,0</Thickness>
+        <Thickness x:Key="Thickness_RB">0,0,1,1</Thickness>
+        <Thickness x:Key="Thickness_TB">0,1,0,1</Thickness>
+
+        <!--Border-->
+        <Style x:Key="BorderStyle_Basic" TargetType="Border" >
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style x:Key="BorderStyle_Black" TargetType="Border" BasedOn="{StaticResource BorderStyle_Basic}">
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+        <Style x:Key="BorderStyle_Blue" TargetType="Border" BasedOn="{StaticResource BorderStyle_Basic}">
+            <Setter Property="BorderBrush" Value="Blue"/>
+        </Style>
+        <Style x:Key="BorderStyle_Red" TargetType="Border" BasedOn="{StaticResource BorderStyle_Basic}">
+            <Setter Property="BorderBrush" Value="Red"/>
+        </Style>
+
+        <Style x:Key="BorderStyle_Black_NormalHeight" TargetType="Border" BasedOn="{StaticResource BorderStyle_Black}">
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+        </Style>
+        <Style x:Key="BorderStyle_Blue_NormalHeight" TargetType="Border" BasedOn="{StaticResource BorderStyle_Blue}">
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+        </Style>
+        <Style x:Key="BorderStyle_Red_NormalHeight" TargetType="Border" BasedOn="{StaticResource BorderStyle_Red}">
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+        </Style>
+
+        <Style x:Key="BorderStyle_Black_NormalHeight_Width01" TargetType="Border" BasedOn="{StaticResource BorderStyle_Black_NormalHeight}">
+            <Setter Property="Width" Value="50"/>
+        </Style>
+        <Style x:Key="BorderStyle_Black_NormalHeight_Width02" TargetType="Border" BasedOn="{StaticResource BorderStyle_Black_NormalHeight}">
+            <Setter Property="Width" Value="75"/>
+        </Style>
+        <Style x:Key="BorderStyle_Black_NormalHeight_Width03" TargetType="Border" BasedOn="{StaticResource BorderStyle_Black_NormalHeight}">
+            <Setter Property="Width" Value="65"/>
+        </Style>
+
+        <Style x:Key="BorderStyle_Blue_TRB" TargetType="Border" BasedOn="{StaticResource BorderStyle_Blue}">
+            <Setter Property="BorderThickness" Value="0,1,1,1"/>
+        </Style>
+        <Style x:Key="BorderStyle_Blue_LB" TargetType="Border" BasedOn="{StaticResource BorderStyle_Blue}">
+            <Setter Property="BorderThickness" Value="1,0,0,1"/>
+        </Style>
+        <Style x:Key="BorderStyle_Blue_RB" TargetType="Border" BasedOn="{StaticResource BorderStyle_Blue}">
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        </Style>
+        <Style x:Key="BorderStyle_Blue_LRB" TargetType="Border" BasedOn="{StaticResource BorderStyle_Blue}">
+            <Setter Property="BorderThickness" Value="1,0,1,1"/>
+        </Style>
+
+        <!--Button-->
+        <Style x:Key="ButtonStyle_Basic" TargetType="Button">
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+
+        <Style x:Key="ButtonStyle_TRB" TargetType="Button" BasedOn="{StaticResource ButtonStyle_Basic}">
+            <Setter Property="BorderThickness" Value="0,1,1,1"/>
+        </Style>
+        <Style x:Key="ButtonStyle_LB" TargetType="Button" BasedOn="{StaticResource ButtonStyle_Basic}">
+            <Setter Property="BorderThickness" Value="1,0,0,1"/>
+        </Style>
+        <Style x:Key="ButtonStyle_RB" TargetType="Button" BasedOn="{StaticResource ButtonStyle_Basic}">
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        </Style>
+        <Style x:Key="ButtonStyle_LRB" TargetType="Button" BasedOn="{StaticResource ButtonStyle_Basic}">
+            <Setter Property="BorderThickness" Value="1,0,1,1"/>
+        </Style>
+
+        <Style x:Key="ButtonStyle_01" TargetType="Button">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="#8C8CFF"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style x:Key="ButtonStyle_02" TargetType="Button">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="{StaticResource AppBrush_PinkBackground}"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style x:Key="ButtonStyle_03" TargetType="Button">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="Height" Value="51"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Background" Value="{StaticResource AppBrush_PinkBackground}"/>
+        </Style>
+        <Style x:Key="ButtonStyle_04" TargetType="Button">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <!--CheckBox-->
+        <Style x:Key="CheckBoxStyle_Basic" TargetType="CheckBox">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="2,0,0,0"/>
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!--ComboBox-->
+        <Style x:Key="ComboBoxStyle_Basic" TargetType="ComboBox">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="SelectedIndex" Value="0"/>
+        </Style>
+
+        <!--Image-->
+        <Style x:Key="ImageSizeMid" TargetType="Image">
+            <Setter Property="Width" Value="22"/>
+        </Style>
+        <Style x:Key="ImageSizeSmall" TargetType="Image">
+            <Setter Property="Width" Value="18"/>
+        </Style>
+
+        <!--Radio Button-->
+        <Style x:Key="RadioBtnStyle" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="IsThreeState"  Value="False"/>
+            <Setter Property="Height" Value="22"/>
+        </Style>
+
+        <!--ScrollViwer-->
+        <Style x:Key="ScrollViwerStyle" TargetType="ScrollViewer">
+            <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
+        <!--TextBlock-->
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!--TextBox-->
+        <Style x:Key="TextBoxStyle_Empty" TargetType="TextBox">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+        <Style x:Key="TextBoxStyle_Fee" TargetType="TextBox">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="{StaticResource LineHeight_Table}"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="TextBoxStyle_Small" TargetType="TextBox">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid HorizontalAlignment="Left" Margin="5">
+        <Grid.Resources>
+            <GridLength x:Key="RowHeight_01">22</GridLength>
+        </Grid.Resources>
+
+        <!--전체를 2개의 컬럼으로-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="885" />
+            <!--데이타-->
+            <ColumnDefinition Width="102" />
+            <!--버튼-->
+        </Grid.ColumnDefinitions>
+
+        <!--#region C0-좌측열(데이타) -->
+        <Grid Grid.Column="0" Height="714" VerticalAlignment="Top">
+            <!--4개의 행으로-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="44"/>
+                <!--고객정보-->
+                <RowDefinition Height="43"/>
+                <!--상태-->
+                <RowDefinition Height="585"/>
+                <!--주문내역-->
+                <RowDefinition Height="22"/>
+                <!--고객저장-->
+            </Grid.RowDefinitions>
+
+            <!--C0-R0 검색명-->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,1">
+                    <!--검색-->
+                    <TextBox x:Name="TBoxHeader_Search" TabIndex="1" 
+                             Width="274" FontSize="25" FontWeight="Bold"
+                             Background="Black" Foreground="Yellow" BorderBrush="Black"
+                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                             KeyDown="TBoxHeader_Search_KeyDown" />
+
+                    <!--수신제한 버튼-->
+                    <Button x:Name="BtnNoRcvTel" Click="BtnNoRcvTel_Click"  
+                            Width="25" Background="{StaticResource AppBrush_PinkBackground}" BorderBrush="Red" Margin="1,0,0,0">
+                        <Image Source="\Resources\Images\Tel006.png" Width="{StaticResource AppItemHeight_Normal}"/>
+                    </Button>
+                </StackPanel>
+
+                <!--고객정보(있을때만 보인다)-->
+                <Grid Grid.Column="1" x:Name="GridCustInfo" Visibility="Visible" Margin="0,0,0,1">
+                    <!--표-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="82"/>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition Width="82"/>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition Width="82"/>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition Width="82"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--주문건수-->
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource BorderStyle_Blue}">
+                        <TextBlock Style="{StaticResource TextBlockStyle}" 
+                                   Text="주문건수" />
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderStyle_Blue_TRB}">
+                        <TextBlock x:Name="TBlkOrderCount" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0"/>
+                    </Border>
+
+                    <!--마일리지-->
+                    <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderStyle_Blue_TRB}">
+                        <TextBlock Style="{StaticResource TextBlockStyle}" 
+                                   Text="마일리지" />
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderStyle_Blue_TRB}">
+                        <TextBlock  x:Name="TBlkMileage" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0"/>
+                    </Border>
+
+                    <!--미결건-->
+                    <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderStyle_Blue_TRB}">
+                        <TextBlock Style="{StaticResource TextBlockStyle}"  
+                                   Text="미결건"/>
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="5" Style="{StaticResource BorderStyle_Blue_TRB}">
+                        <TextBlock x:Name="TBlkNoFinished" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0" Foreground="Red"/>
+                    </Border>
+
+                    <!--전체한도-->
+                    <Border Grid.Row="0" Grid.Column="6" Style="{StaticResource BorderStyle_Blue_TRB}">
+                        <TextBlock Style="{StaticResource TextBlockStyle}"  
+                                   Text="전체한도"/>
+                    </Border>
+                    <Border Grid.Row="0" Grid.Column="7" Style="{StaticResource BorderStyle_Blue_TRB}">
+                        <TextBlock x:Name="TBlkTotalLimit" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0"/>
+                    </Border>
+
+                    <!--완료건수-->
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource BorderStyle_Blue_LB}">
+                        <TextBlock Style="{StaticResource TextBlockStyle}" 
+                                   Text="완료건수"/>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderStyle_Blue_LB}" Margin="-1,0,0,0">
+                        <TextBlock x:Name="TBlkFinishCount" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0"/>
+                    </Border>
+
+                    <!--취소건수-->
+                    <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource BorderStyle_Blue_LB}" Margin="-1,0,0,0">
+                        <TextBlock Style="{StaticResource TextBlockStyle}" 
+                                   Text="취소건수" />
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="3" Style="{StaticResource BorderStyle_Blue_LB}" Margin="-1,0,0,0">
+                        <TextBlock x:Name="TBlkCancelCount" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0" />
+                    </Border>
+
+                    <!--미결금액-->
+                    <Border Grid.Row="1" Grid.Column="4" Style="{StaticResource BorderStyle_Blue_LB}" Margin="-1,0,0,0">
+                        <TextBlock Style="{StaticResource TextBlockStyle}" 
+                                   Text="미결금액"/>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="5" Style="{StaticResource BorderStyle_Blue_LB}" Margin="-1,0,0,0">
+                        <TextBlock x:Name="TBlkNoFee" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0" Foreground="Red"/>
+                    </Border>
+
+                    <!--전체금액-->
+                    <Border Grid.Row="1" Grid.Column="6" Style="{StaticResource BorderStyle_Blue_LB}" Margin="-1,0,0,0">
+                        <TextBlock Style="{StaticResource TextBlockStyle}" 
+                                   Text="전체금액" />
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="7" Style="{StaticResource BorderStyle_Blue_LRB}" Margin="-1,0,0,0">
+                        <TextBlock x:Name="TBlkTotalFee" Style="{StaticResource TextBlockStyle}" 
+                                   Text="0" />
+                    </Border>
+                </Grid>
+
+                <!--C0-R0-C2 고객정보(없을때만 보인다)-->
+                <Border Grid.Column="1" x:Name="BorderCustNew" Visibility="Collapsed"
+                        BorderBrush="Blue" BorderThickness="1" Margin="1,0,3,1">
+                    <TextBlock Text="고객정보없음" FontSize="26" FontWeight="Bold" 
+                               Foreground="Blue"
+                               VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+            </Grid>
+
+            <!--C0-R1 오더상태-->
+            <Grid Grid.Row="1" x:Name="GridOrderState" Background="{StaticResource AppBrushLightReceipt}" Margin="0,1,3,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="31"/>
+                    <ColumnDefinition Width="170"/>
+                </Grid.ColumnDefinitions>
+
+                <!--오더상태-->
+                <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource BorderStyle_Blue}">
+                    <TextBlock x:Name="TBlkOrderState"
+                               Text="접수"  FontSize="22" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+
+                <!--오더번호-->
+                <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock Text="오더번호" Style="{StaticResource TextBlockStyle}"/>
+                </Border>
+                <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock x:Name="TBlkSeqNo" Style="{StaticResource TextBlockStyle}"                               
+                               Text="0" FontWeight="DemiBold" Foreground="Blue"/>
+                </Border>
+
+                <!--접수처-->
+                <Border Grid.Column="3" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock Text="접수처" Style="{StaticResource TextBlockStyle}" />
+                </Border>
+                <Border Grid.Column="4" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock x:Name="TBlkRegistPlace"
+                               Text="카이테크" Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
+                </Border>
+
+                <!--뭔지 모르겠음-->
+                <Border Grid.Column="5" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}" />
+                </Border>
+
+                <!--접수자-->
+                <Border Grid.Column="6" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock Text="접수자" Style="{StaticResource TextBlockStyle}" />
+                </Border>
+                <Border Grid.Column="7" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock x:Name="TBlkRegister"
+                               Text="카이테크" Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
+                </Border>
+                
+                <!--공란-->
+                <Border Grid.Column="8" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                </Border>
+
+                <!--현재시각-->
+                <Border Grid.Column="9" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <TextBlock Text="0000-00-00 00:00:00" Style="{StaticResource TextBlockStyle}"/>
+                </Border>
+
+                <!--메모-->
+                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource BorderStyle_Blue_RB}">
+                    <TextBlock Text="메모" Style="{StaticResource TextBlockStyle}"/>
+                </Border>
+                <Border Grid.Column="2" Grid.ColumnSpan="8" Grid.Row="1" Style="{StaticResource BorderStyle_Blue_RB}">
+                    <TextBlock x:Name="TBlkCallCustMemoExt" Style="{StaticResource TextBlockStyle}"
+                               FontWeight="DemiBold" Foreground="Red"/>
+                </Border>
+            </Grid>
+
+            <!--C0-R2 고객, 출발지, 도착지-->
+            <Grid Grid.Row="2" Margin="{StaticResource AppMargin0100}">
+                <!--행3을 2개의 열로 오더정보-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="431" />
+                    <ColumnDefinition Width="453" />
+                </Grid.ColumnDefinitions>
+
+                <!--#region C0-R2-C0 오더정보 좌측(의뢰지, 출,도착지) 3개의 행으로  -->
+                <Grid Grid.Column="0" Margin="{StaticResource AppMargin0100}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="210"/>
+                        <RowDefinition Height="186"/>
+                        <RowDefinition Height="186"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- 의뢰지 -->
+                    <Grid Grid.Row="0" Margin="{StaticResource AppMargin0100}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="37"/>
+                            <RowDefinition Height="37"/>
+                        </Grid.RowDefinitions>
+
+                        <!--고객명-->
+                        <StackPanel Orientation="Horizontal" >
+                            <!--고객-->
+                            <Image Source="\Resources\Images\Customer001.png" Style="{StaticResource ImageSizeSmall}"/>
+                            <TextBlock Text="고객" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"
+                                       FontWeight="DemiBold" Foreground="Blue" Width="55" />
+
+                            <!--가져오기 버튼-->
+                            <Button x:Name="Caller_BtnPull" Content="가져오기" Width="70" 
+                                    Style="{StaticResource ButtonStyle_01}" BorderThickness="{StaticResource Thickness_LTR}"/>
+
+                            <!--내보내기-->
+                            <Button x:Name="Caller_BtnPush" Content="내보내기" Width="70" 
+                                    Style="{StaticResource ButtonStyle_01}" BorderThickness="{StaticResource Thickness_TR}"/>
+
+                            <!--외부-->
+                            <Button x:Name="Caller_BtnOuter" Content="외부" Width="40" 
+                                    Style="{StaticResource ButtonStyle_01}" BorderThickness="{StaticResource Thickness_TR}"/>
+
+                            <Button x:Name="Caller_BtnUseHistory" Content="이용내역" Width="70" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TR}"/>
+
+                            <!--고객검색버튼-->
+                            <Button x:Name="Caller_BtnSearch" Width="103" Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TR}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="\Resources\Images\Telescope001.png" Style="{StaticResource ImageSizeSmall}"/>
+                                    <TextBlock Text="고객검색" Style="{StaticResource TextBlockStyle}"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!--검색-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray">
+                                <TextBlock Text="검색" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <TextBox x:Name="Caller_TBoxSearch" TabIndex="2"
+                                     Style="{StaticResource TextBoxStyle}" Width="347" BorderThickness="{StaticResource Thickness_TRB}"/>
+
+                            <Button x:Name="Caller_BtnSearch2" Width="34" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}">
+                                <Image Source="\Resources\Images\Play007.png" Style="{StaticResource ImageSizeMid}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!--고객, 동명-->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <!--고객-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="고객" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+                            <TextBox x:Name="Caller_TBoxCustName" TabIndex="3" 
+                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <!--동명-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="동명" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+                            <TextBox x:Name="Caller_TBoxDongBasic" TabIndex="3" 
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"/>
+                        </StackPanel>
+
+                        <!--전화, 전화2-->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                            <!--전화1-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+
+                            <TextBox x:Name="Caller_TBoxTelNo1"
+                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"        
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput" 
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus"/>
+
+                            <Button Width="30" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Arrow_Down002.png" Style="{StaticResource ImageSizeSmall}"/>
+                            </Button>
+
+                            <Button x:Name="Caller_BtnTelNo1" Width="30" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Tel003.png" Style="{StaticResource ImageSizeSmall}"/>
+                            </Button>
+
+                            <!--전화2-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="전화2" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Caller_TBoxTelNo2"
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"        
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput" 
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus"/>
+                        </StackPanel>
+
+                        <!--부서, 담당-->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                            <!--부서-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="부서" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Caller_TBoxDeptName"
+                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_RB}" />
+
+                            <!--담당-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="담당" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Caller_TBoxChargeName"
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}" />
+                        </StackPanel>
+
+                        <!--주소-->
+                        <StackPanel Grid.Row="5" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="주소" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <TextBox x:Name="Caller_TBoxDongAddr" TabIndex="2"
+                                     Style="{StaticResource TextBoxStyle}" Width="347" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <Button x:Name="BtnSearchCustAddr" Width="34" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Position001.png" Style="{StaticResource ImageSizeMid}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!--위치-->
+                        <StackPanel Grid.Row="6" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="37" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="위치" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="381" Height="37" Background="White" BorderThickness="{StaticResource Thickness_RB}" >
+                                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Transparent">
+                                    <TextBox x:Name="Caller_TBoxDetailAddr" TabIndex="8"
+                                             TextWrapping="Wrap" AcceptsReturn="True"
+                                             Style="{StaticResource TextBoxStyle_Empty}" Width="365" Height="35"/>
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+
+                        <!--적요-->
+                        <StackPanel Grid.Row="7" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="37" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="적요" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="381" Height="37" Background="Transparent" BorderThickness="{StaticResource Thickness_RB}" >
+                                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Transparent">
+                                    <TextBox x:Name="Caller_TBoxRemarks" TabIndex="9"
+                                             TextWrapping="Wrap" AcceptsReturn="True"                                             
+                                             Style="{StaticResource TextBoxStyle_Empty}" Width="365" Height="36"/>
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- 출발지 -->
+                    <Grid Grid.Row="1" Margin="{StaticResource AppMargin0100}">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+
+                        <!--출발지-->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+
+                            <!--출발지(Text)-->
+                            <Image Source="\Resources\Images\Customer001.png" Style="{StaticResource ImageSizeSmall}" Margin="5,0,0,0"/>
+                            <TextBlock Text="출발지" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"
+                                       FontWeight="DemiBold" Foreground="Blue" Width="55" />
+
+                            <!--검색-->
+                            <Button x:Name="Start_BtnSearch" Content="검색" Width="45" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_LTR}"
+                                    />
+
+                            <TextBox x:Name="Start_TBoxSearch" TabIndex="10"
+                                     Style="{StaticResource TextBoxStyle}" Width="269" BorderThickness="{StaticResource Thickness_TR}"
+                                     KeyDown="Start_TBoxSearch_KeyDown"/>
+
+                            <Button x:Name="Start_BtnStart" Width="34" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TR}"
+                                    >
+                                <Image Source="\Resources\Images\Play007.png" Style="{StaticResource ImageSizeMid}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!--버튼들-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                            <!--출발지지우기-->
+                            <Button x:Name="Start_BtnErase" Content="출발지지우기" Width="144" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="1"
+                                    Click="Start_BtnErase_Click"/>
+
+                            <!--주거래처등록-->
+                            <Button x:Name="Start_BtnRegComp" Content="주거래처등록" Width="144" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
+                                    Click="Start_BtnRegComp_Click"/>
+
+                            <!--출도착전환-->
+                            <Button x:Name="Start_BtnSwap"  Width="143" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
+                                    Click="StartDest_BtnSwap_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="\Resources\Images\Rotation001.png" Style="{StaticResource ImageSizeSmall}"/>
+                                    <TextBlock Text="  출도착전환  " Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!--고객, 담당-->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+
+                            <!--고객-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="고객" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+
+                            <TextBox x:Name="Start_TBoxCustName" TabIndex="11" 
+                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <!--담당-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="담당" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Start_TBoxChargeName" TabIndex="12" 
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"/>
+                        </StackPanel>
+
+                        <!--부서, 동명-->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+
+                            <!--부서-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="부서" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Start_TBoxDeptName" TabIndex="13" 
+                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <!--동명-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="동명" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+
+                            <TextBox x:Name="Start_TBoxDongBasic" TabIndex="13" 
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"/>
+                        </StackPanel>
+
+                        <!--전화, 전화2-->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+
+                            <!--전화-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+
+                            <TextBox x:Name="Start_TBoxTelNo1"
+                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"        
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput" 
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus"/>
+
+                            <Button Width="30" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Arrow_Down002.png" Style="{StaticResource ImageSizeSmall}"/>
+                            </Button>
+
+                            <Button x:Name="Start_BtnTelNo2" Width="30" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Tel003.png" Style="{StaticResource ImageSizeSmall}"/>
+                            </Button>
+
+                            <!--전화2-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="전화2" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Start_TBoxTelNo2"
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"        
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput" 
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus"/>
+                        </StackPanel>
+
+                        <!--주소-->
+                        <StackPanel Grid.Row="5" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="주소" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <TextBox x:Name="Start_TBoxDongAddr" TabIndex="2"
+                                     Style="{StaticResource TextBoxStyle}" Width="347" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <Button x:Name="Start_BtnSearchAddr" Width="34" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Position001.png" Style="{StaticResource ImageSizeMid}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!--위치-->
+                        <StackPanel Grid.Row="6" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="50" Background="{StaticResource BackgroundBrush_Left02}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="위치" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="381" Height="50" Background="Transparent" BorderThickness="{StaticResource Thickness_RB}" >
+                                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Transparent">
+                                    <TextBox x:Name="Start_TBoxDetailAddr" TabIndex="18"
+                                             TextWrapping="Wrap" AcceptsReturn="True"
+                                             Style="{StaticResource TextBoxStyle_Empty}" Width="365" Height="49"/>
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- 도착지 -->
+                    <Grid Grid.Row="2" Margin="{StaticResource AppMargin0100}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+
+                        <!--도착지, 검색-->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+
+                            <!--도착지(Text)-->
+                            <Image Source="\Resources\Images\Customer001.png" Style="{StaticResource ImageSizeSmall}"
+                                   Margin="5,0,0,0"/>
+
+                            <TextBlock Text="도착지" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"
+                                       FontWeight="DemiBold" Foreground="Blue" Width="55" />
+
+                            <!--검색-->
+                            <Button x:Name="Dest_BtnSearch" Content="검색" Width="45" 
+                                    Style="{StaticResource ButtonStyle_02}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_LTR}"/>
+
+                            <TextBox x:Name="Dest_TBoxSearch" TabIndex="10"
+                                     Style="{StaticResource TextBoxStyle}" Width="269" BorderThickness="{StaticResource Thickness_TR}"
+                                     KeyDown="Dest_TBoxSearch_KeyDown"/>
+
+                            <Button x:Name="Dest_BtnSearchEtc" Width="34" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TR}">
+                                <Image Source="\Resources\Images\Play007.png" Style="{StaticResource ImageSizeMid}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!--버튼들-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                            <!--도착지지우기-->
+                            <Button x:Name="Dest_BtnErase" Content="도착지지우기" Width="144" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="1"
+                                    Click="Dest_BtnErase_Click"/>
+
+                            <!--주거래처등록-->
+                            <Button x:Name="Dest_BtnRegComp" Content="주거래처등록" Width="144" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
+                                    Click="Dest_BtnRegComp_Click"/>
+
+                            <!--출도착전환-->
+                            <Button x:Name="Dest_BtnSwap"  Width="143" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
+                                    Click="StartDest_BtnSwap_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="\Resources\Images\Rotation001.png" Style="{StaticResource ImageSizeSmall}"/>
+                                    <TextBlock Text="  출도착전환  " Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <!--고객, 담당-->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+
+                            <!--고객-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="고객" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+
+                            <TextBox x:Name="Dest_TBoxCustName" TabIndex="11" 
+                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <!--담당-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="담당" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Dest_TBoxChargeName" TabIndex="12" 
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"/>
+                        </StackPanel>
+
+                        <!--부서, 동명-->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+
+                            <!--부서-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="부서" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Dest_TBoxDeptName" TabIndex="13" 
+                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <!--동명-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="동명" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+
+                            <TextBox x:Name="Dest_TBoxDongBasic" TabIndex="13" 
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"/>
+                        </StackPanel>
+
+                        <!--전화, 전화2-->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+
+                            <!--전화-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
+                            </Border>
+
+                            <TextBox x:Name="Dest_TBoxTelNo1"
+                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"        
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput" 
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus"/>
+
+                            <Button Width="30" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Arrow_Down002.png" Style="{StaticResource ImageSizeSmall}"/>
+                            </Button>
+
+                            <Button x:Name="Dest_BtnTelNo1" Width="30" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Tel003.png" Style="{StaticResource ImageSizeSmall}"/>
+                            </Button>
+
+                            <!--전화2-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="전화2" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Dest_TBoxTelNo2"
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"        
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput" 
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus"/>
+                        </StackPanel>
+
+                        <!--주소-->
+                        <StackPanel Grid.Row="5" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="주소" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <TextBox x:Name="Dest_TBoxDongAddr" TabIndex="2"
+                                     Style="{StaticResource TextBoxStyle}" Width="347" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <Button x:Name="BtnDest_Addr" Width="34" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Position001.png" Style="{StaticResource ImageSizeMid}"/>
+                            </Button>
+                        </StackPanel>
+
+                        <!--위치-->
+                        <StackPanel Grid.Row="6" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="50" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="위치" Style="{StaticResource TextBlockStyle}" />
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="381" Height="50" Background="Transparent" BorderThickness="{StaticResource Thickness_RB}" >
+                                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Transparent">
+                                    <TextBox x:Name="Dest_TBoxDetailAddr" TabIndex="18"
+                                             TextWrapping="Wrap" AcceptsReturn="True"
+                                             Style="{StaticResource TextBoxStyle_Empty}" Width="365" Height="49"/>
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <!--#endregion C0-R2-C0 오더정보 좌측(의뢰지, 출,도착지) 3개의 행으로 -->
+
+                <!--#region C0-R2-C1 오더정보 우측(그외 정보) 4개의 행으로 -->
+                <Grid Grid.Column="1" Margin="3,2,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="262"/>
+                        <RowDefinition Height="135"/>
+                        <RowDefinition Height="121"/>
+                        <RowDefinition Height="61"/>
+                    </Grid.RowDefinitions>
+
+                    <!--#region R-0 에약그룹 -->
+                    <Grid Grid.Row="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="82"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="44"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                        </Grid.RowDefinitions>
+
+                        <!--예약-->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LTR}">
+                                <TextBlock Text="예약" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border BorderBrush="Black" BorderThickness="{StaticResource Thickness_TR}" Background="White"
+                                    Width="22" Height="{StaticResource LineHeight_Table}">
+                                <CheckBox x:Name="ChkBoxReserve" Click="ChkBoxReserve_Click" TabIndex="27" 
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+
+
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="205" BorderThickness="0">
+                                <xctk:DateTimePicker x:Name="DtPickerReserve"
+                                                     Format="Custom"
+                                                     FormatString="yyyy‑MM‑dd HH:mm      "
+                                                     FontSize="{StaticResource AppFontSize_Normal}"
+                                                     AllowSpin="True"
+                                                     ShowButtonSpinner="True"
+                                                     BorderThickness="0" 
+                                                     Watermark="날짜와 시간을 선택하세요"
+                                                     VerticalContentAlignment="Center"
+                                                     PreviewKeyDown="DtPickerReserve_PreviewKeyDown"/>
+                            </Border>
+                            <TextBox x:Name="TBoxReserveBreakMin" TabIndex="28"
+                                     Style="{StaticResource TextBoxStyle}" Width="46" BorderThickness="{StaticResource Thickness_TR}"
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"
+                                     DataObject.Pasting="TBoxOnlyNum_Pasting"/>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" Background="White"
+                                    Width="110" BorderThickness="{StaticResource Thickness_TR}">
+                                <TextBlock Text="분전 예약해제" Style="{StaticResource TextBlockStyle}" Width="91" />
+                            </Border>
+                        </StackPanel>
+
+                        <!--SMS-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="1">
+                                <TextBlock Text="SMS" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" BorderThickness="{StaticResource Thickness_TRB}" Width="295">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" BorderThickness="{StaticResource Thickness_TRB}" Width="88" Background="White">
+                                <CheckBox Content="문자사절"
+                                          Style="{StaticResource CheckBoxStyle_Basic}"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!--적요, 버튼-->
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="65"/>
+                                <ColumnDefinition Width="295"/>
+                                <ColumnDefinition Width="88"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--적요(Text)-->
+                            <Border Style="{StaticResource BorderStyle_Black}" Width="65" Height="82" BorderThickness="{StaticResource Thickness_LRB}" Background="{StaticResource BackgroundBrush_Right01}">
+                                <TextBlock Text="적요" 
+                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+
+                            <!--적요(ScrollView)-->
+                            <StackPanel Grid.Column="1" Orientation="Vertical">
+                                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}"
+                                        Width="295" Height="60">
+                                    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Transparent">
+                                        <TextBox x:Name="TBoxOrderRemarks" TabIndex="29"
+                                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                                 Style="{StaticResource TextBoxStyle_Empty}" Width="280" Height="59"/>
+                                    </ScrollViewer>
+                                </Border>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}"
+                                            Width="273" Height="{StaticResource LineHeight_Table}">
+                                        <ComboBox Style="{StaticResource ComboBoxStyle_Basic}"/>
+                                    </Border>
+
+                                    <Button Width="22" 
+                                            Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                        <Image Source="\Resources\Images\Arrow_Down002.png" Style="{StaticResource ImageSizeSmall}"/>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!--버튼-->
+                            <StackPanel Grid.Column="2" Orientation="Vertical">
+                                <!--지우기-->
+                                <Button x:Name="BtnErase_OrderRemarks" 
+                                        Style="{StaticResource ButtonStyle_RB}"  Background="{StaticResource AppBrush_PinkBackground}" Height="41" Width="88" 
+                                        Click="BtnErase_OrderRemarks_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="\Resources\Images\Eraser002.png" Style="{StaticResource ImageSizeSmall}"/>
+                                        <TextBlock Text=" 지우기  " Style="{StaticResource TextBlockStyle}"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!--추가-->
+                                <Button x:Name="BtnAppens_OrderRemarks" 
+                                        Style="{StaticResource ButtonStyle_RB}"  Background="{StaticResource AppBrush_PinkBackground}" Height="41" Width="88" 
+                                        Click="BtnAppend_OrderRemarks_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="\Resources\Images\Add_File003.png" Style="{StaticResource ImageSizeSmall}"/>
+                                        <TextBlock Text="  추가   " FontSize="{StaticResource AppFontSize_Normal}" 
+                                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <!--공유, 체크박스들-->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+
+                            <!--공유-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="공유" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--공유-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" BorderThickness="{StaticResource Thickness_RB}" Width="68" Background="White">
+                                <CheckBox x:Name="ChkBoxShareOrder" TabIndex="30"
+                                          Style="{StaticResource CheckBoxStyle_Basic}" Content="공유"/>
+                            </Border>
+
+                            <!--세금계산서-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" BorderThickness="{StaticResource Thickness_RB}" Width="136" Background="White" >
+                                <CheckBox x:Name="ChkBoxTaxBill" TabIndex="30"
+                                          Style="{StaticResource CheckBoxStyle_Basic}" Content="세금계산서발행"/>
+                            </Border>
+
+                            <!--지연공유-->
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Width="91" Background="White">
+                                <CheckBox x:Name="DelayShare" TabIndex="31"
+                                          Style="{StaticResource CheckBoxStyle_Basic}" Content="지연공유"/>
+                            </Border>
+
+                            <!--수수료없음-->
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Width="88" Background="White">
+                                <CheckBox x:Name="ChkBoxNoCharge" TabIndex="32"
+                                          Style="{StaticResource CheckBoxStyle_Basic}" Content="수수료무"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!--그룹,물품종류,자동대기-->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+
+                            <!--그룹-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="그룹" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}"
+                                    Width="95" Height="{StaticResource LineHeight_Table}">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}" >
+                                    <ComboBoxItem Content="없음"/>
+                                </ComboBox>
+                            </Border>
+
+                            <!--물품종류-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}"  Width="64" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="물품종류" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Width="136" Background="White">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}">
+                                    <ComboBoxItem Content="모름"/>
+                                    <ComboBoxItem Content="서류/소품"/>
+                                    <ComboBoxItem Content="소량/소봉/소박스"/>
+                                    <ComboBoxItem Content="중간/중봉/중박스"/>
+                                    <ComboBoxItem Content="대량/대봉/대박스"/>
+                                </ComboBox>
+                            </Border>
+
+                            <!--자동대기-->
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Width="88" Background="White">
+                                <CheckBox x:Name="ChkBoxAutoWait" TabIndex="33"
+                                          Style="{StaticResource CheckBoxStyle_Basic}" Content="자동대기"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!--요금-->
+                        <StackPanel Grid.Row="5" Orientation="Horizontal">
+
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="요금" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White"
+                                    Width="295" Height="{StaticResource LineHeight_Table}">
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="RadioBtn_선불"
+                                                 GroupName="FeeGroup" Content="선불" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True"/>
+                                    <RadioButton x:Name="RadioBtn_착불"
+                                                 GroupName="FeeGroup" Content="착불" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_신용"
+                                                 GroupName="FeeGroup" Content="신용" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_송금"
+                                                 GroupName="FeeGroup" Content="송금" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_수금"
+                                                 GroupName="FeeGroup" Content="수금" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_카드"
+                                                 GroupName="FeeGroup" Content="카드" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Width="88" Height="{StaticResource LineHeight_Table}">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0">
+                                    <ComboBoxItem Content="즉시"/>
+                                </ComboBox>
+                            </Border>
+                        </StackPanel>
+
+                        <!--차량-->
+                        <Grid Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="65"/>
+                                <ColumnDefinition Width="188" />
+                                <ColumnDefinition Width="195"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--차량(Text)-->
+                            <Border Grid.Column="0" 
+                                    Style="{StaticResource BorderStyle_Black}" Width="65" Height="44" BorderThickness="{StaticResource Thickness_LRB}" Background="{StaticResource BackgroundBrush_Right01}">
+                                <TextBlock Text="차량" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--차량(Radio Buttons)-->
+                            <Border Grid.Column="1" 
+                                    Style="{StaticResource BorderStyle_Black}" Width="188" Height="44" BorderThickness="{StaticResource Thickness_RB}" Background="White">
+
+                                <WrapPanel>
+                                    <RadioButton x:Name="RadioBtn_오토"
+                                                 GroupName="CarGroup" Content="오토    " Margin="2,0,0,0"
+                                                 Style="{StaticResource RadioBtnStyle}" IsChecked="True"/>
+                                    <RadioButton x:Name="RadioBtn_밴"
+                                                 GroupName="CarGroup" Content="밴    " Margin="5,0,0,0"
+                                                 Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_플렉"
+                                                 GroupName="CarGroup" Content="플렉스" Margin="5,0,0,0"
+                                                 Style="{StaticResource RadioBtnStyle}"/>
+
+                                    <RadioButton x:Name="RadioBtn_다마"
+                                                 GroupName="CarGroup" Content="다마스 " Margin="2,0,0,0"
+                                                 Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_라보"
+                                                 GroupName="CarGroup" Content="라보  " Margin="2,0,0,0"
+                                                 Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_트럭"
+                                                 GroupName="CarGroup" Content="트럭" Margin="0,0,0,0"
+                                                 Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_트럭_Checked" Unchecked="RadioBtn_트럭_Unchecked"/>
+                                </WrapPanel>
+                            </Border>
+
+                            <!--차량(ComboBox)-->
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="22"/>
+                                    <RowDefinition Height="22"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="107"/>
+                                    <ColumnDefinition Width="88"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Row="0" Grid.Column="0" 
+                                        Style="{StaticResource BorderStyle_Black}" Width="107" Height="22" BorderThickness="{StaticResource Thickness_RB}">
+                                    <ComboBox x:Name="CmbBoxCarWeight"
+                                              Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0" IsEnabled="False">
+                                        <ComboBoxItem Content=""/>
+                                        <ComboBoxItem Content="1t"/>
+                                        <ComboBoxItem Content="1.4t"/>
+                                        <ComboBoxItem Content="2.5t"/>
+                                        <ComboBoxItem Content="3.5t"/>
+                                        <ComboBoxItem Content="5t"/>
+                                        <ComboBoxItem Content="8t"/>
+                                        <ComboBoxItem Content="9.5t"/>
+                                        <ComboBoxItem Content="11t"/>
+                                        <ComboBoxItem Content="14t"/>
+                                        <ComboBoxItem Content="15t"/>
+                                        <ComboBoxItem Content="18t"/>
+                                        <ComboBoxItem Content="22t"/>
+                                        <ComboBoxItem Content="25t"/>
+                                    </ComboBox>
+                                </Border>
+                                
+                                <Border Grid.Row="0" Grid.Column="1" 
+                                        Style="{StaticResource BorderStyle_Black}" Width="88" Height="22" BorderThickness="{StaticResource Thickness_RB}">
+                                    <ComboBox x:Name="CmbBoxTruckDetail"
+                                              Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0" IsEnabled="False">
+                                        <ComboBoxItem Content="전체"/>
+                                        <ComboBoxItem Content="카고/윙"/>
+                                        <ComboBoxItem Content="카고"/>
+                                        <!--<ComboBoxItem Content="플러스카고"/>-->
+                                        <!--<ComboBoxItem Content="축카고"/>-->
+                                        <!--<ComboBoxItem Content="플축카고"/>-->
+                                        <ComboBoxItem Content="리프트카고"/>
+                                        <!--<ComboBoxItem Content="플러스리"/>-->
+                                        <!--<ComboBoxItem Content="플축리"/>-->
+                                        <ComboBoxItem Content="윙바디"/>
+                                        <ComboBoxItem Content="플러스윙"/>
+                                        <!--<ComboBoxItem Content="윙축"/>-->
+                                        <!--<ComboBoxItem Content="플축윙"/>-->
+                                        <ComboBoxItem Content="리프트윙"/>
+                                        <!--<ComboBoxItem Content="플러스윙리"/>-->
+                                        <!--<ComboBoxItem Content="플축윙리"/>-->
+                                        <ComboBoxItem Content="탑"/>
+                                        <ComboBoxItem Content="리프트탑"/>
+                                        <ComboBoxItem Content="호루"/>
+                                        <ComboBoxItem Content="리프트호루"/>
+                                        <!--<ComboBoxItem Content="자바라"/>-->
+                                        <!--<ComboBoxItem Content="리프트자바라"/>-->
+                                        <ComboBoxItem Content="냉동탑"/>
+                                        <ComboBoxItem Content="냉장탑"/>
+                                        <!--<ComboBoxItem Content="냉동윙"/>-->
+                                        <ComboBoxItem Content="냉장윙"/>
+                                        <!--<ComboBoxItem Content="냉동탑리"/>-->
+                                        <!--<ComboBoxItem Content="냉장탑리"/>-->
+                                        <ComboBoxItem Content="냉동플축윙"/>
+                                        <ComboBoxItem Content="냉장플축윙"/>
+                                        <ComboBoxItem Content="냉동플축윙리"/>
+                                        <ComboBoxItem Content="냉장플축윙리"/>
+                                        <ComboBoxItem Content="평카"/>
+                                        <ComboBoxItem Content="초장축"/>
+                                        <ComboBoxItem Content="무진동"/>
+                                    </ComboBox>
+                                </Border>
+
+                                <Border Grid.Row="1" Grid.Column="0"
+                                        Style="{StaticResource BorderStyle_Black}" Width="107" Height="22" BorderThickness="{StaticResource Thickness_RB}" Background="White">
+                                    <CheckBox Style="{StaticResource CheckBoxStyle_Basic}" Content="플렉스제외"/>
+                                </Border>
+
+                                <Border Grid.Row="1" Grid.Column="1"
+                                        Style="{StaticResource BorderStyle_Black}" Width="88" Height="22" BorderThickness="{StaticResource Thickness_RB}" Background="White">
+                                    <CheckBox Style="{StaticResource CheckBoxStyle_Basic}" Content=" 인수증필"/>
+                                </Border>
+                            </Grid>
+                        </Grid>
+
+                        <!--배송-->
+                        <StackPanel Grid.Row="7" Orientation="Horizontal" >
+                            <!--배송(Text)-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="배송" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--지정(CheckBox)-->
+                            <Border Grid.Row="1" Grid.Column="1"
+                                    Style="{StaticResource BorderStyle_Black}" Width="60" Height="22" BorderThickness="{StaticResource Thickness_RB}" Background="White">
+                                <CheckBox Style="{StaticResource CheckBoxStyle_Basic}"  Content=" 지정"/>
+                            </Border>
+
+                            <!--당일택배(CheckBox)-->
+                            <Border Grid.Row="1" Grid.Column="1"
+                                    Style="{StaticResource BorderStyle_Black}" Width="83" Height="22" BorderThickness="{StaticResource Thickness_RB}" Background="White">
+                                <CheckBox Style="{StaticResource CheckBoxStyle_Basic}"  Content="당일택배"/>
+                            </Border>
+
+                            <!--배송방법(Group RadioButtons)-->
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White"
+                                    Width="180" Height="{StaticResource LineHeight_Table}">
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="RadioBtn_편도" GroupName="AllocGroup" Content="편도" Margin="1,0,0,0"
+                                                 VerticalContentAlignment="Center" HorizontalAlignment="Left" IsChecked="True"/>
+                                    <RadioButton x:Name="RadioBtn_왕복" GroupName="AllocGroup" Content="왕복" Margin="1,0,0,0"
+                                                 VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                    <RadioButton x:Name="RadioBtn_경유" GroupName="AllocGroup" Content="경유" Margin="1,0,0,0"
+                                                 VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                    <RadioButton x:Name="RadioBtn_긴급" GroupName="AllocGroup" Content="긴급" Margin="1,0,0,0"
+                                                 VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}"
+                                    Width="60" Height="{StaticResource LineHeight_Table}">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0">
+                                    <ComboBoxItem Content=""/>
+                                    <ComboBoxItem Content="급송"/>
+                                    <ComboBoxItem Content="조조"/>
+                                    <ComboBoxItem Content="야간"/>
+                                    <ComboBoxItem Content="할증"/>
+                                    <ComboBoxItem Content="과적"/>
+                                    <ComboBoxItem Content="택배"/>
+                                    <ComboBoxItem Content="휴일"/>
+                                    <ComboBoxItem Content="대기"/>
+                                    <ComboBoxItem Content="눈비"/>
+                                    <ComboBoxItem Content="독차"/>
+                                    <ComboBoxItem Content="혼적"/>
+                                    <ComboBoxItem Content="할인"/>
+                                    <ComboBoxItem Content="마일"/>
+                                    <ComboBoxItem Content="보관"/>
+                                    <ComboBoxItem Content="혹한"/>
+                                    <ComboBoxItem Content="상하차"/>
+                                    <ComboBoxItem Content="명절"/>
+                                    <ComboBoxItem Content="폭염"/>
+                                    <ComboBoxItem Content="폭설"/>
+                                    <ComboBoxItem Content="이사"/>
+                                </ComboBox>
+                            </Border>
+                        </StackPanel>
+
+                    </Grid>
+                    <!--#endregion R-0 에약그룹-->
+
+                    <!--#region R-1 요금그룹 -->
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                        </Grid.RowDefinitions>
+
+                        <!--요금(헤더)-->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <!--요금(Image, Text)-->
+                            <Image Source="\Resources\Images\Money001.png" Style="{StaticResource ImageSizeSmall}" Margin="5,0,0,0"/>
+                            <TextBlock Text="요금" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"
+                                       FontWeight="DemiBold" Foreground="Blue" Width="36"/>
+
+                            <!--부가세(체크박스)-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="78" BorderThickness="{StaticResource Thickness_LTR}" Background="White">
+                                <CheckBox Style="{StaticResource CheckBoxStyle_Basic}"  Content="부가세"/>
+                            </Border>
+
+                            <!--거리요금(체크박스)-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" BorderThickness="{StaticResource Thickness_TR}" Background="White">
+                                <CheckBox Style="{StaticResource CheckBoxStyle_Basic}"  Content="거리요금"/>
+                            </Border>
+
+                            <!--화물관련-->
+                            <TextBlock Text="화물중랑(110%이하)" Margin="3,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                            <TextBox Style="{StaticResource TextBoxStyle_Small}" Width="30" Margin="5,0,0,1" BorderThickness="1"/>
+                            <TextBlock Text="t" Margin="3,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                            <TextBlock Text="이하" Margin="3,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+
+                        <!--부가세, 요금타임, 거리, 요금조회-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <!--부가세-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="1">
+                                <TextBlock Text="부가세" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <TextBox x:Name="Fee_TBoxAddedTax" TabIndex="3" 
+                                     Style="{StaticResource TextBoxStyle_Fee}" Width="87" BorderThickness="{StaticResource Thickness_TRB}"/>
+
+                            <!--요금타입-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="67" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TRB}">
+                                <TextBlock Text="요금타입" Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Width="50">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}"/>
+                            </Border>
+
+                            <!--거리-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TRB}" Width="30">
+                                <TextBlock Text="거리" Style="{StaticResource TextBlockStyle}" Foreground="Red"/>
+                            </Border>
+                            <TextBox x:Name="TBoxDistence"
+                                     Style="{StaticResource TextBoxStyle}" Width="50" BorderThickness="{StaticResource Thickness_TRB}"/>
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TRB}" Width="30">
+                                <TextBlock Text="Km" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Button x:Name="BtnSearchFee" Content="요금조회" Width="70" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        </StackPanel>
+
+                        <!--기본요금, 추가금액-->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <!--기본요금-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="기본요금" Style="{StaticResource TextBlockStyle}" FontWeight="SemiBold" Foreground="Blue"/>
+                            </Border>
+                            <TextBox x:Name="TBoxFee_Basic"
+                                     Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"                                     
+                                     GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxBasic_LostFocus" KeyDown="Fee_TBoxBasic_KeyDown"/>
+
+                            <!--추가금액-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="추가금액" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <TextBox x:Name="TBoxFee_Plus"
+                                     Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"
+                                     GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxPlus_LostFocus" KeyDown="Fee_TBoxPlus_KeyDown"/>
+                        </StackPanel>
+
+                        <!--할인금액, 탁송료-->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                            <!--할인금액-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="할인금액" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <TextBox x:Name="TBoxFee_Minus"
+                                     Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"
+                                     GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxMinus_LostFocus" KeyDown="Fee_TBoxMinus_KeyDown"/>
+
+                            <!--탁송료-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="탁송료" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <TextBox x:Name="TBoxFee_Conn"
+                                     Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"
+                                     GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxConn_LostFocus" KeyDown="Fee_TBoxConn_KeyDown"/>
+                        </StackPanel>
+
+                        <!--합계금액, 기사금액-->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                            <!--합계금액-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="합계금액" Style="{StaticResource TextBlockStyle}" FontWeight="SemiBold" Foreground="Blue"/>
+                            </Border>
+                            <TextBox x:Name="TBoxFee_Tot"
+                                     Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
+
+                            <!--기사금액-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="기사금액" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <TextBox x:Name="TBoxFee_Driver"
+                                     Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"
+                                     GotFocus="Fee_TBoxAll_GotFocus"/>
+                        </StackPanel>
+
+                        <!--마일리지, 기사처리비-->
+                        <StackPanel Grid.Row="5" Orientation="Horizontal" 
+                                    VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <!--마일리지-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="마일리지" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" BorderThickness="{StaticResource Thickness_RB}" Width="154">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0">
+                                    <ComboBoxItem Content="의뢰자마일리지"/>
+                                </ComboBox>
+                            </Border>
+
+                            <!--기사처리비-->
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                                <TextBlock Text="기사처리비" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Border BorderBrush="Black" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="22" Height="{StaticResource LineHeight_Table}">
+                                <CheckBox x:Name="ChkBoxFee_DrvCharge"  
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                            <TextBox x:Name="TBoxFee_DrvCharge"
+                                     Style="{StaticResource TextBoxStyle_Fee}" Width="128" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"/>
+                        </StackPanel>
+                    </Grid>
+                    <!--#endregion R-1 요금그룹 -->
+
+                    <!--#region R-2 기사그룹 -->
+                    <Grid Grid.Row="2" Margin="{StaticResource AppMargin0100}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="51"/>
+                            <RowDefinition Height="44"/>
+                            <RowDefinition Height="22"/>
+                        </Grid.RowDefinitions>
+
+                        <!--기사검색, 기사정보조회...-->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+
+                            <!--기사검색-->
+                            <Button x:Name="BtnSearchDriver" Width="65"
+                                    Style="{StaticResource ButtonStyle_03}" BorderThickness="1">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <TextBlock Text="기사검색" Foreground="Blue"/>
+                                    <TextBlock Text="(F3)" HorizontalAlignment="Center" Foreground="Blue"/>
+                                </StackPanel>
+                            </Button>
+
+                            <!--기사정보조회-->
+                            <Button x:Name="BtnSearchDrvInfo" Width="105" Content="기사정보조회"
+                                    Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+
+                            <!--서명확인-->
+                            <Button x:Name="BtnSearchSign" Width="80" Content="서명확인"
+                                    Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+
+                            <!--기사위치-->
+                            <Button x:Name="BtnDriverPos" Width="75" Content="기사위치"
+                                    Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+
+                            <!--배차거리-->
+                            <Button x:Name="BtnAllocDist" Width="70" Content="배차거리" Foreground="Red"
+                                    Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}"
+                                    Width="55" Height="51" Background="{StaticResource AppBrush_PinkBackground}">
+                                <TextBlock Text="0" Foreground="Red"
+                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!--기사정보-->
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="22"/>
+                                <RowDefinition Height="22"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="65"/>
+                                <ColumnDefinition Width="65"/>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="70"/>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="25"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!--라이더-->
+                            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_LRB}" 
+                                    Background="{StaticResource BackgroundBrush_Right03}" Width="65" Height="44">
+                                <TextBlock Text="라이더" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--번호/이름(Text)-->
+                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="{StaticResource BackgroundBrush_Right03}" Width="65" Height="22">
+                                <TextBlock Text="번호/이름" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--타입(Text)-->
+                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="{StaticResource BackgroundBrush_Right03}" Width="65" Height="22">
+                                <TextBlock Text="타입" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--번호(Data)-->
+                            <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="White" Width="50" Height="22">
+                                <TextBlock Text="0" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--이름(Data)-->
+                            <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="White" Width="70" Height="22">
+                                <TextBlock Text="테스트" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--타입(Data)-->
+                            <Border Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="White" Width="120" Height="22">
+                                <TextBlock Text="" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--소속(Text)-->
+                            <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                   Background="{StaticResource BackgroundBrush_Right03}" Width="75" Height="22">
+                                <TextBlock Text="소속" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--전화(Text)-->
+                            <Border Grid.Row="1" Grid.Column="4" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                   Background="{StaticResource BackgroundBrush_Right03}" Width="75" Height="22">
+                                <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--소속(Data)-->
+                            <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="White" Width="125" Height="22">
+                                <TextBlock Text="" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--전화(Data)-->
+                            <Border Grid.Row="1" Grid.Column="5" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="White" Width="100" Height="22">
+                                <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}"
+                                           GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus"/>
+                            </Border>
+
+                            <!--전화(Button)-->
+                            <Button Grid.Row="1" Grid.Column="6"
+                                    x:Name="BtnStart_Tm" Width="25" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                                <Image Source="\Resources\Images\Tel003.png" Style="{StaticResource ImageSizeSmall}"/>
+                            </Button>
+                        </Grid>
+
+                        <!--기타-->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_LRB}" 
+                                    Background="White" Width="65" Height="22">
+                                <TextBlock Text=""  Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Background="White" Width="185" Height="22">
+                                <TextBlock Text="" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <!--세금계산서-->
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="{StaticResource BackgroundBrush_Right01}" 
+                                    Width="75" Height="22">
+                                <TextBlock Text="세금계산서" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" 
+                                    Width="60" Height="22">
+                                <ComboBox Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0">
+                                    <ComboBoxItem Content="일반"/>
+                                    <ComboBoxItem Content="간이"/>
+                                </ComboBox>
+                            </Border>
+
+                            <!--전번복사-->
+                            <Button x:Name="BtnCopyTelNo" Content="전번복사" Width="65" 
+                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}"/>
+                        </StackPanel>
+                    </Grid>
+                    <!--#endregion-->
+
+                    <!--#region R-3 오더메모 -->
+                    <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="1"  Background="{StaticResource BackgroundBrush_Right01}" 
+                                Width="65" Height="59">
+                            <TextBlock Text="오더메모" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Width="385" Height="59">
+                            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Transparent">
+                                <TextBox x:Name="TBoxOrderMemo" TabIndex="39"
+                                         VerticalAlignment="Top" HorizontalAlignment="Left"
+                                         TextWrapping="Wrap" AcceptsReturn="True"
+                                         Width="370" Height="59" BorderThickness="0"/>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                    <!--#endregion R-3 오더메모-->
+                </Grid>
+                <!--#endregion C0-R2-C1 오더정보 우측(그외 정보) 4개의 행으로-->
+            </Grid>
+
+            <!--C0-R3 신규고객저장-->
+            <StackPanel  Grid.Row="3" Orientation="Horizontal">
+                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="1" Background="LightGray"
+                        Width="100" Height="22">
+                    <TextBlock Text="신규고객저장" Style="{StaticResource TextBlockStyle}"/>
+                </Border>
+
+                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}"
+                        Background="White" Width="185" Height="22">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton GroupName="AllocGroup" Content="의뢰지" Margin="3,0,0,0"
+                                     VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                        <RadioButton GroupName="AllocGroup" Content="출발지" Margin="3,0,0,0"
+                                     VerticalContentAlignment="Center" HorizontalAlignment="Left" IsChecked="True"/>
+                        <RadioButton GroupName="AllocGroup" Content="도착지" Margin="3,0,0,0"
+                                     VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="LightGray"
+                        Width="599" Height="22">
+                    <TextBlock Text="       Alt + S : 저장, Alt + D : 대기저장, F2 : 고객저장, F4 : 신규저장, F5 : 오더복사"
+                               Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
+                </Border>
+            </StackPanel>
+        </Grid>
+        <!--#endregion C0-좌측열(데이타)-->
+
+        <!--#region C1-우측열(버튼)  -->
+        <Grid Grid.Column="2">
+            <!--#region 신규등록일때 보임  -->
+            <Border x:Name="ColumnRegist"  BorderThickness="0" Visibility="Collapsed">
+                <StackPanel>
+                    <!--고객등록 버튼-->
+                    <Button x:Name="BtnReg_CustRegist"
+                            Style="{StaticResource ButtonStyle_04}" Height="53" Background="#E6B36D"
+                            Click="BtnReg_CustRegist_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\NewPaper001.png" Style="{StaticResource ImageSizeMid}"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="  고객등록 " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (F2) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--고객수정 버튼-->
+                    <Button x:Name="BtnReg_CustUpdate"  
+                            Style="{StaticResource ButtonStyle_04}" Height="53" Background="#E6B36D"  Visibility="Collapsed"
+                            Click="BtnCommon_CustUpdate_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\NewPaper001.png" Style="{StaticResource ImageSizeMid}"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="  고객수정 " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (F2) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--요금저장 버튼-->
+                    <Button x:Name="BtnSaveFee" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_SaveFee_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Save005.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  요금저장 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--거래처요금 버튼-->
+                    <Button x:Name="BtnReg_CompFee" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_CompFee_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="거래처요금" Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--오더복사 버튼-->
+                    <Button x:Name="BtnReg_CopyOrder"  
+                            Style="{StaticResource ButtonStyle_04}" Height="50" Background="#5AD2FF"
+                            Click="BtnCommon_CopyOrder_Click"> 
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Copy001.png" Style="{StaticResource ImageSizeMid}" />
+                            <StackPanel>
+                                <TextBlock Text="  오더복사 " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (F5) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--마일리지 버튼-->
+                    <Button x:Name="BtnReg_Mileage" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_Mileage_Click" >
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Pencil001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  마일리지 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--변경이력 버튼-->
+                    <Button x:Name="BtnReg_ChangeHistory"
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_ChangeHistory_Click">       
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Pencil002.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  변경이력 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--접수저장 버튼-->
+                    <Button x:Name="BtnReg_SaveReceipt"  
+                            Style="{StaticResource ButtonStyle_04}" Height="80" Background="#5AD2FF"
+                            Click="BtnReg_SaveReceipt_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
+                            <StackPanel>
+                                <TextBlock Text="  접수저장 " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (Alt+R) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--대기저장 버튼-->
+                    <Button x:Name="BtnReg_SaveWait"  
+                            Style="{StaticResource ButtonStyle_04}" Height="80" Background="#5AD2FF"                       
+                            Click="BtnReg_SaveWait_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
+                            <StackPanel>
+                                <TextBlock Text="  대기저장 " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (Alt+W) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--문의 버튼-->
+                    <Button x:Name="BtnMod_Ask" 
+                            Style="{StaticResource ButtonStyle_04}" Height="50"
+                            Click="BtnMod_Ask_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Question001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="    문의    " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--닫기 버튼-->
+                    <Button x:Name="BtnReg_Close" 
+                            Style="{StaticResource ButtonStyle_04}" Height="50" Margin="0,211,0,0"                
+                            Click="BtnCommon_Close_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Close001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="    닫기    " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+            <!--#endregion 신규등록일때 보임-->
+
+            <!--#region 등록수정일때 보임 -->
+            <Border x:Name="ColumnModify" BorderThickness="0" Visibility="Visible">
+                <StackPanel>
+                    <!--고객수정 버튼-->
+                    <Button x:Name="BtnMod_CustUpdate"  
+                            Style="{StaticResource ButtonStyle_04}" Height="53" Background="#E6B36D"
+                            Click="BtnCommon_CustUpdate_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\NewPaper001.png" Style="{StaticResource ImageSizeMid}"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="  고객수정 " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (F2) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--요금저장 버튼-->
+                    <Button x:Name="BtnMod_SaveFee" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_SaveFee_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Save005.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  요금저장 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--거래처요금 버튼-->
+                    <Button x:Name="BtnMod_CompFee" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_CompFee_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="거래처요금" Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--오더복사 버튼-->
+                    <Button x:Name="BtnMod_CopyOrder"  
+                            Style="{StaticResource ButtonStyle_04}" Height="50" Background="#5AD2FF"
+                            Click="BtnCommon_CopyOrder_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Copy001.png" Style="{StaticResource ImageSizeMid}" />
+                            <StackPanel>
+                                <TextBlock Text="  오더복사 " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (F5) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--마일리지 버튼-->
+                    <Button x:Name="BtnMod_Mileage" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_Mileage_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Pencil001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  마일리지 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--변경이력 버튼-->
+                    <Button x:Name="BtnMod_ChangeHistory"
+                            Style="{StaticResource ButtonStyle_04}" Height="30"
+                            Click="BtnCommon_ChangeHistory_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Pencil002.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  변경이력 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--배차 버튼-->
+                    <Button x:Name="BtnMod_Allocation"
+                            Style="{StaticResource ButtonStyle_04}" Height="50" Background="#5AD2FF"
+                            Click="BtnMod_Allocation_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Allocate002.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="    배차   " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--송장인쇄 버튼-->
+                    <Button x:Name="BtnMod_PrintBill"
+                            Style="{StaticResource ButtonStyle_04}" Height="30"             
+                            Click="BtnMod_PrintBill_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Printer001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  송장인쇄 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--처리완료 버튼-->
+                    <Button x:Name="BtnMod_Finish"
+                            Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF"
+                            Click="BtnMod_Finish_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Goal001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  처리완료 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--대기 버튼-->
+                    <Button x:Name="BtnMod_Wait" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF"      
+                            Click="BtnMod_Wait_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Wait001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="     대기    " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--주문취소 버튼-->
+                    <Button x:Name="BtnMod_Cancel" 
+                            Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF"    
+                            Click="BtnMod_Cancel_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Cancel001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  주문취소 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--접수상태 버튼-->
+                    <Button x:Name="BtnMod_Receipt"
+                            Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF"     
+                            Click="BtnMod_Receipt_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Receipt001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="  접수상태 " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--저장 버튼-->
+                    <Button x:Name="BtnMod_Save"  
+                            Style="{StaticResource ButtonStyle_04}" Height="80" Background="#5AD2FF"         
+                            Click="BtnMod_Save_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
+                            <StackPanel>
+                                <TextBlock Text="    저장   " Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="  (Alt+S) " Style="{StaticResource TextBlockStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Button>
+
+                    <!--닫기 버튼-->
+                    <Button x:Name="BtnMod_Close" 
+                            Style="{StaticResource ButtonStyle_04}" Height="50"  Margin="0,141,0,0"
+                            Click="BtnCommon_Close_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Close001.png" Style="{StaticResource ImageSizeMid}" />
+                            <TextBlock Text="    닫기    " Style="{StaticResource TextBlockStyle}"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+            <!--#endregion 등록수정일때 보임-->
+        </Grid>
+        <!--#endregion-->
+
+    </Grid>
+</Window>

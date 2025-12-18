@@ -9,45 +9,45 @@ namespace Kai.Client.CallCenter.Networks.NwInsungs;
 public class InsungsInfo_File
 {
     #region App
-    //public string App_sPredictFolder { get; set; } = string.Empty;
-    //public string App_sExeFileName { get; set; } = string.Empty;
+    public string App_sPredictFolder { get; set; } = string.Empty;
+    public string App_sExeFileName { get; set; } = string.Empty;
     #endregion
 
     #region Splash
     // TopWnd
-    //public string Splash_TopWnd_sWndName { get; set; } = string.Empty;   // WndName  
+    public string Splash_TopWnd_sWndName { get; set; } = string.Empty;   // WndName  
 
     // EditBox
-    //public Draw.Point Splash_IdWnd_ptChk { get; set; } = new Draw.Point(421, 219); // ID Wnd   
-    //public Draw.Point Splash_PwWnd_ptChk { get; set; } = new Draw.Point(421, 262); // PW Wnd
+    public Draw.Point Splash_IdWnd_ptChk { get; set; } = new Draw.Point(421, 219); // ID Wnd   
+    public Draw.Point Splash_PwWnd_ptChk { get; set; } = new Draw.Point(421, 262); // PW Wnd
     #endregion
 
     #region MainWnd
-    //// TopWnd
-    //public string Main_TopWnd_sWndNameReduct { get; set; } = "인성 퀵 서비스 [";  // WndName
-    //public string Main_AnyMenu_sClassName { get; set; } = "WindowsForms10.Window.20808.app.0.13965fa_r"; // "WindowsForms10.Window.20808.app.0.13965fa_r7_ad1";
-    //public string Main_AnyMenu_sWndName { get; set; } = "";
+    // TopWnd
+    public string Main_TopWnd_sWndNameReduct { get; set; } = "인성 퀵 서비스 [";  // WndName
+    public string Main_AnyMenu_sClassName { get; set; } = "WindowsForms10.Window.20808.app.0.13965fa_r"; // "WindowsForms10.Window.20808.app.0.13965fa_r7_ad1";
+    public string Main_AnyMenu_sWndName { get; set; } = "";
 
     // MainMenu_Title
-    //public Draw.Rectangle Main_MainMenu_rcRel { get; set; } = new Draw.Rectangle(8, 0, 1920, 63); // MainMenu_Title Wnd Rectangle
+    public Draw.Rectangle Main_MainMenu_rcRel { get; set; } = new Draw.Rectangle(8, 0, 1920, 63); // MainMenu_Title Wnd Rectangle
 
     // BarMenu
-    //public Draw.Rectangle Main_BarMenu_rcRel { get; set; } = new Draw.Rectangle(8, 63, 1920, 28);  // BarMenu Wnd Rectangle
-    //public Draw.Point Main_BarMenu_pt접수등록 { get; set; } = new Draw.Point(55, 15);  // 접수등록 // BarMenu - 접수등록
-    //public Draw.Point Main_BarMenu_pt고객등록 { get; set; } = new Draw.Point(155, 15); // BarMenu - 고객등록
-    //public Draw.Point Main_BarMenu_pt전화수신내역 { get; set; } = new Draw.Point(255, 15);  // BarMenu - 전화수신내역
-    //public Draw.Point Main_BarMenu_pt게시판 { get; set; } = new Draw.Point(345, 15); // BarMenu - 게시판
-    //public Draw.Point Main_BarMenu_pt기사메세지전송 { get; set; } = new Draw.Point(455, 15); // BarMenu - 기사메세지전송
-    //public Draw.Point Main_BarMenu_pt메세지전송 { get; set; } = new Draw.Point(555, 15); // BarMenu - 메세지전송
-    //public Draw.Point Main_BarMenu_pt계산기 { get; set; } = new Draw.Point(640, 15); // BarMenu - 계산기
-    //public Draw.Point Main_BarMenu_pt기사관제 { get; set; } = new Draw.Point(720, 15); // BarMenu - 기사관제
-    //public Draw.Point Main_BarMenu_pt픽업지알림 { get; set; } = new Draw.Point(830, 15); // BarMenu - 픽업지알림
-    //public Draw.Point Main_BarMenu_pt고객지원게시판 { get; set; } = new Draw.Point(935, 15); // BarMenu - 고객지원게시판
-    //public Draw.Point Main_BarMenu_pt원격지원요청 { get; set; } = new Draw.Point(1030, 15); // BarMenu - 원격지원요청
-    //public Draw.Point Main_BarMenu_pt관재맵설치 { get; set; } = new Draw.Point(1105, 15); // BarMenu - 관재맵설치
+    public Draw.Rectangle Main_BarMenu_rcRel { get; set; } = new Draw.Rectangle(8, 63, 1920, 28);  // BarMenu Wnd Rectangle
+    public Draw.Point Main_BarMenu_pt접수등록 { get; set; } = new Draw.Point(55, 15);  // 접수등록 // BarMenu - 접수등록
+    public Draw.Point Main_BarMenu_pt고객등록 { get; set; } = new Draw.Point(155, 15); // BarMenu - 고객등록
+    public Draw.Point Main_BarMenu_pt전화수신내역 { get; set; } = new Draw.Point(255, 15);  // BarMenu - 전화수신내역
+    public Draw.Point Main_BarMenu_pt게시판 { get; set; } = new Draw.Point(345, 15); // BarMenu - 게시판
+    public Draw.Point Main_BarMenu_pt기사메세지전송 { get; set; } = new Draw.Point(455, 15); // BarMenu - 기사메세지전송
+    public Draw.Point Main_BarMenu_pt메세지전송 { get; set; } = new Draw.Point(555, 15); // BarMenu - 메세지전송
+    public Draw.Point Main_BarMenu_pt계산기 { get; set; } = new Draw.Point(640, 15); // BarMenu - 계산기
+    public Draw.Point Main_BarMenu_pt기사관제 { get; set; } = new Draw.Point(720, 15); // BarMenu - 기사관제
+    public Draw.Point Main_BarMenu_pt픽업지알림 { get; set; } = new Draw.Point(830, 15); // BarMenu - 픽업지알림
+    public Draw.Point Main_BarMenu_pt고객지원게시판 { get; set; } = new Draw.Point(935, 15); // BarMenu - 고객지원게시판
+    public Draw.Point Main_BarMenu_pt원격지원요청 { get; set; } = new Draw.Point(1030, 15); // BarMenu - 원격지원요청
+    public Draw.Point Main_BarMenu_pt관재맵설치 { get; set; } = new Draw.Point(1105, 15); // BarMenu - 관재맵설치
 
     // MdiClient
-    //public Draw.Rectangle Main_MdiClient_rcRel { get; set; } = new Draw.Rectangle(24, 91, 1904, 949); // MdiClient Wnd Rectangle
+    public Draw.Rectangle Main_MdiClient_rcRel { get; set; } = new Draw.Rectangle(24, 91, 1904, 949); // MdiClient Wnd Rectangle
     #endregion
 
     #region 고객등록(관리)Page
@@ -94,7 +94,7 @@ public class InsungsInfo_File
 
     #region 접수(오더)등록Page
     // TopWnd
-    //public string 접수등록Page_TopWnd_sWndName { get; set; } = "접수현황";  // WndName
+    public string 접수등록Page_TopWnd_sWndName { get; set; } = "접수현황";  // WndName
 
     // 검색범위 - For Find 메인윈도 기준(Test상 필요)
     //public Draw.Point 접수등록Page_SearchDay_ptChkRelStartM = new Draw.Point(361, 135); // Check Point
@@ -221,7 +221,7 @@ public class InsungsInfo_File
     //public Draw.Point 접수등록Wnd_우측상단_ptChkRel계산서 { get; set; } = new Draw.Point(596, 261); // Check Rect - X=585,Y=248,Width=86,Height=26
     //public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel수수무 { get; set; } = new Draw.Rectangle(757, 252, 18, 18); // Check Rect - X=755,Y=248,Width=86,Height=26
     //public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel물품종류 { get; set; } = new Draw.Rectangle(640, 275, 95, 21); // Check Rect - X=638,Y=273,Width=118,Height=25
-    
+
     //public Draw.Rectangle 접수등록Wnd_우측상단_rcChkRel차량톤수 { get; set; } = new Draw.Rectangle(696, 323, 50, 21); // Check Rect - X=638,Y=273,Width=118,Height=25
     //public Draw.Point 접수등록Wnd_우측상단_ptChkRel차량톤수Open { get; set; } = new Draw.Point(721, 354); // Check - Combo Button (Center X=696+50/2=721, Bottom+10=323+21+10=354)
 

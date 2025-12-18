@@ -9,8 +9,6 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
-using static Kai.Client.CallCenter.Classes.CommonFuncs_OfrResult;
-using static Kai.Client.CallCenter.Classes.CommonFuncs_StdResult;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;

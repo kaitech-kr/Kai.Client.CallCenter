@@ -2,15 +2,16 @@
 
 using Kai.Common.StdDll_Common;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
+using Kai.Client.CallCenter.Classes;
 
 namespace Kai.Client.CallCenter.MVVM.ViewModels;
 #nullable disable
 public class VmOrder_StatusPage_Order : INotifyPropertyChanged
 {
     #region Variables
-    //public TbOrder tbOrder;
+    public TbOrder tbOrder;
     #endregion
-
+    
     #region Property Event
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(string propertyName)
@@ -20,243 +21,221 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
     #endregion
 
     #region 생성자
-    //public VmOrder_StatusPage_Order(TbOrder tb)//, int nTernNum)
-    //{
-    //    tbOrder = tb;
-    //}
+    public VmOrder_StatusPage_Order(TbOrder tb)//, int nTernNum)
+    {
+        tbOrder = tb;
+    }
     #endregion
 
     #region Properties
-    //// Key
-    //public long KeyCode
-    //{
-    //    get => tbOrder.KeyCode;
-    //    set => OnPropertyChanged(nameof(KeyCode));
-    //}
+    // Key
+    public long KeyCode
+    {
+        get => tbOrder.KeyCode;
+        set => OnPropertyChanged(nameof(KeyCode));
+    }
 
-    //// 상태
-    ////private string _OrderState;
-    //public string OrderState
-    //{
-    //    get => tbOrder.OrderState;
-    //    set => OnPropertyChanged(nameof(OrderState));
-    //}
+    // 상태 (Enum -> string 변환)
+    public string OrderState
+    {
+        get => ((OrderStateEnum)tbOrder.OrderStateCode).ToDesc();
+        set => OnPropertyChanged(nameof(OrderState));
+    }
 
-    //// 생성시간
-    //public string RegTime
-    //{
-    //    get => tbOrder.DtRegist.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEARSEC);
-    //    set => OnPropertyChanged(nameof(RegTime));
-    //}
+    // 생성시간
+    public string RegTime
+    {
+        get => tbOrder.DtRegist.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEARSEC);
+        set => OnPropertyChanged(nameof(RegTime));
+    }
 
-    //// 의뢰자 이전소속
-    //public string CallCustFrom
-    //{
-    //    get => tbOrder.CallCustFrom;
-    //    set => OnPropertyChanged(nameof(CallCustFrom));
-    //}
+    // 의뢰자 이전소속
+    public string CallCustFrom
+    {
+        get => tbOrder.CallCustFrom;
+        set => OnPropertyChanged(nameof(CallCustFrom));
+    }
 
-    //// 인성1
-    //public string Insung1
-    //{
-    //    get => tbOrder.Insung1;
-    //    set => OnPropertyChanged(nameof(Insung1));
-    //}
+    // 인성1
+    public string Insung1
+    {
+        get => tbOrder.Insung1;
+        set => OnPropertyChanged(nameof(Insung1));
+    }
 
-    //// 인성1
-    //public string Insung2
-    //{
-    //    get => tbOrder.Insung2;
-    //    set => OnPropertyChanged(nameof(Insung2));
-    //}
+    // 인성2
+    public string Insung2
+    {
+        get => tbOrder.Insung2;
+        set => OnPropertyChanged(nameof(Insung2));
+    }
 
-    //// 화물24시
-    //public string Cargo24
-    //{
-    //    get => tbOrder.Cargo24;
-    //    set => OnPropertyChanged(nameof(Cargo24));
-    //}
+    // 화물24시
+    public string Cargo24
+    {
+        get => tbOrder.Cargo24;
+        set => OnPropertyChanged(nameof(Cargo24));
+    }
 
-    //// 원콜
-    //public string Onecall
-    //{
-    //    get => tbOrder.Onecall;
-    //    set => OnPropertyChanged(nameof(Onecall));
-    //}
+    // 원콜
+    public string Onecall
+    {
+        get => tbOrder.Onecall;
+        set => OnPropertyChanged(nameof(Onecall));
+    }
 
-    //public string CallCompName
-    //{
-    //    get => tbOrder.CallCompName;
-    //    set => OnPropertyChanged(nameof(CallCompName));
-    //}
+    public string CallCompName
+    {
+        get => tbOrder.CallCompName;
+        set => OnPropertyChanged(nameof(CallCompName));
+    }
 
-    //// 고객명
-    //public string CallCustName
-    //{
-    //    get => tbOrder.CallCustName;
-    //    set => OnPropertyChanged(nameof(CallCustName));
-    //}
+    // 고객명
+    public string CallCustName
+    {
+        get => tbOrder.CallCustName;
+        set => OnPropertyChanged(nameof(CallCustName));
+    }
 
-    //// 고객부서명
-    //public string CallDeptName
-    //{
-    //    get => tbOrder.CallDeptName;
-    //    set => OnPropertyChanged(nameof(CallDeptName));
-    //}
+    // 고객부서명
+    public string CallDeptName
+    {
+        get => tbOrder.CallDeptName;
+        set => OnPropertyChanged(nameof(CallDeptName));
+    }
 
-    //// 고객담당
-    //public string CallChargeName
-    //{
-    //    get => tbOrder.CallChargeName;
-    //    set => OnPropertyChanged(nameof(CallChargeName));
-    //}
+    // 고객담당
+    public string CallChargeName
+    {
+        get => tbOrder.CallChargeName;
+        set => OnPropertyChanged(nameof(CallChargeName));
+    }
 
-    //// 고객전화번호
-    //public string CallTelNo
-    //{
-    //    get => StdConvert.ToPhoneNumberFormat(tbOrder.CallTelNo);
-    //    set => OnPropertyChanged(nameof(CallTelNo));
-    //}
+    // 고객전화번호
+    public string CallTelNo
+    {
+        get => StdConvert.ToPhoneNumberFormat(tbOrder.CallTelNo);
+        set => OnPropertyChanged(nameof(CallTelNo));
+    }
 
-    //// 출발동
-    //public string StartDongBasic
-    //{
-    //    get => tbOrder.StartDongBasic;
-    //    set => OnPropertyChanged(nameof(StartDongBasic));
-    //}
+    // 출발동
+    public string StartDongBasic
+    {
+        get => tbOrder.StartDongBasic;
+        set => OnPropertyChanged(nameof(StartDongBasic));
+    }
 
-    //// 도착동
-    //public string DestDongBasic
-    //{
-    //    get => tbOrder.DestDongBasic;
-    //    set => OnPropertyChanged(nameof(DestDongBasic));
-    //}
+    // 도착동
+    public string DestDongBasic
+    {
+        get => tbOrder.DestDongBasic;
+        set => OnPropertyChanged(nameof(DestDongBasic));
+    }
 
-    //// 기본요금
-    //public string FeeBasic
-    //{
-    //    get => $"{tbOrder.FeeBasic:##,###}";
-    //    set => OnPropertyChanged(nameof(FeeBasic));
-    //}
+    // 요금합계
+    public string sFeeTotal
+    {
+        get => $"{tbOrder.FeeTotal:##,###}";
+        set => OnPropertyChanged(nameof(sFeeTotal));
+    }
+    
+    // 수수료 (FeeCommi)
+    public string FeeCommi
+    {
+        get => $"{tbOrder.FeeCommi:##,###}";
+        set => OnPropertyChanged(nameof(FeeCommi));
+    }
+    
+    // 순운임 (FeeNet - 계산값)
+    public string FeeNet
+    {
+        get => $"{(tbOrder.FeeTotal - tbOrder.FeeCommi):##,###}";
+        set => OnPropertyChanged(nameof(FeeNet));
+    }
 
-    //// 추가요금
-    //public string FeePlus
-    //{
-    //    get => $"{tbOrder.FeePlus:##,###}";
-    //    set => OnPropertyChanged(nameof(FeePlus));
-    //}
+    // 차량종류(CarType) - Enum 변환
+    public string CarType
+    {
+        get => ((CarTypes)tbOrder.CarTypeCode).ToDesc();
+        set => OnPropertyChanged(nameof(CarType));
+    }
+    
+    // 차량톤수(CarWeight) - Enum 변환
+    public string CarWeight
+    {
+        get => ((CarWts)tbOrder.CarWeightCode).ToDesc();
+        set => OnPropertyChanged(nameof(CarWeight));
+    }
 
-    //// 할인요금
-    //public string FeeMinus
-    //{
-    //    get => $"{tbOrder.FeeMinus:##,###}";
-    //    set => OnPropertyChanged(nameof(FeeMinus));
-    //}
+    // 요금타입(FeeType)
+    public string FeeType
+    {
+        get => tbOrder.FeeType == "선불" ? "" : tbOrder.FeeType;
+        set => OnPropertyChanged(nameof(FeeType));
+    }
 
-    //// 탁송료
-    //public string FeeConn
-    //{
-    //    get => $"{tbOrder.FeeConn:##,###}";
-    //    set => OnPropertyChanged(nameof(FeeConn));
-    //}
+    // 배송타입(DeliverType)
+    public string DeliverType
+    {
+        get => tbOrder.DeliverType;
+        set => OnPropertyChanged(nameof(DeliverType));
+    }
 
-    //// 요금합계
-    //public string sFeeTotal
-    //{
-    //    get => $"{tbOrder.FeeTotal:##,###}";
-    //    set => OnPropertyChanged(nameof(sFeeTotal));
-    //}
+    // 적요
+    public string Remarks
+    {
+        get => tbOrder.OrderRemarks;
+        set => OnPropertyChanged(nameof(Remarks));
+    }
 
-    //// 기사요금
-    //public string FeeDriver
-    //{
-    //    get => $"{tbOrder.FeeDriver:##,###}";
-    //    set => OnPropertyChanged(nameof(FeeDriver));
-    //}
+    // 오더메모
+    public string OrderMemo
+    {
+        get => tbOrder.OrderMemo;
+        set => OnPropertyChanged(nameof(OrderMemo));
+    }
 
-    //// 기사처리비
+    // 공유
+    public bool OrderShare
+    {
+        get => tbOrder.Share;
+        set => OnPropertyChanged(nameof(OrderShare));
+    }
 
-    //// 차량종류(CarType)
-    //public string CarType
-    //{
-    //    get
-    //    {
-    //        if (tbOrder.CarType == "오토") return "";
-    //        if (tbOrder.CarType == "다마") return "다마스";
-    //        return tbOrder.CarType;
-    //    }
-    //    set => OnPropertyChanged(nameof(CarType));
-    //}
+    // 세금게산서
+    public bool TaxBill
+    {
+        get => tbOrder.TaxBill;
+        set => OnPropertyChanged(nameof(TaxBill));
+    }
 
-    //// 요금타입(FeeType)
-    //public string FeeType
-    //{
-    //    get => tbOrder.FeeType == "선불" ? "" : tbOrder.FeeType;
-    //    set => OnPropertyChanged(nameof(FeeType));
-    //}
+    // 접수시간
+    public string ReceiptTime
+    {
+        get => tbOrder.ReceiptTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(ReceiptTime));
+    }
 
-    //// 배송타입(DeliverType)
-    //public string DeliverType
-    //{
-    //    get => tbOrder.DeliverType == "편도" ? "" : tbOrder.DeliverType;
-    //    set => OnPropertyChanged(nameof(DeliverType));
-    //}
+    // 배차시간
+    public string AllocTime
+    {
+        get => tbOrder.AllocTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(AllocTime));
+    }
 
-    //// 적요
-    //public string Remarks
-    //{
-    //    get => tbOrder.OrderRemarks;
-    //    set => OnPropertyChanged(nameof(Remarks));
-    //}
+    // 운행시간
+    public string RunTime
+    {
+        get => tbOrder.RunTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(RunTime));
+    }
 
-    //// 오더메모
-    //public string OrderMemo
-    //{
-    //    get => tbOrder.OrderMemo;
-    //    set => OnPropertyChanged(nameof(OrderMemo));
-    //}
-
-    //// 공유
-    //public bool OrderShare
-    //{
-    //    get => tbOrder.Share;
-    //    set => OnPropertyChanged(nameof(OrderShare));
-    //}
-
-    //// 세금게산서
-    //public bool TaxBill
-    //{
-    //    get => tbOrder.TaxBill;
-    //    set => OnPropertyChanged(nameof(TaxBill));
-    //}
-
-    //// 접수시간
-    //public string ReceiptTime
-    //{
-    //    get => tbOrder.ReceiptTime?.ToString(@"HH\:mm") ?? "00:00";
-    //    set => OnPropertyChanged(nameof(ReceiptTime));
-    //}
-
-    //// 배차시간
-    //public string AllocTime
-    //{
-    //    get => tbOrder.AllocTime?.ToString(@"HH\:mm") ?? "00:00";
-    //    set => OnPropertyChanged(nameof(AllocTime));
-    //}
-
-    //// 운행시간
-    //public string RunTime
-    //{
-    //    get => tbOrder.RunTime?.ToString(@"HH\:mm") ?? "00:00";
-    //    set => OnPropertyChanged(nameof(RunTime));
-    //}
-
-    //// 완료시간
-    //public string FinishTime
-    //{
-    //    get => tbOrder.FinishTime?.ToString(@"HH\:mm") ?? "00:00";
-    //    set => OnPropertyChanged(nameof(FinishTime));
-    //}
+    // 완료시간
+    public string FinishTime
+    {
+        get => tbOrder.FinishTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(FinishTime));
+    }
     #endregion
 }
 

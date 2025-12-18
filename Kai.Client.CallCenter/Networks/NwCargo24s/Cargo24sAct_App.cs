@@ -17,27 +17,21 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 public class Cargo24sAct_App
 {
     #region Context Reference
-    ///// <summary>
-    ///// Context에 대한 읽기 전용 참조
-    ///// </summary>
-    //private readonly Cargo24Context m_Context;
+    // Context에 대한 읽기 전용 참조
+    private readonly Cargo24Context m_Context;
 
-    ///// <summary>
-    ///// 편의를 위한 로컬 참조들
-    ///// </summary>
-    //private Cargo24sInfo_File m_FileInfo => m_Context.FileInfo;
-    //private Cargo24sInfo_Mem m_MemInfo => m_Context.MemInfo;
+    // 편의를 위한 로컬 참조들
+    private Cargo24sInfo_File m_FileInfo => m_Context.FileInfo;
+    private Cargo24sInfo_Mem m_MemInfo => m_Context.MemInfo;
     #endregion
 
     #region Constructor
-    ///// <summary>
-    ///// 생성자 - Context를 받아서 초기화
-    ///// </summary>
-    //public Cargo24sAct_App(Cargo24Context context)
-    //{
-    //    m_Context = context ?? throw new ArgumentNullException(nameof(context));
-    //    //Debug.WriteLine($"[Cargo24sAct_App] 생성자 호출: AppName={m_Context.AppName}");
-    //}
+    // 생성자 - Context를 받아서 초기화
+    public Cargo24sAct_App(Cargo24Context context)
+    {
+        m_Context = context ?? throw new ArgumentNullException(nameof(context));
+        //Debug.WriteLine($"[Cargo24sAct_App] 생성자 호출: AppName={m_Context.AppName}");
+    }
     #endregion
 
     #region UpdaterWork
@@ -61,7 +55,7 @@ public class Cargo24sAct_App
     //        Process procExec = Process.Start(processInfo);
     //        if (procExec == null)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/UpdaterWork]실행실패: procExec == null",
     //                "Cargo24sAct_App/UpdaterWorkAsync_01", bWrite, bMsgBox);
     //        }
@@ -93,7 +87,7 @@ public class Cargo24sAct_App
     //        // 프로세스가 종료되지않거나 SplashWnd가 안보이면..
     //        if (!bClosed && m_MemInfo.Splash.TopWnd_hWnd == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/UpdaterWork]업데이터 (5분안에)종료실패",
     //                "Cargo24sAct_App/UpdaterWorkAsync_02", bWrite, bMsgBox);
     //        }
@@ -103,7 +97,7 @@ public class Cargo24sAct_App
     //    }
     //    catch (Exception ex)
     //    {
-    //        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //        return new StdResult_Error(
     //            $"[{m_Context.AppName}/UpdaterWork]예외발생: {ex.Message}",
     //            "Cargo24sAct_App/UpdaterWorkAsync_99", bWrite, bMsgBox);
     //    }
@@ -131,7 +125,7 @@ public class Cargo24sAct_App
     //        // Find SplashWindow
     //        if (mSplash.TopWnd_hWnd == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/SplashWork]스플래쉬윈도 찾기실패[{m_FileInfo.Splash_TopWnd_sClassName}, {m_FileInfo.Splash_TopWnd_sWndName}]",
     //                "Cargo24sAct_App/SplashWorkAsync_01", bWrite, bMsgBox);
     //        }
@@ -155,7 +149,7 @@ public class Cargo24sAct_App
 
     //        if (hWndTmp != mSplash.TopWnd_hWnd)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/SplashWork]스플래쉬윈도 위치이동실패",
     //                "Cargo24sAct_App/SplashWorkAsync_02", bWrite, bMsgBox);
     //        }
@@ -167,7 +161,7 @@ public class Cargo24sAct_App
     //        mSplash.TopWnd_uThreadId = Std32Window.GetWindowThreadProcessId(mSplash.TopWnd_hWnd, out mSplash.TopWnd_uProcessId);
     //        if (mSplash.TopWnd_uThreadId == 0)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/SplashWork]프로세스 찾기실패",
     //                "Cargo24sAct_App/SplashWorkAsync_03", bWrite, bMsgBox);
     //        }
@@ -179,7 +173,7 @@ public class Cargo24sAct_App
     //            Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, m_FileInfo.Splash_IdWnd_ptChk);
     //        if (mSplash.IdWnd_hWnd == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/SplashWork]아이디 입력창 찾기실패",
     //                "Cargo24sAct_App/SplashWorkAsync_04", bWrite, bMsgBox);
     //        }
@@ -191,7 +185,7 @@ public class Cargo24sAct_App
     //            Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, m_FileInfo.Splash_PwWnd_ptChk);
     //        if (mSplash.PwWnd_hWnd == IntPtr.Zero)
     //        {
-    //            return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //            return new StdResult_Error(
     //                $"[{m_Context.AppName}/SplashWork]비밀번호 입력창 찾기실패",
     //                "Cargo24sAct_App/SplashWorkAsync_05", bWrite, bMsgBox);
     //        }
@@ -216,7 +210,7 @@ public class Cargo24sAct_App
     //    }
     //    catch (Exception ex)
     //    {
-    //        return CommonFuncs_StdResult.ErrMsgResult_Error(
+    //        return new StdResult_Error(
     //            $"[{m_Context.AppName}/SplashWork]예외발생: {ex.Message}",
     //            "Cargo24sAct_App/SplashWorkAsync_99", bWrite, bMsgBox);
     //    }

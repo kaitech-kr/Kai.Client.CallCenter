@@ -19,9 +19,7 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 #nullable disable
 
-/// <summary>
-/// 원콜 접수등록 페이지 제어
-/// </summary>
+// 원콜 접수등록 페이지 제어
 public partial class OnecallAct_RcptRegPage
 {
     //#region Constants
@@ -29,32 +27,30 @@ public partial class OnecallAct_RcptRegPage
     //#endregion
     //
     //#region Datagrid Column Header Info
-    ///// <summary>
-    ///// Datagrid 컬럼 헤더 정보 배열 (21개)
-    ///// </summary>
-    //public readonly NwCommon_DgColumnHeader[] m_ReceiptDgHeaderInfos = new NwCommon_DgColumnHeader[]
+    // Datagrid 컬럼 헤더 정보 배열 (21개)
+    //public readonly CModel_DgColumnHeader[] m_ReceiptDgHeaderInfos = new CModel_DgColumnHeader[]
     //{
-    //    new NwCommon_DgColumnHeader() { sName = "순번", bOfrSeq = true, nWidth = 50 },
-    //    new NwCommon_DgColumnHeader() { sName = "처리상태", bOfrSeq = false, nWidth = 65 },
-    //    new NwCommon_DgColumnHeader() { sName = "오더번호", bOfrSeq = true, nWidth = 100 },
-    //    new NwCommon_DgColumnHeader() { sName = "처리일자", bOfrSeq = true, nWidth = 105 },
-    //    new NwCommon_DgColumnHeader() { sName = "처리시간", bOfrSeq = true, nWidth = 85 },
-    //    new NwCommon_DgColumnHeader() { sName = "상차지", bOfrSeq = false, nWidth = 125 },
-    //    new NwCommon_DgColumnHeader() { sName = "하차지", bOfrSeq = false, nWidth = 125 },
-    //    new NwCommon_DgColumnHeader() { sName = "결제방법", bOfrSeq = false, nWidth = 65 },
-    //    new NwCommon_DgColumnHeader() { sName = "운임", bOfrSeq = true, nWidth = 80 },
-    //    new NwCommon_DgColumnHeader() { sName = "수수료", bOfrSeq = true, nWidth = 75 },
-    //    new NwCommon_DgColumnHeader() { sName = "차종", bOfrSeq = false, nWidth = 70 },
-    //    new NwCommon_DgColumnHeader() { sName = "톤수", bOfrSeq = false, nWidth = 50 },
-    //    new NwCommon_DgColumnHeader() { sName = "혼적", bOfrSeq = false, nWidth = 60 },
-    //    new NwCommon_DgColumnHeader() { sName = "차주명", bOfrSeq = false, nWidth = 80 },
-    //    new NwCommon_DgColumnHeader() { sName = "차주전화", bOfrSeq = true, nWidth = 135 },
-    //    new NwCommon_DgColumnHeader() { sName = "담당자번호", bOfrSeq = true, nWidth = 135 },
-    //    new NwCommon_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 130 },
-    //    new NwCommon_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 155 },
-    //    new NwCommon_DgColumnHeader() { sName = "인수증", bOfrSeq = false, nWidth = 60 },
-    //    new NwCommon_DgColumnHeader() { sName = "상차일", bOfrSeq = true, nWidth = 70 },
-    //    new NwCommon_DgColumnHeader() { sName = "하차일", bOfrSeq = true, nWidth = 70 },
+    //    new CModel_DgColumnHeader() { sName = "순번", bOfrSeq = true, nWidth = 50 },
+    //    new CModel_DgColumnHeader() { sName = "처리상태", bOfrSeq = false, nWidth = 65 },
+    //    new CModel_DgColumnHeader() { sName = "오더번호", bOfrSeq = true, nWidth = 100 },
+    //    new CModel_DgColumnHeader() { sName = "처리일자", bOfrSeq = true, nWidth = 105 },
+    //    new CModel_DgColumnHeader() { sName = "처리시간", bOfrSeq = true, nWidth = 85 },
+    //    new CModel_DgColumnHeader() { sName = "상차지", bOfrSeq = false, nWidth = 125 },
+    //    new CModel_DgColumnHeader() { sName = "하차지", bOfrSeq = false, nWidth = 125 },
+    //    new CModel_DgColumnHeader() { sName = "결제방법", bOfrSeq = false, nWidth = 65 },
+    //    new CModel_DgColumnHeader() { sName = "운임", bOfrSeq = true, nWidth = 80 },
+    //    new CModel_DgColumnHeader() { sName = "수수료", bOfrSeq = true, nWidth = 75 },
+    //    new CModel_DgColumnHeader() { sName = "차종", bOfrSeq = false, nWidth = 70 },
+    //    new CModel_DgColumnHeader() { sName = "톤수", bOfrSeq = false, nWidth = 50 },
+    //    new CModel_DgColumnHeader() { sName = "혼적", bOfrSeq = false, nWidth = 60 },
+    //    new CModel_DgColumnHeader() { sName = "차주명", bOfrSeq = false, nWidth = 80 },
+    //    new CModel_DgColumnHeader() { sName = "차주전화", bOfrSeq = true, nWidth = 135 },
+    //    new CModel_DgColumnHeader() { sName = "담당자번호", bOfrSeq = true, nWidth = 135 },
+    //    new CModel_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 130 },
+    //    new CModel_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 155 },
+    //    new CModel_DgColumnHeader() { sName = "인수증", bOfrSeq = false, nWidth = 60 },
+    //    new CModel_DgColumnHeader() { sName = "상차일", bOfrSeq = true, nWidth = 70 },
+    //    new CModel_DgColumnHeader() { sName = "하차일", bOfrSeq = true, nWidth = 70 },
     //};
     //#endregion
     //
@@ -63,6 +59,10 @@ public partial class OnecallAct_RcptRegPage
     //private const int MAX_RETRY = 3;               // 최대 재시도 횟수
     //private const int DELAY_RETRY = 500;           // 재시도 대기 시간 (ms)
     //
+    //public const int c_nCol순번 = 0;
+    //public const int c_nCol처리상태 = 1;
+    //public const int c_nCol오더번호 = 2;
+    //public const int c_nCol클릭 = 0; // 로우 클릭용 (처리일자) - 원콜은 로우전체에 테두리 그려저서 무의미
     //public const int c_nCol순번 = 0;
     //public const int c_nCol처리상태 = 1;
     //public const int c_nCol오더번호 = 2;
@@ -77,9 +77,7 @@ public partial class OnecallAct_RcptRegPage
     //private OnecallInfo_Mem.RcptRegPage mRcpt => mInfo.RcptPage;
     //private string AppName => m_Context.AppName;
     //
-    ///// <summary>
-    ///// 마지막으로 읽은 총계 (조회 딜레이 계산용)
-    ///// </summary>
+    // 마지막으로 읽은 총계 (조회 딜레이 계산용)
     //public int m_nLastTotalCount { get; set; } = 0;
     // #endregion
 
@@ -91,12 +89,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region InitializeAsync
-    /// <summary>
-    /// 접수등록 페이지 초기화
-    /// </summary>
-    /// <summary>
-    /// 접수등록 페이지 초기화
-    /// </summary>
+    // 접수등록 페이지 초기화
     //public async Task<StdResult_Error> InitializeAsync()
     //{
     //    try
@@ -337,7 +330,7 @@ public partial class OnecallAct_RcptRegPage
     //        return new StdResult_Error($"[{AppName}] RcptRegPage 예외: {ex.Message}", "OnecallAct_RcptRegPage/InitializeAsync_99");
     //    }
     //}
-    
+
     // SetDG오더 섹션
     //private async Task<(List<OfrModel_LeftWidth> listLW, StdResult_Error error)> SetDG오더ColumnHeaderAsync(bool bEdit = true)
     //{
@@ -467,9 +460,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
 
-    ///// <summary>
-    ///// Datagrid 강제 초기화 (항목초기화 → 컬럼 삭제 → 순서 조정 → 폭 조정)
-    ///// </summary>
+    // Datagrid 강제 초기화 (항목초기화 → 컬럼 삭제 → 순서 조정 → 폭 조정)
     //private async Task<StdResult_Error> InitDG오더Async(CEnum_DgValidationIssue issues)
     //{
     //    // 마우스 커서 위치 백업 (작업 완료 후 복원용)
@@ -750,9 +741,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     //#region 자동배차 - Kai신규 관련함수들
-    ///// <summary>
-    ///// 신규 주문 처리 (Kai 신규 → 원콜 등록)
-    ///// </summary>
+    // 신규 주문 처리 (Kai 신규 → 원콜 등록)
     //public async Task<CommonResult_AutoAllocProcess> CheckOcOrderAsync_AssumeKaiNewOrder(AutoAllocModel item, CancelTokenControl ctrl)
     //{
     //    await ctrl.WaitIfPausedOrCancelledAsync();
@@ -782,9 +771,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
 
-    /// <summary>
-    /// 신규등록모드: 신규버튼 클릭 → 정보 입력 → 저장
-    /// </summary>
+    // 신규등록모드: 신규버튼 클릭 → 정보 입력 → 저장
     //public async Task<CommonResult_AutoAllocProcess> RegistOrderModeAsync(AutoAllocModel item, CancelTokenControl ctrl)
     //{
     //    try
@@ -858,21 +845,21 @@ public partial class OnecallAct_RcptRegPage
     //
     //        // 차량 - 톤수
     //        await EscapeFocusAsync();
-    //        CommonModel_ComboBox result톤수 = GetCarWeightResult(tbOrder.CarType, tbOrder.CarWeight);
+    //        CModel_ComboBox result톤수 = GetCarWeightResult(tbOrder.CarType, tbOrder.CarWeight);
     //        StdResult_Status resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd톤수, result톤수, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_톤수_rcChkRelM);
     //        if (resultSts.Result != StdResult.Success)
     //            return CommonResult_AutoAllocProcess.FailureAndDiscard($"톤수 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_06");
     //
     //        // 차량 - 차종
     //        await EscapeFocusAsync();
-    //        CommonModel_ComboBox result차종 = GetTruckDetailResult(tbOrder.CarType, tbOrder.TruckDetail);
+    //        CModel_ComboBox result차종 = GetTruckDetailResult(tbOrder.CarType, tbOrder.TruckDetail);
     //        resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd차종, result차종, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_차종_rcChkRelM);
     //        if (resultSts.Result != StdResult.Success)
     //            return CommonResult_AutoAllocProcess.FailureAndDiscard($"차종 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_07");
     //
     //        // 차량 - 결재
     //        await EscapeFocusAsync();
-    //        CommonModel_ComboBox result결재 = GetFeeTypeResult(tbOrder.FeeType);
+    //        CModel_ComboBox result결재 = GetFeeTypeResult(tbOrder.FeeType);
     //        resultSts = await SelectComboBoxItemAsync(mRcpt.접수섹션_차량_hWnd결재, result결재, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_결재_rcChkRelM);
     //        if (resultSts.Result != StdResult.Success)
     //            return CommonResult_AutoAllocProcess.FailureAndDiscard($"결재 선택실패: {resultSts.sErr}", "RegistOrderModeAsync_08");
@@ -1010,18 +997,16 @@ public partial class OnecallAct_RcptRegPage
     // #endregion
 
     #region 자동배차 - Kai변경 관련함수들
-    ///// <summary>
-    ///// Kai DB에서 업데이트된 주문을 원콜 앱에 반영 (Existed_WithSeqno | Updated_Assume)
-    ///// </summary>
+    // Kai DB에서 업데이트된 주문을 원콜 앱에 반영 (Existed_WithSeqno | Updated_Assume)
     //public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiUpdated(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     //{
     //    string kaiState = item.NewOrder?.OrderState ?? "";
     //    string ocState = dgInfo.sStatus;
     //    TbOrder tbOrder = item.NewOrder;
     //    Debug.WriteLine($"[CheckIsOrderAsync_AssumeKaiUpdated] KeyCode={item.KeyCode}, Kai={kaiState}, Onecall={ocState}");
-    //
+
     //    await ctrl.WaitIfPausedOrCancelledAsync();
-    //
+
     //    switch (kaiState)
     //    {
     //        case "대기":
@@ -1029,7 +1014,7 @@ public partial class OnecallAct_RcptRegPage
     //            if (ocState != "취소")
     //                return await UpdateOrderModeAsync(item, dgInfo.nIndex, "취소", null, ctrl);
     //            else return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
-    //
+
     //        //case "취소": // 테스트용으로 임시작업
     //        case "접수": // 같은 접수상태라도 kaiState의 공유상태에 따라 다르게 반응해야함
     //            if (ocState == "접수")
@@ -1041,44 +1026,42 @@ public partial class OnecallAct_RcptRegPage
     //            {
     //                MsgBox("화물24시가 접수이외의 상태이니, 연구가 필요합니다");
     //                break;
-    //
+
     //                //return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
-    //
+
     //                // For Test
     //                //return await UpdateOrderModeAsync(item, dgInfo.nIndex, null, item.NewOrder, ctrl);
     //            }
-    //
+
     //        default:
     //            System.Windows.MessageBox.Show($"[TODO] kaiState={kaiState}, Cg24State={ocState}", "CheckIsOrderAsync_AssumeKaiUpdated");
     //            break;
     //    }
-    //
+
     //    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
     //}
 
-    ///// <summary>
-    ///// 수정모드: 로우 셀렉트 → 상태변경/정보수정 → 저장
-    ///// - targetState: 상태 변경 ("취소" 등, null이면 스킵)
-    ///// - order: 정보 수정 (null이면 스킵)
-    ///// </summary>
+    // 수정모드: 로우 셀렉트 → 상태변경/정보수정 → 저장
+    // - targetState: 상태 변경 ("취소" 등, null이면 스킵)
+    // - order: 정보 수정 (null이면 스킵)
     //public async Task<CommonResult_AutoAllocProcess> UpdateOrderModeAsync(
-    //    AutoAllocModel item, int nRowIndex, string targetState, TbOrder order, CancelTokenControl ctrl)
+        //AutoAllocModel item, int nRowIndex, string targetState, TbOrder order, CancelTokenControl ctrl)
     //{
     //    try
     //    {
     //        #region 1. 사전작업
     //        Debug.WriteLine($"[{AppName}] UpdateOrderModeAsync 진입: KeyCode={item.KeyCode}, RowIndex={nRowIndex}, targetState={targetState}, order={(order != null ? "있음" : "없음")}");
-    //
+
     //        // 파라미터 검증
     //        if (string.IsNullOrEmpty(targetState) && order == null)
     //            return CommonResult_AutoAllocProcess.FailureAndDiscard("targetState와 order 둘 다 null입니다.", "UpdateOrderModeAsync_00");
-    //
+
     //        // 해당 로우 클릭 (클릭만으로 수정모드 진입)
     //        bool bSelected = await ClickDatagridRowAsync(nRowIndex);
     //        Debug.WriteLine($"[{AppName}] 로우 클릭 완료: nRowIndex={nRowIndex}, 선택됨={bSelected}");
     //        if (!bSelected)
     //            return CommonResult_AutoAllocProcess.FailureAndRetry("로우 선택 실패", "UpdateOrderModeAsync_01");
-    //
+
     //        // 오더번호 검증 (선택한 로우가 올바른지 확인)
     //        string expectedSeqno = item.NewOrder.Onecall;
     //        var resultSeqno = await Get오더번호Async(nRowIndex, ctrl);
@@ -1088,7 +1071,7 @@ public partial class OnecallAct_RcptRegPage
     //            return CommonResult_AutoAllocProcess.FailureAndRetry($"오더번호 불일치: 예상={expectedSeqno}, 실제={resultSeqno.strResult}", "UpdateOrderModeAsync_02B");
     //        Debug.WriteLine($"[{AppName}] 오더번호 검증 성공: {resultSeqno.strResult}");
     //        #endregion
-    //
+
     //        #region 2. 상태 변경
     //        if (!string.IsNullOrEmpty(targetState))
     //        {
@@ -1108,12 +1091,12 @@ public partial class OnecallAct_RcptRegPage
     //            }
     //        }
     //        #endregion
-    //
+
     //        #region 3. 정보 수정
     //        if (order != null)
     //        {
     //            int changeCount = 0;
-    //
+
     //            // 상차지 입력
     //            string current상차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd상차지주소) ?? "";
     //            if (current상차 != order.StartDetailAddr)
@@ -1124,7 +1107,7 @@ public partial class OnecallAct_RcptRegPage
     //                changeCount++;
     //                Debug.WriteLine($"[{AppName}] 상차지 수정: {current상차} → {order.StartDetailAddr}");
     //            }
-    //
+
     //            // 하차지 입력
     //            string current하차 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd하차지주소) ?? "";
     //            if (current하차 != order.DestDetailAddr)
@@ -1135,14 +1118,14 @@ public partial class OnecallAct_RcptRegPage
     //                changeCount++;
     //                Debug.WriteLine($"[{AppName}] 하차지 수정: {current하차} → {order.DestDetailAddr}");
     //            }
-    //
+
     //            // 화물정보
     //            string db화물정보 = string.IsNullOrEmpty(order.OrderRemarks) ? "없음" : order.OrderRemarks;
     //            var (changed화물, result화물) = await UpdateEditIfChangedAsync(mRcpt.접수섹션_hWnd화물정보, db화물정보, "화물정보", ctrl);
     //            if (result화물.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"화물정보 입력실패: {result화물.sErr}", "UpdateOrderModeAsync_12");
     //            if (changed화물) changeCount++;
-    //
+
     //            // 운임 - 총운임
     //            string current총운임 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd총운임) ?? "";
     //            string db총운임 = order.FeeTotal > 0 ? order.FeeTotal.ToString() : "";
@@ -1154,7 +1137,7 @@ public partial class OnecallAct_RcptRegPage
     //                changeCount++;
     //                Debug.WriteLine($"[{AppName}] 총운임 수정: {current총운임} → {db총운임}");
     //            }
-    //
+
     //            // 운임 - 수수료
     //            string current수수료 = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd수수료) ?? "";
     //            string db수수료 = order.FeeCharge > 0 ? order.FeeCharge.ToString() : "";
@@ -1166,31 +1149,31 @@ public partial class OnecallAct_RcptRegPage
     //                changeCount++;
     //                Debug.WriteLine($"[{AppName}] 수수료 수정: {current수수료} → {db수수료}");
     //            }
-    //
+
     //            // 차량 - 톤수
-    //            CommonModel_ComboBox model톤수 = GetCarWeightResult(order.CarType, order.CarWeight);
+    //            CModel_ComboBox model톤수 = GetCarWeightResult(order.CarType, order.CarWeight);
     //            var (changed톤수, result톤수) = await UpdateComboIfChangedAsync(
     //                mRcpt.접수섹션_차량_hWnd톤수, model톤수, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_톤수_rcChkRelM, "톤수", ctrl);
     //            if (result톤수.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"톤수 선택실패: {result톤수.sErr}", "UpdateOrderModeAsync_15");
     //            if (changed톤수) changeCount++;
-    //
+
     //            // 차량 - 차종
-    //            CommonModel_ComboBox model차종 = GetTruckDetailResult(order.CarType, order.TruckDetail);
+    //            CModel_ComboBox model차종 = GetTruckDetailResult(order.CarType, order.TruckDetail);
     //            var (changed차종, result차종) = await UpdateComboIfChangedAsync(
     //                mRcpt.접수섹션_차량_hWnd차종, model차종, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_차종_rcChkRelM, "차종", ctrl);
     //            if (result차종.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"차종 선택실패: {result차종.sErr}", "UpdateOrderModeAsync_16");
     //            if (changed차종) changeCount++;
-    //
+
     //            // 차량 - 결재
-    //            CommonModel_ComboBox model결재 = GetFeeTypeResult(order.FeeType);
+    //            CModel_ComboBox model결재 = GetFeeTypeResult(order.FeeType);
     //            var (changed결재, result결재) = await UpdateComboIfChangedAsync(
     //                mRcpt.접수섹션_차량_hWnd결재, model결재, mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_결재_rcChkRelM, "결재", ctrl);
     //            if (result결재.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"결재 선택실패: {result결재.sErr}", "UpdateOrderModeAsync_17");
     //            if (changed결재) changeCount++;
-    //
+
     //            // 화물중량
     //            string maxWeight = GetMaxCarWeight(model톤수);
     //            string curWeight = Std32Window.GetWindowCaption(mRcpt.접수섹션_hWnd화물중량) ?? "";
@@ -1201,58 +1184,58 @@ public partial class OnecallAct_RcptRegPage
     //                    return CommonResult_AutoAllocProcess.FailureAndRetry($"화물중량 설정실패: {result화물중량.sErr}", "UpdateOrderModeAsync_17_1");
     //                changeCount++;
     //            }
-    //
+
     //            // 구분 (왕복/경유/긴급)
     //            bool db왕복 = order.DeliverType == "왕복";
     //            bool db경유 = order.DeliverType == "경유";
     //            bool db긴급 = order.DeliverType == "긴급";
-    //
+
     //            var (changed왕복, result왕복) = await UpdateCheckBoxIfChangedAsync(
     //                mRcpt.접수섹션_구분_hWnd왕복, fInfo.접수등록Page_구분_왕복Part_rcChkRelM, db왕복, "왕복", ctrl);
     //            if (result왕복.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"왕복 설정실패: {result왕복.sErr}", "UpdateOrderModeAsync_18");
     //            if (changed왕복) changeCount++;
-    //
+
     //            var (changed경유, result경유) = await UpdateCheckBoxIfChangedAsync(
     //                mRcpt.접수섹션_구분_hWnd경유, fInfo.접수등록Page_구분_경유Part_rcChkRelM, db경유, "경유", ctrl);
     //            if (result경유.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"경유 설정실패: {result경유.sErr}", "UpdateOrderModeAsync_19");
     //            if (changed경유) changeCount++;
-    //
+
     //            var (changed긴급, result긴급) = await UpdateCheckBoxIfChangedAsync(
     //                mRcpt.접수섹션_구분_hWnd긴급, fInfo.접수등록Page_구분_긴급Part_rcChkRelM, db긴급, "긴급", ctrl);
     //            if (result긴급.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"긴급 설정실패: {result긴급.sErr}", "UpdateOrderModeAsync_20");
     //            if (changed긴급) changeCount++;
-    //
+
     //            // 상차방법 (수작업 고정)
     //            var (changed상차방법, result상차방법) = await UpdateCheckBoxIfChangedAsync(
     //                mRcpt.접수섹션_상차방법_hWnd수작업, fInfo.접수등록Page_상차방법_수작업Part_rcChkRelM, true, "수작업", ctrl);
     //            if (result상차방법.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"상차방법 설정실패: {result상차방법.sErr}", "UpdateOrderModeAsync_21");
     //            if (changed상차방법) changeCount++;
-    //
+
     //            // 상차일시 (당상 고정)
     //            var (changed상차일시, result상차일시) = await UpdateCheckBoxIfChangedAsync(
     //                mRcpt.접수섹션_상차일시_hWnd당상, fInfo.접수등록Page_상차일시_당상Part_rcChkRelM, true, "당상", ctrl);
     //            if (result상차일시.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"상차일시 설정실패: {result상차일시.sErr}", "UpdateOrderModeAsync_22");
     //            if (changed상차일시) changeCount++;
-    //
+
     //            // 하차방법 (수작업 고정)
     //            var (changed하차방법, result하차방법) = await UpdateCheckBoxIfChangedAsync(
     //                mRcpt.접수섹션_하차방법_hWnd수작업, fInfo.접수등록Page_하차방법_수작업Part_rcChkRelM, true, "수작업", ctrl);
     //            if (result하차방법.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"하차방법 설정실패: {result하차방법.sErr}", "UpdateOrderModeAsync_23");
     //            if (changed하차방법) changeCount++;
-    //
+
     //            // 하차일시 (당착 고정)
     //            var (changed하차일시, result하차일시) = await UpdateCheckBoxIfChangedAsync(
     //                mRcpt.접수섹션_하차일시_hWnd당착, fInfo.접수등록Page_하차일시_당착Part_rcChkRelM, true, "당착", ctrl);
     //            if (result하차일시.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"하차일시 설정실패: {result하차일시.sErr}", "UpdateOrderModeAsync_24");
     //            if (changed하차일시) changeCount++;
-    //
+
     //            // 화물메모
     //            string db화물메모 = order.OrderMemo ?? "";
     //            var (changed화물메모, result화물메모) = await UpdateEditIfChangedAsync(
@@ -1260,7 +1243,7 @@ public partial class OnecallAct_RcptRegPage
     //            if (result화물메모.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"화물메모 입력실패: {result화물메모.sErr}", "UpdateOrderModeAsync_25");
     //            if (changed화물메모) changeCount++;
-    //
+
     //            // 의뢰자 - 전화
     //            string db의뢰자전화 = StdConvert.ToPhoneNumberFormat(order.CallTelNo);
     //            var (changed의뢰자전화, result의뢰자전화) = await UpdateEditIfChangedAsync(
@@ -1268,7 +1251,7 @@ public partial class OnecallAct_RcptRegPage
     //            if (result의뢰자전화.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"의뢰자전화 입력실패: {result의뢰자전화.sErr}", "UpdateOrderModeAsync_26");
     //            if (changed의뢰자전화) changeCount++;
-    //
+
     //            // 의뢰자 - 상호
     //            string db의뢰자상호 = order.CallCustName ?? "";
     //            var (changed의뢰자상호, result의뢰자상호) = await UpdateEditIfChangedAsync(
@@ -1276,19 +1259,19 @@ public partial class OnecallAct_RcptRegPage
     //            if (result의뢰자상호.Result != StdResult.Success)
     //                return CommonResult_AutoAllocProcess.FailureAndRetry($"의뢰자상호 입력실패: {result의뢰자상호.sErr}", "UpdateOrderModeAsync_27");
     //            if (changed의뢰자상호) changeCount++;
-    //
+
     //            Debug.WriteLine($"[{AppName}] 정보 수정 완료: {changeCount}개 필드 변경");
     //        }
     //        #endregion
-    //
+
     //        #region 4. 저장 및 확인
     //        var resultSave = await SaveOrderAsync(ctrl);
     //        if (resultSave.Result != StdResult.Success)
     //            return CommonResult_AutoAllocProcess.FailureAndRetry($"저장 실패: {resultSave.sErr}", "UpdateOrderModeAsync_29");
-    //
+
     //        Debug.WriteLine($"[{AppName}] UpdateOrderModeAsync 완료: KeyCode={item.KeyCode}");
     //        #endregion
-    //
+
     //        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
     //    }
     //    catch (Exception ex)
@@ -1299,9 +1282,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 자동배차 - Insung상태관리 관련함수들
-    ///// <summary>
-    ///// 원콜 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
-    ///// </summary>
+    // 원콜 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
     //public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_OnecallOrderManage(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     //{
     //    await ctrl.WaitIfPausedOrCancelledAsync();

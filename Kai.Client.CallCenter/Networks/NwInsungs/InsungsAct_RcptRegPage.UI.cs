@@ -32,7 +32,7 @@ public partial class InsungsAct_RcptRegPage
 //         IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, checkPoint);
 //         if (hWnd == IntPtr.Zero)
 //         {
-//             error = CommonFuncs_StdResult.ErrMsgResult_Error(
+//             error = new StdResult_Error(
 //                 $"[{m_Context.AppName}/RcptRegPage]{controlName}CallCount 찾기실패: {checkPoint}",
 //                 errorCode, bWrite, bMsgBox);
 //             return IntPtr.Zero;
@@ -676,7 +676,7 @@ public partial class InsungsAct_RcptRegPage
 //         }
 // 
 //         // 찾기 실패
-//         var error = CommonFuncs_StdResult.ErrMsgResult_Error(
+//         var error = new StdResult_Error(
 //             $"[{m_Context.AppName}/RcptRegPage]{buttonName}버튼 찾기실패: {checkPoint}",
 //             errorCode, bWrite, bMsgBox);
 //         return (IntPtr.Zero, error);
@@ -692,7 +692,7 @@ public partial class InsungsAct_RcptRegPage
 //         IntPtr hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, checkPoint);
 //         if (hWnd == IntPtr.Zero)
 //         {
-//             var error = CommonFuncs_StdResult.ErrMsgResult_Error(
+//             var error = new StdResult_Error(
 //                 $"[{m_Context.AppName}/RcptRegPage]{buttonName}버튼 찾기실패: {checkPoint}",
 //                 errorCode, bWrite, bMsgBox);
 //             return (IntPtr.Zero, error);
@@ -721,67 +721,47 @@ public partial class InsungsAct_RcptRegPage
 //     /// - CancelToken 완전 지원
 //     /// - 입력 검증 및 예외 처리 포함
 //     /// </summary>
-//     private async Task<StdResult_Status> WriteAndVerifyEditBoxAsync(IntPtr hWnd, string expectedValue, string fieldName, CancelTokenControl ctrl, Func<string, string> normalizeFunc = null)
-//     {
-//         try
-//         {
-//             // 0. 입력 검증
-//             await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//             if (hWnd == IntPtr.Zero)
-//             {
-//                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} EditBox 핸들이 유효하지 않습니다.");
-//                 return new StdResult_Status(StdResult.Fail,
-//                     $"{fieldName} EditBox를 찾을 수 없습니다.", "WriteAndVerifyEditBoxAsync_00");
-//             }
-// 
-//             if (expectedValue == null)
-//                 expectedValue = "";
-// 
-//             // 1. 재시도 루프 (최대 3번)
-//             for (int i = 0; i < CommonVars.c_nRepeatShort; i++)  // 3회
-//             {
-//                 await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//                 // 1-1. 쓰기 (대기 포함 버전 사용)
-//                 string writtenValue = await OfrWork_Common.WriteEditBox_ToHndleAsyncWait(hWnd, expectedValue);
-// 
-//                 // 1-2. 정규화 (필요시)
-//                 if (normalizeFunc != null)
-//                     writtenValue = normalizeFunc(writtenValue);
-// 
-//                 // 1-3. 검증
-//                 if (expectedValue == writtenValue)
-//                 {
-//                     Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 입력 성공: \"{expectedValue}\"");
-//                     return new StdResult_Status(StdResult.Success);
-//                 }
-// 
-//                 Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 불일치 (재시도 {i + 1}/{CommonVars.c_nRepeatShort}): " +
-//                               $"예상=\"{expectedValue}\", 실제=\"{writtenValue}\"");
-// 
-//                 await Task.Delay(CommonVars.c_nWaitLong, ctrl.Token);  // 250ms
-//             }
-// 
-//             // 2. 최종 실패 (재시도 후에도 불일치)
-//             string finalValue = Std32Window.GetWindowCaption(hWnd);
-//             if (normalizeFunc != null)
-//                 finalValue = normalizeFunc(finalValue);
-// 
-//             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 입력 실패: 예상=\"{expectedValue}\", 실제=\"{finalValue}\"");
-//             return new StdResult_Status(StdResult.Fail,
-//                 $"{fieldName} 입력 실패: 예상=\"{expectedValue}\", 실제=\"{finalValue}\"",
-//                 "WriteAndVerifyEditBoxAsync_01");
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 입력 중 예외 발생: {ex.Message}");
-//             return new StdResult_Status(StdResult.Fail,
-//                 StdUtil.GetExceptionMessage(ex),
-//                 "WriteAndVerifyEditBoxAsync_999");
-//         }
-//     }
-// 
+    //private async Task<StdResult_Status> WriteAndVerifyEditBoxAsync(IntPtr hWnd, string expectedValue, string fieldName, CancelTokenControl ctrl, Func<string, string> normalizeFunc = null)
+    //{
+    //    try
+    //    {
+    //        await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //        if (hWnd == IntPtr.Zero)
+    //        {
+    //            return new StdResult_Status(StdResult.Fail, $"{fieldName} EditBox를 찾을 수 없습니다.", "WriteAndVerifyEditBoxAsync_00");
+    //        }
+
+    //        if (expectedValue == null) expectedValue = "";
+
+    //        for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
+    //        {
+    //            await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //            string writtenValue = await OfrWork_Common.WriteEditBox_ToHndleAsyncWait(hWnd, expectedValue);
+
+    //            if (normalizeFunc != null) writtenValue = normalizeFunc(writtenValue);
+
+    //            if (expectedValue == writtenValue)
+    //            {
+    //                return new StdResult_Status(StdResult.Success);
+    //            }
+
+    //            Debug.WriteLine($"[{m_Context.AppName}] {fieldName} 입력 불일치 (재시도 {i + 1}/{CommonVars.c_nRepeatShort}): 예상='{expectedValue}', 실제='{writtenValue}'");
+    //            await Task.Delay(CommonVars.c_nWaitLong, ctrl.Token);
+    //        }
+
+    //        string finalValue = Std32Window.GetWindowCaption(hWnd);
+    //        if (normalizeFunc != null) finalValue = normalizeFunc(finalValue);
+
+    //        return new StdResult_Status(StdResult.Fail, $"{fieldName} 입력 실패: 예상='{expectedValue}', 실제='{finalValue}'", "WriteAndVerifyEditBoxAsync_01");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "WriteAndVerifyEditBoxAsync_999");
+    //    }
+    //}
+
 //     /// <summary>
 //     /// 트럭 ComboBox 처리 헬퍼 - ComboBox 자동 열림 대기 및 항목 선택
 //     /// - hWndParent: 부모 윈도우 핸들
@@ -792,102 +772,82 @@ public partial class InsungsAct_RcptRegPage
 //     /// - maxAttempts: 최대 대기 횟수
 //     /// - ctrl: CancelToken 제어
 //     /// </summary>
-//     private async Task<StdResult_Status> Select트럭ComboBoxItemAsync(
-//         IntPtr hWndParent, Draw.Point ptCheckAbs, IntPtr hWndBefore, int itemIndex, string sFieldName, int maxAttempts, CancelTokenControl ctrl)
-//     {
-//         try
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] Select트럭ComboBoxItemAsync 진입: sFieldName={sFieldName}, itemIndex={itemIndex}, hWndBefore={hWndBefore:X}, ptCheckAbs={ptCheckAbs}");
-// 
-//             // 1. ComboBox 자동 열림 대기 (Handle 변경 감지)
-//             IntPtr hWndDropDown = IntPtr.Zero;
-//             for (int i = 0; i < maxAttempts; i++)
-//             {
-//                 await ctrl.WaitIfPausedOrCancelledAsync();
-//                 await Task.Delay(30, ctrl.Token);
-// 
-//                 IntPtr hWndCurrent = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheckAbs);
-// 
-//                 if (i % 10 == 0) // 10번마다 로그
-//                 {
-//                     Debug.WriteLine($"[{m_Context.AppName}] {sFieldName} ComboBox 대기 중... ({i + 1}번째 시도) - 현재 Handle: {hWndCurrent:X}");
-//                 }
-// 
-//                 if (hWndCurrent != hWndBefore && hWndCurrent != IntPtr.Zero)
-//                 {
-//                     hWndDropDown = hWndCurrent;
-//                     Debug.WriteLine($"[{m_Context.AppName}] {sFieldName} ComboBox 열림 감지 ({i + 1}번째 시도) - 새 Handle: {hWndDropDown:X}");
-//                     break;
-//                 }
-//             }
-// 
-//             if (hWndDropDown == IntPtr.Zero)
-//             {
-//                 return new StdResult_Status(StdResult.Fail, $"{sFieldName} ComboBox 열림 실패", $"Select트럭ComboBoxItemAsync_{sFieldName}_01");
-//             }
-// 
-//             // 2. ComboBox 항목 선택
-//             await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//             Draw.Point ptItem = m_Context.FileInfo.접수등록Wnd_Common_ptComboBox[itemIndex];
-//             await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndDropDown, ptItem);
-// 
-//             Debug.WriteLine($"[{m_Context.AppName}] {sFieldName} ComboBox 항목 선택 완료: index={itemIndex}");
-// 
-//             await Task.Delay(100, ctrl.Token);
-// 
-//             return new StdResult_Status(StdResult.Success);
-//         }
-//         catch (Exception ex)
-//         {
-//             return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), $"Select트럭ComboBoxItemAsync_{sFieldName}_999");
-//         }
-//     }
-// 
+/*
+    private async Task<StdResult_Status> Select트럭ComboBoxItemAsync(
+        IntPtr hWndParent, Draw.Point ptCheckAbs, IntPtr hWndBefore, int itemIndex, string sFieldName, int maxAttempts, CancelTokenControl ctrl)
+    {
+        try
+        {
+            IntPtr hWndDropDown = IntPtr.Zero;
+            for (int i = 0; i < maxAttempts; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+                await Task.Delay(30, ctrl.Token);
+
+                IntPtr hWndCurrent = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheckAbs);
+
+                if (hWndCurrent != hWndBefore && hWndCurrent != IntPtr.Zero)
+                {
+                    hWndDropDown = hWndCurrent;
+                    break;
+                }
+            }
+
+            if (hWndDropDown == IntPtr.Zero)
+            {
+                return new StdResult_Status(StdResult.Fail, $"{sFieldName} ComboBox 열림 실패", $"Select트럭ComboBoxItemAsync_{sFieldName}_01");
+            }
+
+            await ctrl.WaitIfPausedOrCancelledAsync();
+            Draw.Point ptItem = m_Context.FileInfo.접수등록Wnd_Common_ptComboBox[itemIndex];
+            await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndDropDown, ptItem);
+
+            await Task.Delay(100, ctrl.Token);
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (Exception ex)
+        {
+    // Select트럭ComboBoxItemAsync 주석 처리됨
+    /*
+    private async Task<StdResult_Status> Select트럭ComboBoxItemAsync(IntPtr hWndParent, Draw.Point ptRel, string sTargetValue, string sFieldName, CancelTokenControl ctrl)
+    {
+        return new StdResult_Status(StdResult.Success);
+    }
+    */
+
 //     /// <summary>
 //     /// 공통 함수 #5: 요금종류 RadioButton 현재 상태 확인
 //     /// - bmpOrg: 화면 캡처 비트맵
 //     /// - btns: RadioButton 그룹
 //     /// - sFeeType: 확인할 요금종류 ("선불", "착불", 등)
 //     /// </summary>
-//     private async Task<StdResult_NulBool> IsChecked요금종류Async(Draw.Bitmap bmpOrg, OfrModel_RadioBtns btns, string sFeeType)
-//     {
-//         int index = GetFeeTypeIndex(sFeeType);
-//         OfrModel_RadioBtn btn = btns.Btns[index];
-//         return await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(bmpOrg, btn.rcRelPartsT);
-//     }
-// 
-//     /// <summary>
-//     /// 배송타입 RadioButton 현재 상태 확인
-//     /// - bmpOrg: 화면 캡처 비트맵
-//     /// - btns: RadioButton 그룹
-//     /// - sDeliverType: 확인할 배송타입 ("편도", "왕복", "경유", "긴급")
-//     /// </summary>
-//     private async Task<StdResult_NulBool> IsChecked배송타입Async(Draw.Bitmap bmpOrg, OfrModel_RadioBtns btns, string sDeliverType)
-//     {
-//         int index = GetDeliverTypeIndex(sDeliverType);
-//         OfrModel_RadioBtn btn = btns.Btns[index];
-//         return await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(bmpOrg, btn.rcRelPartsT);
-//     }
-// 
-//     /// <summary>
-//     /// 차량종류 RadioButton 현재 상태 확인
-//     /// - bmpOrg: 화면 캡처 비트맵
-//     /// - btns: RadioButton 그룹
-//     /// - sCarType: 확인할 차량종류 ("오토", "밴", "트럭", 등)
-//     /// </summary>
-//     private async Task<StdResult_NulBool> IsChecked차량종류Async(Draw.Bitmap bmpOrg, OfrModel_RadioBtns btns, string sCarType)
-//     {
-//         int index = GetCarTypeIndex(sCarType);
-//         if (index == -1)
-//         {
-//             return new StdResult_NulBool(null, $"지원하지 않는 차량종류: {sCarType}", "IsChecked차량종류Async_01");
-//         }
-// 
-//         OfrModel_RadioBtn btn = btns.Btns[index];
-//         return await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(bmpOrg, btn.rcRelPartsT);
-//     }
-// 
+/*
+    private async Task<StdResult_NulBool> IsChecked요금종류Async(Draw.Bitmap bmpOrg, OfrModel_RadioBtns btns, string sFeeType)
+    {
+        int index = GetFeeTypeIndex(sFeeType);
+        OfrModel_RadioBtn btn = btns.Btns[index];
+        return await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(bmpOrg, btn.rcRelPartsT);
+    }
+*/
+    //private async Task<StdResult_NulBool> IsChecked배송타입Async(Draw.Bitmap bmpOrg, OfrModel_RadioBtns btns, string sDeliverType)
+    //{
+    //    int index = GetDeliverTypeIndex(sDeliverType);
+    //    OfrModel_RadioBtn btn = btns.Btns[index];
+    //    return await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(bmpOrg, btn.rcRelPartsT);
+    //}
+
+    //private async Task<StdResult_NulBool> IsChecked차량종류Async(Draw.Bitmap bmpOrg, OfrModel_RadioBtns btns, string sCarType)
+    //{
+    //    int index = GetCarTypeIndex(sCarType);
+    //    if (index == -1)
+    //    {
+    //        return new StdResult_NulBool(null, $"지원하지 않는 차량종류: {sCarType}", "IsChecked차량종류Async_01");
+    //    }
+
+    //    OfrModel_RadioBtn btn = btns.Btns[index];
+    //    return await OfrWork_Insungs.OfrImgChkValue_RectInBitmapAsync(bmpOrg, btn.rcRelPartsT);
+    //}
+
 //     #endregion
 // 
 //     #region 5. Receipt Window - 접수창 관련
@@ -895,58 +855,55 @@ public partial class InsungsAct_RcptRegPage
 //     /// <summary>
 //     /// 신규 버튼 클릭 후 접수등록 팝업창 열기
 //     /// </summary>
-//     public async Task<StdResult_Status> OpenNewOrderPopupAsync(AutoAllocModel item, CancelTokenControl ctrl)
-//     {
-//         IntPtr hWndPopup = IntPtr.Zero;
-//         bool bFound = false;
-// 
-//         try
-//         {
-//             // 신규 버튼 클릭 시도 (최대 3번)
-//             for (int retry = 1; retry <= c_nRepeatShort; retry++)
-//             {
-//                 await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//                 // 신규 버튼 클릭
-//                 await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd신규);
-//                 Debug.WriteLine($"[{m_Context.AppName}] 신규버튼 클릭 완료 (시도 {retry}/{CommonVars.c_nRepeatShort})");
-// 
-//                 for (int k = 0; k < CommonVars.c_nRepeatShort; k++)
-//                 {
-//                     await Task.Delay(CommonVars.c_nWaitNormal);
-// 
-//                     // 팝업창 찾기
-//                     hWndPopup = Std32Window.FindMainWindow_NotTransparent(
-//                         m_Context.MemInfo.Splash.TopWnd_uProcessId, m_Context.FileInfo.접수등록Wnd_TopWnd_sWndName_Reg);
-//                     if (hWndPopup == IntPtr.Zero) continue;
-// 
-//                     // 닫기 버튼 검증
-//                     IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(
-//                         hWndPopup, m_Context.FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
-//                     if (hWndClose == IntPtr.Zero) continue;
-// 
-//                     string closeText = Std32Window.GetWindowCaption(hWndClose);
-//                     if (closeText.StartsWith(m_Context.FileInfo.접수등록Wnd_버튼그룹_sWndName닫기))
-//                     {
-//                         bFound = true;
-//                         Debug.WriteLine($"[{m_Context.AppName}] 신규주문 팝업창 열림: {hWndPopup:X}");
-//                         break;
-//                     }
-//                 }
-// 
-//                 if (bFound) break;
-//             }
-// 
-//             if (bFound) return await RegistOrderToPopupAsync(item, hWndPopup, ctrl);
-//             else return new StdResult_Status(StdResult.Fail,
-//                 "신규 버튼 클릭 후 팝업창이 열리지 않음", "OpenNewOrderPopupAsync_01");
-//         }
-//         catch (Exception ex)
-//         {
-//             return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "OpenNewOrderPopupAsync_999");
-//         }
-//     }
-// 
+/*
+    public async Task<StdResult_Status> OpenNewOrderPopupAsync(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        IntPtr hWndPopup = IntPtr.Zero;
+        bool bFound = false;
+
+        try
+        {
+            for (int retry = 1; retry <= c_nRepeatShort; retry++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd신규);
+                Debug.WriteLine($"[{m_Context.AppName}] OpenNewOrderPopupAsync - 신규버튼 클릭 시도 {retry}/{c_nRepeatShort}");
+
+                for (int k = 0; k < CommonVars.c_nRepeatShort; k++)
+                {
+                    await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+
+                    hWndPopup = Std32Window.FindMainWindow_NotTransparent(
+                        m_Context.MemInfo.Splash.TopWnd_uProcessId, m_Context.FileInfo.접수등록Wnd_TopWnd_sWndName_Reg);
+                    if (hWndPopup == IntPtr.Zero) continue;
+
+                    IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(
+                        hWndPopup, m_Context.FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
+                    if (hWndClose == IntPtr.Zero) continue;
+
+                    string closeText = Std32Window.GetWindowCaption(hWndClose);
+                    if (closeText.StartsWith(m_Context.FileInfo.접수등록Wnd_버튼그룹_sWndName닫기))
+                    {
+                        bFound = true;
+                        Debug.WriteLine($"[{m_Context.AppName}] 신규주문 팝업창 활성화 확인: {hWndPopup:X}");
+                        break;
+                    }
+                }
+
+                if (bFound) break;
+            }
+
+            if (bFound) return await RegistOrderToPopupAsync(item, hWndPopup, ctrl);
+            else return new StdResult_Status(StdResult.Fail, "신규 버튼 클릭 후 팝업창이 열리지 않음", "OpenNewOrderPopupAsync_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "OpenNewOrderPopupAsync_999");
+        }
+    }
+*/
+
 //     /// <summary>
 //     /// 팝업창에 주문 정보 입력 및 등록
 //     /// - TopMost 설정 (포커스 유지)
@@ -2914,626 +2871,454 @@ public partial class InsungsAct_RcptRegPage
 // 
 //     #region 6. Datagrid - 데이터그리드 관련
 // 
-//     /// <summary>
-//     /// Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)
-//     /// </summary>
-//     /// <param name="columnTexts">OFR로 읽어온 컬럼 헤더 텍스트 배열</param>
-//     /// <param name="listLW">컬럼 Left/Width 리스트</param>
-//     /// <returns>검증 이슈 플래그 (None이면 정상)</returns>
-//     private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
-//     {
-//         CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
-// 
-//         // 1. 컬럼 개수 체크
-//         if (columnTexts == null || columnTexts.Length != m_ReceiptDgHeaderInfos.Length)
-//         {
-//             issues |= CEnum_DgValidationIssue.InvalidColumnCount;
-//             Debug.WriteLine($"[ValidateDatagridState] 컬럼 개수 불일치: 실제={columnTexts?.Length}, 예상={m_ReceiptDgHeaderInfos.Length}");
-//             return issues; // 개수가 다르면 더 이상 체크 불가
-//         }
-// 
-//         // 2. 각 컬럼 검증
-//         for (int x = 0; x < columnTexts.Length; x++)
-//         {
-//             string columnText = columnTexts[x];
-// 
-//             // 2-1. 컬럼명이 유효한지 (m_ReceiptDgHeaderInfos에 존재하는지)
-//             int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
-// 
-//             if (index < 0) // 존재하지 않는 컬럼
-//             {
-//                 issues |= CEnum_DgValidationIssue.InvalidColumn;
-//                 Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}'");
-//                 continue; // 다음 컬럼 검사
-//             }
-// 
-//             // 2-2. 컬럼 순서가 맞는지
-//             if (index != x)
-//             {
-//                 issues |= CEnum_DgValidationIssue.WrongOrder;
-//                 Debug.WriteLine($"[ValidateDatagridState] 컬럼 순서 불일치[{x}]: '{columnText}' (예상 위치={index})");
-//             }
-// 
-//             // 2-3. 컬럼 너비가 맞는지 (허용 오차 이내인지)
-//             int actualWidth = listLW[x].nWidth;
-//             int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
-//             int widthDiff = Math.Abs(actualWidth - expectedWidth);
-// 
-//             if (widthDiff > COLUMN_WIDTH_TOLERANCE)
-//             {
-//                 issues |= CEnum_DgValidationIssue.WrongWidth;
-//             }
-// 
-//             //Debug.WriteLine($"[ValidateDatagridState] 컬럼 너비[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
-//         }
-// 
-//         if (issues == CEnum_DgValidationIssue.None)
-//         {
-//             Debug.WriteLine($"[ValidateDatagridState] Datagrid 상태 정상");
-//         }
-//         else
-//         {
-//             Debug.WriteLine($"[ValidateDatagridState] Datagrid 검증 실패: {issues}");
-//         }
-// 
-//         return issues;
-//     }
-// 
-//     public async Task<StdResult_Int> GetValidRowCountAsync(Draw.Bitmap bmpPage)
-//     {
-//         await Task.CompletedTask;
-// 
-//         Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
-//         int nBackgroundBright = m_RcptPage.DG오더_nBackgroundBright;
-// 
-//         if (rects == null)
-//             return new StdResult_Int(0, "RelChildRects가 null입니다", "InsungsAct_RcptRegPage/GetValidRowCountAsync_01");
-// 
-//         if (nBackgroundBright <= 0 || nBackgroundBright > 255)
-//             return new StdResult_Int(0, $"배경 밝기 값이 유효하지 않음: {nBackgroundBright}", "InsungsAct_RcptRegPage/GetValidRowCountAsync_02");
-// 
-//         int nThreshold = nBackgroundBright - 1;
-//         int nValidRows = 0;
-// 
-//         for (int y = 2; y < rects.GetLength(1); y++)
-//         {
-//             int nCurBright = OfrService.GetPixelBrightnessFrmWndHandle(m_RcptPage.DG오더_hWnd, rects[0, y].Right + 1, rects[0, y].Top + 6);
-// 
-//             if (nCurBright < nThreshold)
-//                 nValidRows++;
-//             else
-//                 break;
-//         }
-// 
-//         //Debug.WriteLine($"[InsungsAct_RcptRegPage] 유효 로우: {nValidRows}개 (배경 밝기: {nBackgroundBright}, 임계값: {nThreshold})");
-//         return new StdResult_Int(nValidRows);
-//     }
-// 
-//     /// <summary>
-//     /// 캡처된 페이지 이미지에서 특정 로우의 주문번호 읽기
-//     /// </summary>
-//     /// <param name="bmpPage">캡처된 데이터그리드 전체 이미지</param>
-//     /// <param name="rectSeqno">주문번호 셀 Rectangle</param>
-//     /// <param name="bInvertRgb">RGB 반전 여부 (선택된 행인 경우 true)</param>
-//     /// <param name="ctrl">취소 토큰</param>
-//     /// <returns>StdResult_String (주문번호)</returns>
-//     public async Task<StdResult_String> GetRowSeqnoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectSeqno, bool bInvertRgb, CancelTokenControl ctrl)
-//     {
-//         await ctrl.WaitIfPausedOrCancelledAsync();
-//         return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, c_dOfrWeight); // 영역추출 못할시 가중치조정
-//     }
-// 
-//     /// <summary>
-//     /// 데이터그리드 Row에서 상태 읽기 (한글 OFR - 다음소)
-//     /// </summary>
-//     /// <param name="bmpPage">전체 페이지 비트맵 (재사용)</param>
-//     /// <param name="rectStatus">상태 컬럼 영역</param>
-//     /// <param name="bInvertRgb">RGB 반전 여부</param>
-//     /// <param name="ctrl">취소 토큰</param>
-//     /// <returns>상태 문자열 (앞 2글자: "접수", "배차", "취소" 등)</returns>
-//     public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectStatus, bool bInvertRgb, bool bText, CancelTokenControl ctrl)
-//     {
-//         await ctrl.WaitIfPausedOrCancelledAsync();
-//         return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb, bText, dWeight: c_dOfrWeight);
-//     }
-// 
-//     /// <summary>
-//     /// 캡처된 페이지 이미지에서 특정 로우의 기사전번 읽기 (단음소 OFR)
-//     /// </summary>
-//     /// <param name="bmpPage">캡처된 데이터그리드 전체 이미지</param>
-//     /// <param name="rectDriverPhNo">기사전번 셀 Rectangle</param>
-//     /// <param name="bInvertRgb">RGB 반전 여부 (선택된 행인 경우 true)</param>
-//     /// <param name="ctrl">취소 토큰</param>
-//     /// <returns>StdResult_String (기사전번)</returns>
-//     public async Task<StdResult_String> GetRowDriverPhNoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectDriverPhNo, bool bInvertRgb, CancelTokenControl ctrl)
-//     {
-//         await ctrl.WaitIfPausedOrCancelledAsync();
-//         return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectDriverPhNo, bInvertRgb, c_dOfrWeight); // 영역추출 못할시 가중치조정
-//     }
-// 
-//     /// <summary>
-//     /// 페이지별 예상 첫 로우 번호 계산 (0-based 페이지 인덱스)
-//     /// - 원콜, 화물24시도 동일 로직 사용 가능 (검증 후 공용화 검토)
-//     /// </summary>
-//     /// <param name="nTotRows">총 행 수</param>
-//     /// <param name="pageIdx">페이지 인덱스 (0-based)</param>
-//     /// <returns>예상 첫 로우 번호</returns>
-//     public static int GetExpectedFirstRowNum(int nTotRows, int pageIdx)
-//     {
-//         int nRowsPerPage = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
-// 
-//         // 총 페이지 수 계산
-//         int nTotPage = 1;
-//         if (nTotRows > nRowsPerPage)
-//         {
-//             nTotPage = nTotRows / nRowsPerPage;
-//             if (nTotRows % nRowsPerPage > 0)
-//                 nTotPage += 1;
-//         }
-// 
-//         int nCurPage = pageIdx + 1;
-//         int nNum = (nRowsPerPage * pageIdx) + 1;
-// 
-//         if (nTotPage == 1) return 1;
-// 
-//         if (nCurPage < nTotPage) return nNum;
-// 
-//         // 마지막 페이지 특수 처리: 나머지 행이 있는 경우
-//         if (nTotRows % nRowsPerPage == 0) return nNum;
-//         else return nNum - nRowsPerPage + (nTotRows % nRowsPerPage);
-//     }
-// 
-//     /// <summary>
-//     /// 번호 컬럼(x=0)에서 첫 로우 번호 읽기
-//     /// </summary>
-//     /// <param name="bEdit">OFR 실패 시 수동 입력 다이얼로그 표시 여부 (기본값: false)</param>
-//     /// <returns>첫 로우 번호 (실패 시 -1)</returns>
-//     public async Task<int> ReadFirstRowNumAsync(bool bEdit = false)
-//     {
-//         IntPtr hWndDG = m_RcptPage.DG오더_hWnd;
-//         Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
-//         int firstNum = -1;
-// 
-//         for (int y = 2; y < 2 + InsungsInfo_File.접수등록Page_DG오더_dataRowCount; y++)
-//         {
-//             // 1. 번호 컬럼(x=0) 캡처
-//             Draw.Rectangle rcNo = rects[0, y];
-//             Draw.Bitmap bmpNo = OfrService.CaptureScreenRect_InWndHandle(hWndDG, rcNo);
-//             if (bmpNo == null) continue;
-// 
-//             // 2. OFR (bEdit=false이면 대화상자 안 띄움)
-//             StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, c_dOfrWeight, bEdit); // 영역추출 못할시 가중치조정
-//             bmpNo.Dispose();
-// 
-//             if (!string.IsNullOrEmpty(resultNo.strResult))
-//             {
-//                 int curNum = StdConvert.StringToInt(resultNo.strResult, -1);
-//                 if (curNum >= 1)
-//                 {
-//                     firstNum = curNum - (y - 2);
-//                     //Debug.WriteLine($"[InsungsAct_RcptRegPage] ReadFirstRowNum: y={y}, curNum={curNum}, firstNum={firstNum}");
-//                     break;
-//                 }
-//             }
-//         }
-// 
-//         return firstNum;
-//     }
-// 
-//     /// <summary>
-//     /// 페이지 검증 및 자동 조정
-//     /// </summary>
-//     /// <param name="nExpectedFirstNum">예상 첫 번호</param>
-//     /// <param name="ctrl">취소 토큰</param>
-//     /// <param name="nRetryCount">재시도 횟수 (기본값: 3)</param>
-//     /// <returns>성공/실패</returns>
-//     public async Task<StdResult_Status> VerifyAndAdjustPageAsync(int nExpectedFirstNum, CancelTokenControl ctrl, int nRetryCount = CommonVars.c_nRepeatShort)
-//     {
-//         for (int retry = 0; retry < nRetryCount; retry++)
-//         {
-//             await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//             // OFR로 실제 번호 읽기
-//             int nActualFirstNum = await ReadFirstRowNumAsync(bEdit: true);
-//             //Debug.WriteLine($"[InsungsAct_RcptRegPage] OFR 결과 (시도 {retry + 1}/{nRetryCount}) - 예상={nExpectedFirstNum}, 실제={nActualFirstNum}");
-// 
-//             if (nExpectedFirstNum == nActualFirstNum)
-//             {
-//                 //Debug.WriteLine($"[InsungsAct_RcptRegPage] ✓ 페이지 검증 성공 (시도 {retry + 1}회)");
-//                 return new StdResult_Status(StdResult.Success);
-//             }
-// 
-//             Debug.WriteLine($"[InsungsAct_RcptRegPage] ✗ 페이지 검증 실패 (시도 {retry + 1}/{nRetryCount})");
-// 
-//             if (retry < nRetryCount - 1)  // 마지막 시도가 아니면 조정
-//             {
-//                 // 바로잡기: 차이 계산
-//                 int diff = nActualFirstNum - nExpectedFirstNum;
-//                 int absDiff = Math.Abs(diff);
-//                 int dataRowCount = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
-// 
-//                 int pageClicks = absDiff / dataRowCount;
-//                 int rowClicks = absDiff % dataRowCount;
-// 
-//                 // 최적화: rowClicks > dataRowCount/2 이면 역방향이 더 효율적
-//                 bool bReverse = false;
-//                 if (rowClicks > dataRowCount / 2)
-//                 {
-//                     pageClicks += 1;
-//                     rowClicks = dataRowCount - rowClicks;
-//                     bReverse = true;
-//                 }
-// 
-//                 // 방향 결정
-//                 Draw.Point ptPage, ptRow;
-//                 if ((diff > 0 && !bReverse) || (diff < 0 && bReverse))  // 위로
-//                 {
-//                     ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel페이지Up;
-//                     ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Up;
-//                     Debug.WriteLine($"[InsungsAct_RcptRegPage] 스크롤 조정: UP - {pageClicks}페이지 + {rowClicks}로우");
-//                 }
-//                 else  // 아래로
-//                 {
-//                     ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel페이지Down;
-//                     ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Down;
-//                     Debug.WriteLine($"[InsungsAct_RcptRegPage] 스크롤 조정: DOWN - {pageClicks}페이지 + {rowClicks}로우");
-//                 }
-// 
-//                 // 페이지 스크롤
-//                 for (int i = 0; i < pageClicks; i++)
-//                 {
-//                     await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd수직스크롤, ptPage);
-//                 }
-// 
-//                 // 로우 스크롤
-//                 for (int i = 0; i < rowClicks; i++)
-//                 {
-//                     await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd수직스크롤, ptRow);
-//                 }
-// 
-//                 await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
-//             }
-//         }
-// 
-//         return new StdResult_Status(StdResult.Fail, $"페이지 조정 {nRetryCount}회 모두 실패", "InsungsAct_RcptRegPage/VerifyAndAdjustPageAsync");
-//     }
-// 
-//     /// <summary>
-//     /// 수정 팝업 열기 (Datagrid 로우 더블클릭)
-//     /// </summary>
-//     private async Task<(InsungsInfo_Mem.RcptWnd_Edit wnd, StdResult_Error error)> OpenEditPopupAsync(int rowIndex, CancelTokenControl ctrl)
-//     {
-//         try
-//         {
-//             await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//             // 1. DG 로우 더블클릭 (헤더 2줄 추가)
-//             int selIndex = rowIndex + 2;
-//             Draw.Point ptRel = StdUtil.GetCenterDrawPoint(m_RcptPage.DG오더_RelChildRects[c_nColForClick, selIndex]);
-// 
-//             Debug.WriteLine($"[{m_Context.AppName}] 팝업 열기 시도: rowIndex={rowIndex}, selIndex={selIndex}, ptRel={ptRel}");
-// 
-//             // 2. 팝업창 찾기 (최대 c_nRepeatVeryShort번 시도)
-//             bool bFind = false;
-//             IntPtr hWndPopup = IntPtr.Zero;
-// 
-//             for (int j = 0; j < CommonVars.c_nRepeatVeryShort; j++)
-//             {
-//                 await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//                 // 더블클릭 (SendMessage 방식, BlockInput 사용)
-//                 //await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
-//                 Debug.WriteLine($"[{m_Context.AppName}] 더블클릭 실행 (시도 {j + 1}/{CommonVars.c_nRepeatVeryShort})");
-// 
-//                 // 팝업창 나타날 때까지 대기 (최대 5초)
-//                 for (int k = 0; k < 100; k++)
-//                 {
-//                     await Task.Delay(50, ctrl.Token);
-// 
-//                     // 팝업창 찾기
-//                     hWndPopup = Std32Window.FindStartWithMainWindow_NotTransparent(m_MemInfo.Splash.TopWnd_uProcessId, m_FileInfo.접수등록Wnd_TopWnd_sWndStartsWith);
-//                     if (hWndPopup == IntPtr.Zero) continue;
-// 
-//                     // 닫기 버튼으로 팝업 검증
-//                     IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
-//                     if (hWndClose == IntPtr.Zero) continue;
-// 
-//                     string closeBtnText = Std32Window.GetWindowCaption(hWndClose);
-//                     if (closeBtnText.StartsWith(m_FileInfo.접수등록Wnd_버튼그룹_sWndName닫기))
-//                     {
-//                         bFind = true;
-//                         Debug.WriteLine($"[{m_Context.AppName}] 팝업창 찾음: hWnd={hWndPopup:X}, 닫기버튼={closeBtnText}");
-//                         break;
-//                     }
-//                 }
-// 
-//                 if (bFind) break;
-//                 await Task.Delay(100, ctrl.Token);
-//             }
-// 
-//             if (!bFind)
-//             {
-//                 Debug.WriteLine($"[{m_Context.AppName}] 팝업창 찾기 실패");
-//                 return (null, new StdResult_Error($"[{m_Context.AppName}] 주문번호 클릭 후 팝업창이 안뜸", "OpenEditPopupAsync_01"));
-//             }
-// 
-//             await Task.Delay(100, ctrl.Token);
-// 
-//             // 3. RcptWnd_Edit 생성
-//             var wndRcpt = new InsungsInfo_Mem.RcptWnd_Edit(hWndPopup, m_FileInfo);
-//             Debug.WriteLine($"[{m_Context.AppName}] RcptWnd_Edit 생성 완료");
-// 
-//             return (wndRcpt, null);
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] OpenEditPopupAsync 예외: {ex.Message}");
-//             return (null, new StdResult_Error(StdUtil.GetExceptionMessage(ex), "OpenEditPopupAsync_999"));
-//         }
-//     }
-// 
-//     private async Task<bool> ClickFirstRowAsync(CancelTokenControl ctrl, int retryCount = 3)
-//     {
-//         try
-//         {
-//             // 클릭용 셀: [c_nColForClick, 2] (첫 번째 데이터 로우의 클릭용 컬럼)
-//             Draw.Rectangle rectClickCell = m_RcptPage.DG오더_RelChildRects[c_nColForClick, 2];
-// 
-//             // 검증용 셀: [1, 2] (첫 번째 데이터 로우의 두 번째 셀)
-//             Draw.Rectangle rectVerifyCell = m_RcptPage.DG오더_RelChildRects[1, 2];
-// 
-//             for (int i = 1; i <= retryCount; i++)
-//             {
-//                 await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//                 Debug.WriteLine($"[{m_Context.AppName}] ===== 첫 로우 클릭 시도 {i}/{retryCount} =====");
-// 
-//                 // 클릭 포인트
-//                 Draw.Point ptRelDG = StdUtil.GetDrawPoint(rectClickCell, 3, 3);
-// 
-//                 // 클릭
-//                 await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptRelDG);
-//                 await Task.Delay(200, ctrl.Token);
-// 
-//                 Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 클릭 완료, 선택 검증 시작");
-// 
-//                 // 검증용 셀 캡처
-//                 Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rectVerifyCell);
-//                 if (bmpCell == null)
-//                 {
-//                     Debug.WriteLine($"[{m_Context.AppName}] 검증 셀 캡처 실패 (시도 {i}/{retryCount})");
-//                     if (i < retryCount) await Task.Delay(200, ctrl.Token);
-//                     continue;
-//                 }
-// 
-//                 try
-//                 {
-//                     // 캡처된 비트맵은 (0,0) 기준이므로 Rectangle 재생성
-//                     Draw.Rectangle rectInBitmap = new Draw.Rectangle(0, 0, rectVerifyCell.Width, rectVerifyCell.Height);
-// 
-//                     // 선택 검증 (4코너 기반)
-//                     bool isSelected = OfrService.IsInvertedSelection(bmpCell, rectInBitmap);
-// 
-//                     Debug.WriteLine($"[{m_Context.AppName}] 선택 여부: {(isSelected ? "선택됨" : "선택 안됨")}");
-// 
-//                     if (isSelected)
-//                     {
-//                         Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 성공 (시도 {i}/{retryCount})");
-//                         return true;
-//                     }
-//                 }
-//                 finally
-//                 {
-//                     bmpCell?.Dispose();
-//                 }
-// 
-//                 if (i < retryCount)
-//                 {
-//                     Debug.WriteLine($"[{m_Context.AppName}] 선택 실패, 재시도...");
-//                     await Task.Delay(200, ctrl.Token);
-//                 }
-//             }
-// 
-//             Debug.WriteLine($"[{m_Context.AppName}] 첫 로우 선택 검증 실패 ({retryCount}회 시도)");
-//             return false;
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] ClickFirstRowAsync 예외: {ex.Message}");
-//             return false;
-//         }
-//     }
-// 
-//     /// <summary>
-//     /// 지정된 로우의 주문번호(Seqno) OFR
-//     /// - 셀 캡처 후 단음소 OFR (TbCharBackup 사용)
-//     /// </summary>
-//     /// <param name="rowIndex">데이터 로우 인덱스 (0부터 시작)</param>
-//     /// <param name="bInvertRgb">RGB 반전 여부 (선택된 로우 = true)</param>
-//     /// <param name="ctrl">취소 토큰</param>
-//     /// <param name="retryCount">재시도 횟수</param>
-//     /// <returns>성공: strResult에 Seqno, 실패: sErr에 에러 메시지</returns>
-//     private async Task<StdResult_String> GetSeqnoAsync(int rowIndex, bool bInvertRgb, CancelTokenControl ctrl, int retryCount = 3)
-//     {
-//         try
-//         {
-//             // 주문번호 컬럼 인덱스
-//             int seqnoColIndex = c_nCol주문번호;
-//             int yIndex = rowIndex + 2; // 헤더 2줄 추가
-// 
-//             Debug.WriteLine($"[{m_Context.AppName}] 주문번호 OFR - rowIndex={rowIndex}, yIndex={yIndex}, InvertRgb={bInvertRgb}");
-// 
-//             for (int i = 1; i <= retryCount; i++)
-//             {
-//                 await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//                 Debug.WriteLine($"[{m_Context.AppName}] ===== Seqno OFR 시도 {i}/{retryCount} =====");
-// 
-//                 // 1. 주문번호 셀 위치
-//                 Draw.Rectangle rectSeqnoCell = m_RcptPage.DG오더_RelChildRects[seqnoColIndex, yIndex];
-// 
-//                 Debug.WriteLine($"[{m_Context.AppName}] 주문번호 셀 위치 [{seqnoColIndex}, {yIndex}]: {rectSeqnoCell}");
-// 
-//                 // 2. 셀 캡처
-//                 Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(
-//                     m_RcptPage.DG오더_hWnd, rectSeqnoCell);
-// 
-//                 if (bmpCell == null)
-//                 {
-//                     Debug.WriteLine($"[{m_Context.AppName}] 주문번호 셀 캡처 실패 (시도 {i}/{retryCount})");
-//                     if (i < retryCount) await Task.Delay(200, ctrl.Token);
-//                     continue;
-//                 }
-// 
-//                 Draw.Bitmap bmpForOcr = null;
-// 
-//                 try
-//                 {
-//                     // 3. RGB 반전 (선택된 로우인 경우)
-//                     if (bInvertRgb)
-//                     {
-//                         bmpForOcr = OfrService.InvertBitmap(bmpCell);
-//                         bmpCell.Dispose();
-//                         Debug.WriteLine($"[{m_Context.AppName}] RGB 반전 완료");
-//                     }
-//                     else
-//                     {
-//                         bmpForOcr = bmpCell;
-//                     }
-// 
-//                     // 4. 단음소 OFR (TbCharBackup 사용)
-//                     StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, c_dOfrWeight); // 영역추출 못할시 가중치조정
-// 
-//                     // 5. Seqno 반환
-//                     if (!string.IsNullOrEmpty(resultSeqno.strResult))
-//                     {
-//                         Debug.WriteLine($"[{m_Context.AppName}] Seqno 획득 성공: '{resultSeqno.strResult}' (시도 {i}/{retryCount})");
-//                         return new StdResult_String(resultSeqno.strResult);
-//                     }
-//                     else
-//                     {
-//                         Debug.WriteLine($"[{m_Context.AppName}] OFR 실패: {resultSeqno.sErr} (시도 {i}/{retryCount})");
-//                     }
-//                 }
-//                 finally
-//                 {
-//                     if (bInvertRgb)
-//                     {
-//                         bmpForOcr?.Dispose();
-//                     }
-//                     else
-//                     {
-//                         // bmpForOcr는 bmpCell을 참조하므로 별도 Dispose 불필요
-//                     }
-//                 }
-// 
-//                 if (i < retryCount) await Task.Delay(200, ctrl.Token);
-//             }
-// 
-//             return new StdResult_String($"Seqno OFR 실패 ({retryCount}회 시도)", "GetSeqnoAsync_99");
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] GetSeqnoAsync 예외: {ex.Message}");
-//             return new StdResult_String(StdUtil.GetExceptionMessage(ex), "GetSeqnoAsync_999");
-//         }
-//     }
-// 
-//     /// <summary>
-//     /// 지정된 로우의 기사전번 OFR
-//     /// - 셀 캡처 후 단음소 OFR (TbCharBackup 사용)
-//     /// </summary>
-//     /// <param name="rowIndex">데이터 로우 인덱스 (0부터 시작)</param>
-//     /// <param name="bInvertRgb">RGB 반전 여부 (선택된 로우 = true)</param>
-//     /// <param name="ctrl">취소 토큰</param>
-//     /// <param name="retryCount">재시도 횟수</param>
-//     /// <returns>성공: strResult에 기사전번, 실패: sErr에 에러 메시지</returns>
-//     private async Task<StdResult_String> GetDriverPhNoAsync(int rowIndex, bool bInvertRgb, CancelTokenControl ctrl, int retryCount = 3)
-//     {
-//         try
-//         {
-//             // 기사전번 컬럼 인덱스
-//             int driverPhNoColIndex = c_nCol기사전번;
-//             int yIndex = rowIndex + 2; // 헤더 2줄 추가
-// 
-//             Debug.WriteLine($"[{m_Context.AppName}] 기사전번 OFR - rowIndex={rowIndex}, yIndex={yIndex}, InvertRgb={bInvertRgb}");
-// 
-//             for (int i = 1; i <= retryCount; i++)
-//             {
-//                 await ctrl.WaitIfPausedOrCancelledAsync();
-// 
-//                 Debug.WriteLine($"[{m_Context.AppName}] ===== 기사전번 OFR 시도 {i}/{retryCount} =====");
-// 
-//                 // 1. 기사전번 셀 위치
-//                 Draw.Rectangle rectCell = m_RcptPage.DG오더_RelChildRects[driverPhNoColIndex, yIndex];
-// 
-//                 Debug.WriteLine($"[{m_Context.AppName}] 기사전번 셀 위치 [{driverPhNoColIndex}, {yIndex}]: {rectCell}");
-// 
-//                 // 2. 셀 캡처
-//                 Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(
-//                     m_RcptPage.DG오더_hWnd, rectCell);
-// 
-//                 if (bmpCell == null)
-//                 {
-//                     Debug.WriteLine($"[{m_Context.AppName}] 기사전번 셀 캡처 실패 (시도 {i}/{retryCount})");
-//                     if (i < retryCount) await Task.Delay(200, ctrl.Token);
-//                     continue;
-//                 }
-// 
-//                 Draw.Bitmap bmpForOcr = null;
-// 
-//                 try
-//                 {
-//                     // 3. RGB 반전 (선택된 로우인 경우)
-//                     if (bInvertRgb)
-//                     {
-//                         bmpForOcr = OfrService.InvertBitmap(bmpCell);
-//                         bmpCell.Dispose();
-//                         Debug.WriteLine($"[{m_Context.AppName}] RGB 반전 완료");
-//                     }
-//                     else
-//                     {
-//                         bmpForOcr = bmpCell;
-//                     }
-// 
-//                     // 4. 단음소 OFR (TbCharBackup 사용)
-//                     StdResult_String resultDriverPhNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, c_dOfrWeight); // 영역추출 못할시 가중치조정
-// 
-//                     // 5. 기사전번 반환
-//                     if (!string.IsNullOrEmpty(resultDriverPhNo.strResult))
-//                     {
-//                         Debug.WriteLine($"[{m_Context.AppName}] 기사전번 획득 성공: '{resultDriverPhNo.strResult}' (시도 {i}/{retryCount})");
-//                         return new StdResult_String(resultDriverPhNo.strResult);
-//                     }
-//                     else
-//                     {
-//                         Debug.WriteLine($"[{m_Context.AppName}] OFR 실패: {resultDriverPhNo.sErr} (시도 {i}/{retryCount})");
-//                     }
-//                 }
-//                 finally
-//                 {
-//                     if (bInvertRgb)
-//                     {
-//                         bmpForOcr?.Dispose();
-//                     }
-//                     else
-//                     {
-//                         // bmpForOcr는 bmpCell을 참조하므로 별도 Dispose 불필요
-//                     }
-//                 }
-// 
-//                 if (i < retryCount) await Task.Delay(200, ctrl.Token);
-//             }
-// 
-//             return new StdResult_String($"기사전번 OFR 실패 ({retryCount}회 시도)", "GetDriverPhNoAsync_99");
-//         }
-//         catch (Exception ex)
-//         {
-//             Debug.WriteLine($"[{m_Context.AppName}] GetDriverPhNoAsync 예외: {ex.Message}");
-//             return new StdResult_String(StdUtil.GetExceptionMessage(ex), "GetDriverPhNoAsync_999");
-//         }
-//     }
-// 
+    /// <summary>
+    /// Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)
+    /// </summary>
+    /// <param name="columnTexts">OFR로 읽어온 컬럼 헤더 텍스트 배열</param>
+    /// <param name="listLW">컬럼 Left/Width 리스트</param>
+    /// <returns>검증 이슈 플래그 (None이면 정상)</returns>
+    /*
+    private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
+    {
+        CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
+
+        // 1. 컬럼 개수 체크
+        if (columnTexts == null || columnTexts.Length != m_ReceiptDgHeaderInfos.Length)
+        {
+            issues |= CEnum_DgValidationIssue.InvalidColumnCount;
+            Debug.WriteLine($"[{m_Context.AppName}] ValidateDatagridState - 컬럼 개수 불일치: 실제={columnTexts?.Length}, 예상={m_ReceiptDgHeaderInfos.Length}");
+            return issues;
+        }
+
+        // 2. 각 컬럼 검증
+        for (int x = 0; x < columnTexts.Length; x++)
+        {
+            string columnText = columnTexts[x];
+
+            // 2-1. 컬럼명이 유효한지
+            int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
+
+            if (index < 0)
+            {
+                issues |= CEnum_DgValidationIssue.InvalidColumn;
+                Debug.WriteLine($"[{m_Context.AppName}] ValidateDatagridState - 유효하지 않은 컬럼[{x}]: '{columnText}'");
+                continue;
+            }
+
+            // 2-2. 컬럼 순서 확인
+            if (index != x)
+            {
+                issues |= CEnum_DgValidationIssue.WrongOrder;
+                Debug.WriteLine($"[{m_Context.AppName}] ValidateDatagridState - 컬럼 순서 불일치[{x}]: '{columnText}' (예상={index})");
+            }
+
+            // 2-3. 컬럼 너비 확인
+            int actualWidth = listLW[x].nWidth;
+            int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
+            int widthDiff = Math.Abs(actualWidth - expectedWidth);
+
+            if (widthDiff > COLUMN_WIDTH_TOLERANCE)
+            {
+                issues |= CEnum_DgValidationIssue.WrongWidth;
+            }
+        }
+
+        if (issues != CEnum_DgValidationIssue.None)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] ValidateDatagridState - 검증 결과 이슈 발견: {issues}");
+        }
+
+        return issues;
+    }
+
+    public async Task<StdResult_Int> GetValidRowCountAsync(Draw.Bitmap bmpPage)
+    {
+        await Task.CompletedTask;
+
+        Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
+        int nBackgroundBright = m_RcptPage.DG오더_nBackgroundBright;
+
+        if (rects == null)
+            return new StdResult_Int(0, "RelChildRects가 null입니다", "GetValidRowCountAsync_01");
+
+        if (nBackgroundBright <= 0 || nBackgroundBright > 255)
+            return new StdResult_Int(0, $"배경 밝기 값 유효하지 않음: {nBackgroundBright}", "GetValidRowCountAsync_02");
+
+        int nThreshold = nBackgroundBright - 1;
+        int nValidRows = 0;
+
+        for (int y = 2; y < rects.GetLength(1); y++)
+        {
+            int nCurBright = OfrService.GetPixelBrightnessFrmWndHandle(m_RcptPage.DG오더_hWnd, rects[0, y].Right + 1, rects[0, y].Top + 6);
+
+            if (nCurBright < nThreshold)
+                nValidRows++;
+            else
+                break;
+        }
+
+        return new StdResult_Int(nValidRows);
+    }
+
+    public async Task<StdResult_String> GetRowSeqnoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectSeqno, bool bInvertRgb, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectSeqno, bInvertRgb, c_dOfrWeight);
+    }
+
+    public async Task<StdResult_String> GetRowStatusAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectStatus, bool bInvertRgb, bool bText, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+        return await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpPage, rectStatus, bInvertRgb, bText, dWeight: c_dOfrWeight);
+    }
+
+    public async Task<StdResult_String> GetRowDriverPhNoAsync(Draw.Bitmap bmpPage, Draw.Rectangle rectDriverPhNo, bool bInvertRgb, CancelTokenControl ctrl)
+    {
+        await ctrl.WaitIfPausedOrCancelledAsync();
+        return await OfrWork_Common.OfrStr_SeqCharAsync(bmpPage, rectDriverPhNo, bInvertRgb, c_dOfrWeight);
+    }
+
+    public static int GetExpectedFirstRowNum(int nTotRows, int pageIdx)
+    {
+        int nRowsPerPage = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+
+        int nTotPage = 1;
+        if (nTotRows > nRowsPerPage)
+        {
+            nTotPage = nTotRows / nRowsPerPage;
+            if (nTotRows % nRowsPerPage > 0)
+                nTotPage += 1;
+        }
+
+        int nCurPage = pageIdx + 1;
+        int nNum = (nRowsPerPage * pageIdx) + 1;
+
+        if (nTotPage == 1) return 1;
+        if (nCurPage < nTotPage) return nNum;
+
+        if (nTotRows % nRowsPerPage == 0) return nNum;
+        else return nNum - nRowsPerPage + (nTotRows % nRowsPerPage);
+    }
+
+    public async Task<int> ReadFirstRowNumAsync(bool bEdit = false)
+    {
+        IntPtr hWndDG = m_RcptPage.DG오더_hWnd;
+        Draw.Rectangle[,] rects = m_RcptPage.DG오더_RelChildRects;
+        int firstNum = -1;
+
+        for (int y = 2; y < 2 + InsungsInfo_File.접수등록Page_DG오더_dataRowCount; y++)
+        {
+            Draw.Rectangle rcNo = rects[0, y];
+            Draw.Bitmap bmpNo = OfrService.CaptureScreenRect_InWndHandle(hWndDG, rcNo);
+            if (bmpNo == null) continue;
+
+            StdResult_String resultNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpNo, c_dOfrWeight, bEdit);
+            bmpNo.Dispose();
+
+            if (!string.IsNullOrEmpty(resultNo.strResult))
+            {
+                int curNum = StdConvert.StringToInt(resultNo.strResult, -1);
+                if (curNum >= 1)
+                {
+                    firstNum = curNum - (y - 2);
+                    break;
+                }
+            }
+        }
+
+        return firstNum;
+    }
+
+    public async Task<StdResult_Status> VerifyAndAdjustPageAsync(int nExpectedFirstNum, CancelTokenControl ctrl, int nRetryCount = CommonVars.c_nRepeatShort)
+    {
+        for (int retry = 0; retry < nRetryCount; retry++)
+        {
+            await ctrl.WaitIfPausedOrCancelledAsync();
+
+            int nActualFirstNum = await ReadFirstRowNumAsync(bEdit: true);
+
+            if (nExpectedFirstNum == nActualFirstNum)
+            {
+                return new StdResult_Status(StdResult.Success);
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] VerifyAndAdjustPageAsync - 페이지 검증 실패 (시도 {retry + 1}/{nRetryCount}, 예상={nExpectedFirstNum}, 실제={nActualFirstNum})");
+
+            if (retry < nRetryCount - 1)
+            {
+                int diff = nActualFirstNum - nExpectedFirstNum;
+                int absDiff = Math.Abs(diff);
+                int dataRowCount = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+
+                int pageClicks = absDiff / dataRowCount;
+                int rowClicks = absDiff % dataRowCount;
+
+                bool bReverse = false;
+                if (rowClicks > dataRowCount / 2)
+                {
+                    pageClicks += 1;
+                    rowClicks = dataRowCount - rowClicks;
+                    bReverse = true;
+                }
+
+                Draw.Point ptPage, ptRow;
+                if ((diff > 0 && !bReverse) || (diff < 0 && bReverse))
+                {
+                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel페이지Up;
+                    ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Up;
+                }
+                else
+                {
+                    ptPage = m_FileInfo.접수등록Page_DG오더_ptClkRel페이지Down;
+                    ptRow = m_FileInfo.접수등록Page_DG오더_ptClkRel버튼Down;
+                }
+
+                for (int i = 0; i < pageClicks; i++)
+                {
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd수직스크롤, ptPage);
+                }
+
+                for (int i = 0; i < rowClicks; i++)
+                {
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd수직스크롤, ptRow);
+                }
+
+                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+            }
+        }
+
+        return new StdResult_Status(StdResult.Fail, $"페이지 조정 {nRetryCount}회 모두 실패", "VerifyAndAdjustPageAsync");
+    }
+    */
+
+    //private async Task<(InsungsInfo_Mem.RcptWnd_Edit wnd, StdResult_Error error)> OpenEditPopupAsync(int rowIndex, CancelTokenControl ctrl)
+    //{
+    //    try
+    //    {
+    //        await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //        int selIndex = rowIndex + 2;
+    //        Draw.Point ptRel = StdUtil.GetCenterDrawPoint(m_RcptPage.DG오더_RelChildRects[c_nColForClick, selIndex]);
+
+    //        Debug.WriteLine($"[{m_Context.AppName}] OpenEditPopupAsync - 팝업 열기 시도 (rowIndex={rowIndex})");
+
+    //        bool bFind = false;
+    //        IntPtr hWndPopup = IntPtr.Zero;
+
+    //        for (int j = 0; j < CommonVars.c_nRepeatVeryShort; j++)
+    //        {
+    //            await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //            // 더블클릭 (BlockInput 사용 권장)
+    //            await Simulation_Mouse.SafeMouseSend_DblClickLeft_ptRelAsync(m_RcptPage.DG오더_hWnd, ptRel);
+
+    //            for (int k = 0; k < 100; k++)
+    //            {
+    //                await Task.Delay(50, ctrl.Token);
+
+    //                hWndPopup = Std32Window.FindStartWithMainWindow_NotTransparent(m_MemInfo.Splash.TopWnd_uProcessId, m_FileInfo.접수등록Wnd_TopWnd_sWndStartsWith);
+    //                if (hWndPopup == IntPtr.Zero) continue;
+
+    //                IntPtr hWndClose = Std32Window.GetWndHandle_FromRelDrawPt(hWndPopup, m_FileInfo.접수등록Wnd_신규버튼그룹_ptChkRel닫기);
+    //                if (hWndClose == IntPtr.Zero) continue;
+
+    //                string closeBtnText = Std32Window.GetWindowCaption(hWndClose);
+    //                if (closeBtnText.StartsWith(m_FileInfo.접수등록Wnd_버튼그룹_sWndName닫기))
+    //                {
+    //                    bFind = true;
+    //                    Debug.WriteLine($"[{m_Context.AppName}] 팝업창 찾음: hWnd={hWndPopup:X}");
+    //                    break;
+    //                }
+    //            }
+
+    //            if (bFind) break;
+    //            await Task.Delay(100, ctrl.Token);
+    //        }
+
+    //        if (!bFind)
+    //        {
+    //            return (null, new StdResult_Error($"[{m_Context.AppName}] 주문번호 클릭 후 팝업창이 열리지 않음", "OpenEditPopupAsync_01"));
+    //        }
+
+    //        await Task.Delay(100, ctrl.Token);
+    //        var wndRcpt = new InsungsInfo_Mem.RcptWnd_Edit(hWndPopup, m_FileInfo);
+
+    //        return (wndRcpt, null);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return (null, new StdResult_Error(StdUtil.GetExceptionMessage(ex), "OpenEditPopupAsync_999"));
+    //    }
+    //}
+
+    private async Task<bool> ClickFirstRowAsync(CancelTokenControl ctrl, int retryCount = 3)
+    {
+        try
+        {
+            Draw.Rectangle rectClickCell = m_RcptPage.DG오더_RelChildRects[c_nColForClick, 2];
+            Draw.Rectangle rectVerifyCell = m_RcptPage.DG오더_RelChildRects[1, 2];
+
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+                Debug.WriteLine($"[{m_Context.AppName}] ClickFirstRowAsync - 첫 로우 클릭 시도 {i}/{retryCount}");
+
+                Draw.Point ptRelDG = StdUtil.GetDrawPoint(rectClickCell, 3, 3);
+                await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_RcptPage.DG오더_hWnd, ptRelDG);
+                await Task.Delay(200, ctrl.Token);
+
+                Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rectVerifyCell);
+                if (bmpCell == null)
+                {
+                    if (i < retryCount) await Task.Delay(200, ctrl.Token);
+                    continue;
+                }
+
+                try
+                {
+                    Draw.Rectangle rectInBitmap = new Draw.Rectangle(0, 0, rectVerifyCell.Width, rectVerifyCell.Height);
+                    bool isSelected = OfrService.IsInvertedSelection(bmpCell, rectInBitmap);
+
+                    if (isSelected)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}] ClickFirstRowAsync - 첫 로우 선택 성공");
+                        return true;
+                    }
+                }
+                finally
+                {
+                    bmpCell?.Dispose();
+                }
+
+                if (i < retryCount) await Task.Delay(200, ctrl.Token);
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}] ClickFirstRowAsync - 첫 로우 선택 검증 실패");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}] ClickFirstRowAsync 예외: {ex.Message}");
+            return false;
+        }
+    }
+
+    //private async Task<StdResult_String> GetSeqnoAsync(int rowIndex, bool bInvertRgb, CancelTokenControl ctrl, int retryCount = 3)
+    //{
+    //    try
+    //    {
+    //        int seqnoColIndex = c_nCol주문번호;
+    //        int yIndex = rowIndex + 2;
+
+    //        for (int i = 1; i <= retryCount; i++)
+    //        {
+    //            await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //            Draw.Rectangle rectSeqnoCell = m_RcptPage.DG오더_RelChildRects[seqnoColIndex, yIndex];
+    //            Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rectSeqnoCell);
+
+    //            if (bmpCell == null)
+    //            {
+    //                if (i < retryCount) await Task.Delay(200, ctrl.Token);
+    //                continue;
+    //            }
+
+    //            Draw.Bitmap bmpForOcr = null;
+    //            try
+    //            {
+    //                if (bInvertRgb)
+    //                {
+    //                    bmpForOcr = OfrService.InvertBitmap(bmpCell);
+    //                    bmpCell.Dispose();
+    //                }
+    //                else
+    //                {
+    //                    bmpForOcr = bmpCell;
+    //                }
+
+    //                StdResult_String resultSeqno = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, c_dOfrWeight);
+
+    //                if (!string.IsNullOrEmpty(resultSeqno.strResult))
+    //                {
+    //                    Debug.WriteLine($"[{m_Context.AppName}] GetSeqnoAsync - Seqno 획득 성공: '{resultSeqno.strResult}'");
+    //                    return new StdResult_String(resultSeqno.strResult);
+    //                }
+    //            }
+    //            finally
+    //            {
+    //                if (bInvertRgb) bmpForOcr?.Dispose();
+    //                else bmpForOcr?.Dispose(); // or keep the reference and dispose after
+    //            }
+
+    //            if (i < retryCount) await Task.Delay(200, ctrl.Token);
+    //        }
+
+    //        return new StdResult_String($"Seqno OFR 실패 ({retryCount}회 시도)", "GetSeqnoAsync_99");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return new StdResult_String(StdUtil.GetExceptionMessage(ex), "GetSeqnoAsync_999");
+    //    }
+    //}
+
+    //private async Task<StdResult_String> GetDriverPhNoAsync(int rowIndex, bool bInvertRgb, CancelTokenControl ctrl, int retryCount = 3)
+    //{
+    //    try
+    //    {
+    //        int driverPhNoColIndex = c_nCol기사전번;
+    //        int yIndex = rowIndex + 2;
+
+    //        for (int i = 1; i <= retryCount; i++)
+    //        {
+    //            await ctrl.WaitIfPausedOrCancelledAsync();
+
+    //            Draw.Rectangle rectCell = m_RcptPage.DG오더_RelChildRects[driverPhNoColIndex, yIndex];
+    //            Draw.Bitmap bmpCell = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rectCell);
+
+    //            if (bmpCell == null)
+    //            {
+    //                if (i < retryCount) await Task.Delay(200, ctrl.Token);
+    //                continue;
+    //            }
+
+    //            Draw.Bitmap bmpForOcr = null;
+    //            try
+    //            {
+    //                if (bInvertRgb)
+    //                {
+    //                    bmpForOcr = OfrService.InvertBitmap(bmpCell);
+    //                    bmpCell.Dispose();
+    //                }
+    //                else
+    //                {
+    //                    bmpForOcr = bmpCell;
+    //                }
+
+    //                StdResult_String resultDriverPhNo = await OfrWork_Common.OfrStr_SeqCharAsync(bmpForOcr, c_dOfrWeight);
+
+    //                if (!string.IsNullOrEmpty(resultDriverPhNo.strResult))
+    //                {
+    //                    Debug.WriteLine($"[{m_Context.AppName}] GetDriverPhNoAsync - 기사전번 획득 성공: '{resultDriverPhNo.strResult}'");
+    //                    return new StdResult_String(resultDriverPhNo.strResult);
+    //                }
+    //            }
+    //            finally
+    //            {
+    //                if (bInvertRgb) bmpForOcr?.Dispose();
+    //                else bmpForOcr?.Dispose();
+    //            }
+
+    //            if (i < retryCount) await Task.Delay(200, ctrl.Token);
+    //        }
+
+    //        return new StdResult_String($"기사전번 OFR 실패 ({retryCount}회 시도)", "GetDriverPhNoAsync_99");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return new StdResult_String(StdUtil.GetExceptionMessage(ex), "GetDriverPhNoAsync_999");
+    //    }
+    //}
+
 //     /// <summary>
 //     /// 셀 영역을 화면에 그려서 시각화 (테스트용)
 //     /// </summary>
