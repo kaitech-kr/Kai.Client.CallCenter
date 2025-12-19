@@ -337,11 +337,7 @@ public class InsungsAct_App
     #endregion
 
     #region Close
-    /// <summary>
-    /// 인성 앱 종료
-    /// - MainWindow 닫기 시도
-    /// - SplashWindow 강제 종료
-    /// </summary>
+    // 인성 앱 종료 - MainWindow 닫기 시도 - SplashWindow 강제 종료
     public StdResult_Error Close(int nDelayMiliSec = 100)
     {
         try

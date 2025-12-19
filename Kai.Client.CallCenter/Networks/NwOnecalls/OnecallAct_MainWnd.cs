@@ -72,12 +72,12 @@ public class OnecallAct_MainWnd
     //            return new StdResult_Error($"[{AppName}] 자식윈도 못찾음", "OnecallAct_MainWnd/InitAsync_03");
 
     //        // 5. MainMenu 찾기
-    //        mMain.WndInfo_MainMenu = mMain.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == fInfo.Main_MainMenu_rcRel);
+    //        mMain.WndInfo_MainMenu = mMain.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == fInfo.Main_MainMenu_rcRelF);
     //        if (mMain.WndInfo_MainMenu == null)
     //            return new StdResult_Error($"[{AppName}] 메인메뉴 못찾음", "OnecallAct_MainWnd/InitAsync_04");
 
     //        // 6. MdiClient 찾기
-    //        mMain.WndInfo_MdiClient = mMain.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == fInfo.Main_MdiClient_rcRel);
+    //        mMain.WndInfo_MdiClient = mMain.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == fInfo.Main_MdiClient_rcRelF);
     //        if (mMain.WndInfo_MdiClient == null)
     //            return new StdResult_Error($"[{AppName}] MdiClient 못찾음", "OnecallAct_MainWnd/InitAsync_05");
 

@@ -7,6 +7,7 @@ using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Media.Imaging;
+using System.Runtime.InteropServices;
 using Ctrl = System.Windows.Controls;
 
 using Kai.Common.FrmDll_WpfCtrl;
@@ -52,6 +53,7 @@ public partial class MainWnd : Window
     //public Config_TelMainWnd m_ConfigTelMainWnd = null;  // 인터넷전화관리 - 대표전화
     public VirtualMonitorWnd m_WndForVirtualMonitor = null; // 가상모니터 를 보기위한 윈도
     public MasterModeManager m_MasterManager = null; // Master 모드 관리자
+    private AnimatedShutdownWnd _shutdownWnd = null; // 애니메이션 종료 화면
     #endregion
 
     #region Basic
@@ -187,23 +189,26 @@ public partial class MainWnd : Window
         await s_SrLClient.ConnectAsync();
         Debug.WriteLine($"[MainWnd] SignalR ConnectAsync 호출 완료");
 
-        ////WindowProc - 아직 사용하지 않음.
-        //CtrlCppFuncs.GetHWndSource(this).AddHook(WindowProc);
-        //if (!CtrlCppFuncs.SetMouseHook(s_hWndMain, MYMSG_MOUSEHOOK)) // Start Mouse Hooking
-        //{
-        //    ErrMsgBox("마우스후킹 실패.", "MainWnd/MainWnd_07");
-        //    goto ERR_EXIT;
-        //}
-        //if (!CtrlCppFuncs.SetKeyboardHook(s_hWndMain, MYMSG_KEYBOARDHOOK)) // Start Keyboard Hooking
-        //{
-        //    ErrMsgBox("키보드후킹 실패.", "MainWnd/MainWnd_08");
-        //    goto ERR_EXIT;
-        //}
+        // 시스템 전역 후킹 등록 (인성 앱이 포커스된 상태에서도 ESC 감지 가능)
+        if (!CtrlCppFuncs.SetKeyboardHook(s_hWndMain, CommonVars.MYMSG_KEYBOARDHOOK))
+        {
+            Debug.WriteLine("[MainWnd] 키보드 전역 후킹 실패");
+        }
+        else
+        {
+            Debug.WriteLine("[MainWnd] 키보드 전역 후킹 성공 (ESC 중단 대기)");
+        }
+
+        // WindowProc 메시지 루프를 통해 전역 키 감지
+        HwndSource source = HwndSource.FromHwnd(s_hWndMain);
+        source.AddHook(new HwndSourceHook(WindowProc));
+
         #endregion
 
         // 가상모니터 를 보기위한 윈도 - 너무 일찍 만들어지지 않게한다(Timer Error)
         m_WndForVirtualMonitor = new VirtualMonitorWnd();
 
+        // Master 모드일 때만 초기화
         // Master 모드일 때만 초기화
         if (IsMasterMode)
         {
@@ -279,116 +284,95 @@ public partial class MainWnd : Window
          Environment.Exit(0);
     }  
     
-    private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        Debug.WriteLine("=== Window_Closing 시작 ===");
+        Debug.WriteLine("=== Window_Closing 시작 (안전 모드 복구) ===");
 
-        //이미 종료 절차 진행 중이면 그대로 통과(두 번째 호출부터는 취소하지 않음)
-        if (_isShuttingDown)
-        {
-            Debug.WriteLine("_isShuttingDown = true, 그대로 통과");
-            return;
-        }
-
-        //1) 창 닫기 일단 막고
+        if (_isShuttingDown) return;
+        
+        // 1) 창 닫기 일단 막고 플래그 설정
         e.Cancel = true;
         _isShuttingDown = true;
 
         try
         {
-            //사용자에게 종료 중 안내(가능하면 비모달/ 오버레이 권장)
-            //CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료중 입니다...");
+            // 사용자에게 안내 (메시지 창 표시)
+            // 안내 창이 화면에 그려지도록 유도
+            CommonFuncs.ShowExtMsgWndSimple(s_MainWnd, "종료 중입니다. 잠시만 기다려 주세요...");
+            
+            // 화면 갱신을 위해 아주 잠깐 대기 (메시지 창이 뜰 포커스를 확보)
+            System.Windows.Forms.Application.DoEvents(); 
+            Thread.Sleep(100);
 
-            //SignalR 연결 종료(동기적으로)
-            try
+            // 2) SignalR 연결 종료 (동기 대기)
+            if (s_SrGClient != null)
             {
-                if (s_SrGClient != null)
-                {
-                    s_SrGClient.StopReconnection(); // 재접속 중지 플래그 설정
-                    s_SrGClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
-                    Debug.WriteLine("SrGlobalClient 종료 완료");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"SrGlobalClient 종료 실패: {ex.Message}");
+                s_SrGClient.StopReconnection();
+                s_SrGClient.DisconnectAsync().Wait(1000);
             }
 
-            try
+            if (s_SrLClient != null)
             {
-                if (s_SrLClient != null)
-                {
-                    s_SrLClient.StopReconnection(); // 재접속 중지 플래그 설정
-                    s_SrLClient.DisconnectAsync().Wait(2000); // 2초 타임아웃
-                    Debug.WriteLine("SrLocalClient 종료 완료");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"SrLocalClient 종료 실패: {ex.Message}");
+                s_SrLClient.StopReconnection();
+                s_SrLClient.DisconnectAsync().Wait(1000);
+                
+                // COM 브로커 종료 시도
+                try { s_SrLClient.SrResult_ComBroker_Close(); } catch { }
             }
 
-            // Close s_X86Proc
-            try
+            // 3) 외부 프로세스(X86 Broker) 확실히 종료
+            if (StdProcess.Find(s_sX86ProcName))
             {
-                if (s_X86Proc != null)
-                {
-                    var r = s_SrLClient.SrResult_ComBroker_Close();
-                    if (!r.bResult)
-                    {
-                        string err = StdProcess.Kill(s_sX86ProcName);
-                        if (!string.IsNullOrEmpty(err)) ErrMsgBox(err);
-                        else s_X86Proc = null;
-                    }
-                    else
-                    {
-                        s_X86Proc = null;
-                    }
-                }
+                StdProcess.Kill(s_sX86ProcName);
             }
-            catch (Exception ex) { Debug.WriteLine($"X86Proc close error: {ex.Message}"); }
 
-            // 4) 서브 윈도우/클라이언트 정리
-            try { m_WndForVirtualMonitor?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
-            try { s_TransparentWnd?.Close(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            // 4) Python 리소스 종료
+            try { Py309Common.Destroy(); } catch { }
 
-            try { s_SrGClient?.Dispose(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            // 5) Master Mode 정리
+            if (m_MasterManager != null)
+            {
+                m_MasterManager.ShutdownAsync().Wait(2000);
+                m_MasterManager.Dispose();
+                m_MasterManager = null;
+            }
 
-            // 5) 훅/리소스 해제 (필요 시 주석 해제)
-            // try { CtrlCppFuncs.ReleaseMouseHook(); } catch {}
-            // try { CtrlCppFuncs.ReleaseKeyboardHook(); } catch {}
-            // try { CtrlCppFuncs.GetHWndSource(this).RemoveHook(WindowProc); } catch {}
-
-            // 6) Python 등 기타 리소스 종료
-            try { Py309Common.Destroy(); } catch (Exception ex) { Debug.WriteLine(ex); }
+            // 6) 기타 윈도우 및 가상 모니터 정리
+            if (s_Screens?.m_VirtualMonitor != null) FrmVirtualMonitor.DeleteVirtualMonitor();
+            m_WndForVirtualMonitor?.Close();
+            s_TransparentWnd?.Close();
+            
+            if (_shutdownWnd != null)
+            {
+                _shutdownWnd.Close();
+                _shutdownWnd = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"종료 정리 중 에러 발생: {ex.Message}");
         }
         finally
         {
-            //Master 모드 리소스 정리 -가상 모니터 제거(있을 때만)
-            try
+            // 7) 이벤트 핸들러 제거 후 프로세스 강제 종료
+            this.Closing -= Window_Closing;
+            
+            Debug.WriteLine("=== 모든 정리 완료, 프로세스 종료 ===");
+            
+            // 모든 윈도우 닫기
+            if (Application.Current != null)
             {
-                if (m_MasterManager != null)
+                foreach (Window win in Application.Current.Windows)
                 {
-                    Debug.WriteLine("[MainWnd] MasterModeManager 정리 시작");
-                    await m_MasterManager.ShutdownAsync();
-                    m_MasterManager.Dispose();
-                    m_MasterManager = null;
-                    Debug.WriteLine("[MainWnd] MasterModeManager 정리 완료");
+                    try { if (win != this) win.Close(); } catch { }
                 }
             }
-            catch (Exception ex) { Debug.WriteLine($"MasterModeManager 정리 실패: {ex.Message}"); }
 
-            // 가상 모니터 제거 (있을 때만)
-            if (s_Screens?.m_VirtualMonitor != null) FrmVirtualMonitor.DeleteVirtualMonitor();
+            // 확실한 종료를 위해 Environment.Exit 호출
+            Debug.WriteLine("[MainWnd] 키보드 전역 후킹 해제");
+            CtrlCppFuncs.ReleaseKeyboardHook();
 
-            //이벤트 핸들러를 제거하고 Dispatcher로 다시 Close 호출
-            this.Closing -= Window_Closing;
-
-            _ = Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Debug.WriteLine("Dispatcher.BeginInvoke에서 Close() 호출");
-                this.Close();
-            }), System.Windows.Threading.DispatcherPriority.Normal);
+            Environment.Exit(0);
         }
     }
     #endregion
@@ -456,31 +440,46 @@ public partial class MainWnd : Window
     #endregion
 
     #region WindowProc
-    //private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-    //{
-    //    switch ((uint)msg) 
-    //    {
-    //        //case 0x0020: // WM_SETCURSOR
-    //        //    handled = true;
-    //        //    Debug.WriteLine($"커서변경: {msg}, {wParam:X}, {lParam:X}"); // Test
-    //        //    break;
+    private IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        switch ((uint)msg) 
+        {
+            case CommonVars.MYMSG_KEYBOARDHOOK:
+                {
+                    try
+                    {
+                        int msgType = (int)wParam; // 0x100 (KEYDOWN), 0x101 (KEYUP) 등
+                        
+                        // [복구] lParam은 포인터 주소이므로 Marshal로 읽어야 함
+                        int vkCode = Marshal.ReadInt32(lParam); 
 
-    //        case LocalCommon.MYMSG_MOUSEHOOK: // Replace with your custom message ID MOUSE_MOVE 0x200
-    //            handled = true;
-    //            StdCommon32.MOUSEHOOKSTRUCT? m = Marshal.PtrToStructure<StdCommon32.MOUSEHOOKSTRUCT>(lParam);
+                        // [로그 정돈] 테스트 완료 후 일반 키 로그는 주석 처리
+                        // Debug.WriteLine($"[WindowProc] Hook - Msg: 0x{msgType:X}, Key: 0x{vkCode:X}");
 
-    //            //Debug.WriteLine($"msg: {msg}, {wParam:X}, {lParam:X}"); // Test
-    //            break;
+                        // WM_KEYDOWN(0x100) 또는 WM_SYSKEYDOWN(0x104) 일 때만 체크
+                        if (msgType == 0x100 || msgType == 0x104)
+                        {
+                            // 만약 vkCode가 너무 큰 값이면 포인터일 수 있으나, 
+                            // 일단 일반적인 VirtualKey 값(ESC=0x1B)과 비교합니다.
+                            if (vkCode == 0x1B) 
+                            {
+                                Debug.WriteLine("[MainWnd] ★★★ 전역 ESC 감지 - 자동화 중단 및 입력 제한 해제! ★★★");
+                                s_GlobalCancelToken.Cancel();
+                                Simulation_Mouse.SafeBlockInputForceStop(); 
+                                handled = true;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[WindowProc] 후킹 메시지 처리 중 예외: {ex.Message}");
+                    }
+                }
+                break;
+        }
 
-    //        case LocalCommon.MYMSG_KEYBOARDHOOK: // Replace with your custom message ID
-    //            handled = true;
-    //            //Debug.WriteLine($"msg: {msg}, {wParam:X}, {lParam:X}"); // Test
-    //            break;
-    //    }
-
-    //    // Return the result from the default window procedure
-    //    return IntPtr.Zero;
-    //}
+        return IntPtr.Zero;
+    }
     #endregion
 
     #region SignalR Events

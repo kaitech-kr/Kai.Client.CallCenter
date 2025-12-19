@@ -130,9 +130,9 @@ public class InsungsAct_MainWnd
                 }
 
                 // 7. 핵심 영역(MainMenu, BarMenu, MdiClient) 핸들 확정
-                m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_MainMenu_rcRel);
-                m_Main.WndInfo_BarMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_BarMenu_rcRel);
-                m_Main.WndInfo_MdiClient = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_MdiClient_rcRel);
+                m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_MainMenu_rcRelF);
+                m_Main.WndInfo_BarMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_BarMenu_rcRelF);
+                m_Main.WndInfo_MdiClient = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_MdiClient_rcRelF);
 
                 if (m_Main.WndInfo_MainMenu == null || m_Main.WndInfo_BarMenu == null || m_Main.WndInfo_MdiClient == null)
                 {
@@ -168,8 +168,8 @@ public class InsungsAct_MainWnd
         }
 
         // BarMenu의 상대 좌표로 마우스 클릭
-        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Main.WndInfo_BarMenu.hWnd, m_FileInfo.Main_BarMenu_pt접수등록);
-        //Debug.WriteLine($"[InsungsAct_MainWnd] 접수등록 바메뉴 클릭: {m_FileInfo.Main_BarMenu_pt접수등록}");
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Main.WndInfo_BarMenu.hWnd, m_FileInfo.Main_BarMenu_pt접수등록L);
+        //Debug.WriteLine($"[InsungsAct_MainWnd] 접수등록 바메뉴 클릭: {m_FileInfo.Main_BarMenu_pt접수등록L}");
     }
 
     //메인 윈도우가 초기화되었는지 확인

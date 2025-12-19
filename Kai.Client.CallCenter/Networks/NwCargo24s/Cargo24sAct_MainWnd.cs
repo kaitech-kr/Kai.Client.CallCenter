@@ -136,7 +136,7 @@ public class Cargo24sAct_MainWnd
     //            {
     //                // MainMenu 찾기 - Rect으로 찾기
     //                m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
-    //                    x => x.rcRel == m_FileInfo.Main_MainMenu_rcRel);
+    //                    x => x.rcRel == m_FileInfo.Main_MainMenu_rcRelF);
 
     //                // BarMenu 찾기 - ClassName으로 찾기
     //                m_Main.WndInfo_BarMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(

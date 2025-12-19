@@ -21,54 +21,39 @@ namespace Kai.Client.CallCenter.OfrWorks;
 public class OfrWork_Common
 {
     #region Config
-    ///// <summary>
-    ///// 텍스트 캐시 최대 크기 (하루 업무량 기준)
-    ///// </summary>
-    //private const int MAX_TEXT_CACHE_SIZE = 20000;
+    // 텍스트 캐시 최대 크기 (하루 업무량 기준)
+    private const int MAX_TEXT_CACHE_SIZE = 20000;
 
-    ///// <summary>
-    ///// 텍스트 캐시 (전체 텍스트용) - Key: "{width}x{height}_{hexArray}", Value: Text
-    ///// </summary>
-    //private static ConcurrentDictionary<string, string> s_TextCache = new ConcurrentDictionary<string, string>();
+    // 텍스트 캐시 (전체 텍스트용) - Key: "{width}x{height}_{hexArray}", Value: Text
+    private static ConcurrentDictionary<string, string> s_TextCache = new ConcurrentDictionary<string, string>();
     #endregion
 
     #region Cache Management
-    ///// <summary>
-    ///// 텍스트 캐시 초기화
-    ///// </summary>
-    //public static void ClearTextCache() => s_TextCache.Clear();
+    // 텍스트 캐시 초기화
+    public static void ClearTextCache() => s_TextCache.Clear();
 
-    ///// <summary>
-    ///// 텍스트 캐시 조회
-    ///// </summary>
-    ///// <param name="analyText">비트맵 분석 결과</param>
-    ///// <param name="cachedText">캐시된 텍스트 (HIT 시)</param>
-    ///// <returns>캐시 HIT 여부</returns>
-    //private static bool TryGetTextCache(OfrModel_BitmapAnalysis analyText, out string cachedText)
-    //{
-    //    string cacheKey = $"{analyText.nWidth}x{analyText.nHeight}_{analyText.sHexArray}";
-    //    return s_TextCache.TryGetValue(cacheKey, out cachedText);
-    //}
+    // 텍스트 캐시 조회 (HIT 시 캐시된 텍스트 반환)
+    private static bool TryGetTextCache(OfrModel_BitmapAnalysis analyText, out string cachedText)
+    {
+        string cacheKey = $"{analyText.nWidth}x{analyText.nHeight}_{analyText.sHexArray}";
+        return s_TextCache.TryGetValue(cacheKey, out cachedText);
+    }
 
-    ///// <summary>
-    ///// 텍스트 캐시 저장 (크기 제한 체크 포함)
-    ///// </summary>
-    ///// <param name="analyText">비트맵 분석 결과</param>
-    ///// <param name="text">저장할 텍스트</param>
-    //private static void SaveTextCache(OfrModel_BitmapAnalysis analyText, string text)
-    //{
-    //    string cacheKey = $"{analyText.nWidth}x{analyText.nHeight}_{analyText.sHexArray}";
+    // 텍스트 캐시 저장 (크기 제한 체크 포함)
+    private static void SaveTextCache(OfrModel_BitmapAnalysis analyText, string text)
+    {
+        string cacheKey = $"{analyText.nWidth}x{analyText.nHeight}_{analyText.sHexArray}";
 
-    //    // 캐시 크기 제한 체크
-    //    if (s_TextCache.Count >= MAX_TEXT_CACHE_SIZE)
-    //    {
-    //        Debug.WriteLine($"[Cache LIMIT] TextCache 한계 도달! 현재: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
-    //        MsgBox($"텍스트 캐시가 한계({MAX_TEXT_CACHE_SIZE}개)에 도달했습니다.\n\n개발자에게 문의하세요.");
-    //        return; // 저장하지 않음
-    //    }
+        // 캐시 크기 제한 체크
+        if (s_TextCache.Count >= MAX_TEXT_CACHE_SIZE)
+        {
+            Debug.WriteLine($"[Cache LIMIT] TextCache 한계 도달! 현재: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
+            MsgBox($"텍스트 캐시가 한계({MAX_TEXT_CACHE_SIZE}개)에 도달했습니다.\n\n개발자에게 문의하세요.");
+            return; // 저장하지 않음
+        }
 
-    //    s_TextCache[cacheKey] = text;
-    //}
+        s_TextCache[cacheKey] = text;
+    }
 
     //private static async Task SaveToTbChar(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string charValue)
     //{
@@ -125,9 +110,7 @@ public class OfrWork_Common
     //    Debug.WriteLine($"[TbChar 저장 완료] '{charValue}' ({savedCount}개 명도, 고유={savedHexStrings.Count}개)");
     //}
 
-    ///// <summary>
-    ///// TbTextFail에 인식 실패 텍스트 저장 (중복 체크 포함)
-    ///// </summary>
+    // TbTextFail에 인식 실패 텍스트 저장 (중복 체크 포함)
     //private static async Task SaveToTbTextFail(OfrModel_BitmapAnalysis modelText, string failReason)
     //{
     //    try
@@ -164,24 +147,41 @@ public class OfrWork_Common
     //    }
     //}
 
-    //private static async Task<string> ShowImageToCharDialog(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string failReason)
-    //{
-    //    string result = null;
+    private static async Task<string> ShowImageToCharDialog(Draw.Bitmap bmpSource, Draw.Rectangle rcChar, string failReason)
+    {
+        string result = null;
 
-    //    await Application.Current.Dispatcher.InvokeAsync(() =>
-    //    {
-    //        ImageToCharWnd wnd = new ImageToCharWnd(bmpSource, rcChar, failReason);
-    //        wnd.ShowDialog();
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            ImageToCharWnd wnd = new ImageToCharWnd(bmpSource, rcChar, failReason);
+            wnd.ShowDialog();
 
-    //        if (wnd.IsConfirmed && !string.IsNullOrEmpty(wnd.UserInput))
-    //        {
-    //            result = wnd.UserInput;
-    //        }
-    //    });
+            if (wnd.IsConfirmed && !string.IsNullOrEmpty(wnd.UserInput))
+            {
+                result = wnd.UserInput;
+            }
+        });
 
-    //    return result;
-    //}
+        return result;
+    }
     #endregion
+
+    // TbChar에서 문자 검색 (검색 성공 시 Searched 카운트 증가)
+    //private static async Task<string> SelectCharByBasicAsync(int width, int height, string hexString)
+    //{
+    //    PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
+    //    if (result?.tbChar != null)
+    //    {
+    //        // Searched가 10보다 작으면 1 증가하여 업데이트
+    //        if (result.tbChar.Searched < 10)
+    //        {
+    //            result.tbChar.Searched++;
+    //            _ = PgService_TbChar.UpdateRowAsync(result.tbChar);
+    //        }
+    //        return result.tbChar.Character;
+    //    }
+    //    return null;
+    //}
 
     // TbText
     //public static async Task<OfrResult_TbText> OfrImage_LooseDrawRelRectAsync(Draw.Bitmap bmpLoose)
@@ -223,254 +223,227 @@ public class OfrWork_Common
     //        $"tb 널 입니다: {analy.nWidth}, {analy.nHeight}, {analy.sHexArray} ->", "OfrWork_Common/OfrImage_DrawRelRectAsync_03");
     //}
 
-    ///// <summary>
-    ///// Exact Bitmap에서 TbText를 찾는 함수 (개선된 버전 - 중첩 루프 제거)
-    ///// 주의: 이 함수는 반복하지 않습니다. 호출하는 측에서 반복 캡처+분석을 수행하세요.
-    ///// </summary>
-    //public static async Task<OfrResult_TbText> OfrImage_ExactDrawRelRectAsync(Draw.Bitmap bmpExact, bool bEdit = true, bool bWrite = true, bool bMsgBox = true, string sWantedStr = null)
-    //{
-    //    // Get Basic Hex Info (한 번만 분석)
-    //    byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpExact);
-    //    OfrModel_BitmapAnalysis analyText = OfrService.GetBitmapAnalysisFast(bmpExact, byteAvgBrightness);
+    // Exact Bitmap에서 TbText를 찾는 함수 (반복하지 않음, 호출 측에서 반복 수행 필요)
+    public static async Task<OfrResult_TbText> OfrImage_ExactDrawRelRectAsync(Draw.Bitmap bmpExact, string sWantedStr = null)
+    {
+        // Get Basic Hex Info (한 번만 분석)
+        byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpExact);
+        OfrModel_BitmapAnalysis analyText = OfrService.GetBitmapAnalysisFast(bmpExact, byteAvgBrightness);
 
-    //    // Check TrueRate (조기 검증)
-    //    if (analyText == null || analyText.trueRate == 0 || analyText.trueRate == 1)
-    //        return ErrMsgResult_TbText(null, analyText, $"trueRate가 {analyText?.trueRate}입니다 (0 또는 1은 유효하지 않음)",
-    //            "OfrWork_Common/OfrImage_ExactDrawRelRectAsync_01", bWrite, bMsgBox);
+        // Check TrueRate (조기 검증)
+        if (analyText == null || analyText.trueRate == 0)
+        {
+            string sErr = $"trueRate가 {analyText?.trueRate}입니다 (0 은 유효하지 않음)";
+            string sPos = "OfrWork_Common/OfrImage_ExactDrawRelRectAsync_01";
+            return new OfrResult_TbText(analyText, sErr, sPos, s_sLogDir);
+        }
 
-    //    // DB에서 찾기 (한 번만)
-    //    PgResult_TbText resultText = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+        // DB에서 찾기 (한 번만)
+        PgResult_TbText resultText = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
 
-    //    if (resultText != null && resultText.tbText != null && resultText.tbText.Text != null)
-    //    {
-    //        // Searched가 10보다 작으면 1 증가하여 업데이트
-    //        if (resultText.tbText.Searched < 10)
-    //        {
-    //            resultText.tbText.Searched++;
-    //            _ = PgService_TbText.UpdateRowAsync(resultText.tbText);
-    //        }
-    //        return new OfrResult_TbText(resultText.tbText, analyText);
-    //    }
+        if (resultText != null && resultText.tbText != null && resultText.tbText.Text != null)
+        {
+            // Searched가 10보다 작으면 1 증가하여 업데이트
+            if (resultText.tbText.Searched < 10)
+            {
+                resultText.tbText.Searched++;
+                _ = PgService_TbText.UpdateRowAsync(resultText.tbText);
+            }
+            return new OfrResult_TbText(resultText.tbText, analyText);
+        }
 
-    //    // Debug 모드에서 수동 입력 다이얼로그 표시
-    //    if (bEdit && s_bDebugMode)
-    //    {
-    //        ImageToMatchedTextWnd wnd = new ImageToMatchedTextWnd("OfrWork_Common/OfrImage_ExactDrawRelRectAsync_02", analyText, sWantedStr);
-    //        wnd.ShowDialog();
+        // Debug 모드에서 수동 입력 다이얼로그 표시
+        if (s_bDebugMode)
+        {
+            await Wnd.Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                ImageToMatchedTextWnd wnd = new ImageToMatchedTextWnd("OfrWork_Common/OfrImage_ExactDrawRelRectAsync_02", analyText, sWantedStr);
+                wnd.ShowDialog();
 
-    //        if (wnd.resultBool != null && wnd.resultBool.bResult)
-    //        {
-    //            // DB 저장 성공 - DB에서 다시 찾기
-    //            resultText = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
-    //            if (resultText != null && resultText.tbText != null && resultText.tbText.Text != null)
-    //            {
-    //                Debug.WriteLine($"[OfrWork_Common] 수동 입력 후 DB 재조회 성공: {resultText.tbText.Text}");
-    //                return new OfrResult_TbText(resultText.tbText, analyText);
-    //            }
-    //        }
-    //    }
+                if (wnd.resultBool != null && wnd.resultBool.bResult)
+                {
+                    // DB 저장 성공 - DB에서 다시 찾기
+                    resultText = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                }
+            });
 
-    //    return ErrMsgResult_TbText(null, analyText,
-    //        $"DB에서 텍스트를 찾을 수 없습니다: {analyText.nWidth}x{analyText.nHeight}, Hex={analyText.sHexArray}",
-    //        "OfrWork_Common/OfrImage_ExactDrawRelRectAsync_03", bWrite, bMsgBox);
-    //}
+            if (resultText != null && resultText.tbText != null && resultText.tbText.Text != null)
+            {
+                Debug.WriteLine($"[OfrWork_Common] 수동 입력 후 DB 재조회 성공: {resultText.tbText.Text}");
+                return new OfrResult_TbText(resultText.tbText, analyText);
+            }
+        }
 
-    ///// <summary>
-    ///// TbChar에서 문자 검색 (검색 성공 시 Searched 카운트 증가)
-    ///// </summary>
-    //private static async Task<string> SelectCharByBasicAsync(int width, int height, string hexString)
-    //{
-    //    PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
-    //    if (result?.tbChar != null)
-    //    {
-    //        // Searched가 10보다 작으면 1 증가하여 업데이트
-    //        if (result.tbChar.Searched < 10)
-    //        {
-    //            result.tbChar.Searched++;
-    //            _ = PgService_TbChar.UpdateRowAsync(result.tbChar);
-    //        }
-    //        return result.tbChar.Character;
-    //    }
-    //    return null;
-    //}
+        string sFinalErr = $"DB에서 텍스트를 찾을 수 없습니다: {analyText.nWidth}x{analyText.nHeight}, Hex={analyText.sHexArray}";
+        string sFinalPos = "OfrWork_Common/OfrImage_ExactDrawRelRectAsync_03";
 
-    ///// <summary>
-    ///// GetStartEndList 기반 복합문자 인식 (우측→좌측 방향)
-    ///// 부분 성공 허용, 처리된 인덱스 마킹
-    ///// </summary>
-    ///// <param name="bmpSource">전경 비트맵</param>
-    ///// <param name="avgBright">평균 밝기</param>
-    ///// <param name="rcFore">전경 영역</param>
-    ///// <returns>(부분 결과 배열, 처리 완료 마킹 배열, 음소 리스트)</returns>
-    //private static async Task<(string[] results, bool[] processed, List<OfrModel_StartEnd> listStartEnd)>
-    //    RecognizeByStartEndList_RightToLeftAsync(Draw.Bitmap bmpSource, byte avgBright, Draw.Rectangle rcFore)
-    //{
-    //    // 1. 음소 분리
-    //    List<OfrModel_StartEnd> listStartEnd = OfrService.GetStartEndList_FromColorBitmap(bmpSource, avgBright, rcFore);
-    //    if (listStartEnd == null || listStartEnd.Count == 0)
-    //        return (null, null, null);
+        return new OfrResult_TbText(analyText, sFinalErr, sFinalPos, s_sLogDir);
+    }
 
-    //    int count = listStartEnd.Count;
-    //    string[] results = new string[count]; // 각 인덱스별 인식 결과
-    //    bool[] processed = new bool[count];   // 처리 완료 마킹
+    // GetStartEndList 기반 복합문자 인식 (우측→좌측 방향, 부분 성공 허용)
+    private static async Task<(string[] results, bool[] processed, List<OfrModel_StartEnd> listStartEnd)> RecognizeByStartEndList_RightToLeftAsync(
+        Draw.Bitmap bmpSource, byte avgBright, Draw.Rectangle rcFore)
+    {
+        // 1. 음소 분리
+        List<OfrModel_StartEnd> listStartEnd = OfrService.GetStartEndList_FromColorBitmap(bmpSource, avgBright, rcFore);
+        if (listStartEnd == null || listStartEnd.Count == 0)
+            return (null, null, null);
 
-    //    // 2. 우측→좌측 방향으로 처리
-    //    for (int x = count - 1; x >= 0; x--)
-    //    {
-    //        if (processed[x]) continue; // 이미 처리됨
+        int count = listStartEnd.Count;
+        string[] results = new string[count]; // 각 인덱스별 인식 결과
+        bool[] processed = new bool[count];   // 처리 완료 마킹
 
-    //        string foundChar = null;
-    //        int consumed = 0;
+        // 2. 우측→좌측 방향으로 처리
+        for (int x = count - 1; x >= 0; x--)
+        {
+            if (processed[x]) continue; // 이미 처리됨
 
-    //        // 3→2→1개 순서로 시도 (우측에서 좌측으로 확장)
-    //        for (int len = Math.Min(3, x + 1); len >= 1; len--)
-    //        {
-    //            int startIdx = x - len + 1;
+            string foundChar = null;
+            int consumed = 0;
 
-    //            // 이미 처리된 인덱스가 포함되어 있으면 건너뜀
-    //            bool hasProcessed = false;
-    //            for (int i = startIdx; i <= x; i++)
-    //            {
-    //                if (processed[i]) { hasProcessed = true; break; }
-    //            }
-    //            if (hasProcessed) continue;
+            // 3→2→1개 순서로 시도 (우측에서 좌측으로 확장)
+            for (int len = Math.Min(3, x + 1); len >= 1; len--)
+            {
+                int startIdx = x - len + 1;
 
-    //            StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(
-    //                bmpSource, avgBright, rcFore, listStartEnd, startIdx, x);
+                // 이미 처리된 인덱스가 포함되어 있으면 건너뜀
+                bool hasProcessed = false;
+                for (int i = startIdx; i <= x; i++)
+                {
+                    if (processed[i]) { hasProcessed = true; break; }
+                }
+                if (hasProcessed) continue;
 
-    //            if (rcIndex == null) continue;
+                StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(
+                    bmpSource, avgBright, rcFore, listStartEnd, startIdx, x);
 
-    //            Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
+                if (rcIndex == null) continue;
 
-    //            // 최소 너비 체크 (너무 작은 영역은 무시) - '1' 같은 좁은 문자 허용
-    //            if (rcChar.Width < 2) continue;
+                Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
 
-    //            OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright);
+                // 최소 너비 체크 (너무 작은 영역은 무시) - '1' 같은 좁은 문자 허용
+                if (rcChar.Width < 2) continue;
 
-    //            if (model == null) continue;
+                OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright);
 
-    //            // DB 검색
-    //            Debug.WriteLine($"[StartEndList 검색] len={len}, idx={startIdx}~{x}, rcChar={rcChar}, W={model.nWidth},H={model.nHeight},Hex={model.sHexArray}");
-    //            PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(
-    //                model.nWidth, model.nHeight, model.sHexArray);
-    //            Debug.WriteLine($"[StartEndList 검색결과] {(result?.tbChar != null ? $"찾음: '{result.tbChar.Character}'" : "없음")}");
+                if (model == null) continue;
 
-    //            if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character))
-    //            {
-    //                foundChar = result.tbChar.Character;
-    //                consumed = len;
-    //                break;
-    //            }
-    //        }
+                // DB 검색
+                Debug.WriteLine($"[StartEndList 검색] len={len}, idx={startIdx}~{x}, rcChar={rcChar}, W={model.nWidth},H={model.nHeight},Hex={model.sHexArray}");
+                PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(
+                    model.nWidth, model.nHeight, model.sHexArray);
+                Debug.WriteLine($"[StartEndList 검색결과] {(result?.tbChar != null ? $"찾음: '{result.tbChar.Character}'" : "없음")}");
 
-    //        if (foundChar != null)
-    //        {
-    //            // 처리된 인덱스 마킹
-    //            int startIdx = x - consumed + 1;
-    //            Debug.WriteLine($"[StartEndList 마킹] foundChar='{foundChar}', x={x}, consumed={consumed}, startIdx={startIdx}");
-    //            for (int i = startIdx; i <= x; i++)
-    //            {
-    //                processed[i] = true;
-    //                Debug.WriteLine($"  processed[{i}]=true");
-    //            }
-    //            results[startIdx] = foundChar; // 시작 인덱스에 결과 저장
-    //            x -= (consumed - 1); // 소비한 만큼 인덱스 감소
-    //        }
-    //        else
-    //        {
-    //            Debug.WriteLine($"[StartEndList] x={x}, foundChar=null → 마킹 안 함");
-    //            // ========================================
-    //            // 백트래킹: 실패 시 인접 처리된 인덱스 취소 후 재시도
-    //            // ========================================
-    //            // 우측에 처리된 인덱스가 있으면 취소하고 합쳐서 재시도
-    //            if (x + 1 < count && processed[x + 1])
-    //            {
-    //                // 우측에서 연속으로 처리된 범위 찾기
-    //                int rightEnd = x + 1;
-    //                while (rightEnd + 1 < count && processed[rightEnd + 1])
-    //                    rightEnd++;
+                if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character))
+                {
+                    foundChar = result.tbChar.Character;
+                    consumed = len;
+                    break;
+                }
+            }
 
-    //                // 원래 값 백업
-    //                var backupProcessed = new bool[rightEnd - x];
-    //                var backupResults = new string[rightEnd - x];
-    //                for (int i = x + 1; i <= rightEnd; i++)
-    //                {
-    //                    backupProcessed[i - x - 1] = processed[i];
-    //                    backupResults[i - x - 1] = results[i];
-    //                }
+            if (foundChar != null)
+            {
+                // 처리된 인덱스 마킹
+                int startIdx = x - consumed + 1;
+                Debug.WriteLine($"[StartEndList 마킹] foundChar='{foundChar}', x={x}, consumed={consumed}, startIdx={startIdx}");
+                for (int i = startIdx; i <= x; i++)
+                {
+                    processed[i] = true;
+                    Debug.WriteLine($"  processed[{i}]=true");
+                }
+                results[startIdx] = foundChar; // 시작 인덱스에 결과 저장
+                x -= (consumed - 1); // 소비한 만큼 인덱스 감소
+            }
+            else
+            {
+                Debug.WriteLine($"[StartEndList] x={x}, foundChar=null → 마킹 안 함");
+                // ========================================
+                // 백트래킹: 실패 시 인접 처리된 인덱스 취소 후 재시도
+                // ========================================
+                // 우측에 처리된 인덱스가 있으면 취소하고 합쳐서 재시도
+                if (x + 1 < count && processed[x + 1])
+                {
+                    // 우측에서 연속으로 처리된 범위 찾기
+                    int rightEnd = x + 1;
+                    while (rightEnd + 1 < count && processed[rightEnd + 1])
+                        rightEnd++;
 
-    //                // 처리 취소
-    //                for (int i = x + 1; i <= rightEnd; i++)
-    //                {
-    //                    processed[i] = false;
-    //                    results[i] = null;
-    //                }
+                    // 원래 값 백업
+                    var backupProcessed = new bool[rightEnd - x];
+                    var backupResults = new string[rightEnd - x];
+                    for (int i = x + 1; i <= rightEnd; i++)
+                    {
+                        backupProcessed[i - x - 1] = processed[i];
+                        backupResults[i - x - 1] = results[i];
+                    }
 
-    //                // x부터 rightEnd까지 합쳐서 재시도 (최대 3개)
-    //                bool backtrackSuccess = false;
-    //                int totalLen = rightEnd - x + 1;
-    //                for (int len = Math.Min(3, totalLen); len >= 2; len--)
-    //                {
-    //                    int endIdx = x + len - 1;
-    //                    if (endIdx > rightEnd) continue;
+                    // 처리 취소
+                    for (int i = x + 1; i <= rightEnd; i++)
+                    {
+                        processed[i] = false;
+                        results[i] = null;
+                    }
 
-    //                    StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(
-    //                        bmpSource, avgBright, rcFore, listStartEnd, x, endIdx);
+                    // x부터 rightEnd까지 합쳐서 재시도 (최대 3개)
+                    bool backtrackSuccess = false;
+                    int totalLen = rightEnd - x + 1;
+                    for (int len = Math.Min(3, totalLen); len >= 2; len--)
+                    {
+                        int endIdx = x + len - 1;
+                        if (endIdx > rightEnd) continue;
 
-    //                    if (rcIndex == null) continue;
+                        StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(
+                            bmpSource, avgBright, rcFore, listStartEnd, x, endIdx);
 
-    //                    Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
+                        if (rcIndex == null) continue;
 
-    //                    // 최소 너비 체크 (너무 작은 영역은 무시)
-    //                    if (rcChar.Width < 3) continue;
+                        Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
 
-    //                    OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright);
+                        // 최소 너비 체크 (너무 작은 영역은 무시)
+                        if (rcChar.Width < 3) continue;
 
-    //                    if (model == null) continue;
+                        OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpSource, rcChar, avgBright);
 
-    //                    // DB 검색
-    //                    PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(
-    //                        model.nWidth, model.nHeight, model.sHexArray);
+                        if (model == null) continue;
 
-    //                    if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character))
-    //                    {
-    //                        // 백트래킹 성공
-    //                        Debug.WriteLine($"[백트래킹 성공] x={x}, len={len}, char='{result.tbChar.Character}'");
-    //                        for (int i = x; i <= endIdx; i++)
-    //                            processed[i] = true;
-    //                        results[x] = result.tbChar.Character;
-    //                        backtrackSuccess = true;
+                        // DB 검색
+                        PgResult_TbChar result = await PgService_TbChar.SelectRowByBasicAsync(
+                            model.nWidth, model.nHeight, model.sHexArray);
 
-    //                        // 나머지 우측 영역은 처리 안 된 상태로 유지 (다음 반복에서 처리)
-    //                        break;
-    //                    }
-    //                }
+                        if (result?.tbChar != null && !string.IsNullOrEmpty(result.tbChar.Character))
+                        {
+                            // 백트래킹 성공
+                            Debug.WriteLine($"[백트래킹 성공] x={x}, len={len}, char='{result.tbChar.Character}'");
+                            for (int i = x; i <= endIdx; i++)
+                                processed[i] = true;
+                            results[x] = result.tbChar.Character;
+                            backtrackSuccess = true;
 
-    //                // 백트래킹 실패 시 원래 값 복원
-    //                if (!backtrackSuccess)
-    //                {
-    //                    Debug.WriteLine($"[백트래킹 실패] x={x}, 원래 값 복원");
-    //                    for (int i = x + 1; i <= rightEnd; i++)
-    //                    {
-    //                        processed[i] = backupProcessed[i - x - 1];
-    //                        results[i] = backupResults[i - x - 1];
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        // 실패해도 계속 진행 (부분 성공 허용)
-    //    }
+                            // 나머지 우측 영역은 처리 안 된 상태로 유지 (다음 반복에서 처리)
+                            break;
+                        }
+                    }
 
-    //    return (results, processed, listStartEnd);
-    //}
+                    // 백트래킹 실패 시 원래 값 복원
+                    if (!backtrackSuccess)
+                    {
+                        Debug.WriteLine($"[백트래킹 실패] x={x}, 원래 값 복원");
+                        for (int i = x + 1; i <= rightEnd; i++)
+                        {
+                            processed[i] = backupProcessed[i - x - 1];
+                            results[i] = backupResults[i - x - 1];
+                        }
+                    }
+                }
+            }
+            // 실패해도 계속 진행 (부분 성공 허용)
+        }
 
-    ///// <summary>
-    ///// 순차 문자 인식 (단음소) - 주문번호, 시간 등 숫자 문자열 전용
-    ///// - 텍스트 캐시 적용: 전체 비트맵 패턴으로 캐싱
-    ///// </summary>
-    ///// <param name="bmpSource">원본 비트맵</param>
-    ///// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
-    ///// <returns>인식 결과</returns>
+        return (results, processed, listStartEnd);
+    }
+
+    // 순차 문자 인식 (단음소) - 숫자 문자열 전용, 텍스트 캐시 적용
     //public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpSource, double weightBrightness, bool bEdit = true)
     //{
     //    Stopwatch sw = Stopwatch.StartNew();
@@ -716,14 +689,7 @@ public class OfrWork_Common
     //    }
     //}
 
-    ///// <summary>
-    ///// 오버로드: 페이지 비트맵에서 Rectangle 영역 crop + RGB 반전 후 OFR
-    ///// </summary>
-    ///// <param name="bmpPage">전체 페이지 비트맵</param>
-    ///// <param name="rect">crop할 영역</param>
-    ///// <param name="bInvertRgb">RGB 반전 여부</param>
-    ///// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
-    ///// <returns>인식 결과</returns>
+    // 페이지 비트맵 Rectangle 영역 crop + RGB 반전 후 OFR 인식 (오버로드)
     //public static async Task<StdResult_String> OfrStr_SeqCharAsync(Draw.Bitmap bmpPage, Draw.Rectangle rect, bool bInvertRgb, double dWeight, bool bEdit = true)
     //{
     //    Draw.Bitmap bmpCell = null;
@@ -752,511 +718,493 @@ public class OfrWork_Common
     //    }
     //}
 
-    //public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(Draw.Bitmap bmpSource, bool bTextSave, double dWeight, bool bEdit = true, int maxCharCount = 0)
-    //{
-    //    Stopwatch sw = Stopwatch.StartNew();
+    public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(Draw.Bitmap bmpSource, bool bTextSave, double dWeight, int maxCharCount = 0)
+    {
+        Stopwatch sw = Stopwatch.StartNew();
 
-    //    try 
-    //    {
-    //        byte avgBright = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpSource);
-    //        Draw.Rectangle rcFull = new Draw.Rectangle(0, 0, bmpSource.Width, bmpSource.Height);
-    //        Draw.Rectangle rcFore = OfrService.GetForeGroundDrawRectangle_FromColorBitmapRectFast(bmpSource, rcFull, avgBright, 0);
+        try
+        {
+            byte avgBright = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpSource);
+            Draw.Rectangle rcFull = new Draw.Rectangle(0, 0, bmpSource.Width, bmpSource.Height);
+            Draw.Rectangle rcFore = OfrService.GetForeGroundDrawRectangle_FromColorBitmapRectFast(bmpSource, rcFull, avgBright, 0);
 
-    //        if (rcFore == StdUtil.s_rcDrawEmpty) return new StdResult_String("전경 영역 없음", "OfrStr_ComplexCharSetAsync_01");
+            if (rcFore == StdUtil.s_rcDrawEmpty) return new StdResult_String("전경 영역 없음", "OfrStr_ComplexCharSetAsync_01");
 
-    //        // ========================================
-    //        // 1. 텍스트 캐시 조회 (전체 전경 영역 기준)
-    //        // ========================================
-    //        Draw.Bitmap bmpFore = OfrService.GetBitmapInBitmapFast(bmpSource, rcFore);
-    //        if (bmpFore == null)
-    //            return new StdResult_String("전경 비트맵 추출 실패", "OfrStr_ComplexCharSetAsync_01_2");
+            // ========================================
+            // 1. 텍스트 캐시 조회 (전체 전경 영역 기준)
+            // ========================================
+            Draw.Bitmap bmpFore = OfrService.GetBitmapInBitmapFast(bmpSource, rcFore);
+            if (bmpFore == null)
+                return new StdResult_String("전경 비트맵 추출 실패", "OfrStr_ComplexCharSetAsync_01_2");
 
-    //        byte avgBright2 = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpFore, dWeight);
-    //        OfrModel_BitmapAnalysis analyText = OfrService.GetBitmapAnalysisFast(bmpFore, avgBright2);
+            byte avgBright2 = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpFore, dWeight);
+            OfrModel_BitmapAnalysis analyText = OfrService.GetBitmapAnalysisFast(bmpFore, avgBright2);
 
-    //        if (analyText == null || string.IsNullOrEmpty(analyText.sHexArray) || analyText.trueRate == 0 || analyText.trueRate == 1)
-    //        {
-    //            bmpFore.Dispose();
-    //            return new StdResult_String("전경 비트맵 분석 실패", "OfrStr_ComplexCharSetAsync_01_3");
-    //        }
+            if (analyText == null || string.IsNullOrEmpty(analyText.sHexArray) || analyText.trueRate == 0 || analyText.trueRate == 1)
+            {
+                bmpFore.Dispose();
+                return new StdResult_String("전경 비트맵 분석 실패", "OfrStr_ComplexCharSetAsync_01_3");
+            }
 
-    //        // 캐시 HIT
-    //        if (TryGetTextCache(analyText, out string cachedText))
-    //        {
-    //            bmpFore.Dispose();
-    //            sw.Stop();
-    //            //Debug.WriteLine($"[Cache HIT] OfrStr_ComplexCharSetAsync: '{cachedText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
-    //            return new StdResult_String(cachedText);
-    //        }
+            // 캐시 HIT
+            if (TryGetTextCache(analyText, out string cachedText))
+            {
+                bmpFore.Dispose();
+                sw.Stop();
+                //Debug.WriteLine($"[Cache HIT] OfrStr_ComplexCharSetAsync: '{cachedText}' ({sw.ElapsedMilliseconds}ms) - Cache: {s_TextCache.Count}/{MAX_TEXT_CACHE_SIZE}");
+                return new StdResult_String(cachedText);
+            }
 
-    //        // ========================================
-    //        // 2. 캐시 MISS → TbText 검색
-    //        // ========================================
-    //        PgResult_TbText findResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+            // ========================================
+            // 2. 캐시 MISS → TbText 검색
+            // ========================================
+            PgResult_TbText findResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
 
-    //        if (findResult != null && findResult.tbText != null && !string.IsNullOrEmpty(findResult.tbText.Text))
-    //        {
-    //            // Searched가 10보다 작으면 1 증가하여 업데이트
-    //            if (findResult.tbText.Searched < 10)
-    //            {
-    //                findResult.tbText.Searched++;
-    //                _ = PgService_TbText.UpdateRowAsync(findResult.tbText);
-    //            }
+            if (findResult != null && findResult.tbText != null && !string.IsNullOrEmpty(findResult.tbText.Text))
+            {
+                // Searched가 10보다 작으면 1 증가하여 업데이트
+                if (findResult.tbText.Searched < 10)
+                {
+                    findResult.tbText.Searched++;
+                    _ = PgService_TbText.UpdateRowAsync(findResult.tbText);
+                }
 
-    //            // TbText HIT → 캐시에 저장
-    //            string resultText = findResult.tbText.Text;
-    //            SaveTextCache(analyText, resultText);
-    //            bmpFore.Dispose();
+                // TbText HIT → 캐시에 저장
+                string resultText = findResult.tbText.Text;
+                SaveTextCache(analyText, resultText);
+                bmpFore.Dispose();
 
-    //            sw.Stop();
-    //            //Debug.WriteLine($"[TbText HIT] OfrStr_ComplexCharSetAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms)");
-    //            return new StdResult_String(resultText);
-    //        }
+                sw.Stop();
+                //Debug.WriteLine($"[TbText HIT] OfrStr_ComplexCharSetAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms)");
+                return new StdResult_String(resultText);
+            }
 
-    //        // ========================================
-    //        // 3. TbText MISS → StartEndList 기반 인식
-    //        // ========================================
-    //        Draw.Rectangle rcForeFull = new Draw.Rectangle(0, 0, bmpFore.Width, bmpFore.Height);
-    //        var (results, processed, listStartEnd) = await RecognizeByStartEndList_RightToLeftAsync(bmpFore, avgBright2, rcForeFull);
+            // ========================================
+            // 3. TbText MISS → StartEndList 기반 인식
+            // ========================================
+            Draw.Rectangle rcForeFull = new Draw.Rectangle(0, 0, bmpFore.Width, bmpFore.Height);
+            var (results, processed, listStartEnd) = await RecognizeByStartEndList_RightToLeftAsync(bmpFore, avgBright2, rcForeFull);
 
-    //        // 결과 확인 - 모든 인덱스가 처리되었는지
-    //        bool allProcessed = true;
-    //        int processedCount = 0;
-    //        if (processed != null)
-    //        {
-    //            Debug.WriteLine($"[StartEndList] 음소 개수={processed.Length}");
-    //            for (int i = 0; i < processed.Length; i++)
-    //            {
-    //                if (processed[i]) processedCount++;
-    //                else allProcessed = false;
-    //                Debug.WriteLine($"  [{i}] processed={processed[i]}, result={results?[i] ?? "null"}");
-    //            }
-    //        }
-    //        else
-    //        {
-    //            allProcessed = false;
-    //            Debug.WriteLine($"[StartEndList] processed가 null");
-    //        }
+            // 결과 확인 - 모든 인덱스가 처리되었는지
+            bool allProcessed = true;
+            int processedCount = 0;
+            if (processed != null)
+            {
+                Debug.WriteLine($"[StartEndList] 음소 개수={processed.Length}");
+                for (int i = 0; i < processed.Length; i++)
+                {
+                    if (processed[i]) processedCount++;
+                    else allProcessed = false;
+                    Debug.WriteLine($"  [{i}] processed={processed[i]}, result={results?[i] ?? "null"}");
+                }
+            }
+            else
+            {
+                allProcessed = false;
+                Debug.WriteLine($"[StartEndList] processed가 null");
+            }
 
-    //        // 모든 인덱스가 처리되었으면 완료
-    //        if (allProcessed && results != null)
-    //        {
-    //            StringBuilder sbResult = new StringBuilder();
-    //            for (int i = 0; i < results.Length; i++)
-    //            {
-    //                if (!string.IsNullOrEmpty(results[i]))
-    //                    sbResult.Append(results[i]);
-    //            }
+            // 모든 인덱스가 처리되었으면 완료
+            if (allProcessed && results != null)
+            {
+                StringBuilder sbResult = new StringBuilder();
+                for (int i = 0; i < results.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(results[i]))
+                        sbResult.Append(results[i]);
+                }
 
-    //            string startEndResult = sbResult.ToString();
-    //            if (!string.IsNullOrEmpty(startEndResult))
-    //            {
-    //                SaveTextCache(analyText, startEndResult);
+                string startEndResult = sbResult.ToString();
+                if (!string.IsNullOrEmpty(startEndResult))
+                {
+                    SaveTextCache(analyText, startEndResult);
 
-    //                // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
-    //                if (bTextSave)
-    //                {
-    //                    var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
-    //                    if (existingResult?.tbText == null)
-    //                    {
-    //                        TbText newTbText = new TbText
-    //                        {
-    //                            Text = startEndResult,
-    //                            Width = analyText.nWidth,
-    //                            Height = analyText.nHeight,
-    //                            HexStrValue = analyText.sHexArray,
-    //                            Threshold = 0,
-    //                            Searched = 1,
-    //                            Reserved = ""
-    //                        };
-    //                        await PgService_TbText.InsertRowAsync(newTbText);
-    //                    }
-    //                }
-    //                bmpFore.Dispose();
-    //                sw.Stop();
-    //                Debug.WriteLine($"[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: '{startEndResult}' ({sw.ElapsedMilliseconds}ms)");
-    //                return new StdResult_String(startEndResult);
-    //            }
-    //        }
+                    // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                    if (bTextSave)
+                    {
+                        var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                        if (existingResult?.tbText == null)
+                        {
+                            TbText newTbText = new TbText
+                            {
+                                Text = startEndResult,
+                                Width = analyText.nWidth,
+                                Height = analyText.nHeight,
+                                HexStrValue = analyText.sHexArray,
+                                Threshold = 0,
+                                Searched = 1,
+                                Reserved = ""
+                            };
+                            await PgService_TbText.InsertRowAsync(newTbText);
+                        }
+                    }
+                    bmpFore.Dispose();
+                    sw.Stop();
+                    Debug.WriteLine($"[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: '{startEndResult}' ({sw.ElapsedMilliseconds}ms)");
+                    return new StdResult_String(startEndResult);
+                }
+            }
 
-    //        // ========================================
-    //        // 4. 미처리 영역에 RightSliding
-    //        // ========================================
-    //        OfrCharSearchDelegate searchFunc = async (int width, int height, string hexString) =>
-    //        {
-    //            PgResult_TbChar charResult = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
-    //            if (charResult?.tbChar != null && !string.IsNullOrEmpty(charResult.tbChar.Character) && charResult.tbChar.Character.Length == 1)
-    //                return new OfrCharSearchResult(charResult.tbChar.Character[0], width, height);
-    //            return new OfrCharSearchResult();
-    //        };
+            // ========================================
+            // 4. 미처리 영역에 RightSliding
+            // ========================================
+            OfrCharSearchDelegate searchFunc = async (int width, int height, string hexString) =>
+            {
+                PgResult_TbChar charResult = await PgService_TbChar.SelectRowByBasicAsync(width, height, hexString);
+                if (charResult?.tbChar != null && !string.IsNullOrEmpty(charResult.tbChar.Character) && charResult.tbChar.Character.Length == 1)
+                    return new OfrCharSearchResult(charResult.tbChar.Character[0], width, height);
+                return new OfrCharSearchResult();
+            };
 
-    //        if (processed != null && listStartEnd != null && results != null)
-    //        {
-    //            // 미처리 인덱스들을 연속 그룹으로 묶기
-    //            List<(int start, int end)> unprocessedGroups = new List<(int, int)>();
-    //            int groupStart = -1;
-    //            for (int i = 0; i < processed.Length; i++)
-    //            {
-    //                if (!processed[i])
-    //                {
-    //                    if (groupStart == -1) groupStart = i;
-    //                }
-    //                else
-    //                {
-    //                    if (groupStart != -1)
-    //                    {
-    //                        unprocessedGroups.Add((groupStart, i - 1));
-    //                        groupStart = -1;
-    //                    }
-    //                }
-    //            }
-    //            if (groupStart != -1)
-    //                unprocessedGroups.Add((groupStart, processed.Length - 1));
+            if (processed != null && listStartEnd != null && results != null)
+            {
+                // 미처리 인덱스들을 연속 그룹으로 묶기
+                List<(int start, int end)> unprocessedGroups = new List<(int, int)>();
+                int groupStart = -1;
+                for (int i = 0; i < processed.Length; i++)
+                {
+                    if (!processed[i])
+                    {
+                        if (groupStart == -1) groupStart = i;
+                    }
+                    else
+                    {
+                        if (groupStart != -1)
+                        {
+                            unprocessedGroups.Add((groupStart, i - 1));
+                            groupStart = -1;
+                        }
+                    }
+                }
+                if (groupStart != -1)
+                    unprocessedGroups.Add((groupStart, processed.Length - 1));
 
-    //            // 미처리 그룹 로그
-    //            Debug.WriteLine($"[미처리 그룹] 총 {unprocessedGroups.Count}개: {string.Join(", ", unprocessedGroups.Select(g => $"[{g.start}~{g.end}]"))}");
-    //            for (int i = 0; i < processed.Length; i++)
-    //                Debug.WriteLine($"  processed[{i}]={processed[i]}, result={results[i] ?? "null"}");
+                // 미처리 그룹 로그
+                Debug.WriteLine($"[미처리 그룹] 총 {unprocessedGroups.Count}개: {string.Join(", ", unprocessedGroups.Select(g => $"[{g.start}~{g.end}]"))}");
+                for (int i = 0; i < processed.Length; i++)
+                    Debug.WriteLine($"  processed[{i}]={processed[i]}, result={results[i] ?? "null"}");
 
-    //            // 각 미처리 그룹에 대해 RightSliding 수행
-    //            foreach (var group in unprocessedGroups)
-    //            {
-    //                StdConst_IndexRect rcGroup = OfrService.GetIndexRect_FromColorBitmapByIndex(
-    //                    bmpFore, avgBright2, rcForeFull, listStartEnd, group.start, group.end);
-    //                if (rcGroup == null) continue;
+                // 각 미처리 그룹에 대해 RightSliding 수행
+                foreach (var group in unprocessedGroups)
+                {
+                    StdConst_IndexRect rcGroup = OfrService.GetIndexRect_FromColorBitmapByIndex(
+                        bmpFore, avgBright2, rcForeFull, listStartEnd, group.start, group.end);
+                    if (rcGroup == null) continue;
 
-    //                Draw.Rectangle rcGroupRect = rcGroup.GetDrawRectangle();
-    //                Draw.Bitmap bmpGroup = OfrService.GetBitmapInBitmapFast(bmpFore, rcGroupRect);
-    //                if (bmpGroup == null) continue;
+                    Draw.Rectangle rcGroupRect = rcGroup.GetDrawRectangle();
+                    Draw.Bitmap bmpGroup = OfrService.GetBitmapInBitmapFast(bmpFore, rcGroupRect);
+                    if (bmpGroup == null) continue;
 
-    //                OfrResult_Recognition groupResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpGroup, searchFunc, null, avgBright2);
-    //                bmpGroup.Dispose();
+                    OfrResult_Recognition groupResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpGroup, searchFunc, null, avgBright2);
+                    bmpGroup.Dispose();
 
-    //                if (groupResult != null && !string.IsNullOrEmpty(groupResult.strResult) && !groupResult.strResult.Contains('☒'))
-    //                {
-    //                    results[group.start] = groupResult.strResult;
-    //                    for (int i = group.start; i <= group.end; i++)
-    //                        processed[i] = true;
-    //                }
-    //                groupResult?.SourceBitmap?.Dispose();
-    //            }
+                    if (groupResult != null && !string.IsNullOrEmpty(groupResult.strResult) && !groupResult.strResult.Contains('☒'))
+                    {
+                        results[group.start] = groupResult.strResult;
+                        for (int i = group.start; i <= group.end; i++)
+                            processed[i] = true;
+                    }
+                    groupResult?.SourceBitmap?.Dispose();
+                }
 
-    //            // ========================================
-    //            // 5. 여전히 미처리인 영역 처리 (모드별)
-    //            // ========================================
-    //            // 미처리 그룹 재계산
-    //            unprocessedGroups.Clear();
-    //            groupStart = -1;
-    //            for (int i = 0; i < processed.Length; i++)
-    //            {
-    //                if (!processed[i])
-    //                {
-    //                    if (groupStart == -1) groupStart = i;
-    //                }
-    //                else
-    //                {
-    //                    if (groupStart != -1)
-    //                    {
-    //                        unprocessedGroups.Add((groupStart, i - 1));
-    //                        groupStart = -1;
-    //                    }
-    //                }
-    //            }
-    //            if (groupStart != -1)
-    //                unprocessedGroups.Add((groupStart, processed.Length - 1));
+                // ========================================
+                // 5. 여전히 미처리인 영역 처리 (모드별)
+                // ========================================
+                // 미처리 그룹 재계산
+                unprocessedGroups.Clear();
+                groupStart = -1;
+                for (int i = 0; i < processed.Length; i++)
+                {
+                    if (!processed[i])
+                    {
+                        if (groupStart == -1) groupStart = i;
+                    }
+                    else
+                    {
+                        if (groupStart != -1)
+                        {
+                            unprocessedGroups.Add((groupStart, i - 1));
+                            groupStart = -1;
+                        }
+                    }
+                }
+                if (groupStart != -1)
+                    unprocessedGroups.Add((groupStart, processed.Length - 1));
 
-    //            // maxCharCount > 0이면 좌측부터 N개 문자가 이미 인식됐는지 확인
-    //            if (maxCharCount > 0 && unprocessedGroups.Count > 0)
-    //            {
-    //                // 현재까지 인식된 결과 합치기 (공백/☒ 제외)
-    //                StringBuilder sbTemp = new StringBuilder();
-    //                for (int i = 0; i < results.Length; i++)
-    //                {
-    //                    if (!string.IsNullOrEmpty(results[i]))
-    //                        sbTemp.Append(results[i]);
-    //                }
-    //                string tempResult = sbTemp.ToString().Replace(" ", "").Replace("☒", "");
+                // maxCharCount > 0이면 좌측부터 N개 문자가 이미 인식됐는지 확인
+                if (maxCharCount > 0 && unprocessedGroups.Count > 0)
+                {
+                    // 현재까지 인식된 결과 합치기 (공백/☒ 제외)
+                    StringBuilder sbTemp = new StringBuilder();
+                    for (int i = 0; i < results.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(results[i]))
+                            sbTemp.Append(results[i]);
+                    }
+                    string tempResult = sbTemp.ToString().Replace(" ", "").Replace("☒", "");
 
-    //                // 이미 N개 이상 인식됐으면 미처리 영역 무시 (대화상자 안 띄움)
-    //                if (tempResult.Length >= maxCharCount)
-    //                {
-    //                    unprocessedGroups.Clear();
-    //                }
-    //            }
+                    // 이미 N개 이상 인식됐으면 미처리 영역 무시 (대화상자 안 띄움)
+                    if (tempResult.Length >= maxCharCount)
+                    {
+                        unprocessedGroups.Clear();
+                    }
+                }
 
-    //            // 미처리 영역이 있으면 모드별 처리
-    //            if (unprocessedGroups.Count > 0)
-    //            {
-    //                if (!bEdit)
-    //                {
-    //                    // UI 인식 모드: 에러 반환
-    //                    bmpFore.Dispose();
-    //                    return new StdResult_String("인식 실패 (UI 모드)", "OfrStr_ComplexCharSetAsync_UI_Fail");
-    //                }
+                // 미처리 영역이 있으면 모드별 처리
+                if (unprocessedGroups.Count > 0)
+                {
+                    if (!s_bDebugMode)
+                    {
+                        // UI 인식 모드: 에러 반환
+                        bmpFore.Dispose();
+                        return new StdResult_String("인식 실패 (UI 모드)", "OfrStr_ComplexCharSetAsync_UI_Fail");
+                    }
 
-    //                // 좌→우 순서로 처리
-    //                foreach (var group in unprocessedGroups)
-    //                {
-    //                    if (bEdit && s_bDebugMode)
-    //                    {
-    //                        // 디버그 모드: 대화상자로 DB 작업 (1→2→3 순서)
-    //                        int currentIdx = group.start;
-    //                        while (currentIdx <= group.end)
-    //                        {
-    //                            bool found = false;
+                    // 좌→우 순서로 처리
+                    foreach (var group in unprocessedGroups)
+                    {
+                        if (s_bDebugMode)
+                        {
+                            // 디버그 모드: 대화상자로 DB 작업 (1→2→3 순서)
+                            int currentIdx = group.start;
+                            while (currentIdx <= group.end)
+                            {
+                                bool found = false;
 
-    //                            // 1→2→3 순서로 시도
-    //                            for (int len = 1; len <= Math.Min(3, group.end - currentIdx + 1); len++)
-    //                            {
-    //                                int endIdx = currentIdx + len - 1;
+                                // 1→2→3 순서로 시도
+                                for (int len = 1; len <= Math.Min(3, group.end - currentIdx + 1); len++)
+                                {
+                                    int endIdx = currentIdx + len - 1;
 
-    //                                StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(
-    //                                    bmpFore, avgBright2, rcForeFull, listStartEnd, currentIdx, endIdx);
-    //                                if (rcIndex == null) continue;
+                                    StdConst_IndexRect rcIndex = OfrService.GetIndexRect_FromColorBitmapByIndex(
+                                        bmpFore, avgBright2, rcForeFull, listStartEnd, currentIdx, endIdx);
+                                    if (rcIndex == null) continue;
 
-    //                                Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
-    //                                Debug.WriteLine($"[대화상자] len={len}, currentIdx={currentIdx}, endIdx={endIdx}, rcChar={rcChar}");
-    //                                string manualInput = await ShowImageToCharDialog(bmpFore, rcChar, $"인식 실패 ({len}개 음소)");
+                                    Draw.Rectangle rcChar = rcIndex.GetDrawRectangle();
+                                    Debug.WriteLine($"[대화상자] len={len}, currentIdx={currentIdx}, endIdx={endIdx}, rcChar={rcChar}");
+                                    string manualInput = await ShowImageToCharDialog(bmpFore, rcChar, $"인식 실패 ({len}개 음소)");
 
-    //                                if (!string.IsNullOrEmpty(manualInput))
-    //                                {
-    //                                    // DB 저장 (다음소 영역추출과 동일한 방식으로 HexString 생성)
-    //                                    Debug.WriteLine($"[TbChar 저장 시도] manualInput='{manualInput}', rcChar={rcChar}, avgBright2={avgBright2}");
+                                    if (!string.IsNullOrEmpty(manualInput))
+                                    {
+                                        // DB 저장 (다음소 영역추출과 동일한 방식으로 HexString 생성)
+                                        Debug.WriteLine($"[TbChar 저장 시도] manualInput='{manualInput}', rcChar={rcChar}, avgBright2={avgBright2}");
 
-    //                                    OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpFore, rcChar, avgBright2);
+                                        OfrModel_BitmapAnalysis model = OfrService.GetBitmapAnalysisFast(bmpFore, rcChar, avgBright2);
 
-    //                                    Debug.WriteLine($"[TbChar] model={(model != null ? $"W={model.nWidth},H={model.nHeight},Hex={model.sHexArray}" : "null")}");
-    //                                    if (model != null)
-    //                                    {
-    //                                        // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
-    //                                        var existingChar = await PgService_TbChar.SelectRowByBasicAsync(model.nWidth, model.nHeight, model.sHexArray);
-    //                                        Debug.WriteLine($"[TbChar] existingChar={(existingChar?.tbChar != null ? "이미 존재" : "없음")}");
-    //                                        if (existingChar?.tbChar == null)
-    //                                        {
-    //                                            TbChar newChar = new TbChar
-    //                                            {
-    //                                                Character = manualInput,
-    //                                                Width = model.nWidth,
-    //                                                Height = model.nHeight,
-    //                                                HexStrValue = model.sHexArray,
-    //                                                Threshold = avgBright2,
-    //                                                Searched = 1
-    //                                            };
-    //                                            var insertResult = await PgService_TbChar.InsertRowAsync(newChar);
-    //                                            Debug.WriteLine($"[TbChar 저장 완료] '{manualInput}' → result={insertResult?.lResult}");
-    //                                        }
-    //                                    }
-    //                                    else
-    //                                    {
-    //                                        Debug.WriteLine($"[TbChar 저장 실패] model이 null");
-    //                                    }
+                                        Debug.WriteLine($"[TbChar] model={(model != null ? $"W={model.nWidth},H={model.nHeight},Hex={model.sHexArray}" : "null")}");
+                                        if (model != null)
+                                        {
+                                            // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                                            var existingChar = await PgService_TbChar.SelectRowByBasicAsync(model.nWidth, model.nHeight, model.sHexArray);
+                                            Debug.WriteLine($"[TbChar] existingChar={(existingChar?.tbChar != null ? "이미 존재" : "없음")}");
+                                            if (existingChar?.tbChar == null)
+                                            {
+                                                TbChar newChar = new TbChar
+                                                {
+                                                    Character = manualInput,
+                                                    Width = model.nWidth,
+                                                    Height = model.nHeight,
+                                                    HexStrValue = model.sHexArray,
+                                                    Threshold = avgBright2,
+                                                    Searched = 1
+                                                };
+                                                var insertResult = await PgService_TbChar.InsertRowAsync(newChar);
+                                                Debug.WriteLine($"[TbChar 저장 완료] '{manualInput}' → result={insertResult?.lResult}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Debug.WriteLine($"[TbChar 저장 실패] model이 null");
+                                        }
 
-    //                                    results[currentIdx] = manualInput;
-    //                                    for (int i = currentIdx; i <= endIdx; i++)
-    //                                        processed[i] = true;
+                                        results[currentIdx] = manualInput;
+                                        for (int i = currentIdx; i <= endIdx; i++)
+                                            processed[i] = true;
 
-    //                                    currentIdx = endIdx + 1;
-    //                                    found = true;
-    //                                    break;
-    //                                }
-    //                            }
+                                        currentIdx = endIdx + 1;
+                                        found = true;
+                                        break;
+                                    }
+                                }
 
-    //                            if (!found)
-    //                            {
-    //                                // 1→2→3 모두 취소: 1개 음소로 ☒ 처리
-    //                                results[currentIdx] = "☒";
-    //                                processed[currentIdx] = true;
-    //                                currentIdx++;
-    //                            }
-    //                        }
-    //                    }
-    //                    else
-    //                    {
-    //                        // 편집 모드 + 비디버그 모드: ☒ 처리 + TbCharFail 저장
-    //                        for (int i = group.start; i <= group.end; i++)
-    //                        {
-    //                            if (!processed[i])
-    //                            {
-    //                                results[i] = "☒";
-    //                                processed[i] = true;
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //            }
+                                if (!found)
+                                {
+                                    // 1→2→3 모두 취소: 1개 음소로 ☒ 처리
+                                    results[currentIdx] = "☒";
+                                    processed[currentIdx] = true;
+                                    currentIdx++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // 편집 모드 + 비디버그 모드: ☒ 처리 + TbCharFail 저장
+                            for (int i = group.start; i <= group.end; i++)
+                            {
+                                if (!processed[i])
+                                {
+                                    results[i] = "☒";
+                                    processed[i] = true;
+                                }
+                            }
+                        }
+                    }
+                }
 
-    //            // 최종 결과 합치기
-    //            StringBuilder sbFinal = new StringBuilder();
-    //            for (int i = 0; i < results.Length; i++)
-    //            {
-    //                if (!string.IsNullOrEmpty(results[i]))
-    //                    sbFinal.Append(results[i]);
-    //            }
+                // 최종 결과 합치기
+                StringBuilder sbFinal = new StringBuilder();
+                for (int i = 0; i < results.Length; i++)
+                {
+                    if (!string.IsNullOrEmpty(results[i]))
+                        sbFinal.Append(results[i]);
+                }
 
-    //            string finalResult = sbFinal.ToString();
+                string finalResult = sbFinal.ToString();
 
-    //            // 성공 시 캐시/TbText 저장
-    //            if (!string.IsNullOrEmpty(finalResult) && !finalResult.Contains('☒'))
-    //            {
-    //                SaveTextCache(analyText, finalResult);
+                // 성공 시 캐시/TbText 저장
+                if (!string.IsNullOrEmpty(finalResult) && !finalResult.Contains('☒'))
+                {
+                    SaveTextCache(analyText, finalResult);
 
-    //                // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
-    //                var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
-    //                if (existingResult?.tbText == null)
-    //                {
-    //                    TbText newTbText = new TbText
-    //                    {
-    //                        Text = finalResult,
-    //                        Width = analyText.nWidth,
-    //                        Height = analyText.nHeight,
-    //                        HexStrValue = analyText.sHexArray,
-    //                        Threshold = 0,
-    //                        Searched = 1,
-    //                        Reserved = ""
-    //                    };
-    //                    await PgService_TbText.InsertRowAsync(newTbText);
-    //                }
-    //            }
+                    // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                    var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                    if (existingResult?.tbText == null)
+                    {
+                        TbText newTbText = new TbText
+                        {
+                            Text = finalResult,
+                            Width = analyText.nWidth,
+                            Height = analyText.nHeight,
+                            HexStrValue = analyText.sHexArray,
+                            Threshold = 0,
+                            Searched = 1,
+                            Reserved = ""
+                        };
+                        await PgService_TbText.InsertRowAsync(newTbText);
+                    }
+                }
 
-    //            bmpFore.Dispose();
-    //            sw.Stop();
-    //            Debug.WriteLine($"[최종 결과] OfrStr_ComplexCharSetAsync: '{finalResult}' ({sw.ElapsedMilliseconds}ms)");
-    //            return new StdResult_String(finalResult);
-    //        }
+                bmpFore.Dispose();
+                sw.Stop();
+                Debug.WriteLine($"[최종 결과] OfrStr_ComplexCharSetAsync: '{finalResult}' ({sw.ElapsedMilliseconds}ms)");
+                return new StdResult_String(finalResult);
+            }
 
-    //        // 폴백: 전체 RightSliding (listStartEnd가 없는 경우)
-    //        OfrCharFailDelegate failFunc = null;
-    //        if (bEdit && s_bDebugMode)
-    //        {
-    //            failFunc = async (Draw.Bitmap bmpSrc, Draw.Rectangle rcFail) =>
-    //            {
-    //                string manualInput = await ShowImageToCharDialog(bmpFore, rcFail, "인식 실패 영역");
-    //                return manualInput;
-    //            };
-    //        }
+            // 폴백: 전체 RightSliding (listStartEnd가 없는 경우)
+            OfrCharFailDelegate failFunc = null;
+            if (s_bDebugMode)
+            {
+                failFunc = async (Draw.Bitmap bmpSrc, Draw.Rectangle rcFail) =>
+                {
+                    string manualInput = await ShowImageToCharDialog(bmpFore, rcFail, "인식 실패 영역");
+                    return manualInput;
+                };
+            }
 
-    //        OfrResult_Recognition recognitionResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpFore, searchFunc, failFunc);
+            OfrResult_Recognition recognitionResult = await Ofr_CharSet_Core.RecognizeCharSetAsync_RightSliding(bmpFore, searchFunc, failFunc);
 
-    //        bmpFore.Dispose();
+            bmpFore.Dispose();
 
-    //        if (recognitionResult != null && !string.IsNullOrEmpty(recognitionResult.strResult))
-    //        {
-    //            string resultText = recognitionResult.strResult;
+            if (recognitionResult != null && !string.IsNullOrEmpty(recognitionResult.strResult))
+            {
+                string resultText = recognitionResult.strResult;
 
-    //            // SourceBitmap 해제
-    //            recognitionResult.SourceBitmap?.Dispose();
+                // SourceBitmap 해제
+                recognitionResult.SourceBitmap?.Dispose();
 
-    //            // 완전 성공(☒ 없음) 시 캐시 + TbText 저장
-    //            if (!resultText.Contains('☒'))
-    //            {
-    //                SaveTextCache(analyText, resultText);
+                // 완전 성공(☒ 없음) 시 캐시 + TbText 저장
+                if (!resultText.Contains('☒'))
+                {
+                    SaveTextCache(analyText, resultText);
 
-    //                // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
-    //                var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
-    //                if (existingResult?.tbText == null)
-    //                {
-    //                    TbText newTbText = new TbText
-    //                    {
-    //                        Text = resultText,
-    //                        Width = analyText.nWidth,
-    //                        Height = analyText.nHeight,
-    //                        HexStrValue = analyText.sHexArray,
-    //                        Threshold = 0,
-    //                        Searched = 1,
-    //                        Reserved = ""
-    //                    };
+                    // DB에 이미 존재하는지 확인 (중복 키 예외 방지)
+                    var existingResult = await PgService_TbText.SelectRowByBasicAsync(analyText.nWidth, analyText.nHeight, analyText.sHexArray);
+                    if (existingResult?.tbText == null)
+                    {
+                        TbText newTbText = new TbText
+                        {
+                            Text = resultText,
+                            Width = analyText.nWidth,
+                            Height = analyText.nHeight,
+                            HexStrValue = analyText.sHexArray,
+                            Threshold = 0,
+                            Searched = 1,
+                            Reserved = ""
+                        };
 
-    //                    StdResult_Long saveResult = await PgService_TbText.InsertRowAsync(newTbText);
-    //                    if (saveResult.lResult > 0)
-    //                    {
-    //                        Debug.WriteLine($"[OfrStr_ComplexCharSetAsync] TbText 저장 성공: {resultText}");
-    //                    }
-    //                }
-    //            }
+                        StdResult_Long saveResult = await PgService_TbText.InsertRowAsync(newTbText);
+                        if (saveResult.lResult > 0)
+                        {
+                            Debug.WriteLine($"[OfrStr_ComplexCharSetAsync] TbText 저장 성공: {resultText}");
+                        }
+                    }
+                }
 
-    //            sw.Stop();
-    //            Debug.WriteLine($"[RightSliding 성공] OfrStr_ComplexCharSetAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms)");
-    //            return new StdResult_String(resultText);
-    //        }
+                sw.Stop();
+                Debug.WriteLine($"[RightSliding 성공] OfrStr_ComplexCharSetAsync: '{resultText}' ({sw.ElapsedMilliseconds}ms)");
+                return new StdResult_String(resultText);
+            }
 
-    //        // ========================================
-    //        // 5. 모든 단계 실패
-    //        // ========================================
-    //        return new StdResult_String(recognitionResult?.sErr ?? "RightSliding 실패", "OfrStr_ComplexCharSetAsync_05");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_String(StdUtil.GetExceptionMessage(ex), "OfrStr_ComplexCharSetAsync_999");
-    //    }
-    //}
+            // ========================================
+            // 5. 모든 단계 실패
+            // ========================================
+            return new StdResult_String(recognitionResult?.sErr ?? "RightSliding 실패", "OfrStr_ComplexCharSetAsync_05");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_String(StdUtil.GetExceptionMessage(ex), "OfrStr_ComplexCharSetAsync_999");
+        }
+    }
 
-    ///// <summary>
-    ///// 오버로드: 페이지 비트맵에서 Rectangle 영역 crop + RGB 반전 후 한글 OFR
-    ///// </summary>
-    ///// <param name="bmpPage">전체 페이지 비트맵</param>
-    ///// <param name="rect">crop할 영역</param>
-    ///// <param name="bInvertRgb">RGB 반전 여부</param>
-    ///// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
-    ///// <param name="maxCharCount">최대 인식 문자 수 (0=전체, 1=좌측1문자, 2=좌측2문자...)</param>
-    ///// <returns>인식 결과 (strResult: 인식된 문자열)</returns>
-    //public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(
-    //    Draw.Bitmap bmpPage, Draw.Rectangle rect, bool bInvertRgb, bool bTextSave, double dWeight, bool bEdit = true, int maxCharCount = 0)
-    //{
-    //    Draw.Bitmap bmpCell = null;
+    // 페이지 비트맵 Rectangle 영역 crop + RGB 반전 후 한글 OFR 인식 (최대 문자 수 지정 가능)
+    public static async Task<StdResult_String> OfrStr_ComplexCharSetAsync(
+        Draw.Bitmap bmpPage, Draw.Rectangle rect, bool bInvertRgb, bool bTextSave, double dWeight, int maxCharCount = 0)
+    {
+        Draw.Bitmap bmpCell = null;
 
-    //    try
-    //    {
-    //        // 1. bmpPage에서 rect 영역 crop
-    //        bmpCell = OfrService.GetBitmapInBitmapFast(bmpPage, rect);
-    //        if (bmpCell == null) return new StdResult_String("셀 crop 실패", "OfrStr_ComplexCharSetAsync_Rect_01");
+        try
+        {
+            // 1. bmpPage에서 rect 영역 crop
+            bmpCell = OfrService.GetBitmapInBitmapFast(bmpPage, rect);
+            if (bmpCell == null) return new StdResult_String("셀 crop 실패", "OfrStr_ComplexCharSetAsync_Rect_01");
 
-    //        // 2. RGB 반전 필요하면
-    //        if (bInvertRgb)
-    //        {
-    //            Draw.Bitmap bmpOriginal = bmpCell;
-    //            bmpCell = OfrService.InvertBitmap(bmpOriginal);
-    //            bmpOriginal.Dispose();
-    //        }
+            // 2. RGB 반전 필요하면
+            if (bInvertRgb)
+            {
+                Draw.Bitmap bmpOriginal = bmpCell;
+                bmpCell = OfrService.InvertBitmap(bmpOriginal);
+                bmpOriginal.Dispose();
+            }
 
-    //        // 3. 기존 오버로드 호출 (maxCharCount 전달)
-    //        var result = await OfrStr_ComplexCharSetAsync(bmpCell, bTextSave, dWeight, bEdit, maxCharCount);
+            // 3. 기존 오버로드 호출 (maxCharCount 전달)
+            var result = await OfrStr_ComplexCharSetAsync(bmpCell, bTextSave, dWeight, maxCharCount);
 
-    //        // 4. maxCharCount > 0이면 공백/실패마커 제외하고 좌측부터 N개 문자만
-    //        if (maxCharCount > 0 && !string.IsNullOrEmpty(result.strResult))
-    //        {
-    //            // 공백과 실패마커(☒) 제거 후 좌측 N개 문자만
-    //            string cleaned = result.strResult.Replace(" ", "").Replace("☒", "");
-    //            if (cleaned.Length >= maxCharCount)
-    //            {
-    //                result.strResult = cleaned.Substring(0, maxCharCount);
-    //                result.sErr = null; // 성공으로 처리
-    //            }
-    //            else if (cleaned.Length > 0)
-    //            {
-    //                result.strResult = cleaned;
-    //                result.sErr = null; // 부분 성공도 성공으로
-    //            }
-    //        }
+            // 4. maxCharCount > 0이면 공백/실패마커 제외하고 좌측부터 N개 문자만
+            if (maxCharCount > 0 && !string.IsNullOrEmpty(result.strResult))
+            {
+                // 공백과 실패마커(☒) 제거 후 좌측 N개 문자만
+                string cleaned = result.strResult.Replace(" ", "").Replace("☒", "");
+                if (cleaned.Length >= maxCharCount)
+                {
+                    result.strResult = cleaned.Substring(0, maxCharCount);
+                    result.sErr = null; // 성공으로 처리
+                }
+                else if (cleaned.Length > 0)
+                {
+                    result.strResult = cleaned;
+                    result.sErr = null; // 부분 성공도 성공으로
+                }
+            }
 
-    //        return result;
-    //    }
-    //    finally
-    //    {
-    //        bmpCell?.Dispose();
-    //    }
-    //}
+            return result;
+        }
+        finally
+        {
+            bmpCell?.Dispose();
+        }
+    }
 
-    /// <summary>
-    /// 컬럼 헤더 등 복합 문자열을 인식하는 함수 (Stage 1: TbText 전체 매칭)
-    /// TODO: Stage 2-4 (RightSliding 알고리즘) 통합 필요
-    /// </summary>
-    /// <param name="bmpOrg">원본 비트맵</param>
-    /// <param name="rcSpare">인식 영역 (여유 있게)</param>
-    /// <param name="bSaveToTbText">인식 성공 시 TbText에 저장 여부 (컬럼헤더=false, 사람이름=true)</param>
-    /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
-    /// <param name="bWrite">실패 시 로그 작성 여부</param>
-    /// <param name="bMsgBox">실패 시 메시지박스 표시 여부</param>
-    /// <returns>인식 결과</returns>
+    // 컬럼 헤더 등 복합 문자열 인식 (Stage 1 매칭, Stage 2-4 통합 예정)
     //public static async Task<OfrResult_TbCharSetList> OfrStr_ComplexCharSetAsync(
     //    Draw.Bitmap bmpOrg, Draw.Rectangle rcSpare, bool bSaveToTbText = false, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
     //{
@@ -1389,19 +1337,7 @@ public class OfrWork_Common
     //    return ErrMsgResult_TbCharSetList(result, bWrite, bMsgBox);
     //}
 
-    /// <summary>
-    /// 단음소(숫자/영문) 전용 OFR 핵심 함수 (Core) - 전경,배경 방식
-    /// - Stage 1 (TbText 전체 매칭) - bUseTbTextStage1=true일 때만 수행
-    /// - Stage 2 (전경/배경 방식으로 문자 영역 추출 + TbChar 검색)
-    /// - 성공 시 TbText 저장
-    /// </summary>
-    /// <param name="bmpOrg">원본 비트맵</param>
-    /// <param name="rcSpare">인식 영역 (여유 있게)</param>
-    /// <param name="bUseTbTextStage1">Stage 1 (TbText 전체 매칭) 사용 여부</param>
-    /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
-    /// <param name="bWrite">실패 시 로그 작성 여부</param>
-    /// <param name="bMsgBox">실패 시 메시지박스 표시 여부</param>
-    /// <returns>인식 결과</returns>
+    // 단음소(숫자/영문) 전용 OFR 핵심 함수 (전경/배경 방식, Stage 1-2 연동)
     //     private static async Task<OfrResult_TbCharSetList> OfrStr_SeqCharCore(
     //         Draw.Bitmap bmpOrg,
     //         Draw.Rectangle rcSpare,
@@ -1607,18 +1543,7 @@ public class OfrWork_Common
     //         return result;
     //     }
 
-    /// <summary>
-    /// 반복되는 단음소 단어 인식 함수 (예: "No", "OK" 등 컬럼 헤더)
-    /// - Stage 1: TbText에서 전체 문자열 캐싱 검색 (빠름)
-    /// - Stage 2: 실패 시 전경/배경 방식으로 문자 분리 + TbChar 검색
-    /// - 성공 시 TbText에 자동 저장하여 다음번엔 Stage 1에서 찾음
-    /// </summary>
-    /// <param name="bmpOrg">원본 비트맵</param>
-    /// <param name="rcSpare">인식 영역 (여유 있게)</param>
-    /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
-    /// <param name="bWrite">실패 시 로그 작성 여부</param>
-    /// <param name="bMsgBox">실패 시 메시지박스 표시 여부</param>
-    /// <returns>인식 결과</returns>
+    // 반복되는 단음소 단어 인식 (Stage 1 캐싱 검색 -> Stage 2 분리 검색)
     //public static async Task<OfrResult_TbCharSetList> OfrStr_SeqWordAsync(
     //    Draw.Bitmap bmpOrg,
     //    Draw.Rectangle rcSpare,

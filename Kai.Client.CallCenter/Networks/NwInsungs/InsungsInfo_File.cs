@@ -29,25 +29,25 @@ public class InsungsInfo_File
     public string Main_AnyMenu_sWndName { get; set; } = "";
 
     // MainMenu_Title
-    public Draw.Rectangle Main_MainMenu_rcRel { get; set; } = new Draw.Rectangle(8, 0, 1920, 63); // MainMenu_Title Wnd Rectangle
+    public Draw.Rectangle Main_MainMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 0, 1920, 63); // MainMenu_Title Wnd Rectangle - By Find
 
     // BarMenu
-    public Draw.Rectangle Main_BarMenu_rcRel { get; set; } = new Draw.Rectangle(8, 63, 1920, 28);  // BarMenu Wnd Rectangle
-    public Draw.Point Main_BarMenu_pt접수등록 { get; set; } = new Draw.Point(55, 15);  // 접수등록 // BarMenu - 접수등록
-    public Draw.Point Main_BarMenu_pt고객등록 { get; set; } = new Draw.Point(155, 15); // BarMenu - 고객등록
-    public Draw.Point Main_BarMenu_pt전화수신내역 { get; set; } = new Draw.Point(255, 15);  // BarMenu - 전화수신내역
-    public Draw.Point Main_BarMenu_pt게시판 { get; set; } = new Draw.Point(345, 15); // BarMenu - 게시판
-    public Draw.Point Main_BarMenu_pt기사메세지전송 { get; set; } = new Draw.Point(455, 15); // BarMenu - 기사메세지전송
-    public Draw.Point Main_BarMenu_pt메세지전송 { get; set; } = new Draw.Point(555, 15); // BarMenu - 메세지전송
-    public Draw.Point Main_BarMenu_pt계산기 { get; set; } = new Draw.Point(640, 15); // BarMenu - 계산기
-    public Draw.Point Main_BarMenu_pt기사관제 { get; set; } = new Draw.Point(720, 15); // BarMenu - 기사관제
-    public Draw.Point Main_BarMenu_pt픽업지알림 { get; set; } = new Draw.Point(830, 15); // BarMenu - 픽업지알림
-    public Draw.Point Main_BarMenu_pt고객지원게시판 { get; set; } = new Draw.Point(935, 15); // BarMenu - 고객지원게시판
-    public Draw.Point Main_BarMenu_pt원격지원요청 { get; set; } = new Draw.Point(1030, 15); // BarMenu - 원격지원요청
-    public Draw.Point Main_BarMenu_pt관재맵설치 { get; set; } = new Draw.Point(1105, 15); // BarMenu - 관재맵설치
+    public Draw.Rectangle Main_BarMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 63, 1920, 28);  // BarMenu Wnd Rectangle
+    public Draw.Point Main_BarMenu_pt접수등록L { get; set; } = new Draw.Point(55, 15);  // 접수등록 // BarMenu - 접수등록
+    public Draw.Point Main_BarMenu_pt고객등록L { get; set; } = new Draw.Point(155, 15); // BarMenu - 고객등록
+    public Draw.Point Main_BarMenu_pt전화수신내역L { get; set; } = new Draw.Point(255, 15);  // BarMenu - 전화수신내역
+    public Draw.Point Main_BarMenu_pt게시판L { get; set; } = new Draw.Point(345, 15); // BarMenu - 게시판
+    public Draw.Point Main_BarMenu_pt기사메세지전송L { get; set; } = new Draw.Point(455, 15); // BarMenu - 기사메세지전송
+    public Draw.Point Main_BarMenu_pt메세지전송L { get; set; } = new Draw.Point(555, 15); // BarMenu - 메세지전송
+    public Draw.Point Main_BarMenu_pt계산기L { get; set; } = new Draw.Point(640, 15); // BarMenu - 계산기
+    public Draw.Point Main_BarMenu_pt기사관제L { get; set; } = new Draw.Point(720, 15); // BarMenu - 기사관제
+    public Draw.Point Main_BarMenu_pt픽업지알림L { get; set; } = new Draw.Point(830, 15); // BarMenu - 픽업지알림
+    public Draw.Point Main_BarMenu_pt고객지원게시판L { get; set; } = new Draw.Point(935, 15); // BarMenu - 고객지원게시판
+    public Draw.Point Main_BarMenu_pt원격지원요청L { get; set; } = new Draw.Point(1030, 15); // BarMenu - 원격지원요청
+    public Draw.Point Main_BarMenu_pt관재맵설치L { get; set; } = new Draw.Point(1105, 15); // BarMenu - 관재맵설치
 
     // MdiClient
-    public Draw.Rectangle Main_MdiClient_rcRel { get; set; } = new Draw.Rectangle(24, 91, 1904, 949); // MdiClient Wnd Rectangle
+    public Draw.Rectangle Main_MdiClient_rcRelF { get; set; } = new Draw.Rectangle(24, 91, 1904, 949); // MdiClient Wnd Rectangle - By Find
     #endregion
 
     #region 고객등록(관리)Page
@@ -101,40 +101,41 @@ public class InsungsInfo_File
     //public Draw.Point 접수등록Page_SearchDay_ptChkRelEndM = new Draw.Point(480, 135); // Check Point 
 
     // StatusBtns - For Find 메인윈도 기준
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel접수M { get; set; } = new Draw.Point(65, 140); // Check Point {X=65,Y=140}
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel배차M { get; set; } = new Draw.Point(141, 140); // Check Point {X=141,Y=140}
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel운행M { get; set; } = new Draw.Point(217, 140); // Check Point {X=217,Y=140}
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel완료M { get; set; } = new Draw.Point(65, 181); // Check Point  {X=65,Y=181}
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel취소M { get; set; } = new Draw.Point(141, 181); // Check Point {X=141,Y=181}
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel전체M { get; set; } = new Draw.Point(217, 181); // Check Point {X=217,Y=181}
+    public Draw.Point 접수등록Page_StatusBtn_ptChkRel접수T { get; set; } = new Draw.Point(65, 140); // Check Point {X=65,Y=140}
+    public Draw.Point 접수등록Page_StatusBtn_ptChkRel배차T { get; set; } = new Draw.Point(141, 140); // Check Point {X=141,Y=140}
+    public Draw.Point 접수등록Page_StatusBtn_ptChkRel운행T { get; set; } = new Draw.Point(217, 140); // Check Point {X=217,Y=140}
+    public Draw.Point 접수등록Page_StatusBtn_ptChkRel완료T { get; set; } = new Draw.Point(65, 181); // Check Point  {X=65,Y=181}
+    public Draw.Point 접수등록Page_StatusBtn_ptChkRel취소M { get; set; } = new Draw.Point(141, 181); // Check Point {X=141,Y=181}
+    public Draw.Point 접수등록Page_StatusBtn_ptChkRel전체T { get; set; } = new Draw.Point(217, 181); // Check Point {X=217,Y=181}
 
     // CommandBtns GroupBox
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel신규M { get; set; } = new Draw.Point(867, 143); // Check Point  {X=867,Y=143}
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회M { get; set; } = new Draw.Point(961, 143); // Check Point  {X=961,Y=143}
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel기사M { get; set; } = new Draw.Point(1122, 143); // Check Point {X=1122,Y=143}
+    public Draw.Point 접수등록Page_CmdBtn_ptChkRel신규T { get; set; } = new Draw.Point(867, 143); // Check Point  {X=867,Y=143}
+    public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회T { get; set; } = new Draw.Point(961, 143); // Check Point  {X=961,Y=143}
+    public Draw.Point 접수등록Page_CmdBtn_ptChkRel기사T { get; set; } = new Draw.Point(1122, 143); // Check Point {X=1122,Y=143}
 
     // CallCount
-    //public Draw.Point 접수등록Page_CallCount_ptChkRel접수M { get; set; } = new Draw.Point(157, 888); // Check Point {X=157,Y=888}
-    //public Draw.Point 접수등록Page_CallCount_ptChkRel운행M { get; set; } = new Draw.Point(157, 915); // Check Point {X=157,Y=915}
-    //public Draw.Point 접수등록Page_CallCount_ptChkRel취소M { get; set; } = new Draw.Point(157, 942); // Check Point {X=157,Y=942}
-    //public Draw.Point 접수등록Page_CallCount_ptChkRel완료M { get; set; } = new Draw.Point(157, 969); // Check Point {X=157,Y=969}
-    //public Draw.Point 접수등록Page_CallCount_ptChkRel총계M { get; set; } = new Draw.Point(157, 995); // Check Point {X=157,Y=995}
+    public Draw.Point 접수등록Page_CallCount_ptChkRel접수T { get; set; } = new Draw.Point(157, 890); // {X=157,Y=890}
+    public Draw.Point 접수등록Page_CallCount_ptChkRel운행T { get; set; } = new Draw.Point(157, 917); // {X=157,Y=917}
+    public Draw.Point 접수등록Page_CallCount_ptChkRel취소T { get; set; } = new Draw.Point(157, 944); // {X=157,Y=944}
+    public Draw.Point 접수등록Page_CallCount_ptChkRel완료T { get; set; } = new Draw.Point(157, 971); // {X=157,Y=971}
+    public Draw.Point 접수등록Page_CallCount_ptChkRel총계T { get; set; } = new Draw.Point(157, 997); // {X=157,Y=997}
 
     // 접수 Datagrid
-    //public Draw.Point 접수등록Page_DG오더_ptCenterRelM { get; set; } = new Draw.Point(300, 550); // Center Point {X=968,Y=550} avoid Loading Panel
-    //public Draw.Rectangle 접수등록Page_DG오더_rcRel { get; set; } = new Draw.Rectangle(26, 231, 1885, 639); // DataGrid Rectangle X=26,Y=231,Width=1885,Height=639}
-    //public int 접수등록Page_DG오더_headerHeight { get; set; } = 30; // HeaderRow Height
-    //public int 접수등록Page_DG오더_emptyRowHeight { get; set; } = 25; // EmptyRow Height
-    //public int 접수등록Page_DG오더_dataRowHeight { get; set; } = 20; // DataRow Height
-    //public int 접수등록Page_DG오더_dataGab { get; set; } = 3; // 셀 상하단 gap
-    //public const int 접수등록Page_DG오더_dataRowCount = 28; // DataRow Count
+    public Draw.Point 접수등록Page_DG오더_ptCenterRelT { get; set; } = new Draw.Point(968, 550); // Center Point {X=968,Y=550} avoid Loading Panel
+    //public Draw.Point 접수등록Page_DG오더_ptCenterRel { get; set; } = new Draw.Point(300, 550); // Center Point {X=968,Y=550} avoid Loading Panel
+    public Draw.Rectangle 접수등록Page_DG오더_rcRelT { get; set; } = new Draw.Rectangle(26, 231, 1885, 639); // DataGrid Rectangle X=26,Y=231,Width=1885,Height=639}
+    public int 접수등록Page_DG오더_headerHeight { get; set; } = 30; // HeaderRow Height
+    public int 접수등록Page_DG오더_emptyRowHeight { get; set; } = 25; // EmptyRow Height
+    public int 접수등록Page_DG오더_dataRowHeight { get; set; } = 20; // DataRow Height
+    public int 접수등록Page_DG오더_dataGab { get; set; } = 3; // 셀 상하단 gap
+    public const int 접수등록Page_DG오더_dataRowCount = 28; // DataRow Count
 
     // 스크롤 바
-    //public Draw.Point 접수등록Page_DG오더_ptChkRel수직스크롤M { get; set; } = new Draw.Point(1900, 542); // 스크롤 중간 - MainWnd 기준
-    //public Draw.Point 접수등록Page_DG오더_ptClkRel페이지Down { get; set; } = new Draw.Point(8, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - VScrollBar기준
-    //public Draw.Point 접수등록Page_DG오더_ptClkRel페이지Up { get; set; } = new Draw.Point(8, 20); // 스크롤 업버튼 바로아래 - Page업 스크롤 하기 위해 - VScrollBar기준
-    //public Draw.Point 접수등록Page_DG오더_ptClkRel버튼Down { get; set; } = new Draw.Point(8, 607); // 스크롤 다운버튼 바로위 - Row다운 스크롤 하기 위해 - VScrollBar기준
-    //public Draw.Point 접수등록Page_DG오더_ptClkRel버튼Up { get; set; } = new Draw.Point(8, 6); // 스크롤 업버튼 바로아래 - Row업 스크롤 하기 위해 - VScrollBar기준
+    public Draw.Point 접수등록Page_DG오더_ptChkRel수직스크롤T { get; set; } = new Draw.Point(1900, 542); // 스크롤 중간 - MainWnd 기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRel페이지DownL { get; set; } = new Draw.Point(8, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - VScrollBar기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRel페이지UpL { get; set; } = new Draw.Point(8, 20); // 스크롤 업버튼 바로아래 - Page업 스크롤 하기 위해 - VScrollBar기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRel버튼DownL { get; set; } = new Draw.Point(8, 607); // 스크롤 다운버튼 바로위 - Row다운 스크롤 하기 위해 - VScrollBar기준
+    public Draw.Point 접수등록Page_DG오더_ptClkRel버튼UpL { get; set; } = new Draw.Point(8, 6); // 스크롤 업버튼 바로아래 - Row업 스크롤 하기 위해 - VScrollBar기준
 
     // 로딩패널
     //public Draw.Point 접수등록Page_DG오더_ptChkRelPanL { get; set; } = new Draw.Point(950, 359); // {X=984,Y=590}

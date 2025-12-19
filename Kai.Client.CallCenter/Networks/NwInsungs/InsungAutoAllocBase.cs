@@ -161,30 +161,30 @@ public abstract class InsungAutoAllocBase : IExternalApp
 
     public void Shutdown()
     {
-        //try
-        //{q
-        //    Debug.WriteLine($"[{AppName}] Shutdown 시작");
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 시작");
 
-        //    // AppAct.Close() 호출 - 인성 앱 종료
-        //    if (m_Context?.AppAct != null)
-        //    {
-        //        StdResult_Error resultClose = m_Context.AppAct.Close();
-        //        if (resultClose != null)
-        //        {
-        //            Debug.WriteLine($"[{AppName}] Close 실패: {resultClose.sErrNPos}");
-        //        }
-        //        else
-        //        {
-        //            Debug.WriteLine($"[{AppName}] Close 성공");
-        //        }
-        //    }
+            // AppAct.Close() 호출 - 인성 앱 종료
+            if (m_Context?.AppAct != null)
+            {
+                StdResult_Error resultClose = m_Context.AppAct.Close();
+                if (resultClose != null)
+                {
+                    Debug.WriteLine($"[{AppName}] Close 실패: {resultClose.sErrNPos}");
+                }
+                else
+                {
+                    Debug.WriteLine($"[{AppName}] Close 성공");
+                }
+            }
 
-        //    Debug.WriteLine($"[{AppName}] Shutdown 완료");
-        //}
-        //catch (Exception ex)
-        //{
-        //    Debug.WriteLine($"[{AppName}] Shutdown 실패: {ex.Message}");
-        //}
+            Debug.WriteLine($"[{AppName}] Shutdown 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 실패: {ex.Message}");
+        }
     }
 
     public async Task<StdResult_Status> AutoAllocAsync(long lAllocCount, CancelTokenControl ctrl)
@@ -428,7 +428,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
             //            // 여러 페이지면 스크롤 핸들 다시 얻어야함
             //            if (nTotPage > 1)
             //                m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤 =
-            //                    Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤M);
+            //                    Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤T);
             //            #endregion
 
             //            #region 5-3. 페이지별 리스트 검사 및 처리
@@ -653,7 +653,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
             //                {
             //                    // 다음 페이지로 이동
             //                    await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(
-            //                        m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel페이지Down);
+            //                        m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel페이지DownL);
             //                    await Task.Delay(c_nWaitNormal, ctrl.Token);
             //                    Debug.WriteLine($"[{AppName}] 페이지 {pageIdx + 1} -> {pageIdx + 2} 이동");
             //                } 

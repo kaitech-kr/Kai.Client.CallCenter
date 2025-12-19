@@ -8,6 +8,7 @@ using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Services;
 using System.Diagnostics;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
+//using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using Draw = System.Drawing;
 using DrawImg = System.Drawing.Imaging;
 
@@ -38,7 +39,6 @@ public partial class InsungsAct_RcptRegPage
     public const int c_nColForClick = 3;  // 클릭용 컬럼
 
     // 접수등록 Datagrid 컬럼 헤더 정보 (20개 컬럼)
-    /*
     public readonly CModel_DgColumnHeader[] m_ReceiptDgHeaderInfos = new CModel_DgColumnHeader[]
     {
         new CModel_DgColumnHeader() { sName = "No", bOfrSeq = false, nWidth = 60 },
@@ -63,7 +63,6 @@ public partial class InsungsAct_RcptRegPage
         new CModel_DgColumnHeader() { sName = "오더메모", bOfrSeq = false, nWidth = 100 },
         new CModel_DgColumnHeader() { sName = "적요", bOfrSeq = false, nWidth = 240 },
     };
-    */
     #endregion
 
     #region 2. Context Reference - 컨텍스트 참조
@@ -78,7 +77,7 @@ public partial class InsungsAct_RcptRegPage
     #endregion
 
     #region 3. Constructor - 생성자
-    // 생성자 - Context를 받아서 초기화
+    // 생성자 - Context 초기화
     public InsungsAct_RcptRegPage(InsungContext context)
     {
         m_Context = context ?? throw new ArgumentNullException(nameof(context));
@@ -86,7 +85,7 @@ public partial class InsungsAct_RcptRegPage
     #endregion
 
     #region 4. Initialize - 초기화
-    // 접수등록 페이지 초기화
+    // 접수등록 페이지 초기화 (전체 버튼 클릭 및 상태 검증)
     public async Task<StdResult_Error> InitializeAsync()
     {
         try
@@ -96,11 +95,12 @@ public partial class InsungsAct_RcptRegPage
             // 1. 바메뉴 클릭 - 접수등록 페이지 열기
             await m_Context.MainWndAct.ClickAsync접수등록();
             await Task.Delay(c_nWaitVeryLong); // 페이지 로딩 대기
-            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 접수등록 메뉴 클릭 완료");
+            //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 접수등록 메뉴 클릭 완료");
 
             // 2. TopWnd 찾기 (MDI 자식 중 "접수현황")
             for (int i = 0; i < c_nRepeatNormal; i++)
             {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync(); // ESC 중단 체크
                 m_RcptPage.TopWnd_hWnd = Std32Window.FindWindowEx(
                     m_Main.WndInfo_MdiClient.hWnd, IntPtr.Zero, null, m_FileInfo.접수등록Page_TopWnd_sWndName);
 
@@ -108,126 +108,140 @@ public partial class InsungsAct_RcptRegPage
                 await Task.Delay(c_nWaitNormal);
             }
 
-            //if (m_RcptPage.TopWnd_hWnd == IntPtr.Zero)
-            //{
-            //    return new StdResult_Error(
-            //        $"[{m_Context.AppName}/RcptRegPage] 페이지 찾기 실패: {m_FileInfo.접수등록Page_TopWnd_sWndName}",
-            //        "InsungsAct_RcptRegPage/InitializeAsync_01");
-            //}
+            if (m_RcptPage.TopWnd_hWnd == IntPtr.Zero)
+            {
+                return new StdResult_Error(
+                    $"[{m_Context.AppName}/RcptRegPage] 페이지 찾기 실패: {m_FileInfo.접수등록Page_TopWnd_sWndName}",
+                    "InsungsAct_RcptRegPage/InitializeAsync_01");
+            }
+            //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 접수현황 찾음");
 
-            //// 3. 상태 버튼들 핸들 수집 및 텍스트 검증
-            //await Task.Delay(c_nWaitVeryLong);
-            //bool bBtnFound = false;
-            //for (int i = 0; i < c_nRepeatNormal; i++)
-            //{
-            //    await Task.Delay(c_nWaitNormal);
+            // 3. 상태 버튼 핸들 수집 및 텍스트 검증 (접수 버튼 기준)
+            await Task.Delay(c_nWaitVeryLong);
+            bool bBtnFound = false;
+            for (int i = 0; i < c_nRepeatNormal; i++)
+            {
+                await Task.Delay(c_nWaitNormal);
 
-            //    m_RcptPage.StatusBtn_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel접수M);
-            //    string sText = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd접수);
+                m_RcptPage.StatusBtn_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel접수T);
+                string sText = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd접수);
 
-            //    if (sText == "접수")
-            //    {
-            //        bBtnFound = true;
-            //        break;
-            //    }
-            //}
+                if (sText == "접수")
+                {
+                    bBtnFound = true;
+                    break;
+                }
+            }
 
-            //if (!bBtnFound)
-            //{
-            //    return new StdResult_Error(
-            //        $"[{m_Context.AppName}/RcptRegPage] 접수 버튼 텍스트 확인 실패", "InsungsAct_RcptRegPage/InitializeAsync_02", bWrite, bMsgBox);
-            //}
+            if (!bBtnFound)
+            {
+                return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 접수 버튼 텍스트 확인 실패", "InsungsAct_RcptRegPage/InitializeAsync_02");
+            }
 
-            //// 나머지 상태 버튼 핸들 확정
-            //m_RcptPage.StatusBtn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel배차M);
-            //m_RcptPage.StatusBtn_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel운행M);
-            //m_RcptPage.StatusBtn_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel완료M);
-            //m_RcptPage.StatusBtn_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel취소M);
-            //m_RcptPage.StatusBtn_hWnd전체 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel전체M);
+            // 나머지 상태 버튼 핸들 확정
+            m_RcptPage.StatusBtn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel배차T);
+            m_RcptPage.StatusBtn_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel운행T);
+            m_RcptPage.StatusBtn_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel완료T);
+            m_RcptPage.StatusBtn_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel취소M);
+            m_RcptPage.StatusBtn_hWnd전체 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel전체T);
 
             //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 상태 버튼 핸들 수집 완료");
 
-            //// 4. 이미지 비교로 버튼 Up/Down 상태 확인
-            //await Task.Delay(c_nWaitNormal);
-            //StdResult_NulBool resultNulBool;
+            // 4. 상태 버튼 Up 이미지 매칭 (접수, 배차, 운행, 완료, 취소, 전체)
+            await Task.Delay(c_nWaitNormal);
+            StdResult_NulBool resultNulBool;
 
-            //// 각 버튼 Up 상태 확인
-            //string[] btnNames = { "접수", "배차", "운행", "완료", "취소", "전체" };
-            //IntPtr[] hWnds = { m_RcptPage.StatusBtn_hWnd접수, m_RcptPage.StatusBtn_hWnd배차, m_RcptPage.StatusBtn_hWnd운행, m_RcptPage.StatusBtn_hWnd완료, m_RcptPage.StatusBtn_hWnd취소, m_RcptPage.StatusBtn_hWnd전체 };
+            await Task.Delay(c_nWaitNormal);
+            string[] btnNames = { "접수", "배차", "운행", "완료", "취소", "전체" };
+            IntPtr[] hWnds = { m_RcptPage.StatusBtn_hWnd접수, m_RcptPage.StatusBtn_hWnd배차, 
+                m_RcptPage.StatusBtn_hWnd운행, m_RcptPage.StatusBtn_hWnd완료, m_RcptPage.StatusBtn_hWnd취소, m_RcptPage.StatusBtn_hWnd전체 };
 
-            //for (int i = 0; i < btnNames.Length; i++)
-            //{
-            //    resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Up", true, true, true);
-            //    if (!StdConvert.NullableBoolToBool(resultNulBool.bResult))
-            //        return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] {btnNames[i]}버튼 Up 이미지 매칭 실패", $"InsungsAct_RcptRegPage/InitializeAsync_UpMatch_{i}", bWrite, bMsgBox);
-            //}
+            for (int i = 0; i < btnNames.Length; i++)
+            {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync(); // ESC 중단 체크
+                resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Up", true, true, true);
+                if (!StdConvert.NullableBoolToBool(resultNulBool.bResult))
+                    return new StdResult_Error(
+                        $"[{m_Context.AppName}/RcptRegPage] {btnNames[i]}버튼 Up 이미지 매칭 실패", $"InsungsAct_RcptRegPage/InitializeAsync_UpMatch_{i}");
+            }
+            //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 버튼 Up 이미지 매칭 성공");
 
-            //// 5. 전체버튼 클릭 → 접수버튼 Down 상태 확인 루프
-            //await Std32Mouse_Post.MousePostAsync_ClickLeft_Center(m_RcptPage.StatusBtn_hWnd전체);
-            //bool bStateChanged = false;
-            //for (int i = 0; i < c_nRepeatVeryShort; i++)
-            //{
-            //    await Task.Delay(c_nWaitShort);
-            //    resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(m_RcptPage.StatusBtn_hWnd접수, HEADER_GAB, "Img_접수버튼_Down", i == c_nRepeatVeryShort - 1, i == c_nRepeatVeryShort - 1, i == c_nRepeatVeryShort - 1);
-            //    if (StdConvert.NullableBoolToBool(resultNulBool.bResult)) { bStateChanged = true; break; }
-            //}
+            // 5. 전체 버튼 클릭 → 접수 버튼 Down 상태 확인 루프
+            await Std32Mouse_Post.MousePostAsync_ClickLeft_Center(m_RcptPage.StatusBtn_hWnd전체);
+            bool bStateChanged = false;
+            for (int i = 1; i <= c_nRepeatVeryShort; i++)
+            {
+                bool bEdit = i == c_nRepeatVeryShort;
+                await Task.Delay(c_nWaitShort);
+                resultNulBool = await OfrWork_Insungs.
+                    OfrIsMatchedImage_DrawRelRectAsync(m_RcptPage.StatusBtn_hWnd접수, HEADER_GAB, "Img_접수버튼_Down", bEdit, bEdit, bEdit);
 
-            //if (!bStateChanged)
-            //    return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 전체버튼 클릭 후 상태 변경 실패", "InsungsAct_RcptRegPage/InitializeAsync_09", bWrite, bMsgBox);
+                if (StdConvert.NullableBoolToBool(resultNulBool.bResult)) { bStateChanged = true; break; }
+            }
 
-            //// 나머지 버튼 Down 상태 확인
-            //for (int i = 1; i < btnNames.Length; i++) // 0(접수)은 위에서 확인됨
-            //{
-            //    resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Down", true, true, true);
-            //    if (!StdConvert.NullableBoolToBool(resultNulBool.bResult))
-            //        return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] {btnNames[i]}버튼 Down 이미지 매칭 실패", $"InsungsAct_RcptRegPage/InitializeAsync_DownMatch_{i}", bWrite, bMsgBox);
-            //}
+            if (!bStateChanged)
+                return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 전체버튼 클릭 후 상태 변경 실패", "InsungsAct_RcptRegPage/InitializeAsync_09");
+            //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 전체버튼 클릭 후 상태 변경 성공");
 
-            //// 6. CommandBtn 찾기 및 OFR 검증 (신규, 조회, 기사)
-            //var (hWnd신규, error신규) = await FindCommandButtonWithOfrAsync("신규", m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규M, "Img_신규버튼", "InsungsAct_RcptRegPage/InitializeAsync_08", bEdit, bWrite, bMsgBox);
-            //if (error신규 != null) return error신규;
-            //m_RcptPage.CmdBtn_hWnd신규 = hWnd신규;
+            // 나머지 버튼 Down 상태 확인 (비교 루프)
+            for (int i = 1; i < btnNames.Length; i++) // 0(접수)은 위에서 확인됨
+            {
+                resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Down", true, true, true);
+                if (!StdConvert.NullableBoolToBool(resultNulBool.bResult))
+                    return new StdResult_Error(
+                        $"[{m_Context.AppName}/RcptRegPage] {btnNames[i]}버튼 Down 이미지 매칭 실패", $"InsungsAct_RcptRegPage/InitializeAsync_DownMatch_{i}");
+            }
+            //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 버튼 Down 이미지 매칭 성공");
 
-            //var (hWnd조회, error조회) = await FindCommandButtonWithOfrAsync("조회", m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회M, "Img_조회버튼", "InsungsAct_RcptRegPage/InitializeAsync_09", bEdit, bWrite, bMsgBox);
-            //if (error조회 != null) return error조회;
-            //m_RcptPage.CmdBtn_hWnd조회 = hWnd조회;
+            // 6. 커맨드 버튼 찾기 및 OFR 검증 (신규, 조회, 기사)
+            var (hWnd신규, error신규) = await FindCommandButtonWithOfrAsync(
+                "신규", m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규T, "Img_신규버튼", "InsungsAct_RcptRegPage/InitializeAsync_08", true, true, true);
+            if (error신규 != null) return error신규;
+            m_RcptPage.CmdBtn_hWnd신규 = hWnd신규;
 
-            //var (hWnd기사, error기사) = await FindCommandButtonWithOfrAsync("기사", m_FileInfo.접수등록Page_CmdBtn_ptChkRel기사M, "Img_기사버튼", "InsungsAct_RcptRegPage/InitializeAsync_10", bEdit, bWrite, bMsgBox);
-            //if (error기사 != null) return error기사;
-            //m_RcptPage.CmdBtn_hWnd기사 = hWnd기사;
+            var (hWnd조회, error조회) = await FindCommandButtonWithOfrAsync(
+                "조회", m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회T, "Img_조회버튼", "InsungsAct_RcptRegPage/InitializeAsync_09", true, true, true);
+            if (error조회 != null) return error조회;
+            m_RcptPage.CmdBtn_hWnd조회 = hWnd조회;
 
-            //// 7. CallCount 핸들 찾기
-            //string[] countNames = { "접수", "운행", "취소", "완료", "총계" };
-            //Draw.Point[] countPts = { m_FileInfo.접수등록Page_CallCount_ptChkRel접수M, m_FileInfo.접수등록Page_CallCount_ptChkRel운행M, m_FileInfo.접수등록Page_CallCount_ptChkRel취소M, m_FileInfo.접수등록Page_CallCount_ptChkRel완료M, m_FileInfo.접수등록Page_CallCount_ptChkRel총계M };
-            //IntPtr[] countHWnds = new IntPtr[5];
+            var (hWnd기사, error기사) = await FindCommandButtonWithOfrAsync(
+                "기사", m_FileInfo.접수등록Page_CmdBtn_ptChkRel기사T, "Img_기사버튼", "InsungsAct_RcptRegPage/InitializeAsync_10", true, true, true);
+            if (error기사 != null) return error기사;
+            m_RcptPage.CmdBtn_hWnd기사 = hWnd기사;
 
-            //for (int i = 0; i < countNames.Length; i++)
-            //{
-            //    countHWnds[i] = FindCallCountControl(countNames[i], countPts[i], $"InsungsAct_RcptRegPage/InitializeAsync_Count_{i}", bWrite, bMsgBox, out StdResult_Error err);
-            //    if (err != null) return err;
-            //}
-            //m_RcptPage.CallCount_hWnd접수 = countHWnds[0];
-            //m_RcptPage.CallCount_hWnd운행 = countHWnds[1];
-            //m_RcptPage.CallCount_hWnd취소 = countHWnds[2];
-            //m_RcptPage.CallCount_hWnd완료 = countHWnds[3];
-            //m_RcptPage.CallCount_hWnd총계 = countHWnds[4];
+            // 7. CallCount 핸들 찾기
+            string[] countNames = { "접수", "운행", "취소", "완료", "총계" };
+            Draw.Point[] countPts = { m_FileInfo.접수등록Page_CallCount_ptChkRel접수T, m_FileInfo.접수등록Page_CallCount_ptChkRel운행T, m_FileInfo.접수등록Page_CallCount_ptChkRel취소T, m_FileInfo.접수등록Page_CallCount_ptChkRel완료T, m_FileInfo.접수등록Page_CallCount_ptChkRel총계T };
+            IntPtr[] countHWnds = new IntPtr[5];
 
-            //// 8. 오더 Datagrid 초기화
-            //m_RcptPage.DG오더_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_DG오더_ptCenterRelM);
-            //if (m_RcptPage.DG오더_hWnd == IntPtr.Zero)
-            //    return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 찾기 실패", "InsungsAct_RcptRegPage/InitializeAsync_16", bWrite, bMsgBox);
+            for (int i = 0; i < countNames.Length; i++)
+            {
+                countHWnds[i] = FindCallCountControl(countNames[i], countPts[i], $"InsungsAct_RcptRegPage/InitializeAsync_Count_{i}", out StdResult_Error err);
+                if (err != null) return err;
+            }
+            m_RcptPage.CallCount_hWnd접수 = countHWnds[0];
+            m_RcptPage.CallCount_hWnd운행 = countHWnds[1];
+            m_RcptPage.CallCount_hWnd취소 = countHWnds[2];
+            m_RcptPage.CallCount_hWnd완료 = countHWnds[3];
+            m_RcptPage.CallCount_hWnd총계 = countHWnds[4];
+            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] CallCount 핸들 찾기 성공");
 
-            //m_RcptPage.DG오더_AbsRect = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
-            //if (m_RcptPage.DG오더_AbsRect.Width != m_FileInfo.접수등록Page_DG오더_rcRel.Width || m_RcptPage.DG오더_AbsRect.Height != m_FileInfo.접수등록Page_DG오더_rcRel.Height)
-            //    return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 크기 불일치", "InsungsAct_RcptRegPage/InitializeAsync_17", bWrite, bMsgBox);
+            // 8. 오더 Datagrid 초기화
+            m_RcptPage.DG오더_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_DG오더_ptCenterRelT);
+            if (m_RcptPage.DG오더_hWnd == IntPtr.Zero)
+                return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 찾기 실패", "InsungsAct_RcptRegPage/InitializeAsync_16");
 
-            //m_RcptPage.DG오더_hWnd수직스크롤 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤M);
+            m_RcptPage.DG오더_AbsRect = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
+            if (m_RcptPage.DG오더_AbsRect.Width != m_FileInfo.접수등록Page_DG오더_rcRelT.Width || m_RcptPage.DG오더_AbsRect.Height != m_FileInfo.접수등록Page_DG오더_rcRelT.Height)
+                return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 크기 불일치", "InsungsAct_RcptRegPage/InitializeAsync_17");
 
-            //// 9. Datagrid 상세 정보 설정
-            //StdResult_Error resultDG = await SetDG오더RectsAsync(bEdit, bWrite, bMsgBox);
-            //if (resultDG != null) return resultDG;
+             m_RcptPage.DG오더_hWnd수직스크롤 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤T);
 
-            //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 초기화 완료");
+            // 9. Datagrid 상세 정보 설정
+            StdResult_Error resultDG = await SetDG오더RectsAsync();
+            if (resultDG != null) return resultDG;
+
+            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 초기화 완료");
             return null;
         }
         catch (Exception ex)
@@ -235,153 +249,190 @@ public partial class InsungsAct_RcptRegPage
             return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 예외 발생: {ex.Message}", "InsungsAct_RcptRegPage/InitializeAsync_999");
         }
     }
-    #endregion    /// <summary>
     // Datagrid 상세 영역 설정 (컬럼 헤더 읽기 + RelChildRects 계산 + 상태 검증)
-    private async Task<StdResult_Error> SetDG오더RectsAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    private async Task<StdResult_Error> SetDG오더RectsAsync()
     {
         Draw.Bitmap bmpDG = null;
         try
         {
             Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] SetDG오더RectsAsync 시작");
 
-            //// 재시도 루프
-            //for (int retry = 1; retry <= c_nRepeatShort; retry++)
-            //{
-            //    bool bShowMsgBox = (retry == c_nRepeatShort) && bMsgBox;
+            // 재시도 루프
+            for (int retry = 1; retry <= c_nRepeatShort; retry++)
+            {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync(); // ESC 중단 체크
+                bool bShowMsgBox = (retry == c_nRepeatShort);
 
-            //    if (retry > 1)
-            //    {
-            //        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] Datagrid 재시도 {retry}/{c_nRepeatShort}");
-            //        await Task.Delay(c_nWaitVeryLong);
-            //    }
+                if (retry > 1)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] Datagrid 재시도 {retry}/{c_nRepeatShort}");
+                    await Task.Delay(c_nWaitVeryLong);
+                }
 
-            //    // 1. DG오더_hWnd 기준으로 헤더 영역만 캡처
-            //    Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
-            //    int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
-            //    Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, headerHeight);
+                // 1. DG오더_hWnd 기준으로 헤더 영역만 캡처
+                Draw.Rectangle rcDG_Abs = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
+                int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
+                Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG_Abs.Width, headerHeight);
 
-            //    bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
+                bmpDG = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, rcHeader);
 
-            //    if (bmpDG == null)
-            //    {
-            //        if (retry != c_nRepeatShort)
-            //        {
-            //            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] DG오더 캡처 실패 (재시도 {retry}/{c_nRepeatShort})");
-            //            await Task.Delay(200);
-            //            continue;
-            //        }
-            //        return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] DG오더 캡처 실패", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_01", bWrite, bShowMsgBox);
-            //    }
+                if (bmpDG == null)
+                {
+                    if (retry != c_nRepeatShort)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] DG오더 캡처 실패 (재시도 {retry}/{c_nRepeatShort})");
+                        await Task.Delay(200);
+                        continue;
+                    }
+                    return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] DG오더 캡처 실패", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_01");
+                }
+                //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] DG오더 캡처 성공: {bmpDG.Width}x{bmpDG.Height}");
 
-            //    Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] DG오더 캡처 성공: {bmpDG.Width}x{bmpDG.Height}");
+                // 2. 컬럼 경계 검출 (상단 여백 중간에서 검출)
+                int targetRow = HEADER_GAB / 2;  // 상단 여백 중간 (3)
+                byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpDG, targetRow);
 
-            //    // 2. 컬럼 경계 검출 (상단 여백 중간에서 검출)
-            //    int targetRow = HEADER_GAB / 2;  // 상단 여백 중간 (3)
-            //    byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpDG, targetRow);
+                if (minBrightness == 255)
+                {
+                    return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 최소 밝기 검출 실패", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_02");
+                }
+                //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 최소 밝기 검출 성공");
 
-            //    if (minBrightness == 255)
-            //    {
-            //        return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 최소 밝기 검출 실패", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_02", bWrite, bMsgBox);
-            //    }
+                minBrightness += 2;
+                bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, targetRow, minBrightness, 2);
 
-            //    minBrightness += 2;
-            //    bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpDG, targetRow, minBrightness, 2);
+                if (boolArr == null || boolArr.Length == 0)
+                {
+                    return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Bool 배열 생성 실패", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_03");
+                }
 
-            //    if (boolArr == null || boolArr.Length == 0)
-            //    {
-            //        return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Bool 배열 생성 실패", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_03", bWrite, bMsgBox);
-            //    }
+                // 2-3. 컬럼 경계 리스트 추출
+                List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
 
-            //    // 2-3. 컬럼 경계 리스트 추출
-            //    List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
+                if (listLW == null || listLW.Count < 2)
+                {
+                    return new StdResult_Error(
+                        $"[{m_Context.AppName}/RcptRegPage] 컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_04");
+                }
 
-            //    if (listLW == null || listLW.Count < 2)
-            //    {
-            //        return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 컬럼 경계 검출 실패: Count={listLW?.Count ?? 0}", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_04", bWrite, bMsgBox);
-            //    }
+                // 마지막 항목 제거 (오른쪽 끝 경계)
+                listLW.RemoveAt(listLW.Count - 1);
+                int columns = listLW.Count;
 
-            //    // 마지막 항목 제거 (오른쪽 끝 경계)
-            //    listLW.RemoveAt(listLW.Count - 1);
-            //    int columns = listLW.Count;
+                // 3. 컬럼 헤더 OFR (컬럼 개수 확인 전에 OFR을 먼저 수행하여 텍스트를 확보)
+                m_RcptPage.DG오더_ColumnTexts = new string[columns];
+                for (int i = 0; i < columns; i++)
+                {
+                    Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[i].nLeft, HEADER_GAB, listLW[i].nWidth, HEADER_TEXT_HEIGHT);
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight);
+                    m_RcptPage.DG오더_ColumnTexts[i] = result?.strResult ?? string.Empty;
+                }
+                string detectedTexts = string.Join(", ", m_RcptPage.DG오더_ColumnTexts.Take(columns));
 
-            //    // 컬럼 개수 확인
-            //    if (columns != m_ReceiptDgHeaderInfos.Length)
-            //    {
-            //        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 컬럼 개수 불일치: 검출={columns}개, 예상={m_ReceiptDgHeaderInfos.Length}개 (재시도 {retry}/{c_nRepeatShort})");
-            //        bmpDG?.Dispose();
-            //        bmpDG = null;
+                // 컬럼 개수 확인
+                if (columns != m_ReceiptDgHeaderInfos.Length)
+                {
+                    string msg = $"[검증 실패] 컬럼 개수가 맞지 않습니다.\n\n" +
+                                 $"- Issue: InvalidColumnCount\n" +
+                                 $"- 검출: {columns}개\n" +
+                                 $"- 예상: {m_ReceiptDgHeaderInfos.Length}개\n\n" +
+                                 $"[검출된 헤더 텍스트]\n{detectedTexts}\n\n" +
+                                 $"확인을 누르면 초기화(Init)를 다시 시도합니다.";
+                    
+                    Debug.WriteLine($"[INSUNG1/RcptRegPage] {msg.Replace("\n", " ")}");
+                    //MsgBox(msg, "그리드 검증 실패");
 
-            //        StdResult_Error initResult = await InitDG오더Async(CEnum_DgValidationIssue.InvalidColumnCount, bEdit, bWrite, bMsgBox: false);
-            //        if (initResult != null && retry == c_nRepeatShort)
-            //            return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 컬럼 개수 불일치: 검출={columns}, 예상={m_ReceiptDgHeaderInfos.Length}", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_05", bWrite, bShowMsgBox);
+                    bmpDG?.Dispose();
+                    bmpDG = null;
 
-            //        await Task.Delay(200);
-            //        continue;
-            //    }
+                    StdResult_Error initResult = await InitDG오더Async(CEnum_DgValidationIssue.InvalidColumnCount);
+                    if (initResult != null)
+                    {
+                        if (initResult.sErr.Contains("취소")) return initResult; // ESC 중단 시 즉시 종료
+                        if (retry == c_nRepeatShort)
+                            return new StdResult_Error(
+                                $"[{m_Context.AppName}/RcptRegPage] 컬럼 개수 불일치: 검출={columns}, 예상={m_ReceiptDgHeaderInfos.Length}", 
+                                "InsungsAct_RcptRegPage/SetDG오더RectsAsync_05");
+                    }
 
-            //    // 3. 컬럼 헤더 OFR
-            //    m_RcptPage.DG오더_ColumnTexts = new string[columns];
-            //    for (int i = 0; i < columns; i++)
-            //    {
-            //        Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[i].nLeft, HEADER_GAB, listLW[i].nWidth, HEADER_TEXT_HEIGHT);
-            //        var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpDG, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
-            //        m_RcptPage.DG오더_ColumnTexts[i] = result?.strResult ?? string.Empty;
-            //    }
+                    await Task.Delay(200);
+                    continue;
+                }
 
-            //    Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] OFR 완료: {string.Join(", ", m_RcptPage.DG오더_ColumnTexts)}");
+                Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] OFR 완료: {string.Join(", ", m_RcptPage.DG오더_ColumnTexts)}");
 
-            //    // 4. Datagrid 상태 검증
-            //    CEnum_DgValidationIssue validationIssues = ValidateDatagridState(m_RcptPage.DG오더_ColumnTexts, listLW);
-            //    if (validationIssues != CEnum_DgValidationIssue.None)
-            //    {
-            //        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] Datagrid 상태 검증 실패: {validationIssues}");
-            //        bmpDG?.Dispose();
-            //        bmpDG = null;
+                // 4. Datagrid 상태 검증
+                CEnum_DgValidationIssue validationIssues = ValidateDatagridState(m_RcptPage.DG오더_ColumnTexts, listLW);
+                if (validationIssues != CEnum_DgValidationIssue.None)
+                {
+                    string msg = $"[검증 실패] 데이터그리드 상태가 규격과 다릅니다.\n\n" +
+                                 $"- 상세 이슈: {validationIssues}\n" +
+                                 $"- 예상 컬럼: {m_ReceiptDgHeaderInfos.Length}개\n\n" +
+                                 $"확인을 누르면 초기화(Init)를 다시 시도합니다.";
 
-            //        StdResult_Error initResult = await InitDG오더Async(validationIssues, bEdit, bWrite, bMsgBox: false);
-            //        if (initResult != null && retry == c_nRepeatShort)
-            //            return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 상태 검증 실패: {validationIssues}", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_Validation", bWrite, bShowMsgBox);
+                    Debug.WriteLine($"[INSUNG1/RcptRegPage] {msg.Replace("\n", " ")}");
+                    //MsgBox(msg, "그리드 규격 검증 실패");
 
-            //        await Task.Delay(200);
-            //        continue;
-            //    }
+                    bmpDG?.Dispose();
+                    bmpDG = null;
 
-            //    // 5. RelChildRects 생성
-            //    bmpDG?.Dispose();
-            //    bmpDG = null;
+                    StdResult_Error initResult = await InitDG오더Async(validationIssues);
+                    if (initResult != null)
+                    {
+                        if (initResult.sErr.Contains("취소")) return initResult; // ESC 중단 시 즉시 종료
+                        if (retry == c_nRepeatShort)
+                            return new StdResult_Error(
+                                $"[{m_Context.AppName}/RcptRegPage] Datagrid 상태 검증 실패: {validationIssues}", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_Validation");
+                    }
 
-            //    int rows = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
-            //    int dataRowHeight = m_FileInfo.접수등록Page_DG오더_dataRowHeight;
-            //    int emptyRowHeight = m_FileInfo.접수등록Page_DG오더_emptyRowHeight;
-            //    const int dataHeight = 15;
+                    await Task.Delay(200);
+                    continue;
+                }
 
-            //    m_RcptPage.DG오더_RelChildRects = new Draw.Rectangle[columns, rows + 2]; // +2: 헤더, Empty
+                // 5. RelChildRects 생성
+                bmpDG?.Dispose();
+                bmpDG = null;
 
-            //    for (int col = 0; col < columns; col++)
-            //    {
-            //        // Row 0: Header
-            //        m_RcptPage.DG오더_RelChildRects[col, 0] = new Draw.Rectangle(listLW[col].nLeft + 1, HEADER_GAB, listLW[col].nWidth - 2, HEADER_TEXT_HEIGHT);
-            //        // Row 1: Empty
-            //        m_RcptPage.DG오더_RelChildRects[col, 1] = new Draw.Rectangle(listLW[col].nLeft + 1, headerHeight + 1, listLW[col].nWidth - 2, dataHeight);
+                int rows = InsungsInfo_File.접수등록Page_DG오더_dataRowCount;
+                int dataRowHeight = m_FileInfo.접수등록Page_DG오더_dataRowHeight;
+                int emptyRowHeight = m_FileInfo.접수등록Page_DG오더_emptyRowHeight;
+                const int dataHeight = 15;
 
-            //        // Row 2~: Data rows
-            //        for (int row = 2; row < rows + 2; row++)
-            //        {
-            //            int cellY = headerHeight + emptyRowHeight + ((row - 2) * dataRowHeight) + 1;
-            //            m_RcptPage.DG오더_RelChildRects[col, row] = new Draw.Rectangle(listLW[col].nLeft + 1, cellY, listLW[col].nWidth - 2, dataHeight);
-            //        }
-            //    }
+                m_RcptPage.DG오더_RelChildRects = new Draw.Rectangle[columns, rows + 2]; // +2: 헤더, Empty
 
-            //    // 6. Background Brightness 계산
-            //    m_RcptPage.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(m_RcptPage.DG오더_hWnd);
-            //    break;
-            //}
+                for (int col = 0; col < columns; col++)
+                {
+                    // Row 0: Header
+                    m_RcptPage.DG오더_RelChildRects[col, 0] = new Draw.Rectangle(listLW[col].nLeft + 1, HEADER_GAB, listLW[col].nWidth - 2, HEADER_TEXT_HEIGHT);
+                    // Row 1: Empty
+                    m_RcptPage.DG오더_RelChildRects[col, 1] = new Draw.Rectangle(listLW[col].nLeft + 1, headerHeight + 1, listLW[col].nWidth - 2, dataHeight);
+
+                    // Row 2~: Data rows
+                    for (int row = 2; row < rows + 2; row++)
+                    {
+                        int cellY = headerHeight + emptyRowHeight + ((row - 2) * dataRowHeight) + 1;
+                        m_RcptPage.DG오더_RelChildRects[col, row] = new Draw.Rectangle(listLW[col].nLeft + 1, cellY, listLW[col].nWidth - 2, dataHeight);
+                    }
+                }
+
+                // 6. Background Brightness 계산
+                m_RcptPage.DG오더_nBackgroundBright = OfrService.GetCenterPixelBrightnessFrmWndHandle(m_RcptPage.DG오더_hWnd);
+                break;
+            }
 
             return null;
         }
+        catch (OperationCanceledException)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.");
+            return new StdResult_Error("작업 취소됨", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel");
+        }
         catch (Exception ex)
         {
-            return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] SetDG오더RectsAsync 예외발생: {ex.Message}", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_999");
+            string err = $"[{m_Context.AppName}/RcptRegPage] SetDG오더RectsAsync 예외발생: {ex.Message}";
+            Debug.WriteLine(err);
+            Debug.WriteLine(ex.StackTrace);
+            return new StdResult_Error(err, "InsungsAct_RcptRegPage/SetDG오더RectsAsync_999");
         }
         finally
         {
@@ -408,167 +459,204 @@ public partial class InsungsAct_RcptRegPage
         return (bmpHeader, listLW, columns);
     }
 
-    //// 모든 컬럼 OFR 헬퍼
-    //private async Task<string[]> OfrAllColumnsAsync(Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns, int gab, int height, bool bEdit = false)
-    //{
-    //    string[] texts = new string[columns];
+    // 모든 컬럼 OFR 헬퍼
+    private async Task<string[]> OfrAllColumnsAsync(Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns, int gab, int height, bool bTextSave = true)
+    {
+        string[] texts = new string[columns];
 
-    //    for (int x = 0; x < columns; x++)
-    //    {
-    //        Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
-    //        var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
+        for (int x = 0; x < columns; x++)
+        {
+            Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: bTextSave, dWeight: c_dOfrWeight);
 
-    //        texts[x] = result?.strResult;
-    //    }
+            texts[x] = result?.strResult;
+        }
 
-    //    return texts;
-    //}
+        return texts;
+    }
 
-    //// Datagrid 강제 초기화 (Context 메뉴 → "접수화면초기화" 클릭 → 컬럼 조정)
-    //private async Task<StdResult_Error> InitDG오더Async(CEnum_DgValidationIssue issues, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
-    //{
-    //    Draw.Point ptCursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
-    //    try
-    //    {
-    //        Simulation_Mouse.SafeBlockInputStart();
+    //Datagrid 강제 초기화(Context 메뉴 → "접수화면초기화" 클릭 → 컬럼 조정)
+    private async Task<StdResult_Error> InitDG오더Async(CEnum_DgValidationIssue issues, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    {
+        // 마우스 커서 위치 백업 (작업 완료 후 복원용)
+        Draw.Point ptCursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
 
-    //        Draw.Rectangle rcDG = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
-    //        Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG.Width, m_FileInfo.접수등록Page_DG오더_headerHeight);
+        try
+        {
+            // 초기화 전체 기간 동안 외부 입력 차단
+            Simulation_Mouse.SafeBlockInputStart();
 
-    //        Debug.WriteLine($"[{m_Context.AppName}/InitDG오더] Step 1: 접수화면초기화 시작");
+            // DG오더_hWnd 기준으로 헤더 영역 정의
+            Draw.Rectangle rcDG = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
+            Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG.Width, m_FileInfo.접수등록Page_DG오더_headerHeight);
 
-    //        await Std32Mouse_Post.MousePostAsync_ClickRight(m_RcptPage.DG오더_hWnd);
+            // Step 1: 사전작업 - "접수화면초기화" 클릭
+            Debug.WriteLine("[InitDG오더] Step 1: 접수화면초기화 시작");
+            await Std32Mouse_Post.MousePostAsync_ClickRight(m_RcptPage.DG오더_hWnd);
 
-    //        IntPtr hWndMenu = IntPtr.Zero;
-    //        for (int i = 0; i < 100; i++)
-    //        {
-    //            await Task.Delay(20);
-    //            hWndMenu = Std32Window.FindMainWindow_StartsWith(m_Context.MemInfo.Splash.TopWnd_uProcessId, m_FileInfo.Main_AnyMenu_sClassName, m_FileInfo.Main_AnyMenu_sWndName);
-    //            if (hWndMenu != IntPtr.Zero) break;
-    //        }
+            IntPtr hWndMenu = IntPtr.Zero;
+            for (int i = 0; i < 100; i++)
+            {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await Task.Delay(20);
+                hWndMenu = Std32Window.FindMainWindow_StartsWith(m_Context.MemInfo.Splash.TopWnd_uProcessId, m_FileInfo.Main_AnyMenu_sClassName, m_FileInfo.Main_AnyMenu_sWndName);
+                if (hWndMenu != IntPtr.Zero) break;
+            }
 
-    //        if (hWndMenu == IntPtr.Zero)
-    //            return new StdResult_Error($"[{m_Context.AppName}/InitDG오더] Context 메뉴 찾기 실패", "InsungsAct_RcptRegPage/InitDG오더Async_01");
+            if (hWndMenu == IntPtr.Zero) return new StdResult_Error("[InitDG오더]Context 메뉴 찾기 실패", "InitDG오더Async_01");
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12, 50);
 
-    //        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12, 50);
+            IntPtr hWndDialog = IntPtr.Zero;
+            for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
+            {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await Task.Delay(CommonVars.c_nWaitShort);
+                hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
+                if (hWndDialog != IntPtr.Zero) break;
+            }
 
-    //        IntPtr hWndDialog = IntPtr.Zero;
-    //        for (int i = 0; i < CommonVars.c_nRepeatNormal; i++)
-    //        {
-    //            await Task.Delay(CommonVars.c_nWaitShort);
-    //            hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
-    //            if (hWndDialog != IntPtr.Zero) break;
-    //        }
+            if (hWndDialog == IntPtr.Zero)
+            {
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12, 50);
+                for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
+                {
+                    await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                    await Task.Delay(CommonVars.c_nWaitShort);
+                    hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
+                    if (hWndDialog != IntPtr.Zero) break;
+                }
+            }
 
-    //        if (hWndDialog == IntPtr.Zero)
-    //        {
-    //            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12, 100);
-    //            for (int i = 0; i < CommonVars.c_nRepeatNormal; i++)
-    //            {
-    //                await Task.Delay(CommonVars.c_nWaitShort);
-    //                hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
-    //                if (hWndDialog != IntPtr.Zero) break;
-    //            }
-    //        }
+            if (hWndDialog == IntPtr.Zero) return new StdResult_Error("[InitDG오더]확인 다이얼로그 찾기 실패", "InitDG오더Async_03");
 
-    //        if (hWndDialog == IntPtr.Zero)
-    //            return new StdResult_Error($"[{m_Context.AppName}/InitDG오더] 확인 다이얼로그 찾기 실패", "InsungsAct_RcptRegPage/InitDG오더Async_03");
+            IntPtr hWndBtn = Std32Window.FindWindowEx(hWndDialog, IntPtr.Zero, "Button", "예(&Y)");
+            if (hWndBtn == IntPtr.Zero) return new StdResult_Error("[InitDG오더]'예' 버튼 찾기 실패", "InitDG오더Async_02");
 
-    //        IntPtr hWndBtn = Std32Window.FindWindowEx(hWndDialog, IntPtr.Zero, "Button", "예(&Y)");
-    //        if (hWndBtn == IntPtr.Zero)
-    //            return new StdResult_Error($"[{m_Context.AppName}/InitDG오더] '예' 버튼 찾기 실패", "InsungsAct_RcptRegPage/InitDG오더Async_02");
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn, 5, 5, 50);
+            await Task.Delay(500);
 
-    //        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn, 5, 5, 50);
-    //        await Task.Delay(200);
+            for (int i = 0; i < CommonVars.c_nRepeatMany; i++)
+            {
+                await Task.Delay(CommonVars.c_nWaitShort);
+                hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
+                if (hWndDialog == IntPtr.Zero) break;
+            }
 
-    //        for (int i = 0; i < CommonVars.c_nRepeatShort; i++)
-    //        {
-    //            await Task.Delay(CommonVars.c_nWaitShort);
-    //            hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
-    //            if (hWndDialog == IntPtr.Zero) break;
-    //        }
+            await Task.Delay(c_nWaitVeryLong);
 
-    //        if (hWndDialog != IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/InitDG오더] 확인 다이얼로그 사라지기 실패", "InsungsAct_RcptRegPage/InitDG오더Async_04");
-    //        }
+            // Step 2: 컬럼 삭제 및 21개 확보 (폭 조정을 통한 발견)
+            Debug.WriteLine("[InitDG오더] Step 2: 컬럼 확보 시작");
+            int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
+            const int headerGab = 7;
+            int textHeight = headerHeight - (headerGab * 2);
+            int targetRow = headerGab / 2;
+            const int center = 15;
 
-    //        await Task.Delay(c_nWaitVeryLong);
+            for (int widthIter = 0; widthIter < 5; widthIter++)
+            {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await Task.Delay(CommonVars.c_nWaitNormal);
+                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                if (bmpHeader == null) return new StdResult_Error("헤더 캡쳐 실패", "InitDG오더Async_Step2_01");
 
-    //        Debug.WriteLine($"[{m_Context.AppName}/InitDG오더] Step 2: 불필요한 컬럼 제거 및 폭 조정 시작");
-
-    //        int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
-    //        const int headerGab = 7;
-    //        int textHeight = headerHeight - (headerGab * 2);
-    //        int targetRow = headerGab / 2;
-    //        const int center = 15;
-
-    //        for (int widthIter = 0; widthIter < 5; widthIter++)
-    //        {
-    //            await Task.Delay(CommonVars.c_nWaitNormal);
-    //            var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-    //            if (bmpHeader == null) return new StdResult_Error($"[{m_Context.AppName}/InitDG오더] 헤더 캡쳐 실패", "InitDG오더Async_05");
-
-    //            string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, bEdit);
+                string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, true);
                 
-    //            int removedCount = 0;
-    //            for (int x = columns - 1; x >= 0; x--)
-    //            {
-    //                bool isTarget = m_ReceiptDgHeaderInfos.Any(h => h.sName == texts[x]);
-    //                if (!isTarget)
-    //                {
-    //                    removedCount++;
-    //                    Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(new Draw.Rectangle(listLW[x].nLeft, headerGab, listLW[x].nWidth, textHeight));
-    //                    await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(m_RcptPage.DG오더_hWnd, ptCenter, -50, false);
-    //                    await Task.Delay(c_nWaitShort);
-    //                }
-    //            }
+                // 불필요 제거
+                for (int x = columns - 1; x >= 0; x--)
+                {
+                    if (!m_ReceiptDgHeaderInfos.Any(h => h.sName == texts[x]))
+                    {
+                        Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(new Draw.Rectangle(listLW[x].nLeft, headerGab, listLW[x].nWidth, textHeight));
+                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(m_RcptPage.DG오더_hWnd, ptCenter, -50, false, 50);
+                       await Task.Delay(c_nWaitShort);
+                    }
+                }
+                bmpHeader.Dispose();
 
-    //            if (removedCount > 0)
-    //            {
-    //                bmpHeader.Dispose();
-    //                await Task.Delay(CommonVars.c_nWaitLong);
-    //                var reCapture = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-    //                bmpHeader = reCapture.bmpHeader;
-    //                listLW = reCapture.listLW;
-    //                columns = reCapture.columns;
-    //                texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, true);
-    //            }
+                // 폭 조정 (끌어오기용 축소)
+                var (bmpHeaderReload, listLWReload, columnsReload) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                string[] textsReload = await OfrAllColumnsAsync(bmpHeaderReload, listLWReload, columnsReload, headerGab, textHeight, true);
+                for (int x = columnsReload - 1; x >= 0; x--)
+                {
+                    int boundaryX = listLWReload[x + 1].nLeft;
+                    var matched = m_ReceiptDgHeaderInfos.FirstOrDefault(h => h.sName == textsReload[x]);
+                    int targetWidth = (matched?.sName.Length ?? (textsReload[x]?.Length ?? 3)) * 18;
+                    int dx = (listLWReload[x].nLeft + targetWidth) - boundaryX;
+                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, new Draw.Point(boundaryX, center), dx, false, 50);
+                    await Task.Delay(c_nWaitNormal);
+                }
+                bmpHeaderReload.Dispose();
 
-    //            for (int x = columns - 1; x >= 0; x--)
-    //            {
-    //                int boundaryX = listLW[x + 1].nLeft;
-    //                int targetWidth = (texts[x]?.Length ?? 3) * 18;
-    //                int dx = (listLW[x].nLeft + targetWidth) - boundaryX;
-    //                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, new Draw.Point(boundaryX, center), dx, false, 100);
-    //                await Task.Delay(c_nWaitNormal);
-    //            }
+                // 확인
+                var (bmpFinal, listFinal, countFinal) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                string[] textsFinal = await OfrAllColumnsAsync(bmpFinal, listFinal, countFinal, headerGab, textHeight, true);
+                bmpFinal.Dispose();
+                if (m_ReceiptDgHeaderInfos.All(h => textsFinal.Contains(h.sName))) break;
+            }
 
-    //            bmpHeader.Dispose();
 
-    //            var (bmpFinal, _, finalCols) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-    //            if (bmpFinal != null)
-    //            {
-    //                string[] finalTexts = await OfrAllColumnsAsync(bmpFinal, _, finalCols, headerGab, textHeight, true);
-    //                bmpFinal.Dispose();
-    //                if (m_ReceiptDgHeaderInfos.All(h => finalTexts.Contains(h.sName))) break;
-    //            }
-    //        }
+            // Step 3: 컬럼 순서 조정
+            Debug.WriteLine("[InitDG오더] Step 3: 컬럼 순서 조정 시작");
+            for (int x = 0; x < m_ReceiptDgHeaderInfos.Length; x++)
+            {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await Task.Delay(CommonVars.c_nWaitNormal);
+                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                if (bmpHeader == null) break;
 
-    //        Debug.WriteLine($"[{m_Context.AppName}/InitDG오더] Datagrid 강제 초기화 완료");
-    //        return null;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Error($"[{m_Context.AppName}/InitDG오더] 예외발생: {ex.Message}", "InitDG오더Async_999");
-    //    }
-    //    finally
-    //    {
-    //        Simulation_Mouse.SafeBlockInputForceStop();
-    //        Std32Cursor.SetCursorPos_AbsDrawPt(ptCursorBackup);
-    //    }
-    //}
+                string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, true);
+                string targetText = m_ReceiptDgHeaderInfos[x].sName;
+                int index = Array.IndexOf(texts, targetText);
+
+                if (index >= 0 && index != x)
+                {
+                    Draw.Point ptStart = StdUtil.GetCenterDrawPoint(new Draw.Rectangle(listLW[index].nLeft, headerGab, listLW[index].nWidth, textHeight));
+                    Draw.Point ptTarget = new Draw.Point(listLW[x].nLeft + 3, ptStart.Y);
+                    await Simulation_Mouse.SafeMouseEvent_DragLeft_SmoothAsync(m_RcptPage.DG오더_hWnd, ptStart, ptTarget, false, 50);
+                    await Task.Delay(CommonVars.c_nWaitLong);
+                }
+                bmpHeader.Dispose();
+            }
+
+
+            // Step 4: 최종 규격 너비 조정
+            Debug.WriteLine("[InitDG오더] Step 4: 규격 너비 조정 시작");
+            for (int iter = 0; iter < 2; iter++)
+            {
+                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await Task.Delay(CommonVars.c_nWaitNormal);
+                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                if (bmpHeader == null) break;
+
+                string[] texts = await OfrAllColumnsAsync(bmpHeader, listLW, columns, headerGab, textHeight, true);
+                for (int x = columns - 1; x >= 0; x--)
+                {
+                    var matched = m_ReceiptDgHeaderInfos.FirstOrDefault(h => h.sName == texts[x]);
+                    if (matched == null) continue;
+                    int boundaryX = listLW[x + 1].nLeft;
+                    int targetX = listLW[x].nLeft + matched.nWidth;
+                    int dx = targetX - boundaryX;
+                    if (Math.Abs(dx) > 1)
+                    {
+                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, new Draw.Point(boundaryX, center), dx, false, 50);
+                        await Task.Delay(c_nWaitNormal);
+                    }
+                }
+                bmpHeader.Dispose();
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Error($"[{m_Context.AppName}/InitDG오더] 예외발생: {ex.Message}", "InitDG오더Async_999");
+        }
+        finally
+        {
+            Simulation_Mouse.SafeBlockInputForceStop();
+            Std32Cursor.SetCursorPos_AbsDrawPt(ptCursorBackup);
+        }
+    }
 
     // 접수등록 페이지가 초기화되었는지 확인 (간단 체크)
     public bool IsInitialized()
@@ -577,393 +665,374 @@ public partial class InsungsAct_RcptRegPage
         if (m_RcptPage.DG오더_RelChildRects == null || m_RcptPage.DG오더_ColumnTexts == null) return false;
         return true;
     }
+    #endregion
 
-//     #region 5. AutoAlloc NewOrder - Kai신규 자동배차
-    /// <summary>
-    /// 신규 주문 등록 확인 (Kai에만 존재, 인성에 없음)
-    /// </summary>
-    //public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAllocModel item, CancelTokenControl ctrl)
-    //{
-    //    // Cancel/Pause 체크 - 긴 작업 전
-    //    await ctrl.WaitIfPausedOrCancelledAsync();
-    //
-    //    string kaiState = item.NewOrder.OrderState;
-    //
-    //    switch (kaiState)
-    //    {
-    //        case "접수":
-    //        case "취소":
-    //        case "대기":
-    //            // 신규 주문 팝업창 열기 → 입력 → 닫기 → 성공 확인
-    //            StdResult_Status result = await OpenNewOrderPopupAsync(item, ctrl);
-    //
-    //            if (result.Result == StdResult.Success)
-    //            {
-    //                // 성공: NotChanged로 재적재 (다음 사이클에서 관리 대상으로 분류됨)
-    //                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //            }
-    //            else
-    //            {
-    //                // 실패: 치명적 에러 (신규 등록 실패)
-    //                return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
-    //            }
-    //
-    //        case "배차":
-    //        case "운행":
-    //        case "완료":
-    //        case "예약":
-    //            return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_TODO");
-    //
-    //        default:
-    //            return CommonResult_AutoAllocProcess.FailureAndDiscard($"알 수 없는 Kai 주문 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_800");
-    //    }
-    //}
-//     #endregion
+    // #region 5. AutoAlloc NewOrder - Kai신규 자동배차
+    // 신규 주문 등록 확인 (Kai 전용)
+    // public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAllocModel item, CancelTokenControl ctrl)
+    // {
+    //     // Cancel/Pause 체크 - 긴 작업 전
+    //     await ctrl.WaitIfPausedOrCancelledAsync();
+    // 
+    //     string kaiState = item.NewOrder.OrderState;
+    // 
+    //     switch (kaiState)
+    //     {
+    //         case "접수":
+    //         case "취소":
+    //         case "대기":
+    //             // 신규 주문 팝업창 열기 → 입력 → 닫기 → 성공 확인
+    //             StdResult_Status result = await OpenNewOrderPopupAsync(item, ctrl);
+    // 
+    //             if (result.Result == StdResult.Success)
+    //             {
+    //                 // 성공: NotChanged로 재적재 (다음 사이클에서 관리 대상으로 분류됨)
+    //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+    //             }
+    //             else
+    //             {
+    //                 // 실패: 치명적 에러 (신규 등록 실패)
+    //                 return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+    //             }
+    // 
+    //         case "배차":
+    //         case "운행":
+    //         case "완료":
+    //         case "예약":
+    //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_TODO");
+    // 
+    //         default:
+    //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"알 수 없는 Kai 주문 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_800");
+    //     }
+    // }
+    // #endregion
 // 
-//     #region 6. AutoAlloc UpdateOrder - Kai변경 자동배차
-    /// <summary>
-    /// Kai DB에서 업데이트된 주문을 인성 앱에 반영
-    /// </summary>
-    //public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiUpdated(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    await ctrl.WaitIfPausedOrCancelledAsync();
-    //
-    //    string kaiState = item.NewOrder.OrderState;
-    //    string isState = dgInfo.sStatus;
-    //
-    //    // 상태가 같은 경우: 필드만 업데이트
-    //    if (kaiState == isState) return await UpdateOrderSameStateAsync(item, dgInfo, ctrl);
-    //    // 상태가 다른 경우: 필드 업데이트 + 상태 전환
-    //    else return await UpdateOrderDiffStateAsync(item, dgInfo, kaiState, isState, ctrl);
-    //}
+    // #region 6. AutoAlloc UpdateOrder - Kai변경 자동배차
+    // Kai DB에서 업데이트된 주문을 인성 앱에 반영
+    // public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiUpdated(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     await ctrl.WaitIfPausedOrCancelledAsync();
+    // 
+    //     string kaiState = item.NewOrder.OrderState;
+    //     string isState = dgInfo.sStatus;
+    // 
+    //     // 상태가 같은 경우: 필드만 업데이트
+    //     if (kaiState == isState) return await UpdateOrderSameStateAsync(item, dgInfo, ctrl);
+    //     // 상태가 다른 경우: 필드 업데이트 + 상태 전환
+    //     else return await UpdateOrderDiffStateAsync(item, dgInfo, kaiState, isState, ctrl);
+    // }
+    // 같은 상태: 필드만 선별 업데이트
+    // private async Task<CommonResult_AutoAllocProcess> UpdateOrderSameStateAsync(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     string isState = dgInfo.sStatus;
+    // 
+    //     // 인성 앱 특성: 상태가 변경되면 저장 안 됨 → 같은 상태 버튼 클릭 필요
+    //     // 대기/취소: 외부에서 상태 변경 불가 → 반복 불필요
+    //     // 접수/배차: 외부에서 상태 변경 가능 → 타이밍 이슈 대비 반복 필요
+    //     switch (dgInfo.sStatus)
+    //     {
+    //         case "대기":  // 외부 변경 없음 → 1번만
+    //             return await UpdateOrderWidelyAsync("", item, dgInfo, false, ctrl);
+    // 
+    //         case "접수": // 외부 변경 가능 → 10번 재시도
+    //         case "배차":
+    //             return await UpdateOrderWidelyAsync("", item, dgInfo, true, ctrl);
+    // 
+    //         case "취소":
+    //         case "완료":
+    //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+    // 
+    //         default:
+    //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(SameState): Kai={isState}, IS={isState}", "UpdateOrderSameStateAsync_999");
+    //     }
+    // }
+    // 
+    // 다른 상태: 필드 업데이트 + 상태 전환
+    // private async Task<CommonResult_AutoAllocProcess> UpdateOrderDiffStateAsync(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, string kaiState, string isState, CancelTokenControl ctrl)
+    // {
+    //     string wantState = kaiState; // Kai DB의 목표 상태로 전환
+    //     bool useRepeat;
+    // 
+    //     // 상태 전환 규칙에 따라 반복 횟수 결정
+    //     switch (kaiState)
+    //     {
+    //         case "접수":
+    //             switch (isState)
+    //             {
+    //                 case "취소": // 취소 → 접수
+    //                 case "대기": // 대기 → 접수
+    //                     useRepeat = true; // 10번 재시도
+    //                     break;
+    // 
+    //                 case "운행": // 운행 → 접수
+    //                     Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
+    //                     return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+    // 
+    //                 default:
+    //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=접수, IS={isState}", "InsungsAct_RcptRegPage/pdateOrderDiffStateAsync_01");
+    //             }
+    //             break;
+    // 
+    //         case "대기":
+    //             switch (isState)
+    //             {
+    //                 case "취소": // 취소 → 대기
+    //                     useRepeat = false; // 1번만
+    //                     break;
+    //                 case "접수": // 접수 → 대기
+    //                 case "배차": // 배차 → 대기
+    //                     useRepeat = true; // 10번 재시도
+    //                     break;
+    //                 default:
+    //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=대기, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_02");
+    //             }
+    //             break;
+    // 
+    //         case "취소":
+    //             switch (isState)
+    //             {
+    //                 case "접수": // 접수 → 취소
+    //                 case "배차": // 배차 → 취소
+    //                 case "운행": // 운행 → 취소
+    //                     return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, true, ctrl); // 10번 재시도
+    // 
+    //                 case "예약": // 예약 → 취소
+    //                 case "완료": // 완료 → 취소
+    //                 case "대기": // 대기 → 취소
+    //                     return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, false, ctrl); // 1번만
+    // 
+    //                 default:
+    //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_03");
+    //             }
+    // 
+    //         case "운행":
+    //             switch (isState)
+    //             {
+    //                 case "완료": // 운행 → 완료
+    //                     return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
+    // 
+    //                 default:
+    //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_03");
+    //             }
+    // 
+    //         default:
+    //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(DiffState): Kai={kaiState}, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_04");
+    //     }
+    // 
+    //     // 팝업 열기 → 필드 업데이트 → 상태 전환 → 저장/닫기
+    //     return await UpdateOrderWidelyAsync(wantState, item, dgInfo, useRepeat, ctrl);
+    // }
+    // #endregion
+
+    // #region 7. Status Management - Insung상태 관리
+    // Insung 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
+    // public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_InsungOrderManage(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     // Cancel/Pause 체크
+    //     await ctrl.WaitIfPausedOrCancelledAsync();
+    // 
+    //     string kaiState = item.NewOrder.OrderState;
+    //     string isState = dgInfo.sStatus;
+    // 
+    //     Debug.WriteLine($"[CheckIsOrderAsync_InsungOrderManage] KeyCode={item.KeyCode}, Kai={kaiState}, Insung={isState}");
+    // 
+    //     // Insung 상태별로 handler 함수 호출 (2중 switch 방지)
+    //     switch (isState)
+    //     {
+    //         case "접수":
+    //         case "배차":
+    //             return await InsungOrderManage_접수Or배차Async(item, kaiState, dgInfo, ctrl);
+    //         case "운행":
+    //             return await InsungOrderManage_운행Async(item, kaiState, dgInfo, ctrl);
+    //         case "완료":
+    //             return await InsungOrderManage_완료Async(item, kaiState, dgInfo, ctrl);
+    //         case "대기":
+    //             return await InsungOrderManage_대기Async(item, kaiState, dgInfo, ctrl);
+    //         case "취소":
+    //             return await InsungOrderManage_취소Async(item, kaiState, dgInfo, ctrl);
+    // 
+    //         default:
+    //             Debug.WriteLine($"  → 미정의 Insung 상태: {isState}");
+    //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+    //     }
+    // }
+
+    // Insung "접수" 또는 "배차" 상태 처리 - Kai 상태별 로깅
+    // #pragma warning disable CS1998 // async method lacks await
+    // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_접수Or배차Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     string insungState = dgInfo.sStatus;
+    // 
+    //     switch (kaiState)
+    //     {
+    //         case "접수":
+    //         case "배차":
+    //             Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
+    //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+    // 
+    //         default:
+    //             Debug.WriteLine($"  → [{insungState}/?] 미정의 Kai 상태: {kaiState}");
+    //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_999");
+    //     }
+    // }
+    // #pragma warning restore CS1998
 // 
-    /// <summary>
-    /// 같은 상태: 필드만 선별 업데이트
-    /// </summary>
-    //private async Task<CommonResult_AutoAllocProcess> UpdateOrderSameStateAsync(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    string isState = dgInfo.sStatus;
-    //
-    //    // 인성 앱 특성: 상태가 변경되면 저장 안 됨 → 같은 상태 버튼 클릭 필요
-    //    // 대기/취소: 외부에서 상태 변경 불가 → 반복 불필요
-    //    // 접수/배차: 외부에서 상태 변경 가능 → 타이밍 이슈 대비 반복 필요
-    //    switch (dgInfo.sStatus)
-    //    {
-    //        case "대기":  // 외부 변경 없음 → 1번만
-    //            return await UpdateOrderWidelyAsync("", item, dgInfo, false, ctrl);
-    //
-    //        case "접수": // 외부 변경 가능 → 10번 재시도
-    //        case "배차":
-    //            return await UpdateOrderWidelyAsync("", item, dgInfo, true, ctrl);
-    //
-    //        case "취소":
-    //        case "완료":
-    //            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //
-    //        default:
-    //            return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(SameState): Kai={isState}, IS={isState}", "UpdateOrderSameStateAsync_999");
-    //    }
-    //}
+    // Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
+    // Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
+    // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_운행Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     Debug.WriteLine($"  → [InsungOrderManage_운행Async] 진입 - KeyCode={item.KeyCode}, RunStartTime={item.RunStartTime?.ToString("HH:mm:ss") ?? "null"}, DriverPhone={item.DriverPhone ?? "null"}");
+    // 
+    //     switch (kaiState)
+    //     {
+    //         case "접수":
+    //             // 타이머 시작 체크
+    //             if (item.RunStartTime == null)
+    //             {
+    //                 item.RunStartTime = DateTime.Now;
+    //                 Debug.WriteLine($"  → [운행/접수] 운행 진입 - 타이머 시작 ({item.RunStartTime:HH:mm:ss}) - 경과: 0.0초 / 40초");
+    // 
+    //                 // 기사전번 읽기 (캡처된 페이지 이미지 재사용)
+    //                 if (dgInfo.BmpPage == null)
+    //                 {
+    //                     Debug.WriteLine($"  → [운행/접수] 심각한 오류: BmpPage가 null - 자동배차 루프에서 페이지 캡처 실패");
+    //                     return CommonResult_AutoAllocProcess.FailureAndRetry("BmpPage가 null - 페이지 캡처 실패", "InsungOrderManage_운행Async_BmpPageNull");
+    //                 }
+    // 
+    //                 int yIndex = dgInfo.nIndex + 2;  // 헤더 2줄 추가
+    //                 Draw.Rectangle rectDriverPhNo = m_RcptPage.DG오더_RelChildRects[c_nCol기사전번, yIndex];
+    //                 StdResult_String resultDriverPhNo = await GetRowDriverPhNoAsync(dgInfo.BmpPage, rectDriverPhNo, dgInfo.bInvertRgb, ctrl);
+    // 
+    //                 if (string.IsNullOrEmpty(resultDriverPhNo.strResult))
+    //                 {
+    //                     Debug.WriteLine($"  → [운행/접수] 심각한 오류: 기사전번 획득 실패 - 운행 상태인데 기사 정보 없음: {resultDriverPhNo.sErr}");
+    //                     return CommonResult_AutoAllocProcess.FailureAndRetry($"기사전번 OFR 실패: {resultDriverPhNo.sErr}", "InsungOrderManage_운행Async_DriverPhNoFail");
+    //                 }
+    // 
+    //                 item.DriverPhone = resultDriverPhNo.strResult;
+    //                 Debug.WriteLine($"  → [운행/접수] 기사전번 획득: {item.DriverPhone}");
+    // 
+    //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 업데이트하며 재적재
+    //             }
+    // 
+    //             // 타이머 체크
+    //             TimeSpan elapsed = DateTime.Now - item.RunStartTime.Value;
+    //             Debug.WriteLine($"  → [운행/접수] 운행 중 - 경과 시간: {elapsed.TotalSeconds:F1}초");
+    // 
+    //             // 기사전번 다시 OFR (기사 변경 감지용)
+    //             if (dgInfo.BmpPage == null)
+    //             {
+    //                 Debug.WriteLine($"  → [운행/접수] 심각한 오류: BmpPage가 null - 자동배차 루프에서 페이지 캡처 실패");
+    //                 return CommonResult_AutoAllocProcess.FailureAndRetry("BmpPage가 null - 페이지 캡처 실패", "InsungOrderManage_운행Async_BmpPageNull2");
+    //             }
+    // 
+    //             int yIndexCheck = dgInfo.nIndex + 2;  // 헤더 2줄 추가
+    //             Draw.Rectangle rectDriverPhNoCheck = m_RcptPage.DG오더_RelChildRects[c_nCol기사전번, yIndexCheck];
+    //             StdResult_String resultDriverPhNoCheck = await GetRowDriverPhNoAsync(dgInfo.BmpPage, rectDriverPhNoCheck, dgInfo.bInvertRgb, ctrl);
+    // 
+    //             if (string.IsNullOrEmpty(resultDriverPhNoCheck.strResult))
+    //             {
+    //                 Debug.WriteLine($"  → [운행/접수] 심각한 오류: 기사전번 획득 실패 - 운행 상태인데 기사 정보 없음: {resultDriverPhNoCheck.sErr}");
+    //                 return CommonResult_AutoAllocProcess.FailureAndRetry($"기사전번 OFR 실패: {resultDriverPhNoCheck.sErr}", "InsungOrderManage_운행Async_DriverPhNoFail2");
+    //             }
+    // 
+    //             // 기사 변경 체크
+    //             if (resultDriverPhNoCheck.strResult != item.DriverPhone)
+    //             {
+    //                 Debug.WriteLine($"  → [운행/접수] 기사 변경 감지! 기존: {item.DriverPhone} → 새: {resultDriverPhNoCheck.strResult}");
+    //                 item.DriverPhone = resultDriverPhNoCheck.strResult;
+    //                 item.RunStartTime = DateTime.Now;
+    //                 Debug.WriteLine($"  → [운행/접수] 타이머 리셋 - 새로운 40초 대기 시작 ({item.RunStartTime:HH:mm:ss})");
+    //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 업데이트하며 재적재
+    //             }
+    // 
+    //             // 40초 경과 체크 (기사 변경 없음)
+    //             if (elapsed.TotalSeconds < 40)
+    //             {
+    //                 // 40초 미만 - 계속 대기
+    //                 Debug.WriteLine($"  → [운행/접수] 40초 대기 중 - 경과: {elapsed.TotalSeconds:F1}초 / 40초");
+    //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 유지하며 재적재
+    //             }
+    // 
+    //             // 40초 이상 경과 - 기사 확정
+    //             Debug.WriteLine($"  → [운행/접수] 40초 경과! 기사 확정 상태 (기사전번: {item.DriverPhone})");
+    // 
+    //             // 타이머 파괴
+    //             item.RunStartTime = null;
+    // 
+    //             // 1. 기사 정보 읽기용 팝업 열기 (DG 더블클릭 → 3초 대기 → 닫기)
+    //             Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기용 팝업 열기 시작");
+    //             StdResult_Status resultPopup = await OpenReadPopupAsync(dgInfo.nIndex, item, ctrl);
+    //             if (resultPopup.Result != StdResult.Success)
+    //             {
+    //                 Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기 실패: {resultPopup.sErr}");
+    //                 return CommonResult_AutoAllocProcess.FailureAndRetry(resultPopup.sErr, resultPopup.sPos);
+    //             }
+    //             Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기 성공");
+    // 
+    //             // 2. Order_StatusPage에서 처리 (DB 업데이트, 다른 앱 취소)
+    //             return await CommonVars.s_Order_StatusPage.Insung01배차To운행Async(item, ctrl);
+    // 
+    //         case "운행": // 같은상태 
+    //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
+    // 
+    //         default:
+    //             Debug.WriteLine($"  → [운행/{kaiState}] 미정의 Kai 상태: {kaiState}");
+    //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=운행", "InsungOrderManage_운행Async_999");
+    //     }
+    // }
 // 
-    /// <summary>
-    /// 다른 상태: 필드 업데이트 + 상태 전환
-    /// </summary>
-    //private async Task<CommonResult_AutoAllocProcess> UpdateOrderDiffStateAsync(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, string kaiState, string isState, CancelTokenControl ctrl)
-    //{
-    //    string wantState = kaiState; // Kai DB의 목표 상태로 전환
-    //    bool useRepeat;
-    //
-    //    // 상태 전환 규칙에 따라 반복 횟수 결정
-    //    switch (kaiState)
-    //    {
-    //        case "접수":
-    //            switch (isState)
-    //            {
-    //                case "취소": // 취소 → 접수
-    //                case "대기": // 대기 → 접수
-    //                    useRepeat = true; // 10번 재시도
-    //                    break;
-    //
-    //                case "운행": // 운행 → 접수
-    //                    Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
-    //                    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //
-    //                default:
-    //                    return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=접수, IS={isState}", "InsungsAct_RcptRegPage/pdateOrderDiffStateAsync_01");
-    //            }
-    //            break;
-    //
-    //        case "대기":
-    //            switch (isState)
-    //            {
-    //                case "취소": // 취소 → 대기
-    //                    useRepeat = false; // 1번만
-    //                    break;
-    //                case "접수": // 접수 → 대기
-    //                case "배차": // 배차 → 대기
-    //                    useRepeat = true; // 10번 재시도
-    //                    break;
-    //                default:
-    //                    return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=대기, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_02");
-    //            }
-    //            break;
-    //
-    //        case "취소":
-    //            switch (isState)
-    //            {
-    //                case "접수": // 접수 → 취소
-    //                case "배차": // 배차 → 취소
-    //                case "운행": // 운행 → 취소
-    //                    return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, true, ctrl); // 10번 재시도
-    //
-    //                case "예약": // 예약 → 취소
-    //                case "완료": // 완료 → 취소
-    //                case "대기": // 대기 → 취소
-    //                    return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, false, ctrl); // 1번만
-    //
-    //                default:
-    //                    return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_03");
-    //            }
-    //
-    //        case "운행":
-    //            switch (isState)
-    //            {
-    //                case "완료": // 운행 → 완료
-    //                    return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
-    //
-    //                default:
-    //                    return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_03");
-    //            }
-    //
-    //        default:
-    //            return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(DiffState): Kai={kaiState}, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_04");
-    //    }
-    //
-    //    // 팝업 열기 → 필드 업데이트 → 상태 전환 → 저장/닫기
-    //    return await UpdateOrderWidelyAsync(wantState, item, dgInfo, useRepeat, ctrl);
-    //}
-//     #endregion
+    // Insung "완료" 상태 처리 - Kai 상태별 로깅
+    // Insung "완료" 상태 처리 - Kai 상태별 로깅
+    // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_완료Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     switch (kaiState)
+    //     {
+    //         case "운행":
+    //             return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
+    // 
+    //         default:
+    //             Debug.WriteLine($"  → [완료/{kaiState}] 미정의 Kai 상태: {kaiState}");
+    //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=완료", "InsungOrderManage_완료Async_999");
+    //     }
+    // }
 // 
-//     #region 7. Status Management - Insung상태 관리
-    /// <summary>
-    /// Insung 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
-    /// - Insung 상태를 primary switch로 분기
-    /// - 각 Insung 상태별 handler 함수 호출
-    /// - 로그만 출력 (DB 업데이트, 앱 취소 작업 없음)
-    /// </summary>
-    //public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_InsungOrderManage(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    // Cancel/Pause 체크
-    //    await ctrl.WaitIfPausedOrCancelledAsync();
-    //
-    //    string kaiState = item.NewOrder.OrderState;
-    //    string isState = dgInfo.sStatus;
-    //
-    //    Debug.WriteLine($"[CheckIsOrderAsync_InsungOrderManage] KeyCode={item.KeyCode}, Kai={kaiState}, Insung={isState}");
-    //
-    //    // Insung 상태별로 handler 함수 호출 (2중 switch 방지)
-    //    switch (isState)
-    //    {
-    //        case "접수":
-    //        case "배차":
-    //            return await InsungOrderManage_접수Or배차Async(item, kaiState, dgInfo, ctrl);
-    //        case "운행":
-    //            return await InsungOrderManage_운행Async(item, kaiState, dgInfo, ctrl);
-    //        case "완료":
-    //            return await InsungOrderManage_완료Async(item, kaiState, dgInfo, ctrl);
-    //        case "대기":
-    //            return await InsungOrderManage_대기Async(item, kaiState, dgInfo, ctrl);
-    //        case "취소":
-    //            return await InsungOrderManage_취소Async(item, kaiState, dgInfo, ctrl);
-    //
-    //        default:
-    //            Debug.WriteLine($"  → 미정의 Insung 상태: {isState}");
-    //            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //    }
-    //}
-// 
-    /// <summary>
-    /// Insung "접수" 또는 "배차" 상태 처리 - Kai 상태별 로깅
-    /// </summary>
+    // Insung "대기" 상태 처리 - Kai 상태별 로깅
 //#pragma warning disable CS1998 // async method lacks await
-    //private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_접수Or배차Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    string insungState = dgInfo.sStatus;
-    //
-    //    switch (kaiState)
-    //    {
-    //        case "접수":
-    //        case "배차":
-    //            Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
-    //            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //
-    //        default:
-    //            Debug.WriteLine($"  → [{insungState}/?] 미정의 Kai 상태: {kaiState}");
-    //            return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_999");
-    //    }
-    //}
-//#pragma warning restore CS1998
+    // Insung "대기" 상태 처리 - Kai 상태별 로깅
+    // #pragma warning disable CS1998 // async method lacks await
+    // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_대기Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     switch (kaiState)
+    //     {
+    //         case "대기":
+    //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+    // 
+    //         default:
+    //             Debug.WriteLine($"  → [대기/{kaiState}] 미정의 Kai 상태: {kaiState}");
+    //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=대기", "InsungOrderManage_대기Async_999");
+    //     }
+    // }
+    // #pragma warning restore CS1998
 // 
-    /// <summary>
-    /// Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
-    /// </summary>
-    //private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_운행Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    Debug.WriteLine($"  → [InsungOrderManage_운행Async] 진입 - KeyCode={item.KeyCode}, RunStartTime={item.RunStartTime?.ToString("HH:mm:ss") ?? "null"}, DriverPhone={item.DriverPhone ?? "null"}");
-    //
-    //    switch (kaiState)
-    //    {
-    //        case "접수":
-    //            // 타이머 시작 체크
-    //            if (item.RunStartTime == null)
-    //            {
-    //                item.RunStartTime = DateTime.Now;
-    //                Debug.WriteLine($"  → [운행/접수] 운행 진입 - 타이머 시작 ({item.RunStartTime:HH:mm:ss}) - 경과: 0.0초 / 40초");
-    //
-    //                // 기사전번 읽기 (캡처된 페이지 이미지 재사용)
-    //                if (dgInfo.BmpPage == null)
-    //                {
-    //                    Debug.WriteLine($"  → [운행/접수] 심각한 오류: BmpPage가 null - 자동배차 루프에서 페이지 캡처 실패");
-    //                    return CommonResult_AutoAllocProcess.FailureAndRetry("BmpPage가 null - 페이지 캡처 실패", "InsungOrderManage_운행Async_BmpPageNull");
-    //                }
-    //
-    //                int yIndex = dgInfo.nIndex + 2;  // 헤더 2줄 추가
-    //                Draw.Rectangle rectDriverPhNo = m_RcptPage.DG오더_RelChildRects[c_nCol기사전번, yIndex];
-    //                StdResult_String resultDriverPhNo = await GetRowDriverPhNoAsync(dgInfo.BmpPage, rectDriverPhNo, dgInfo.bInvertRgb, ctrl);
-    //
-    //                if (string.IsNullOrEmpty(resultDriverPhNo.strResult))
-    //                {
-    //                    Debug.WriteLine($"  → [운행/접수] 심각한 오류: 기사전번 획득 실패 - 운행 상태인데 기사 정보 없음: {resultDriverPhNo.sErr}");
-    //                    return CommonResult_AutoAllocProcess.FailureAndRetry($"기사전번 OFR 실패: {resultDriverPhNo.sErr}", "InsungOrderManage_운행Async_DriverPhNoFail");
-    //                }
-    //
-    //                item.DriverPhone = resultDriverPhNo.strResult;
-    //                Debug.WriteLine($"  → [운행/접수] 기사전번 획득: {item.DriverPhone}");
-    //
-    //                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 업데이트하며 재적재
-    //            }
-    //
-    //            // 타이머 체크
-    //            TimeSpan elapsed = DateTime.Now - item.RunStartTime.Value;
-    //            Debug.WriteLine($"  → [운행/접수] 운행 중 - 경과 시간: {elapsed.TotalSeconds:F1}초");
-    //
-    //            // 기사전번 다시 OFR (기사 변경 감지용)
-    //            if (dgInfo.BmpPage == null)
-    //            {
-    //                Debug.WriteLine($"  → [운행/접수] 심각한 오류: BmpPage가 null - 자동배차 루프에서 페이지 캡처 실패");
-    //                return CommonResult_AutoAllocProcess.FailureAndRetry("BmpPage가 null - 페이지 캡처 실패", "InsungOrderManage_운행Async_BmpPageNull2");
-    //            }
-    //
-    //            int yIndexCheck = dgInfo.nIndex + 2;  // 헤더 2줄 추가
-    //            Draw.Rectangle rectDriverPhNoCheck = m_RcptPage.DG오더_RelChildRects[c_nCol기사전번, yIndexCheck];
-    //            StdResult_String resultDriverPhNoCheck = await GetRowDriverPhNoAsync(dgInfo.BmpPage, rectDriverPhNoCheck, dgInfo.bInvertRgb, ctrl);
-    //
-    //            if (string.IsNullOrEmpty(resultDriverPhNoCheck.strResult))
-    //            {
-    //                Debug.WriteLine($"  → [운행/접수] 심각한 오류: 기사전번 획득 실패 - 운행 상태인데 기사 정보 없음: {resultDriverPhNoCheck.sErr}");
-    //                return CommonResult_AutoAllocProcess.FailureAndRetry($"기사전번 OFR 실패: {resultDriverPhNoCheck.sErr}", "InsungOrderManage_운행Async_DriverPhNoFail2");
-    //            }
-    //
-    //            // 기사 변경 체크
-    //            if (resultDriverPhNoCheck.strResult != item.DriverPhone)
-    //            {
-    //                Debug.WriteLine($"  → [운행/접수] 기사 변경 감지! 기존: {item.DriverPhone} → 새: {resultDriverPhNoCheck.strResult}");
-    //                item.DriverPhone = resultDriverPhNoCheck.strResult;
-    //                item.RunStartTime = DateTime.Now;
-    //                Debug.WriteLine($"  → [운행/접수] 타이머 리셋 - 새로운 40초 대기 시작 ({item.RunStartTime:HH:mm:ss})");
-    //                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 업데이트하며 재적재
-    //            }
-    //
-    //            // 40초 경과 체크 (기사 변경 없음)
-    //            if (elapsed.TotalSeconds < 40)
-    //            {
-    //                // 40초 미만 - 계속 대기
-    //                Debug.WriteLine($"  → [운행/접수] 40초 대기 중 - 경과: {elapsed.TotalSeconds:F1}초 / 40초");
-    //                return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 유지하며 재적재
-    //            }
-    //
-    //            // 40초 이상 경과 - 기사 확정
-    //            Debug.WriteLine($"  → [운행/접수] 40초 경과! 기사 확정 상태 (기사전번: {item.DriverPhone})");
-    //
-    //            // 타이머 파괴
-    //            item.RunStartTime = null;
-    //
-    //            // 1. 기사 정보 읽기용 팝업 열기 (DG 더블클릭 → 3초 대기 → 닫기)
-    //            Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기용 팝업 열기 시작");
-    //            StdResult_Status resultPopup = await OpenReadPopupAsync(dgInfo.nIndex, item, ctrl);
-    //            if (resultPopup.Result != StdResult.Success)
-    //            {
-    //                Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기 실패: {resultPopup.sErr}");
-    //                return CommonResult_AutoAllocProcess.FailureAndRetry(resultPopup.sErr, resultPopup.sPos);
-    //            }
-    //            Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기 성공");
-    //
-    //            // 2. Order_StatusPage에서 처리 (DB 업데이트, 다른 앱 취소)
-    //            return await CommonVars.s_Order_StatusPage.Insung01배차To운행Async(item, ctrl);
-    //
-    //        case "운행": // 같은상태 
-    //            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
-    //
-    //        default:
-    //            Debug.WriteLine($"  → [운행/{kaiState}] 미정의 Kai 상태: {kaiState}");
-    //            return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=운행", "InsungOrderManage_운행Async_999");
-    //    }
-    //}
-// 
-    /// <summary>
-    /// Insung "완료" 상태 처리 - Kai 상태별 로깅
-    /// </summary>
-    //private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_완료Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    switch (kaiState)
-    //    {
-    //        case "운행":
-    //            return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
-    //
-    //        default:
-    //            Debug.WriteLine($"  → [완료/{kaiState}] 미정의 Kai 상태: {kaiState}");
-    //            return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=완료", "InsungOrderManage_완료Async_999");
-    //    }
-    //}
-// 
-    /// <summary>
-    /// Insung "대기" 상태 처리 - Kai 상태별 로깅
-    /// </summary>
-//#pragma warning disable CS1998 // async method lacks await
-    //private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_대기Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    switch (kaiState)
-    //    {
-    //        case "대기":
-    //            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //
-    //        default:
-    //            Debug.WriteLine($"  → [대기/{kaiState}] 미정의 Kai 상태: {kaiState}");
-    //            return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=대기", "InsungOrderManage_대기Async_999");
-    //    }
-    //}
-//#pragma warning restore CS1998
-// 
-    /// <summary>
-    /// Insung "취소" 상태 처리 - Kai 상태별 로깅
-    /// </summary>
-//#pragma warning disable CS1998 // async method lacks await
-    //private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_취소Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
-    //{
-    //    switch (kaiState)
-    //    {
-    //        case "취소":
-    //            return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
-    //
-    //        case "대기": // 취소 -> 대기
-    //            return await UpdateOrderStateOnlyAsync("대기", item, dgInfo, false, ctrl); // 1번만
-    //
-    //        default:
-    //            Debug.WriteLine($"  → [취소/{kaiState}] 미정의 Kai 상태: {kaiState}");
-    //            return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=취소", "InsungOrderManage_취소Async_999");
-    //    }
-    //}
-//#pragma warning restore CS1998
-//     #endregion
+    // Insung "취소" 상태 처리 - Kai 상태별 로깅
+    // #pragma warning disable CS1998 // async method lacks await
+    // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_취소Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
+    // {
+    //     switch (kaiState)
+    //     {
+    //         case "취소":
+    //             return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+    // 
+    //         case "대기": // 취소 -> 대기
+    //             return await UpdateOrderStateOnlyAsync("대기", item, dgInfo, false, ctrl); // 1번만
+    // 
+    //         default:
+    //             Debug.WriteLine($"  → [취소/{kaiState}] 미정의 Kai 상태: {kaiState}");
+    //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=취소", "InsungOrderManage_취소Async_999");
+    //     }
+    // }
+    // #pragma warning restore CS1998
+    // #endregion
 }
 #nullable enable

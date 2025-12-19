@@ -37,12 +37,33 @@ public class InsungsAct_App
     #endregion
 
     #region BeforeWork
-    // 앱 실행 전 준비 작업
+    // 앱 실행 전 준비 작업 (Registry 경로 검색 및 기존 인성 프로세스 정리)
     public async Task<StdResult_String> BeforeWorkAsync(string sRegNameOfAppPath, string sFolder, string sExecFile)
     {
-        // TODO: 실제 로직 구현 필요 (Legacy 코드 참조하여 복원)
-        // 현재는 임시로 성공 처리
-        return new StdResult_String { strResult = "TempPath" };
+        Debug.WriteLine($"[{m_Context.AppName}/BeforeWork] 앱 경로 검색 시작: {sExecFile}");
+
+        // Registry 또는 표준 설치 경로에서 AppPath 획득
+        StdResult_String result = await Task.Run(() => NwCommon.GetAppPath(sRegNameOfAppPath, sFolder, sExecFile));
+
+        // 경로를 찾지 못한 경우 (저장소 검색 대신 에러 메시지 처리)
+        if (string.IsNullOrEmpty(result?.strResult))
+        {
+            string errMsg = $"[{m_Context.AppName}/BeforeWork] 설치 경로를 찾을 수 없습니다. 프로그램을 수동으로 확인해 주세요.";
+            Debug.WriteLine(errMsg);
+
+            return new StdResult_String(errMsg, "InsungsAct_App/BeforeWork_PathNotFound");
+        }
+
+        // 기존에 열려있는 인성 메인 윈도우가 있다면 우아하게 종료 시도
+        IntPtr hWndMain = Std32Window.FindMainWindow_Reduct(null, m_FileInfo.Main_TopWnd_sWndNameReduct);
+        if (hWndMain != IntPtr.Zero)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/BeforeWork] 기존 인성 앱 감지 - 종료 메시지 전송");
+            Std32Window.PostCloseTwiceWindow(hWndMain);
+            await Task.Delay(c_nWaitLong); // 안정적인 종료를 위해 1초 대기
+        }
+
+        return result;
     }
     #endregion
 
@@ -53,6 +74,14 @@ public class InsungsAct_App
         try
         {
             Debug.WriteLine($"[{m_Context.AppName}/UpdaterWork] 업데이터 실행 시도: {sPath}");
+
+            // 1. 실행 파일 존재 확인
+            if (!System.IO.File.Exists(sPath))
+            {
+                string err = $"업데이터 경로가 존재하지 않습니다: {sPath}";
+                Debug.WriteLine($"[{m_Context.AppName}/UpdaterWork] {err}");
+                return new StdResult_Error(err, "InsungsAct_App/UpdaterWorkAsync_NotFound");
+            }
 
             ProcessStartInfo processInfo = new ProcessStartInfo
             {
@@ -65,8 +94,8 @@ public class InsungsAct_App
             {
                 if (procExec == null)
                 {
-                    return new StdResult_Error(
-                        $"[{m_Context.AppName}/UpdaterWork] 실행 실패: Process.Start 결과가 null입니다.", "InsungsAct_App/UpdaterWorkAsync_01");
+                    Debug.WriteLine($"[{m_Context.AppName}/UpdaterWork] 실행 실패: Process.Start 결과가 null입니다.");
+                    return new StdResult_Error("업데이터 실행 실패(null)", "InsungsAct_App/UpdaterWorkAsync_ProcessNull");
                 }
 
                 // 전용 취소 토큰 (5분 타임아웃)
@@ -74,15 +103,14 @@ public class InsungsAct_App
                 {
                     try
                     {
-                        // 닷넷 비동기 대기 방식
+                        Debug.WriteLine($"[{m_Context.AppName}/UpdaterWork] 프로세스 종료 대기 시작...");
                         await procExec.WaitForExitAsync(cts.Token);
                         Debug.WriteLine($"[{m_Context.AppName}/UpdaterWork] 업데이터 정상 종료 확인");
                     }
                     catch (OperationCanceledException)
                     {
                         Debug.WriteLine($"[{m_Context.AppName}/UpdaterWork] 업데이터 종료 대기 타임아웃 (5분)");
-                        return new StdResult_Error(
-                            $"[{m_Context.AppName}/UpdaterWork] 업데이터가 5분 안에 종료되지 않았습니다.", "InsungsAct_App/UpdaterWorkAsync_02");
+                        return new StdResult_Error("업데이터가 5분 안에 종료되지 않았습니다.", "InsungsAct_App/UpdaterWorkAsync_Timeout");
                     }
                 }
             }
@@ -91,8 +119,8 @@ public class InsungsAct_App
         }
         catch (Exception ex)
         {
-            return new StdResult_Error(
-                $"[{m_Context.AppName}/UpdaterWork] 예외 발생: {ex.Message}", "InsungsAct_App/UpdaterWorkAsync_99");
+            Debug.WriteLine($"[{m_Context.AppName}/UpdaterWork] 예외 발생: {ex.Message}");
+            return new StdResult_Error(ex.Message, "InsungsAct_App/UpdaterWorkAsync_Exception");
         }
     }
     #endregion
@@ -243,11 +271,55 @@ public class InsungsAct_App
     #endregion
 
     #region Close
-    // 인성 앱 종료 - MainWindow 닫기 시도 - SplashWindow 강제 종료
+    // 인성 앱 종료 - MainWindow 닫기 시도 후 최종적으로 프로세스 정리
     public StdResult_Error Close(int nDelayMiliSec = 100)
     {
-        // TODO: 실제 로직 구현 필요
-        return null; // 성공
+        try
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/Close] 종료 시퀀스 시작");
+
+            // 1. 메인 윈도우 종료 시도
+            if (m_Context.MemInfo.Main.TopWnd_hWnd != IntPtr.Zero && StdWin32.IsWindowVisible(m_Context.MemInfo.Main.TopWnd_hWnd))
+            {
+                Debug.WriteLine($"[{m_Context.AppName}/Close] 메인 윈도우 종료 메시지 전송");
+                StdWin32.PostMessage(m_Context.MemInfo.Main.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, Std32Window.SC_CLOSE, 0);
+            }
+
+            System.Threading.Thread.Sleep(nDelayMiliSec);
+
+            // 2. 스플래시 윈도우 정리
+            if (m_Context.MemInfo.Splash.TopWnd_hWnd != IntPtr.Zero)
+            {
+                Debug.WriteLine($"[{m_Context.AppName}/Close] 스플래시 윈도우 정리 전송");
+                Std32Window.PostCloseTwiceWindow(m_Context.MemInfo.Splash.TopWnd_hWnd);
+
+                // 3. 확실한 종료 확인 및 최후의 수단(Kill) 실행
+                bool bExists = true;
+                for (int i = 0; i < c_nRepeatMany; i++) // 5초 감시 (c_nRepeatMany=50, c_nWaitNormal=100)
+                {
+                    bExists = StdWin32.IsWindow(m_Context.MemInfo.Splash.TopWnd_hWnd);
+                    if (!bExists) break;
+                    System.Threading.Thread.Sleep(c_nWaitNormal);
+                }
+
+                if (bExists)
+                {
+                    // 정상 종료 실패 시 프로세스 Kill 실행 (확장자 제외한 파일명 전달)
+                    string processName = System.IO.Path.GetFileNameWithoutExtension(m_Context.AppPath);
+                    Debug.WriteLine($"[{m_Context.AppName}/Close] 정상 종료 실패. 프로세스 강제 종료 시도: {processName}");
+                    
+                    // Kai.Common.StdDll_Common.StdProcess.Kill 사용
+                    Kai.Common.StdDll_Common.StdProcess.Kill(processName);
+                }
+            }
+
+            return null; // 성공
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/Close] 예외 발생: {ex.Message}");
+            return new StdResult_Error(ex.Message, "InsungsAct_App/Close_Exception");
+        }
     }
     #endregion
 }

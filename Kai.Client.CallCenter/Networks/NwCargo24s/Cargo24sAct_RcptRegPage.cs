@@ -213,12 +213,12 @@ public partial class Cargo24sAct_RcptRegPage
     //        Debug.WriteLine($"[Cargo24sAct_RcptRegPage] CmdBtn 찾기 시작");
 
     //        // 신규 버튼
-    //        var (hWnd신규, err신규) = await FindStatusButtonAsync(m_FileInfo.접수등록Page_CmdBtn_sWndName신규, m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규M, "Cargo24sAct_RcptRegPage/InitializeAsync_07", bWrite, bMsgBox);
+    //        var (hWnd신규, err신규) = await FindStatusButtonAsync(m_FileInfo.접수등록Page_CmdBtn_sWndName신규, m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규T, "Cargo24sAct_RcptRegPage/InitializeAsync_07", bWrite, bMsgBox);
     //        if (err신규 != null) return err신규;
     //        m_RcptPage.CmdBtn_hWnd신규 = hWnd신규;
 
     //        // 조회 버튼
-    //        var (hWnd조회, err조회) = await FindStatusButtonAsync(m_FileInfo.접수등록Page_CmdBtn_sWndName조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회M, "Cargo24sAct_RcptRegPage/InitializeAsync_08", bWrite, bMsgBox);
+    //        var (hWnd조회, err조회) = await FindStatusButtonAsync(m_FileInfo.접수등록Page_CmdBtn_sWndName조회, m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회T, "Cargo24sAct_RcptRegPage/InitializeAsync_08", bWrite, bMsgBox);
     //        if (err조회 != null) return err조회;
     //        m_RcptPage.CmdBtn_hWnd조회 = hWnd조회;
 

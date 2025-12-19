@@ -31,6 +31,24 @@ public class CommonFuncs : CommonVars
 
         try
         {
+            // 로그 파일 경로 설정 및 디렉토리 생성
+            string logFilePath = @"D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Log..txt";
+            string logDir = Path.GetDirectoryName(logFilePath);
+            if (!Directory.Exists(logDir)) Directory.CreateDirectory(logDir);
+
+            // TraceListener 설정 (공유 권한 부여하여 다른 앱과 충돌 방지)
+            // DefaultTraceListener의 LogFileName을 수동으로 설정하면 파일 잠금이 발생할 수 있으므로 
+            // FileStream을 직접 생성하여 공유 모드(ReadWrite)를 지원합니다.
+            FileStream fs = new FileStream(logFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+            StreamWriter sw = new StreamWriter(fs) { AutoFlush = true };
+            
+            TextWriterTraceListener fileListener = new TextWriterTraceListener(sw);
+            Trace.Listeners.Add(fileListener);
+            Trace.AutoFlush = true;
+            Debug.AutoFlush = true;
+
+            Debug.WriteLine($"\n[SYSTEM] 로그 기록 시작: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+
             s_sKaiLogId = JsonFileManager.GetValue("Kaitech_LoginInfo:Kaitech_sId");
             s_sKaiLogPw = JsonFileManager.GetValue("Kaitech_LoginInfo:Kaitech_sPw");
 
@@ -241,27 +259,27 @@ public class CommonFuncs : CommonVars
     #endregion
 
     #region NetMsgWnd
-    //public static void ShowExtMsgWndSimple(Window wndBase, string msg, string title = "")
-    //{
-    //    if (s_WndMsgSimple != null) CloseExtMsgWndSimple();
+    public static void ShowExtMsgWndSimple(Window wndBase, string msg, string title = "")
+    {
+        if (s_WndMsgSimple != null) CloseExtMsgWndSimple();
 
-    //    Application.Current.Dispatcher.Invoke(() =>
-    //    {
-    //        s_WndMsgSimple = NetMsgWnd.ShowExtMsgWndSimple(wndBase, msg, title);
-    //    });
-    //}
-    //public static void CloseExtMsgWndSimple()
-    //{
-    //    if (s_WndMsgSimple != null)
-    //    {
-    //        Application.Current.Dispatcher.Invoke(() =>
-    //        {
-    //            NetMsgWnd.CloseExtMsgWndSimple(s_WndMsgSimple);
-    //        });
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            s_WndMsgSimple = NetMsgWnd.ShowExtMsgWndSimple(wndBase, msg, title);
+        });
+    }
+    public static void CloseExtMsgWndSimple()
+    {
+        if (s_WndMsgSimple != null)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                NetMsgWnd.CloseExtMsgWndSimple(s_WndMsgSimple);
+            });
 
-    //        s_WndMsgSimple = null;
-    //    }
-    //}
+            s_WndMsgSimple = null;
+        }
+    }
     #endregion
 }
 
@@ -393,7 +411,7 @@ public class CommonFuncs : CommonVars
 //    {
 //        if (bWrite) Debug.WriteLine($"sErr: {sErr}, sPos: {sPos}");
 //        // if (bMsgBox) FormFuncs.ErrMsgBox(sErr, sPos);
-
+//
 //        return new OfrResult_TbText(analy, sErr, sPos, CommonVars.s_sLogDir);
 //    }
 

@@ -15,8 +15,8 @@ public class CommonVars
 {
     #region Variables
     // Constants
-    //public const uint MYMSG_MOUSEHOOK = 1027; // 지금은 W
-    //public const uint MYMSG_KEYBOARDHOOK = 1028;
+    public const uint MYMSG_MOUSEHOOK = 1027; 
+    public const uint MYMSG_KEYBOARDHOOK = 1028;
     public const int c_nRepeatUltraShort = 3; // 극도로짧은 반복횟수 - 3회
     public const int c_nRepeatVeryShort = 10; // 매우짧은 반복횟수 - 10회
     public const int c_nRepeatShort = 50; // 짧은반복횟수 - 50회
@@ -69,6 +69,7 @@ public class CommonVars
     public static string s_sKaiLogId = "";
     public static string s_sKaiLogPw = "";
     public static bool s_bAutoAlloc = false; // appsettings.json으로 이동 (LoadExternalAppsConfig에서 로드)
+    public static readonly CancelTokenControl s_GlobalCancelToken = new CancelTokenControl(); // 전역 작업 중단/일시정지 제어
 
     // Pointer
     public static SplashWnd s_SplashWnd = null; //  SplashWnd 

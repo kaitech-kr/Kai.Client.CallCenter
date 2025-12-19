@@ -29,14 +29,14 @@ public class OnecallInfo_File
     //public string Main_TopWnd_sWndNameReduct = "(주)원콜";   // WndName
 
     // MainMenu_Title
-    //public Draw.Rectangle Main_MainMenu_rcRel = new Draw.Rectangle(8, 31, 1920, 45); // MainMenu_Title Wnd Rectangle
+    //public Draw.Rectangle Main_MainMenu_rcRelF = new Draw.Rectangle(8, 31, 1920, 45); // MainMenu_Title Wnd Rectangle
 
     // MainMenu
 
     // BarMenu
 
     // MdiClient
-    //public Draw.Rectangle Main_MdiClient_rcRel = new Draw.Rectangle(8, 76, 1920, 937); // MdiClient Wnd Rectangle
+    //public Draw.Rectangle Main_MdiClient_rcRelF = new Draw.Rectangle(8, 76, 1920, 937); // MdiClient Wnd Rectangle
     //public string Main_MdiClient_ClassName = "WindowsForms10.MDICLIENT.app.0.34f5582_r7_ad1"; // ClassName
     #endregion
 

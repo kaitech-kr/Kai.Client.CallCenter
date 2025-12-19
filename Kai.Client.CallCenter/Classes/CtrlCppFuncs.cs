@@ -12,28 +12,28 @@ public class CtrlCppFuncs
     //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
     //public static extern bool Test();
 
-    //// Mouse Hook
-    //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern bool SetMouseHook(IntPtr hWnd, uint uMsg);
+    // Mouse Hook
+    [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
+    public static extern bool SetMouseHook(IntPtr hWnd, uint uMsg);
 
-    //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern void ReleaseMouseHook();
+    [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void ReleaseMouseHook();
 
-    //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern void SetMouseLock(bool bLock);
+    [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void SetMouseLock(bool bLock);
 
-    //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern void SetHookMouseMove(bool bHook);
+    [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void SetHookMouseMove(bool bHook);
 
-    //// Keyboard Hook
-    //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern bool SetKeyboardHook(IntPtr hWnd, uint uMsg);
+    // Keyboard Hook
+    [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
+    public static extern bool SetKeyboardHook(IntPtr hWnd, uint uMsg);
 
-    //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern void ReleaseKeyboardHook();
+    [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void ReleaseKeyboardHook();
 
-    //[DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
-    //public static extern void SetKeyboardLock(bool bLock);
+    [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
+    public static extern void SetKeyboardLock(bool bLock);
 
     #region System
     //[DllImport(c_sHookDllPath, CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]

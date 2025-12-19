@@ -30,14 +30,14 @@ public class Cargo24sInfo_File
     //public string Main_TopWnd_sWndNameReduct { get; set; } = " ::::: 대한민국대표콜센터";   // WndName - Spase주의
 
     //// MainMenu_Rect (BarMenu와 동일 - 화물24시는 MainMenu=BarMenu)
-    //public Draw.Rectangle Main_MainMenu_rcRel { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // MainMenu_Title Wnd Rectangle
+    //public Draw.Rectangle Main_MainMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // MainMenu_Title Wnd Rectangle
 
     //// BarMenu
-    //public Draw.Rectangle Main_BarMenu_rcRel { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // BarMenu Wnd Rectangle
+    //public Draw.Rectangle Main_BarMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // BarMenu Wnd Rectangle
     //public string Main_BarMenu_ClassName { get; set; } = "TAdvPanel";
 
     //// MdiClient
-    //public Draw.Rectangle Main_MdiClient_rcRel { get; set; } = new Draw.Rectangle(8, 78, 1920, 943); // MdiClient Wnd Rectangle
+    //public Draw.Rectangle Main_MdiClient_rcRelF { get; set; } = new Draw.Rectangle(8, 78, 1920, 943); // MdiClient Wnd Rectangle
     //public string Main_MdiClient_ClassName { get; set; } = "MDIClient"; // ClassName
     #endregion
 
@@ -73,16 +73,16 @@ public class Cargo24sInfo_File
     //public string 접수등록Page_안내문_sWndName오늘하루동안감추기 { get; set; } = "오늘하루동안 감추기"; // Check Window Name
 
     //// CommandBtns GroupBox
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel신규M { get; set; } = new Draw.Point(818, 96); // Check Point
+    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel신규T { get; set; } = new Draw.Point(818, 96); // Check Point
     //public string 접수등록Page_CmdBtn_sWndName신규 { get; set; } = "신규오더(F3)"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회M { get; set; } = new Draw.Point(93, 96); // Check Point
+    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회T { get; set; } = new Draw.Point(93, 96); // Check Point
     //public string 접수등록Page_CmdBtn_sWndName조회 { get; set; } = "조회(F2)"; // Check Window Name
     //public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회L { get; set; } = new Draw.Point(5, 15);  // Check Point For Brightness
 
     //// 접수 Datagrid
     //public Draw.Point 접수등록Page_DG오더_ptChkRel { get; set; } = new Draw.Point(300, 547); // Check Point - Center(968, 547) From Loading Panel(rkqus)
-    //public Draw.Rectangle 접수등록Page_DG오더_rcRel { get; set; } = new Draw.Rectangle(10, 229, 1916, 637);
+    //public Draw.Rectangle 접수등록Page_DG오더_rcRelT { get; set; } = new Draw.Rectangle(10, 229, 1916, 637);
 
     //public string 접수등록Page_DG오더_sClassName { get; set; } = "TRealDBGrid"; // Check Window Name
     //public int 접수등록Page_DG오더_headerHeight { get; set; } = 32; // HeaderRow Height
