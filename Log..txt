@@ -1,5 +1,5 @@
 
-[SYSTEM] 로그 기록 시작: 2025-12-20 00:18:43
+[SYSTEM] 로그 기록 시작: 2025-12-20 20:01:31
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
 [CommonFuncs] sUse 확인: 'True'
@@ -12,7 +12,7 @@ HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:0
 연결 시도 시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=dDzvF_9qNKQ6zv4BVV7u-w *****
+***** SrReport_ConnectedAsync 시작: connectedID=Mk9oQcgvSC9WZ8SmwN0CHg *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
@@ -24,7 +24,6 @@ HubConnection 생성 중...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
 [MainWnd] SignalR ConnectAsync 호출 완료
-[MainWnd] 키보드 전역 후킹 성공 (ESC 중단 대기)
 [MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
 [MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
 [MasterModeManager] ExternalAppController 초기화 시작
@@ -44,14 +43,16 @@ SignalR 연결 성공
 [INSUNG1/MainWnd] 초기화 시작
 [INSUNG1/MainWnd] 초기화 성공
 [INSUNG1/RcptRegPage] 초기화 시작
-[INSUNG1/UI] 신규버튼 확인 완료: hWnd=380C8E (시도=1/10)
-[INSUNG1/UI] 조회버튼 확인 완료: hWnd=5E0E06 (시도=1/10)
-[INSUNG1/UI] 기사버튼 확인 완료: hWnd=860DC4 (시도=1/10)
+[INSUNG1/UI] 신규버튼 확인 완료: hWnd=E0F2E (시도=1/10)
+[INSUNG1/UI] 조회버튼 확인 완료: hWnd=F0F34 (시도=1/10)
+[INSUNG1/UI] 기사버튼 확인 완료: hWnd=110F28 (시도=1/10)
 [INSUNG1/RcptRegPage] CallCount 핸들 찾기 성공
 [INSUNG1/RcptRegPage] SetDG오더RectsAsync 시작
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
 [INSUNG1/RcptRegPage] [검증 실패] 컬럼 개수가 맞지 않습니다.  - Issue: InvalidColumnCount - 검출: 22개 - 예상: 21개  [검출된 헤더 텍스트] No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요, 오더일자  확인을 누르면 초기화(Init)를 다시 시도합니다.
+[INSUNG1] BlockInput(true) - 데이터그리드 초기화 시작
+[INSUNG1] 데이터그리드 수동 초기화 강제 실행 (Step 1)
 [InitDG오더] Step 1: 접수화면초기화 시작
 [InitDG오더] Step 2: 컬럼 확보 시작
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
@@ -120,7 +121,7 @@ SignalR 연결 성공
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] BlockInput Force Disabled
+[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
 [INSUNG1/RcptRegPage] Datagrid 재시도 2/50
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
@@ -155,979 +156,302 @@ SrLocalClient 재접속 중지 플래그 설정
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
-
-xFE115220420AC47FFF0809002101E0E7FF000401802220400004F8877F
+Page] OFR 완료: No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요
+[*] ValidateDatagridState 검증 통과 (정상)
+[INSUNG1/RcptRegPage] 초기화 완료
+[INSUNG1] InitializeAsync 완료
+[ExternalAppController] INSUNG1 초기화 성공
+[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
+[ExternalAppController] InitializeAsync 전체 완료
+[MasterModeManager] ExternalAppController 초기화 완료
+[MainWnd] Master 모드 초기화 완료
+[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
+=== Window_Closing 시작 (안전 모드 복구) ===
+SrGlobalClient 재접속 중지 플래그 설정
+SignalR OnClosedAsync called
+SrLocalClient 재접속 중지 플래그 설정
+재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
+[MasterModeManager] Shutdown 시작
+[MasterModeManager] ExternalAppController 정리 중
+[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
+[CancelTokenControl] Cancel 호출됨
+[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
+[INSUNG1] Shutdown 시작
+[INSUNG1/Close] 종료 시퀀스 시작
+[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
+[INSUNG1/Close] 스플래시 윈도우 정리 전송
+[INSUNG1] Close 성공
+[INSUNG1] Shutdown 완료
+[ExternalAppController] 모든 리소스 정리 완료
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+{X=36,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEE11F2141402042428140FC4704FF0869100010120000E02700FC0FC0FF010180202002024040000480807FF807
 [StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=6~6, rcChar={X=73,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
+[StartEndList 검색] len=2, idx=3~4, rcChar={X=48,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFE115220420AC47FFF0809002101E0E7FF000401802220400004F8877F
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=4~4, rcChar={X=60,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
 [StartEndList 검색결과] 찾음: '번'
-[StartEndList 마킹] foundChar='번', x=6, consumed=1, startIdx=6
-  processed[6]=true
-[StartEndList 검색] len=3, idx=3~5, rcChar={X=19,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x000000807FF807000000808040000000001408E400000020827F110000804100100100000000001100000000FC1F010000FC0F08110000000888E00000008080000000000008F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=4~5, rcChar={X=49,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=5~5, rcChar={X=61,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F0000F03F082208E01F
-[StartEndList 검색결과] 찾음: '문'
-[StartEndList 마킹] foundChar='문', x=5, consumed=1, startIdx=5
-  processed[5]=true
-[StartEndList 검색] len=3, idx=2~4, rcChar={X=13,Y=1,Width=46,Height=13}, W=46,H=13,Hex=0x09000000004002000000009001000000FE6500000000081B00000000C5E700000020D2450000000675110000000059040000004016010000FC9F4500000020440E00000008000000000002
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=3~4, rcChar={X=19,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x000000807F000000000800000000140E00000022110000804111000000001100000000110000C0FF11000000080E000000080000000008
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=4~4, rcChar={X=49,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE81000522060100C0FF20800002
-[StartEndList 검색결과] 찾음: '주'
-[StartEndList 마킹] foundChar='주', x=4, consumed=1, startIdx=4
+[StartEndList 마킹] foundChar='번', x=4, consumed=1, startIdx=4
   processed[4]=true
-[StartEndList 검색] len=3, idx=1~3, rcChar={X=8,Y=1,Width=16,Height=12}, W=16,H=12,Hex=0x2F012101210321036F03E173A18BA18B218B2F8B208B2072
+[StartEndList 검색] len=3, idx=1~3, rcChar={X=6,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x000000807FF807000000808040000000001408E400000020827F110000804100100100000000001100000000FC1F010000FC0F08110000000888E00000008080000000000008F807
 [StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=2~3, rcChar={X=13,Y=1,Width=11,Height=12}, W=11,H=12,Hex=0x0948400632B081CF75B18B59CC62162307
+[StartEndList 검색] len=2, idx=2~3, rcChar={X=36,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
 [StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=3~3, rcChar={X=19,Y=6,Width=5,Height=7}, W=5,H=7,Hex=0x2EC618A303
-[StartEndList 검색결과] 찾음: '미'
-[StartEndList 마킹] foundChar='미', x=3, consumed=1, startIdx=3
+[StartEndList 검색] len=1, idx=3~3, rcChar={X=48,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F0000F03F082208E01F
+[StartEndList 검색결과] 찾음: '문'
+[StartEndList 마킹] foundChar='문', x=3, consumed=1, startIdx=3
   processed[3]=true
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=1,Width=18,Height=12}, W=18,H=12,Hex=0x102F41841411B25CC8146F43840F10FA43E8102143BCFC00320088
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=3,Width=46,Height=11}, W=46,H=11,Hex=0x11000000E05F04000000803001000000504C0E00000022550400006050150100000090450000000064110000C0FF510400000042E40000008000000000002000
 [StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=8,Y=1,Width=10,Height=12}, W=10,H=12,Hex=0x2F851472C86F871F7AE821BF0C3288
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=6,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x000000807F000000000800000000140E00000022110000804111000000001100000000110000C0FF11000000080E000000080000000008
 [StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=13,Y=1,Width=5,Height=12}, W=5,H=12,Hex=0x29E5BC7FEF39E708
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=36,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE81000522060100C0FF20800002
+[StartEndList 검색결과] 찾음: '주'
+[StartEndList 마킹] foundChar='주', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=3,Width=11,Height=10}, W=11,H=10,Hex=0x1188C0042657C52A66318B518C1C
 [StartEndList 검색결과] 없음
-[StartEndList] x=2, foundChar=null → 마킹 안 함
-[백트래킹 실패] x=2, 원래 값 복원
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=1,Width=12,Height=11}, W=12,H=11,Hex=0x100F11112117140F1100F1101001F10F00
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=6,Y=6,Width=5,Height=7}, W=5,H=7,Hex=0x2EC618A303
+[StartEndList 검색결과] 찾음: '미'
+[StartEndList 마킹] foundChar='미', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=3,Width=5,Height=10}, W=5,H=10,Hex=0x31CE596BCE3102
+[StartEndList 검색결과] 찾음: 'N'
+[StartEndList 마킹] foundChar='N', x=0, consumed=1, startIdx=0
+  processed[0]=true
+[StartEndList] 음소 개수=13
+  [0] processed=True, result=N
+  [1] processed=True, result=미
+  [2] processed=True, result=주
+  [3] processed=True, result=문
+  [4] processed=True, result=번
+  [5] processed=True, result=호
+  [6] processed=True, result=접
+  [7] processed=True, result=수
+  [8] processed=True, result=시
+  [9] processed=True, result=null
+  [10] processed=True, result=간
+  [11] processed=True, result=공
+  [12] processed=True, result=유
+[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: 'N미주문번호접수시간공유' (531ms)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[InitDG오더] Step 4: 규격 너비 조정 시작
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
+[INSUNG1/RcptRegPage] Datagrid 재시도 2/50
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
+[StartEndList 검색] len=3, idx=10~12, rcChar={X=144,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x3F0100807FF003120000008440200100004408047200004082401001000004F083100000FC0F0007010000000000100000F0C3FF02000080401022000000080421FE0100003F1002
 [StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=8,Y=1,Width=4,Height=10}, W=4,H=10,Hex=0x1F111F11F1
+[StartEndList 검색] len=2, idx=11~12, rcChar={X=174,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEC10F400804110241824010C0CFFF00000000F0C3FF0241884010C20F8400
 [StartEndList 검색결과] 없음
-[StartEndList] x=1, foundChar=null → 마킹 안 함
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=1,Width=7,Height=11}, W=7,H=11,Hex=0x1048444E81001E10C803
+[StartEndList 검색] len=1, idx=12~12, rcChar={X=186,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFC08249040FC0000C0FF84104208
+[StartEndList 검색결과] 찾음: '유'
+[StartEndList 마킹] foundChar='유', x=12, consumed=1, startIdx=12
+  processed[12]=true
+[StartEndList 검색] len=3, idx=9~11, rcChar={X=140,Y=3,Width=44,Height=11}, W=44,H=11,Hex=0xF1130000F81720010000400112000040142007000024011100004010080100C0FF711000000010000100003F2100000008140200008040E11F0000F003
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=10~11, rcChar={X=144,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x3F0100807F2001000040200100004420070000241001000004080100C0FF0701000000000100003F02000080400200008040FE0100003F
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=11~11, rcChar={X=174,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0104112410FC0F003F0209C40F
+[StartEndList 검색결과] 찾음: '공'
+[StartEndList 마킹] foundChar='공', x=11, consumed=1, startIdx=11
+  processed[11]=true
+[StartEndList 검색] len=3, idx=8~10, rcChar={X=132,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x08F11384000942800421408E1010A1088450C441440220222180A0100040F807
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=9~10, rcChar={X=140,Y=3,Width=15,Height=11}, W=15,H=11,Hex=0xF19300498024401E100984C441022021801040F807
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=10~10, rcChar={X=144,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F010948400E11841C04200210807F00
+[StartEndList 검색결과] 찾음: '간'
+[StartEndList 마킹] foundChar='간', x=10, consumed=1, startIdx=10
+  processed[10]=true
+[StartEndList 검색] len=3, idx=7~9, rcChar={X=120,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x208010041042014244406830080180220050FC1F912020120482820040
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=8~9, rcChar={X=132,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x08112244889022459122830204
+[StartEndList 검색결과] 찾음: '시'
+[StartEndList 마킹] foundChar='시', x=9, consumed=2, startIdx=8
+  processed[8]=true
+  processed[9]=true
+[StartEndList 검색] len=3, idx=5~7, rcChar={X=72,Y=3,Width=58,Height=11}, W=58,H=11,Hex=0x78000000F0132000000000004180F03F000000C4010512000000300422840000002011061302000040480080070000000000000800000008C4FF20000000E01F20FC0F00008040800000000000FE0102
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=6~7, rcChar={X=108,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x3F01024180401C50300422126170480000000008C4FFFE01824080E01F2000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=7~7, rcChar={X=120,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x2080000522060300C0FF20800002
+[StartEndList 검색결과] 찾음: '수'
+[StartEndList 마킹] foundChar='수', x=7, consumed=1, startIdx=7
+  processed[7]=true
+[StartEndList 검색] len=3, idx=4~6, rcChar={X=60,Y=3,Width=57,Height=11}, W=57,H=11,Hex=0x2181070000003F43020000000008FEC7FF000000100F09240000006018128400000020F12708010000202440E0010000000080000100000081020002000000FE05E07F00000004FA0700000000F807
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=5~6, rcChar={X=72,Y=3,Width=45,Height=11}, W=45,H=11,Hex=0x78000000F0130000000008FE0F0000007124000000604808000000120901000020241E0000000000010000008120000000E0FF7F0000000402000000807F
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=6~6, rcChar={X=108,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x3F0912672831240081FE05FA07
+[StartEndList 검색결과] 찾음: '접'
+[StartEndList 마킹] foundChar='접', x=6, consumed=1, startIdx=6
+  processed[6]=true
+[StartEndList 검색] len=3, idx=3~5, rcChar={X=48,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0xFE111278084448002010FFF1BF7F8404120010128400C04F10F23F0081070800040822200020088000FCEF1FFE0100
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=4~5, rcChar={X=60,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x2181474800F01FFF8704122141C84F1002107800040802008200FCEF1F0000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=5~5, rcChar={X=72,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0x7800F03F12841082070820FC0F
+[StartEndList 검색결과] 찾음: '호'
+[StartEndList 마킹] foundChar='호', x=5, consumed=1, startIdx=5
+  processed[5]=true
+[StartEndList 검색] len=3, idx=2~4, rcChar={X=36,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEE11F2141402042428140FC4704FF0869100010120000E02700FC0FC0FF010180202002024040000480807FF807
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=3~4, rcChar={X=48,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFE115220420AC47FFF0809002101E0E7FF000401802220400004F8877F
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=4~4, rcChar={X=60,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
+[StartEndList 검색결과] 찾음: '번'
+[StartEndList 마킹] foundChar='번', x=4, consumed=1, startIdx=4
+  processed[4]=true
+[StartEndList 검색] len=3, idx=1~3, rcChar={X=6,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x000000807FF807000000808040000000001408E400000020827F110000804100100100000000001100000000FC1F010000FC0F08110000000888E00000008080000000000008F807
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=2~3, rcChar={X=36,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=3~3, rcChar={X=48,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F0000F03F082208E01F
+[StartEndList 검색결과] 찾음: '문'
+[StartEndList 마킹] foundChar='문', x=3, consumed=1, startIdx=3
+  processed[3]=true
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=3,Width=46,Height=11}, W=46,H=11,Hex=0x11000000E05F04000000803001000000504C0E00000022550400006050150100000090450000000064110000C0FF510400000042E40000008000000000002000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=6,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x000000807F000000000800000000140E00000022110000804111000000001100000000110000C0FF11000000080E000000080000000008
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=36,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE81000522060100C0FF20800002
+[StartEndList 검색결과] 찾음: '주'
+[StartEndList 마킹] foundChar='주', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=3,Width=11,Height=10}, W=11,H=10,Hex=0x1188C0042657C52A66318B518C1C
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=6,Y=6,Width=5,Height=7}, W=5,H=7,Hex=0x2EC618A303
+[StartEndList 검색결과] 찾음: '미'
+[StartEndList 마킹] foundChar='미', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=3,Width=5,Height=10}, W=5,H=10,Hex=0x31CE596BCE3102
+[StartEndList 검색결과] 찾음: 'N'
+[StartEndList 마킹] foundChar='N', x=0, consumed=1, startIdx=0
+  processed[0]=true
+[StartEndList] 음소 개수=13
+  [0] processed=True, result=N
+  [1] processed=True, result=미
+  [2] processed=True, result=주
+  [3] processed=True, result=문
+  [4] processed=True, result=번
+  [5] processed=True, result=호
+  [6] processed=True, result=접
+  [7] processed=True, result=수
+  [8] processed=True, result=시
+  [9] processed=True, result=null
+  [10] processed=True, result=간
+  [11] processed=True, result=공
+  [12] processed=True, result=유
+[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: 'N미주문번호접수시간공유' (281ms)
+[INSUNG1/RcptRegPage] [검증 실패] 컬럼 개수가 맞지 않습니다.  - Issue: InvalidColumnCount - 검출: 1개 - 예상: 21개  [검출된 헤더 텍스트] N미주문번호접수시간공유  확인을 누르면 초기화(Init)를 다시 시도합니다.
+[INSUNG1] 데이터그리드 수동 초기화 강제 실행 (Step 1)
+[InitDG오더] Step 1: 접수화면초기화 시작
+[InitDG오더] Step 2: 컬럼 확보 시작
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[CancelTokenControl] Cancel 호출됨
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=10,Height=14}, W=10,H=14,Hex=0x02118207218410F23F0000F807104080FC0F
 [StartEndList 검색결과] 없음
 [StartEndList] x=0, foundChar=null → 마킹 안 함
-[StartEndList] 음소 개수=15
+[StartEndList] 음소 개수=1
   [0] processed=False, result=null
-  [1] processed=False, result=null
-  [2] processed=False, result=null
-  [3] processed=True, result=미
-  [4] processed=True, result=주
-  [5] processed=True, result=문
-  [6] processed=True, result=번
-  [7] processed=True, result=호
-  [8] processed=True, result=접
-  [9] processed=True, result=수
-  [10] processed=True, result=시
-  [11] processed=True, result=null
-  [12] processed=True, result=간
-  [13] processed=True, result=공
-  [14] processed=True, result=유
-[미처리 그룹] 총 1개: [0~2]
+[미처리 그룹] 총 1개: [0~0]
   processed[0]=False, result=null
-  processed[1]=False, result=null
-  processed[2]=False, result=null
-  processed[3]=True, result=미
-  processed[4]=True, result=주
-  processed[5]=True, result=문
-  processed[6]=True, result=번
-  processed[7]=True, result=호
-  processed[8]=True, result=접
-  processed[9]=True, result=수
-  processed[10]=True, result=시
-  processed[11]=True, result=null
-  processed[12]=True, result=간
-  processed[13]=True, result=공
-  processed[14]=True, result=유
-[RightSliding 인식 시작] 이미지 크기: 18x12
+[RightSliding 인식 시작] 이미지 크기: 10x14
 [RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~14
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=9ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계] 검색 범위: w=3~10
+[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=7ms
+[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=6ms
+[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
+[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=9ms
 [RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=5ms
 [RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=10ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=18,Height=12}, 오른쪽문자영역={X=3,Y=0,Width=15,Height=12}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=3,Y=0,Width=15,Height=12}
+[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=10,Height=14}, 오른쪽문자영역={X=0,Y=0,Width=10,Height=14}
+[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=10,Height=14}
 [RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=1,Width=7,Height=11}
+[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=10,Height=14}
 [ImageToCharWnd] Window_Loaded 시작
-�, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-t 검색] len=3, idx=46~48, rcChar={X=689,Y=3,Width=25,Height=11}, W=25,H=11,Hex=0x8110080321100642200C8A431824813C8482620404C5000891210022430082867F0004
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=47~48, rcChar={X=693,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x08811021102204428A434812C885826240500408910220520082FA0740
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=48~48, rcChar={X=705,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x08112244889C22459122830204
-[StartEndList 검색결과] 찾음: '서'
-[StartEndList 마킹] foundChar='서', x=48, consumed=1, startIdx=48
-  processed[48]=true
-[StartEndList 검색] len=3, idx=45~47, rcChar={X=681,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x4F8110A440085E200429288E1424410AA1D04540880220422180A0100050F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=46~47, rcChar={X=689,Y=3,Width=15,Height=11}, W=15,H=11,Hex=0x819040482024281E2409A14440022021801040F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=47~47, rcChar={X=693,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x08410842284E12A10404200210807F00
-[StartEndList 검색결과] 찾음: '산'
-[StartEndList 마킹] foundChar='산', x=47, consumed=1, startIdx=47
-  processed[47]=true
-[StartEndList 검색] len=3, idx=44~46, rcChar={X=654,Y=3,Width=36,Height=11}, W=36,H=11,Hex=0xFE0100780A100000A4000100C00B080000A4FF0300400A000000A4000000A02B100000A2FE0100102A100080A0FE0100000A
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=45~46, rcChar={X=681,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x4F91E2458A14295DA242830205
-[StartEndList 검색결과] 찾음: '계'
-[StartEndList 마킹] foundChar='계', x=46, consumed=2, startIdx=45
-  processed[45]=true
-  processed[46]=true
-[StartEndList 검색] len=3, idx=42~44, rcChar={X=642,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x7FE11F420084100021042008F13F450040110088844022E15F50080410FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=43~44, rcChar={X=650,Y=3,Width=14,Height=11}, W=14,H=11,Hex=0xE15F0014000520F17F0010008440E15F0814FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=44~44, rcChar={X=654,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE01041020FF03008040FE09E41F
-[StartEndList 검색결과] 찾음: '급'
-[StartEndList 마킹] foundChar='급', x=44, consumed=1, startIdx=44
-  processed[44]=true
-[StartEndList 검색] len=3, idx=41~43, rcChar={X=623,Y=3,Width=28,Height=11}, W=28,H=11,Hex=0x0900F89B00008409004098000084090040F800008A0900A098000091090010990080A009000008
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=42~43, rcChar={X=642,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x7F112244889022459122830204
-[StartEndList 검색결과] 찾음: '지'
-[StartEndList 마킹] foundChar='지', x=43, consumed=2, startIdx=42
-  processed[42]=true
-  processed[43]=true
-[StartEndList 검색] len=3, idx=39~41, rcChar={X=605,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x1CE2258008F92742528E9022E2A5E808CF2142028090F821248178891F4002
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=40~41, rcChar={X=618,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2F43860CF9327CC890215F8204
-[StartEndList 검색결과] 찾음: '태'
-[StartEndList 마킹] foundChar='태', x=41, consumed=2, startIdx=40
-  processed[40]=true
-  processed[41]=true
-[StartEndList 검색] len=3, idx=37~39, rcChar={X=570,Y=3,Width=45,Height=11}, W=45,H=11,Hex=0x1C211000E05024FC0300008A844000E04F8EF30F00508E1020000011FFE27F00203A4000000038E407FF00000002011000C04F2000020004F2034000003F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=38~39, rcChar={X=582,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0x0201000EFD0300000A0400FEF40F00500E020010F17F00203A00008043FF000000000100FC00020004020400F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=39~39, rcChar={X=605,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x1C02F827E5228ACE2100F811881F
-[StartEndList 검색결과] 찾음: '형'
-[StartEndList 마킹] foundChar='형', x=39, consumed=1, startIdx=39
-  processed[39]=true
-[StartEndList 검색] len=3, idx=36~38, rcChar={X=546,Y=3,Width=46,Height=11}, W=46,H=11,Hex=0x3F01001C2110C8018048F8F71300201202050400709C7F0107000801C25F00C05FFC0F1000001000F00300F0837F0201000201904000804000C40F00C00F0001
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=37~38, rcChar={X=570,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x1C219048F8271202719C7F0801C25FFC0F1000F0837F0201904000C40F0001
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=38~38, rcChar={X=582,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x02F927907F20FC0F807F00010410
-[StartEndList 검색결과] 찾음: '복'
-[StartEndList 마킹] foundChar='복', x=38, consumed=1, startIdx=38
-  processed[38]=true
-[StartEndList 검색] len=3, idx=35~37, rcChar={X=542,Y=3,Width=39,Height=11}, W=39,H=11,Hex=0xF11300C0910039001049FC04008824020200381E01070008B9BF0080BF0440000040821F00801F21100020901008001048F00300F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=36~37, rcChar={X=546,Y=3,Width=35,Height=11}, W=35,H=11,Hex=0x3F01001C01390010C94F008048020200381E70008090BF0080BF00040000841F00801F0201000211080010083F00003F00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=37~37, rcChar={X=570,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x1C118948388E90BF00841F0211083F00
-[StartEndList 검색결과] 찾음: '왕'
-[StartEndList 마킹] foundChar='왕', x=37, consumed=1, startIdx=37
-  processed[37]=true
-[StartEndList 검색] len=3, idx=34~36, rcChar={X=534,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x1CF1138000F95FFC04210282100147B8BF50044048821F42219080100840F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=35~36, rcChar={X=542,Y=3,Width=15,Height=11}, W=15,H=11,Hex=0xF1930079FC24021201BFBF0440821F21901048F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=36~36, rcChar={X=546,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F01F94F0212F0BF00841F0211083F00
-[StartEndList 검색결과] 찾음: '량'
-[StartEndList 마킹] foundChar='량', x=36, consumed=1, startIdx=36
-  processed[36]=true
-[StartEndList 검색] len=3, idx=33~35, rcChar={X=507,Y=3,Width=38,Height=11}, W=38,H=11,Hex=0xFE0100E0880000000022000080BFF80700002120000040C8FF0000100E0000008AF003008024020100108A40000002C20F00008000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=34~35, rcChar={X=534,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x1C01C85F108210845384244209084000
-[StartEndList 검색결과] 찾음: '차'
-[StartEndList 마킹] foundChar='차', x=35, consumed=2, startIdx=34
-  processed[34]=true
-  processed[35]=true
-[StartEndList 검색] len=3, idx=31~33, rcChar={X=483,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0xFEC111FE0900400820007F27800020847F02401120F8C758FC0F0200000008F8073F20001002FD0F4008040000C10F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=32~33, rcChar={X=495,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x1CE11F4008F0770220847F1401C258FC0F0000F8073F00211040080410FC00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=33~33, rcChar={X=507,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0920807F20FC0F003F0209C40F
-[StartEndList 검색결과] 찾음: '동'
-[StartEndList 마킹] foundChar='동', x=33, consumed=1, startIdx=33
-  processed[33]=true
-[StartEndList 검색] len=3, idx=30~32, rcChar={X=453,Y=3,Width=53,Height=11}, W=53,H=11,Hex=0xFE0100807F70440000001000800800000002F077FF000040001002020000080045FE070000FF180B000000000200E007000040C03F02010000080044200000F81F80F0030000000010
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=31~32, rcChar={X=483,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0xFEC11101008800FC5D0010220014F18FB180000040C03F200090FF0108000004
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=32~32, rcChar={X=495,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x1C01C8DF114291B100C03F0001084000
-[StartEndList 검색결과] 찾음: '착'
-[StartEndList 마킹] foundChar='착', x=32, consumed=1, startIdx=32
-  processed[32]=true
-[StartEndList 검색] len=3, idx=29~31, rcChar={X=441,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x21E11F0000F8F71302000080002127000000081012FE010080003F01020000080000FF0300807FFE01000000800010FC00000008FE21100000802000020100C0FFFEC10F00000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=30~31, rcChar={X=453,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0xFE0100807F02000080000200008000FE010080002000008000FF0300807F0000000008FC000000080201000008020100C0FFFC00000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=31~31, rcChar={X=483,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0xFE0920800002F807020820FC0F
-[StartEndList 검색결과] 찾음: '도'
-[StartEndList 마킹] foundChar='도', x=31, consumed=1, startIdx=31
-  processed[31]=true
-[StartEndList 검색] len=3, idx=28~30, rcChar={X=429,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0x201012FEF9C74F0800052127806384847FFFF31320800000FCEF1FFE01004000043FFEE11F0209800008E41FFEC10F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=29~30, rcChar={X=441,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x21E1DF4F0810720284847F3F010200FCEF1F0000043FFE21900008E41FFC00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=30~30, rcChar={X=453,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0920807F20FC0F003F0209C40F
-[StartEndList 검색결과] 찾음: '동'
-[StartEndList 마킹] foundChar='동', x=30, consumed=1, startIdx=30
-  processed[30]=true
-[StartEndList 검색] len=3, idx=27~29, rcChar={X=396,Y=3,Width=56,Height=11}, W=56,H=11,Hex=0x7800000040202400000000FCE327FF030000A020E4480000001C232484000000FEE7278400000040000078000000FCC33F2000000000022020000000FCC33FFF03000004400000000000FCC33F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=28~29, rcChar={X=429,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x201012FFF8091484DC3142F23F3F010100F8877F000220FEE11F0110807FF807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=29~29, rcChar={X=441,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x21F949C843F21300F80720FE11807F00
-[StartEndList 검색결과] 찾음: '발'
-[StartEndList 마킹] foundChar='발', x=29, consumed=1, startIdx=29
-  processed[29]=true
-[StartEndList 검색] len=3, idx=26~28, rcChar={X=384,Y=3,Width=55,Height=11}, W=55,H=11,Hex=0x218107000000849000000000E0DF7FFC0F00008022249000000038161284000000FEFF09420000002000041E000000FF000204000000400200020000C03F01F81F000020807F00000000F00F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=27~28, rcChar={X=396,Y=3,Width=43,Height=11}, W=43,H=11,Hex=0x780000004000000000E0DFFF00000028900000003846080000E07F4200000020E0010000F00F040000004020000000FCFB1F0000200000000000FF00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=28~28, rcChar={X=429,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x20F8078563FF83E01F40FE09E01F
-[StartEndList 검색결과] 찾음: '출'
-[StartEndList 마킹] foundChar='출', x=28, consumed=1, startIdx=28
-  processed[28]=true
-[StartEndList 검색] len=3, idx=25~27, rcChar={X=380,Y=3,Width=26,Height=11}, W=26,H=11,Hex=0x11127844480010FFF17F840412111284DC4F10120081470004082100208400FC1FFE0100
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=26~27, rcChar={X=384,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x2181474800F01FFF8704122141C84F1002107800040802008200FCEF1F0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=27~27, rcChar={X=396,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0x7800F03F12841082070820FC0F
-[StartEndList 검색결과] 찾음: '호'
-[StartEndList 마킹] foundChar='호', x=27, consumed=1, startIdx=27
-  processed[27]=true
-[StartEndList 검색] len=3, idx=24~26, rcChar={X=372,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x1C11122042FEC57F8008C9112145EEA74800E408800821E02F0400847F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=25~26, rcChar={X=380,Y=3,Width=13,Height=11}, W=13,H=11,Hex=0x113242C6FF081921EF67000C80212004847F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=26~26, rcChar={X=384,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
-[StartEndList 검색결과] 찾음: '번'
-[StartEndList 마킹] foundChar='번', x=26, consumed=1, startIdx=26
-  processed[26]=true
-[StartEndList 검색] len=3, idx=23~25, rcChar={X=360,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x7FC11184000872FC85220042121C110A9107844800822302801001F88B7F0004
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=24~25, rcChar={X=372,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x1C01C85F00C211918B842308F90B4000
-[StartEndList 검색결과] 찾음: '화'
-[StartEndList 마킹] foundChar='화', x=25, consumed=2, startIdx=24
-  processed[24]=true
-  processed[25]=true
-[StartEndList 검색] len=3, idx=21~23, rcChar={X=327,Y=3,Width=42,Height=11}, W=42,H=11,Hex=0x7F010000FE2204000040881000000039420000008A0801000048521C0000104A11000020A048000000802201000004040500001000100000C03F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=22~23, rcChar={X=335,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0x010000FE0600004018000000790000008A010000481E0000101A00002060000000800100000404000010100000C03F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=23~23, rcChar={X=360,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x7F1122A748526840800204F807
-[StartEndList 검색결과] 찾음: '전'
-[StartEndList 마킹] foundChar='전', x=23, consumed=1, startIdx=23
-  processed[23]=true
-[StartEndList 검색] len=3, idx=20~22, rcChar={X=315,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x3FF197804048402024E010F2170801088A030045F8412402211281080A3F0004
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=21~22, rcChar={X=327,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x7F4108421082108A53442422090A4000
-[StartEndList 검색결과] 찾음: '자'
-[StartEndList 마킹] foundChar='자', x=22, consumed=2, startIdx=21
-  processed[21]=true
-  processed[22]=true
-[StartEndList 검색] len=3, idx=18~20, rcChar={X=273,Y=3,Width=53,Height=11}, W=53,H=11,Hex=0x3F0100C04FFC243C000008888084040000011190F0000020E002FE130000FCC55F00020000800008000000000000E0070000FC831F02010080400844200000100881F0030000FEC10F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=19~20, rcChar={X=303,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x3FF193800848400424E002FE177F010880000000FC831F0221108110887FF003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=20~20, rcChar={X=315,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F09484002FE178000801F0211083F00
-[StartEndList 검색결과] 찾음: '당'
-[StartEndList 마킹] foundChar='당', x=20, consumed=1, startIdx=20
-  processed[20]=true
-[StartEndList 검색] len=3, idx=17~19, rcChar={X=261,Y=3,Width=53,Height=11}, W=53,H=11,Hex=0x2FF1130000FC0425C203008080A047480000101094080F0000024E123F0100C05F46022000000008000000000000F00F7E0000C03F0021100000080420040200008100043F0000E01F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=18~19, rcChar={X=273,Y=3,Width=41,Height=11}, W=41,H=11,Hex=0x3F0100C04FC2030080808404000001090F000002FE130000FC05200000000800000000007E0000C03F02010080400402000081F0030000FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=19~19, rcChar={X=303,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F09484002FE178000C03F0211887F00
-[StartEndList 검색결과] 찾음: '담'
-[StartEndList 마킹] foundChar='담', x=19, consumed=1, startIdx=19
-  processed[19]=true
-[StartEndList 검색] len=3, idx=16~18, rcChar={X=249,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEF1123F010225C203047A84040894088F1024F113214602204200000044F00F7E08001002FF072004020040F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=17~18, rcChar={X=261,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x2FF11325C2A3474894084F123F4702200000F00F7E002110200402043F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=18~18, rcChar={X=273,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x3FC3870CFF1320007E0205F203
-[StartEndList 검색결과] 찾음: '명'
-[StartEndList 마킹] foundChar='명', x=18, consumed=1, startIdx=18
-  processed[18]=true
-[StartEndList 검색] len=3, idx=15~17, rcChar={X=227,Y=3,Width=43,Height=11}, W=43,H=11,Hex=0x0900807FBC4C000000026502000010E813000080409900002004C9070000214626000008012001004004FF09000002004C0000FE0760020000000001
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=16~17, rcChar={X=249,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFEF112205002047A804089102411622442004004FF0800F07F00020040
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=17~17, rcChar={X=261,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2F51A24749722400FF00010204
-[StartEndList 검색결과] 찾음: '객'
-[StartEndList 마킹] foundChar='객', x=17, consumed=1, startIdx=17
-  processed[17]=true
-[StartEndList 검색] len=3, idx=14~16, rcChar={X=222,Y=3,Width=37,Height=11}, W=37,H=11,Hex=0x2F0100F02F2400000085040000A090000000F412000084C203008050480000100A0900002221010040E0250000FF8304000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=15~16, rcChar={X=227,Y=3,Width=32,Height=11}, W=32,H=11,Hex=0x0900807F090000400900004009000040090000420F0000420900004209000022090000020900C0FF09000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=16~16, rcChar={X=249,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0xFE01041040082184102208FC0F
-[StartEndList 검색결과] 찾음: '고'
-[StartEndList 마킹] foundChar='고', x=16, consumed=1, startIdx=16
-  processed[16]=true
-[StartEndList 검색] len=3, idx=13~15, rcChar={X=210,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x08F1122142524448920B29142F03223C0084E48790021152205EF20348
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=14~15, rcChar={X=222,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2F43860CF9327CC890215F8204
-[StartEndList 검색결과] 찾음: '태'
-[StartEndList 마킹] foundChar='태', x=15, consumed=2, startIdx=14
-  processed[14]=true
-  processed[15]=true
-[StartEndList 검색] len=3, idx=11~13, rcChar={X=174,Y=3,Width=47,Height=11}, W=47,H=11,Hex=0xFEC10F00801080100800400844080400500412040200480E01FC000042F91F00008080000000000000F8E17F00801F0241080020108120040010083F100200F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=12~13, rcChar={X=186,Y=3,Width=35,Height=11}, W=35,H=11,Hex=0xFC00000811080040884000004504020048CE0F0020140000808000000000E07F00801F8400000221040010082100003F00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=13~13, rcChar={X=210,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x08410845482E948000801F0211083F00
-[StartEndList 검색결과] 찾음: '상'
-[StartEndList 마킹] foundChar='상', x=13, consumed=1, startIdx=13
-  processed[13]=true
-[StartEndList 검색] len=3, idx=10~12, rcChar={X=144,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x3F0100807FF003120000008440200100004408047200004082401001000004F083100000FC0F0007010000000000100000F0C3FF02000080401022000000080421FE0100003F1002
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=11~12, rcChar={X=174,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEC10F400804110241824010C0CFFF00000000F0C3FF0241884010C20F8400
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=12~12, rcChar={X=186,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFC08249040FC0000C0FF84104208
-[StartEndList 검색결과] 찾음: '유'
-[StartEndList 마킹] foundChar='유', x=12, consumed=1, startIdx=12
-  processed[12]=true
-[StartEndList 검색] len=3, idx=9~11, rcChar={X=140,Y=3,Width=44,Height=11}, W=44,H=11,Hex=0xF1130000F81720010000400112000040142007000024011100004010080100C0FF711000000010000100003F2100000008140200008040E11F0000F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=10~11, rcChar={X=144,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x3F0100807F2001000040200100004420070000241001000004080100C0FF0701000000000100003F02000080400200008040FE0100003F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=11~11, rcChar={X=174,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0104112410FC0F003F0209C40F
-[StartEndList 검색결과] 찾음: '공'
-[StartEndList 마킹] foundChar='공', x=11, consumed=1, startIdx=11
-  processed[11]=true
-[StartEndList 검색] len=3, idx=8~10, rcChar={X=132,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x08F11384000942800421408E1010A1088450C441440220222180A0100040F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=9~10, rcChar={X=140,Y=3,Width=15,Height=11}, W=15,H=11,Hex=0xF19300498024401E100984C441022021801040F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=10~10, rcChar={X=144,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F010948400E11841C04200210807F00
-[StartEndList 검색결과] 찾음: '간'
-[StartEndList 마킹] foundChar='간', x=10, consumed=1, startIdx=10
-  processed[10]=true
-[StartEndList 검색] len=3, idx=7~9, rcChar={X=120,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x208010041042014244406830080180220050FC1F912020120482820040
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=8~9, rcChar={X=132,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x08112244889022459122830204
-[StartEndList 검색결과] 찾음: '시'
-[StartEndList 마킹] foundChar='시', x=9, consumed=2, startIdx=8
-  processed[8]=true
-  processed[9]=true
-[StartEndList 검색] len=3, idx=5~7, rcChar={X=72,Y=3,Width=58,Height=11}, W=58,H=11,Hex=0x78000000F0132000000000004180F03F000000C4010512000000300422840000002011061302000040480080070000000000000800000008C4FF20000000E01F20FC0F00008040800000000000FE0102
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=6~7, rcChar={X=108,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x3F01024180401C50300422126170480000000008C4FFFE01824080E01F2000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=7~7, rcChar={X=120,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x2080000522060300C0FF20800002
-[StartEndList 검색결과] 찾음: '수'
-[StartEndList 마킹] foundChar='수', x=7, consumed=1, startIdx=7
-  processed[7]=true
-[StartEndList 검색] len=3, idx=4~6, rcChar={X=60,Y=3,Width=57,Height=11}, W=57,H=11,Hex=0x2181070000003F43020000000008FEC7FF000000100F09240000006018128400000020F12708010000202440E0010000000080000100000081020002000000FE05E07F00000004FA0700000000F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=5~6, rcChar={X=72,Y=3,Width=45,Height=11}, W=45,H=11,Hex=0x78000000F0130000000008FE0F0000007124000000604808000000120901000020241E0000000000010000008120000000E0FF7F0000000402000000807F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=6~6, rcChar={X=108,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x3F0912672831240081FE05FA07
-[StartEndList 검색결과] 찾음: '접'
-[StartEndList 마킹] foundChar='접', x=6, consumed=1, startIdx=6
-  processed[6]=true
-[StartEndList 검색] len=3, idx=3~5, rcChar={X=48,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0xFE111278084448002010FFF1BF7F8404120010128400C04F10F23F0081070800040822200020088000FCEF1FFE0100
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=4~5, rcChar={X=60,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x2181474800F01FFF8704122141C84F1002107800040802008200FCEF1F0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=5~5, rcChar={X=72,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0x7800F03F12841082070820FC0F
-[StartEndList 검색결과] 찾음: '호'
-[StartEndList 마킹] foundChar='호', x=5, consumed=1, startIdx=5
-  processed[5]=true
-[StartEndList 검색] len=3, idx=2~4, rcChar={X=36,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEE11F2141402042428140FC4704FF0869100010120000E02700FC0FC0FF010180202002024040000480807FF807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=3~4, rcChar={X=48,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFE115220420AC47FFF0809002101E0E7FF000401802220400004F8877F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=4~4, rcChar={X=60,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
-[StartEndList 검색결과] 찾음: '번'
-[StartEndList 마킹] foundChar='번', x=4, consumed=1, startIdx=4
-  processed[4]=true
-[StartEndList 검색] len=3, idx=1~3, rcChar={X=6,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x000000807FF807000000808040000000001408E400000020827F110000804100100100000000001100000000FC1F010000FC0F08110000000888E00000008080000000000008F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=2~3, rcChar={X=36,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=3~3, rcChar={X=48,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F0000F03F082208E01F
-[StartEndList 검색결과] 찾음: '문'
-[StartEndList 마킹] foundChar='문', x=3, consumed=1, startIdx=3
-  processed[3]=true
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=3,Width=46,Height=11}, W=46,H=11,Hex=0x11000000E05F04000000803001000000504C0E00000022550400006050150100000090450000000064110000C0FF510400000042E40000008000000000002000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=6,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x000000807F000000000800000000140E00000022110000804111000000001100000000110000C0FF11000000080E000000080000000008
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=36,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE81000522060100C0FF20800002
-[StartEndList 검색결과] 찾음: '주'
-[StartEndList 마킹] foundChar='주', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=3,Width=11,Height=10}, W=11,H=10,Hex=0x1188C0042657C52A66318B518C1C
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=6,Y=6,Width=5,Height=7}, W=5,H=7,Hex=0x2EC618A303
-[StartEndList 검색결과] 찾음: '미'
-[StartEndList 마킹] foundChar='미', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=3,Width=5,Height=10}, W=5,H=10,Hex=0x31CE596BCE3102
-[StartEndList 검색결과] 찾음: 'N'
-[StartEndList 마킹] foundChar='N', x=0, consumed=1, startIdx=0
-  processed[0]=true
-[StartEndList] 음소 개수=71
-  [0] processed=True, result=N
-  [1] processed=True, result=미
-  [2] processed=True, result=주
-  [3] processed=True, result=문
-  [4] processed=True, result=번
-  [5] processed=True, result=호
-  [6] processed=True, result=접
-  [7] processed=True, result=수
-  [8] processed=True, result=시
-  [9] processed=True, result=null
-  [10] processed=True, result=간
-  [11] processed=True, result=공
-  [12] processed=True, result=유
-  [13] processed=True, result=상
-  [14] processed=True, result=태
-  [15] processed=True, result=null
-  [16] processed=True, result=고
-  [17] processed=True, result=객
-  [18] processed=True, result=명
-  [19] processed=True, result=담
-  [20] processed=True, result=당
-  [21] processed=True, result=자
-  [22] processed=True, result=null
-  [23] processed=True, result=전
-  [24] processed=True, result=화
-  [25] processed=True, result=null
-  [26] processed=True, result=번
-  [27] processed=True, result=호
-  [28] processed=True, result=출
-  [29] processed=True, result=발
-  [30] processed=True, result=동
-  [31] processed=True, result=도
-  [32] processed=True, result=착
-  [33] processed=True, result=동
-  [34] processed=True, result=차
-  [35] processed=True, result=null
-  [36] processed=True, result=량
-  [37] processed=True, result=왕
-  [38] processed=True, result=복
-  [39] processed=True, result=형
-  [40] processed=True, result=태
-  [41] processed=True, result=null
-  [42] processed=True, result=지
-  [43] processed=True, result=null
-  [44] processed=True, result=급
-  [45] processed=True, result=계
-  [46] processed=True, result=null
-  [47] processed=True, result=산
-  [48] processed=True, result=서
-  [49] processed=True, result=라
-  [50] processed=True, result=null
-  [51] processed=True, result=이
-  [52] processed=True, result=null
-  [53] processed=True, result=더
-  [54] processed=True, result=요
-  [55] processed=True, result=금
-  [56] processed=True, result=적
-  [57] processed=True, result=요
-  [58] processed=True, result=최
-  [59] processed=True, result=null
-  [60] processed=True, result=초
-  [61] processed=True, result=접
-  [62] processed=True, result=수
-  [63] processed=True, result=시
-  [64] processed=True, result=null
-  [65] processed=True, result=간
-  [66] processed=True, result=오
-  [67] processed=True, result=더
-  [68] processed=True, result=메
-  [69] processed=True, result=null
-  [70] processed=True, result=모
-[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: 'N미주문번호접수시간공유상태고객명담당자전화번호출발동도착동차량왕복형태지급계산서라이더요금적요최초접수시간오더메모' (1812ms)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 3: 컬럼 순서 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 4: 규격 너비 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] BlockInput Force Disabled
-[INSUNG1/RcptRegPage] Datagrid 재시도 2/50
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1/RcptRegPage] OFR 완료: No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요
-[!!!] ValidateDatagridState 검증 실패: WrongWidth
-[INSUNG1/RcptRegPage] [검증 실패] 데이터그리드 상태가 규격과 다릅니다.  - 상세 이슈: WrongWidth - 예상 컬럼: 21개  확인을 누르면 초기화(Init)를 다시 시도합니다.
-[InitDG오더] Step 1: 접수화면초기화 시작
-[InitDG오더] Step 2: 컬럼 확보 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=23,Height=16}, W=23,H=16,Hex=0x20811090400844501C22288210222108910C44500002200000003CF00F21004420002210802084FFE10100080100
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=12,Y=0,Width=11,Height=14}, W=11,H=14,Hex=0x084108C52922129104052000F00F40000288FF01
-[StartEndList 검색결과] 없음
-[StartEndList] x=1, foundChar=null → 마킹 안 함
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=9,Height=16}, W=9,H=16,Hex=0x204142848890E0408000F010122890101E42
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[StartEndList] 음소 개수=2
-  [0] processed=False, result=null
-  [1] processed=False, result=null
-[미처리 그룹] 총 1개: [0~1]
-  processed[0]=False, result=null
-  processed[1]=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 23x16
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~19
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=4ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=21ms
-[RightSliding 1단계 성능] w=11, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=12, HexString생성=0ms, DB검색=11ms
-[RightSliding 1단계 성능] w=13, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=14, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 성능] w=15, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=16, HexString생성=0ms, DB검색=21ms
-[RightSliding 1단계 성능] w=17, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=18, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=19, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=23,Height=16}, 오른쪽문자영역={X=3,Y=0,Width=20,Height=16}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=3,Y=0,Width=20,Height=16}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=9,Height=16}
-[ImageToCharWnd] Window_Loaded 시작
-dList 검색결과] 없음
-[StartEndList 검색] len=2, idx=35~36, rcChar={X=542,Y=3,Width=15,Height=11}, W=15,H=11,Hex=0xF1930079FC24021201BFBF0440821F21901048F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=36~36, rcChar={X=546,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F01F94F0212F0BF00841F0211083F00
-[StartEndList 검색결과] 찾음: '량'
-[StartEndList 마킹] foundChar='량', x=36, consumed=1, startIdx=36
-  processed[36]=true
-[StartEndList 검색] len=3, idx=33~35, rcChar={X=507,Y=3,Width=38,Height=11}, W=38,H=11,Hex=0xFE0100E0880000000022000080BFF80700002120000040C8FF0000100E0000008AF003008024020100108A40000002C20F00008000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=34~35, rcChar={X=534,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x1C01C85F108210845384244209084000
-[StartEndList 검색결과] 찾음: '차'
-[StartEndList 마킹] foundChar='차', x=35, consumed=2, startIdx=34
-  processed[34]=true
-  processed[35]=true
-[StartEndList 검색] len=3, idx=31~33, rcChar={X=483,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0xFEC111FE0900400820007F27800020847F02401120F8C758FC0F0200000008F8073F20001002FD0F4008040000C10F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=32~33, rcChar={X=495,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x1CE11F4008F0770220847F1401C258FC0F0000F8073F00211040080410FC00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=33~33, rcChar={X=507,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0920807F20FC0F003F0209C40F
-[StartEndList 검색결과] 찾음: '동'
-[StartEndList 마킹] foundChar='동', x=33, consumed=1, startIdx=33
-  processed[33]=true
-[StartEndList 검색] len=3, idx=30~32, rcChar={X=453,Y=3,Width=53,Height=11}, W=53,H=11,Hex=0xFE0100807F70440000001000800800000002F077FF000040001002020000080045FE070000FF180B000000000200E007000040C03F02010000080044200000F81F80F0030000000010
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=31~32, rcChar={X=483,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0xFEC11101008800FC5D0010220014F18FB180000040C03F200090FF0108000004
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=32~32, rcChar={X=495,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x1C01C8DF114291B100C03F0001084000
-[StartEndList 검색결과] 찾음: '착'
-[StartEndList 마킹] foundChar='착', x=32, consumed=1, startIdx=32
-  processed[32]=true
-[StartEndList 검색] len=3, idx=29~31, rcChar={X=441,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x21E11F0000F8F71302000080002127000000081012FE010080003F01020000080000FF0300807FFE01000000800010FC00000008FE21100000802000020100C0FFFEC10F00000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=30~31, rcChar={X=453,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0xFE0100807F02000080000200008000FE010080002000008000FF0300807F0000000008FC000000080201000008020100C0FFFC00000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=31~31, rcChar={X=483,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0xFE0920800002F807020820FC0F
-[StartEndList 검색결과] 찾음: '도'
-[StartEndList 마킹] foundChar='도', x=31, consumed=1, startIdx=31
-  processed[31]=true
-[StartEndList 검색] len=3, idx=28~30, rcChar={X=429,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0x201012FEF9C74F0800052127806384847FFFF31320800000FCEF1FFE01004000043FFEE11F0209800008E41FFEC10F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=29~30, rcChar={X=441,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x21E1DF4F0810720284847F3F010200FCEF1F0000043FFE21900008E41FFC00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=30~30, rcChar={X=453,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0920807F20FC0F003F0209C40F
-[StartEndList 검색결과] 찾음: '동'
-[StartEndList 마킹] foundChar='동', x=30, consumed=1, startIdx=30
-  processed[30]=true
-[StartEndList 검색] len=3, idx=27~29, rcChar={X=396,Y=3,Width=56,Height=11}, W=56,H=11,Hex=0x7800000040202400000000FCE327FF030000A020E4480000001C232484000000FEE7278400000040000078000000FCC33F2000000000022020000000FCC33FFF03000004400000000000FCC33F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=28~29, rcChar={X=429,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x201012FFF8091484DC3142F23F3F010100F8877F000220FEE11F0110807FF807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=29~29, rcChar={X=441,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x21F949C843F21300F80720FE11807F00
-[StartEndList 검색결과] 찾음: '발'
-[StartEndList 마킹] foundChar='발', x=29, consumed=1, startIdx=29
-  processed[29]=true
-[StartEndList 검색] len=3, idx=26~28, rcChar={X=384,Y=3,Width=55,Height=11}, W=55,H=11,Hex=0x218107000000849000000000E0DF7FFC0F00008022249000000038161284000000FEFF09420000002000041E000000FF000204000000400200020000C03F01F81F000020807F00000000F00F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=27~28, rcChar={X=396,Y=3,Width=43,Height=11}, W=43,H=11,Hex=0x780000004000000000E0DFFF00000028900000003846080000E07F4200000020E0010000F00F040000004020000000FCFB1F0000200000000000FF00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=28~28, rcChar={X=429,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x20F8078563FF83E01F40FE09E01F
-[StartEndList 검색결과] 찾음: '출'
-[StartEndList 마킹] foundChar='출', x=28, consumed=1, startIdx=28
-  processed[28]=true
-[StartEndList 검색] len=3, idx=25~27, rcChar={X=380,Y=3,Width=26,Height=11}, W=26,H=11,Hex=0x11127844480010FFF17F840412111284DC4F10120081470004082100208400FC1FFE0100
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=26~27, rcChar={X=384,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x2181474800F01FFF8704122141C84F1002107800040802008200FCEF1F0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=27~27, rcChar={X=396,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0x7800F03F12841082070820FC0F
-[StartEndList 검색결과] 찾음: '호'
-[StartEndList 마킹] foundChar='호', x=27, consumed=1, startIdx=27
-  processed[27]=true
-[StartEndList 검색] len=3, idx=24~26, rcChar={X=372,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x1C11122042FEC57F8008C9112145EEA74800E408800821E02F0400847F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=25~26, rcChar={X=380,Y=3,Width=13,Height=11}, W=13,H=11,Hex=0x113242C6FF081921EF67000C80212004847F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=26~26, rcChar={X=384,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
-[StartEndList 검색결과] 찾음: '번'
-[StartEndList 마킹] foundChar='번', x=26, consumed=1, startIdx=26
-  processed[26]=true
-[StartEndList 검색] len=3, idx=23~25, rcChar={X=360,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x7FC11184000872FC85220042121C110A9107844800822302801001F88B7F0004
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=24~25, rcChar={X=372,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x1C01C85F00C211918B842308F90B4000
-[StartEndList 검색결과] 찾음: '화'
-[StartEndList 마킹] foundChar='화', x=25, consumed=2, startIdx=24
-  processed[24]=true
-  processed[25]=true
-[StartEndList 검색] len=3, idx=21~23, rcChar={X=327,Y=3,Width=42,Height=11}, W=42,H=11,Hex=0x7F010000FE2204000040881000000039420000008A0801000048521C0000104A11000020A048000000802201000004040500001000100000C03F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=22~23, rcChar={X=335,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0x010000FE0600004018000000790000008A010000481E0000101A00002060000000800100000404000010100000C03F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=23~23, rcChar={X=360,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x7F1122A748526840800204F807
-[StartEndList 검색결과] 찾음: '전'
-[StartEndList 마킹] foundChar='전', x=23, consumed=1, startIdx=23
-  processed[23]=true
-[StartEndList 검색] len=3, idx=20~22, rcChar={X=315,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x3FF197804048402024E010F2170801088A030045F8412402211281080A3F0004
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=21~22, rcChar={X=327,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x7F4108421082108A53442422090A4000
-[StartEndList 검색결과] 찾음: '자'
-[StartEndList 마킹] foundChar='자', x=22, consumed=2, startIdx=21
-  processed[21]=true
-  processed[22]=true
-[StartEndList 검색] len=3, idx=18~20, rcChar={X=273,Y=3,Width=53,Height=11}, W=53,H=11,Hex=0x3F0100C04FFC243C000008888084040000011190F0000020E002FE130000FCC55F00020000800008000000000000E0070000FC831F02010080400844200000100881F0030000FEC10F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=19~20, rcChar={X=303,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x3FF193800848400424E002FE177F010880000000FC831F0221108110887FF003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=20~20, rcChar={X=315,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F09484002FE178000801F0211083F00
-[StartEndList 검색결과] 찾음: '당'
-[StartEndList 마킹] foundChar='당', x=20, consumed=1, startIdx=20
-  processed[20]=true
-[StartEndList 검색] len=3, idx=17~19, rcChar={X=261,Y=3,Width=53,Height=11}, W=53,H=11,Hex=0x2FF1130000FC0425C203008080A047480000101094080F0000024E123F0100C05F46022000000008000000000000F00F7E0000C03F0021100000080420040200008100043F0000E01F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=18~19, rcChar={X=273,Y=3,Width=41,Height=11}, W=41,H=11,Hex=0x3F0100C04FC2030080808404000001090F000002FE130000FC05200000000800000000007E0000C03F02010080400402000081F0030000FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=19~19, rcChar={X=303,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F09484002FE178000C03F0211887F00
-[StartEndList 검색결과] 찾음: '담'
-[StartEndList 마킹] foundChar='담', x=19, consumed=1, startIdx=19
-  processed[19]=true
-[StartEndList 검색] len=3, idx=16~18, rcChar={X=249,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEF1123F010225C203047A84040894088F1024F113214602204200000044F00F7E08001002FF072004020040F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=17~18, rcChar={X=261,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x2FF11325C2A3474894084F123F4702200000F00F7E002110200402043F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=18~18, rcChar={X=273,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x3FC3870CFF1320007E0205F203
-[StartEndList 검색결과] 찾음: '명'
-[StartEndList 마킹] foundChar='명', x=18, consumed=1, startIdx=18
-  processed[18]=true
-[StartEndList 검색] len=3, idx=15~17, rcChar={X=227,Y=3,Width=43,Height=11}, W=43,H=11,Hex=0x0900807FBC4C000000026502000010E813000080409900002004C9070000214626000008012001004004FF09000002004C0000FE0760020000000001
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=16~17, rcChar={X=249,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFEF112205002047A804089102411622442004004FF0800F07F00020040
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=17~17, rcChar={X=261,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2F51A24749722400FF00010204
-[StartEndList 검색결과] 찾음: '객'
-[StartEndList 마킹] foundChar='객', x=17, consumed=1, startIdx=17
-  processed[17]=true
-[StartEndList 검색] len=3, idx=14~16, rcChar={X=222,Y=3,Width=37,Height=11}, W=37,H=11,Hex=0x2F0100F02F2400000085040000A090000000F412000084C203008050480000100A0900002221010040E0250000FF8304000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=15~16, rcChar={X=227,Y=3,Width=32,Height=11}, W=32,H=11,Hex=0x0900807F090000400900004009000040090000420F0000420900004209000022090000020900C0FF09000000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=16~16, rcChar={X=249,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0xFE01041040082184102208FC0F
-[StartEndList 검색결과] 찾음: '고'
-[StartEndList 마킹] foundChar='고', x=16, consumed=1, startIdx=16
-  processed[16]=true
-[StartEndList 검색] len=3, idx=13~15, rcChar={X=210,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x08F1122142524448920B29142F03223C0084E48790021152205EF20348
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=14~15, rcChar={X=222,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2F43860CF9327CC890215F8204
-[StartEndList 검색결과] 찾음: '태'
-[StartEndList 마킹] foundChar='태', x=15, consumed=2, startIdx=14
-  processed[14]=true
-  processed[15]=true
-[StartEndList 검색] len=3, idx=11~13, rcChar={X=174,Y=3,Width=47,Height=11}, W=47,H=11,Hex=0xFEC10F00801080100800400844080400500412040200480E01FC000042F91F00008080000000000000F8E17F00801F0241080020108120040010083F100200F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=12~13, rcChar={X=186,Y=3,Width=35,Height=11}, W=35,H=11,Hex=0xFC00000811080040884000004504020048CE0F0020140000808000000000E07F00801F8400000221040010082100003F00
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=13~13, rcChar={X=210,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x08410845482E948000801F0211083F00
-[StartEndList 검색결과] 찾음: '상'
-[StartEndList 마킹] foundChar='상', x=13, consumed=1, startIdx=13
-  processed[13]=true
-[StartEndList 검색] len=3, idx=10~12, rcChar={X=144,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x3F0100807FF003120000008440200100004408047200004082401001000004F083100000FC0F0007010000000000100000F0C3FF02000080401022000000080421FE0100003F1002
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=11~12, rcChar={X=174,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEC10F400804110241824010C0CFFF00000000F0C3FF0241884010C20F8400
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=12~12, rcChar={X=186,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFC08249040FC0000C0FF84104208
-[StartEndList 검색결과] 찾음: '유'
-[StartEndList 마킹] foundChar='유', x=12, consumed=1, startIdx=12
-  processed[12]=true
-[StartEndList 검색] len=3, idx=9~11, rcChar={X=140,Y=3,Width=44,Height=11}, W=44,H=11,Hex=0xF1130000F81720010000400112000040142007000024011100004010080100C0FF711000000010000100003F2100000008140200008040E11F0000F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=10~11, rcChar={X=144,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x3F0100807F2001000040200100004420070000241001000004080100C0FF0701000000000100003F02000080400200008040FE0100003F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=11~11, rcChar={X=174,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0104112410FC0F003F0209C40F
-[StartEndList 검색결과] 찾음: '공'
-[StartEndList 마킹] foundChar='공', x=11, consumed=1, startIdx=11
-  processed[11]=true
-[StartEndList 검색] len=3, idx=8~10, rcChar={X=132,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x08F11384000942800421408E1010A1088450C441440220222180A0100040F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=9~10, rcChar={X=140,Y=3,Width=15,Height=11}, W=15,H=11,Hex=0xF19300498024401E100984C441022021801040F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=10~10, rcChar={X=144,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F010948400E11841C04200210807F00
-[StartEndList 검색결과] 찾음: '간'
-[StartEndList 마킹] foundChar='간', x=10, consumed=1, startIdx=10
-  processed[10]=true
-[StartEndList 검색] len=3, idx=7~9, rcChar={X=120,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x208010041042014244406830080180220050FC1F912020120482820040
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=8~9, rcChar={X=132,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x08112244889022459122830204
-[StartEndList 검색결과] 찾음: '시'
-[StartEndList 마킹] foundChar='시', x=9, consumed=2, startIdx=8
-  processed[8]=true
-  processed[9]=true
-[StartEndList 검색] len=3, idx=5~7, rcChar={X=72,Y=3,Width=58,Height=11}, W=58,H=11,Hex=0x78000000F0132000000000004180F03F000000C4010512000000300422840000002011061302000040480080070000000000000800000008C4FF20000000E01F20FC0F00008040800000000000FE0102
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=6~7, rcChar={X=108,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x3F01024180401C50300422126170480000000008C4FFFE01824080E01F2000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=7~7, rcChar={X=120,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x2080000522060300C0FF20800002
-[StartEndList 검색결과] 찾음: '수'
-[StartEndList 마킹] foundChar='수', x=7, consumed=1, startIdx=7
-  processed[7]=true
-[StartEndList 검색] len=3, idx=4~6, rcChar={X=60,Y=3,Width=57,Height=11}, W=57,H=11,Hex=0x2181070000003F43020000000008FEC7FF000000100F09240000006018128400000020F12708010000202440E0010000000080000100000081020002000000FE05E07F00000004FA0700000000F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=5~6, rcChar={X=72,Y=3,Width=45,Height=11}, W=45,H=11,Hex=0x78000000F0130000000008FE0F0000007124000000604808000000120901000020241E0000000000010000008120000000E0FF7F0000000402000000807F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=6~6, rcChar={X=108,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x3F0912672831240081FE05FA07
-[StartEndList 검색결과] 찾음: '접'
-[StartEndList 마킹] foundChar='접', x=6, consumed=1, startIdx=6
-  processed[6]=true
-[StartEndList 검색] len=3, idx=3~5, rcChar={X=48,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0xFE111278084448002010FFF1BF7F8404120010128400C04F10F23F0081070800040822200020088000FCEF1FFE0100
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=4~5, rcChar={X=60,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x2181474800F01FFF8704122141C84F1002107800040802008200FCEF1F0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=5~5, rcChar={X=72,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0x7800F03F12841082070820FC0F
-[StartEndList 검색결과] 찾음: '호'
-[StartEndList 마킹] foundChar='호', x=5, consumed=1, startIdx=5
-  processed[5]=true
-[StartEndList 검색] len=3, idx=2~4, rcChar={X=36,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEE11F2141402042428140FC4704FF0869100010120000E02700FC0FC0FF010180202002024040000480807FF807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=3~4, rcChar={X=48,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFE115220420AC47FFF0809002101E0E7FF000401802220400004F8877F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=4~4, rcChar={X=60,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
-[StartEndList 검색결과] 찾음: '번'
-[StartEndList 마킹] foundChar='번', x=4, consumed=1, startIdx=4
-  processed[4]=true
-[StartEndList 검색] len=3, idx=1~3, rcChar={X=6,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x000000807FF807000000808040000000001408E400000020827F110000804100100100000000001100000000FC1F010000FC0F08110000000888E00000008080000000000008F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=2~3, rcChar={X=36,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=3~3, rcChar={X=48,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F0000F03F082208E01F
-[StartEndList 검색결과] 찾음: '문'
-[StartEndList 마킹] foundChar='문', x=3, consumed=1, startIdx=3
-  processed[3]=true
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=3,Width=46,Height=11}, W=46,H=11,Hex=0x11000000E05F04000000803001000000504C0E00000022550400006050150100000090450000000064110000C0FF510400000042E40000008000000000002000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=6,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x000000807F000000000800000000140E00000022110000804111000000001100000000110000C0FF11000000080E000000080000000008
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=36,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE81000522060100C0FF20800002
-[StartEndList 검색결과] 찾음: '주'
-[StartEndList 마킹] foundChar='주', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=3,Width=11,Height=10}, W=11,H=10,Hex=0x1188C0042657C52A66318B518C1C
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=6,Y=6,Width=5,Height=7}, W=5,H=7,Hex=0x2EC618A303
-[StartEndList 검색결과] 찾음: '미'
-[StartEndList 마킹] foundChar='미', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=3,Width=5,Height=10}, W=5,H=10,Hex=0x31CE596BCE3102
-[StartEndList 검색결과] 찾음: 'N'
-[StartEndList 마킹] foundChar='N', x=0, consumed=1, startIdx=0
-  processed[0]=true
-[StartEndList] 음소 개수=71
-  [0] processed=True, result=N
-  [1] processed=True, result=미
-  [2] processed=True, result=주
-  [3] processed=True, result=문
-  [4] processed=True, result=번
-  [5] processed=True, result=호
-  [6] processed=True, result=접
-  [7] processed=True, result=수
-  [8] processed=True, result=시
-  [9] processed=True, result=null
-  [10] processed=True, result=간
-  [11] processed=True, result=공
-  [12] processed=True, result=유
-  [13] processed=True, result=상
-  [14] processed=True, result=태
-  [15] processed=True, result=null
-  [16] processed=True, result=고
-  [17] processed=True, result=객
-  [18] processed=True, result=명
-  [19] processed=True, result=담
-  [20] processed=True, result=당
-  [21] processed=True, result=자
-  [22] processed=True, result=null
-  [23] processed=True, result=전
-  [24] processed=True, result=화
-  [25] processed=True, result=null
-  [26] processed=True, result=번
-  [27] processed=True, result=호
-  [28] processed=True, result=출
-  [29] processed=True, result=발
-  [30] processed=True, result=동
-  [31] processed=True, result=도
-  [32] processed=True, result=착
-  [33] processed=True, result=동
-  [34] processed=True, result=차
-  [35] processed=True, result=null
-  [36] processed=True, result=량
-  [37] processed=True, result=왕
-  [38] processed=True, result=복
-  [39] processed=True, result=형
-  [40] processed=True, result=태
-  [41] processed=True, result=null
-  [42] processed=True, result=지
-  [43] processed=True, result=null
-  [44] processed=True, result=급
-  [45] processed=True, result=계
-  [46] processed=True, result=null
-  [47] processed=True, result=산
-  [48] processed=True, result=서
-  [49] processed=True, result=라
-  [50] processed=True, result=null
-  [51] processed=True, result=이
-  [52] processed=True, result=null
-  [53] processed=True, result=더
-  [54] processed=True, result=요
-  [55] processed=True, result=금
-  [56] processed=True, result=적
-  [57] processed=True, result=요
-  [58] processed=True, result=최
-  [59] processed=True, result=null
-  [60] processed=True, result=초
-  [61] processed=True, result=접
-  [62] processed=True, result=수
-  [63] processed=True, result=시
-  [64] processed=True, result=null
-  [65] processed=True, result=간
-  [66] processed=True, result=오
-  [67] processed=True, result=더
-  [68] processed=True, result=메
-  [69] processed=True, result=null
-  [70] processed=True, result=모
-[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: 'N미주문번호접수시간공유상태고객명담당자전화번호출발동도착동차량왕복형태지급계산서라이더요금적요최초접수시간오더메모' (1656ms)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 3: 컬럼 순서 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 4: 규격 너비 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] BlockInput Force Disabled
-[INSUNG1/RcptRegPage] Datagrid 재시도 2/50
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1/RcptRegPage] OFR 완료: No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요
-[*] ValidateDatagridState 검증 통과 (정상)
-[INSUNG1/RcptRegPage] 초기화 완료
-[INSUNG1] InitializeAsync 완료
-[ExternalAppController] INSUNG1 초기화 성공
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
-[ExternalAppController] InitializeAsync 전체 완료
-[MasterModeManager] ExternalAppController 초기화 완료
-[MainWnd] Master 모드 초기화 완료
-[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
+[WindowProc] KEYHOOK - vkCode(wParam):0x15, msgType(lParam):0x100, PhysEsc:False
+[WindowProc] KEYHOOK - vkCode(wParam):0x15, msgType(lParam):0x101, PhysEsc:False
+[WindowProc] KEYHOOK - vkCode(wParam):0xA2, msgType(lParam):0x100, PhysEsc:False
+[WindowProc] KEYHOOK - vkCode(wParam):0x56, msgType(lParam):0x100, PhysEsc:False
+[WindowProc] KEYHOOK - vkCode(wParam):0x56, msgType(lParam):0x101, PhysEsc:False
+[WindowProc] KEYHOOK - vkCode(wParam):0xA2, msgType(lParam):0x101, PhysEsc:False
+[WindowProc] KEYHOOK - vkCode(wParam):0xD, msgType(lParam):0x100, PhysEsc:False
+[WindowProc] KEYHOOK - vkCode(wParam):0xD, msgType(lParam):0x101, PhysEsc:False
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒' (18782ms)
+[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
+[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
+[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
+[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
 === Window_Closing 시작 (안전 모드 복구) ===
 SrGlobalClient 재접속 중지 플래그 설정
 SignalR OnClosedAsync called
@@ -1149,3 +473,563 @@ SrLocalClient 재접속 중지 플래그 설정
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
+_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[InitDG오더] Step 3: 컬럼 순서 조정 시작
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[InitDG오더] Step 4: 규격 너비 조정 시작
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[CancelTokenControl] Cancel 호출됨
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
+[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
+[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+=== Window_Closing 시작 (안전 모드 복구) ===
+SrGlobalClient 재접속 중지 플래그 설정
+SignalR OnClosedAsync called
+SrLocalClient 재접속 중지 플래그 설정
+재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
+[MasterModeManager] Shutdown 시작
+[MasterModeManager] ExternalAppController 정리 중
+[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
+[CancelTokenControl] Cancel 호출됨
+[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
+[INSUNG1] Shutdown 시작
+[INSUNG1/Close] 종료 시퀀스 시작
+[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
+[INSUNG1/Close] 스플래시 윈도우 정리 전송
+[INSUNG1] Close 성공
+[INSUNG1] Shutdown 완료
+[ExternalAppController] 모든 리소스 정리 완료
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+ Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[Simulation_Mouse] L-Click DOWN (Drag Start)
+[Simulation_Mouse] L-Click UP (Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
+[CancelTokenControl] Cancel 호출됨
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
+[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
+[Simulation_Mouse] L-Click UP (Horizon Drag End)
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
+[Simulation_Mouse] Mouse Hook Lock Force Disabled
+[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
+예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
+[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
+[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
+[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
+=== Window_Closing 시작 (안전 모드 복구) ===
+SrGlobalClient 재접속 중지 플래그 설정
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Net.Http.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+SignalR OnClosedAsync called
+SrLocalClient 재접속 중지 플래그 설정
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.OperationCanceledException'(System.Net.WebSockets.dll)
+예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
+재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
+[MasterModeManager] Shutdown 시작
+[MasterModeManager] ExternalAppController 정리 중
+[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
+[CancelTokenControl] Cancel 호출됨
+[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
+[INSUNG1] Shutdown 시작
+[INSUNG1/Close] 종료 시퀀스 시작
+[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
+[INSUNG1/Close] 스플래시 윈도우 정리 전송
+[INSUNG1] Close 성공
+[INSUNG1] Shutdown 완료
+[ExternalAppController] 모든 리소스 정리 완료
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.TimeoutException'(WindowsBase.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(WindowsBase.dll)
+'[10412] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).

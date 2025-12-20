@@ -261,7 +261,6 @@ public partial class InsungsAct_RcptRegPage
             for (int retry = 1; retry <= c_nRepeatShort; retry++)
             {
                 await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync(); // ESC 중단 체크
-                bool bShowMsgBox = (retry == c_nRepeatShort);
 
                 if (retry > 1)
                 {
@@ -340,11 +339,11 @@ public partial class InsungsAct_RcptRegPage
                                  $"확인을 누르면 초기화(Init)를 다시 시도합니다.";
                     
                     Debug.WriteLine($"[INSUNG1/RcptRegPage] {msg.Replace("\n", " ")}");
-                    //MsgBox(msg, "그리드 검증 실패");
 
                     bmpDG?.Dispose();
                     bmpDG = null;
 
+                    // 자동 초기화 시도
                     StdResult_Error initResult = await InitDG오더Async(CEnum_DgValidationIssue.InvalidColumnCount);
                     if (initResult != null)
                     {
@@ -354,7 +353,7 @@ public partial class InsungsAct_RcptRegPage
                                 $"[{m_Context.AppName}/RcptRegPage] 컬럼 개수 불일치: 검출={columns}, 예상={m_ReceiptDgHeaderInfos.Length}", 
                                 "InsungsAct_RcptRegPage/SetDG오더RectsAsync_05");
                     }
-
+                    
                     await Task.Delay(200);
                     continue;
                 }
@@ -371,11 +370,11 @@ public partial class InsungsAct_RcptRegPage
                                  $"확인을 누르면 초기화(Init)를 다시 시도합니다.";
 
                     Debug.WriteLine($"[INSUNG1/RcptRegPage] {msg.Replace("\n", " ")}");
-                    //MsgBox(msg, "그리드 규격 검증 실패");
 
                     bmpDG?.Dispose();
                     bmpDG = null;
 
+                    // 자동 초기화 시도
                     StdResult_Error initResult = await InitDG오더Async(validationIssues);
                     if (initResult != null)
                     {
@@ -483,21 +482,23 @@ public partial class InsungsAct_RcptRegPage
 
         try
         {
-            // 초기화 전체 기간 동안 외부 입력 차단
-            Simulation_Mouse.SafeBlockInputStart();
+            // Step 1: 사전작업 
+            // 입력 제한 시작
+            Kai.Common.StdDll_Common.StdWin32.StdWin32.BlockInput(true);
+            Debug.WriteLine($"[{m_Context.AppName}] BlockInput(true) - 데이터그리드 초기화 시작");
 
-            // DG오더_hWnd 기준으로 헤더 영역 정의
+            Debug.WriteLine($"[{m_Context.AppName}] 데이터그리드 수동 초기화 강제 실행 (Step 1)");
             Draw.Rectangle rcDG = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
             Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG.Width, m_FileInfo.접수등록Page_DG오더_headerHeight);
 
-            // Step 1: 사전작업 - "접수화면초기화" 클릭
+            // Step 2: "접수화면초기화" 클릭
             Debug.WriteLine("[InitDG오더] Step 1: 접수화면초기화 시작");
             await Std32Mouse_Post.MousePostAsync_ClickRight(m_RcptPage.DG오더_hWnd);
 
             IntPtr hWndMenu = IntPtr.Zero;
             for (int i = 0; i < 100; i++)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
                 await Task.Delay(20);
                 hWndMenu = Std32Window.FindMainWindow_StartsWith(m_Context.MemInfo.Splash.TopWnd_uProcessId, m_FileInfo.Main_AnyMenu_sClassName, m_FileInfo.Main_AnyMenu_sWndName);
                 if (hWndMenu != IntPtr.Zero) break;
@@ -509,7 +510,7 @@ public partial class InsungsAct_RcptRegPage
             IntPtr hWndDialog = IntPtr.Zero;
             for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
                 await Task.Delay(CommonVars.c_nWaitShort);
                 hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
                 if (hWndDialog != IntPtr.Zero) break;
@@ -520,7 +521,7 @@ public partial class InsungsAct_RcptRegPage
                 await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndMenu, 10, 12, 50);
                 for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
                 {
-                    await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                    await CommonFuncs.CheckCancelAndThrowAsync();
                     await Task.Delay(CommonVars.c_nWaitShort);
                     hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
                     if (hWndDialog != IntPtr.Zero) break;
@@ -530,21 +531,35 @@ public partial class InsungsAct_RcptRegPage
             if (hWndDialog == IntPtr.Zero) return new StdResult_Error("[InitDG오더]확인 다이얼로그 찾기 실패", "InitDG오더Async_03");
 
             IntPtr hWndBtn = Std32Window.FindWindowEx(hWndDialog, IntPtr.Zero, "Button", "예(&Y)");
+            if (hWndBtn == IntPtr.Zero) hWndBtn = Std32Window.FindWindowEx(hWndDialog, IntPtr.Zero, "Button", "예"); // mnemonic 없는 경우 대비
             if (hWndBtn == IntPtr.Zero) return new StdResult_Error("[InitDG오더]'예' 버튼 찾기 실패", "InitDG오더Async_02");
 
-            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn, 5, 5, 50);
-            await Task.Delay(500);
-
-            for (int i = 0; i < CommonVars.c_nRepeatMany; i++)
+            // Step 2.2: "예" 버튼 클릭 및 창 닫힘 대기 (백업 로직 기반 강화)
+            for (int i = 0; i < 3; i++)
             {
-                await Task.Delay(CommonVars.c_nWaitShort);
-                hWndDialog = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
-                if (hWndDialog == IntPtr.Zero) break;
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn, 5, 5, 100);
+                await Std32Key_Msg.KeyPost_DownAsync(hWndDialog, StdCommon32.VK_RETURN); // 엔터키 병행
+                await Task.Delay(CommonVars.c_nWaitNormal);
+                if (!Std32Window.IsWindow(hWndDialog)) break;
+            }
+
+            // Step 2.3: 최종 "초기화되었습니다" 확인창 처리 (백업본 팝업 로직 참조)
+            await Task.Delay(CommonVars.c_nWaitNormal);
+            IntPtr hWndFinal = Std32Window.FindMainWindow(m_Context.MemInfo.Splash.TopWnd_uProcessId, "#32770", "확인");
+            if (hWndFinal != IntPtr.Zero)
+            {
+                IntPtr hWndFinalBtn = Std32Window.FindWindowEx(hWndFinal, IntPtr.Zero, "Button", "확인");
+                if (hWndFinalBtn != IntPtr.Zero)
+                {
+                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndFinalBtn, 10, 10, 50);
+                    await Std32Key_Msg.KeyPost_DownAsync(hWndFinal, StdCommon32.VK_RETURN);
+                    await Task.Delay(CommonVars.c_nWaitNormal);
+                }
             }
 
             await Task.Delay(c_nWaitVeryLong);
 
-            // Step 2: 컬럼 삭제 및 21개 확보 (폭 조정을 통한 발견)
+            // Step 3: 컬럼 삭제 및 21개 확보 (폭 조정을 통한 발견)
             Debug.WriteLine("[InitDG오더] Step 2: 컬럼 확보 시작");
             int headerHeight = m_FileInfo.접수등록Page_DG오더_headerHeight;
             const int headerGab = 7;
@@ -554,7 +569,7 @@ public partial class InsungsAct_RcptRegPage
 
             for (int widthIter = 0; widthIter < 5; widthIter++)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
                 await Task.Delay(CommonVars.c_nWaitNormal);
                 var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader == null) return new StdResult_Error("헤더 캡쳐 실패", "InitDG오더Async_Step2_01");
@@ -566,12 +581,17 @@ public partial class InsungsAct_RcptRegPage
                 {
                     if (!m_ReceiptDgHeaderInfos.Any(h => h.sName == texts[x]))
                     {
-                        Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(new Draw.Rectangle(listLW[x].nLeft, headerGab, listLW[x].nWidth, textHeight));
-                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(m_RcptPage.DG오더_hWnd, ptCenter, -50, false, 50);
-                       await Task.Delay(c_nWaitShort);
+                        Draw.Rectangle rcCol = new Draw.Rectangle(listLW[x].nLeft, headerGab, listLW[x].nWidth, textHeight);
+                        Draw.Point ptCenter = StdUtil.GetCenterDrawPoint(rcCol);
+                        
+                        // [원복] 거리 -50, 시간 50ms
+                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_VerticalAsync(m_RcptPage.DG오더_hWnd, ptCenter, -50, false, 50); 
+                        await Task.Delay(c_nWaitShort);
                     }
                 }
-                bmpHeader.Dispose();
+                
+                // 루프 종료 전 안전하게 해제
+                if (bmpHeader != null) { bmpHeader.Dispose(); bmpHeader = null; }
 
                 // 폭 조정 (끌어오기용 축소)
                 var (bmpHeaderReload, listLWReload, columnsReload) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
@@ -582,8 +602,10 @@ public partial class InsungsAct_RcptRegPage
                     var matched = m_ReceiptDgHeaderInfos.FirstOrDefault(h => h.sName == textsReload[x]);
                     int targetWidth = (matched?.sName.Length ?? (textsReload[x]?.Length ?? 3)) * 18;
                     int dx = (listLWReload[x].nLeft + targetWidth) - boundaryX;
-                        await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, new Draw.Point(boundaryX, center), dx, false, 50);
-                    await Task.Delay(c_nWaitNormal);
+                    
+                    // [원복] 시간 50ms
+                    await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, new Draw.Point(boundaryX, center), dx, false, 50);
+                    await Task.Delay(c_nWaitShort);
                 }
                 bmpHeaderReload.Dispose();
 
@@ -594,12 +616,11 @@ public partial class InsungsAct_RcptRegPage
                 if (m_ReceiptDgHeaderInfos.All(h => textsFinal.Contains(h.sName))) break;
             }
 
-
-            // Step 3: 컬럼 순서 조정
+            // Step 4: 컬럼 순서 조정
             Debug.WriteLine("[InitDG오더] Step 3: 컬럼 순서 조정 시작");
             for (int x = 0; x < m_ReceiptDgHeaderInfos.Length; x++)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
                 await Task.Delay(CommonVars.c_nWaitNormal);
                 var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader == null) break;
@@ -619,11 +640,11 @@ public partial class InsungsAct_RcptRegPage
             }
 
 
-            // Step 4: 최종 규격 너비 조정
+            // Step 5: 최종 규격 너비 조정
             Debug.WriteLine("[InitDG오더] Step 4: 규격 너비 조정 시작");
             for (int iter = 0; iter < 2; iter++)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
                 await Task.Delay(CommonVars.c_nWaitNormal);
                 var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
                 if (bmpHeader == null) break;
@@ -647,14 +668,20 @@ public partial class InsungsAct_RcptRegPage
 
             return null;
         }
+        catch (OperationCanceledException)
+        {
+            Debug.WriteLine("[InitDG오더] ESC 키에 의해 자동화 작업이 취소되었습니다.");
+            return new StdResult_Error("사용자 중단 (ESC)", "InitDG오더Async_Cancelled");
+        }
         catch (Exception ex)
         {
             return new StdResult_Error($"[{m_Context.AppName}/InitDG오더] 예외발생: {ex.Message}", "InitDG오더Async_999");
         }
         finally
         {
-            Simulation_Mouse.SafeBlockInputForceStop();
+            Debug.WriteLine($"[{m_Context.AppName}] 데이터그리드 초기화 로직 종료 (입력제한 해제)");
             Std32Cursor.SetCursorPos_AbsDrawPt(ptCursorBackup);
+            Kai.Common.StdDll_Common.StdWin32.StdWin32.BlockInput(false);
         }
     }
 

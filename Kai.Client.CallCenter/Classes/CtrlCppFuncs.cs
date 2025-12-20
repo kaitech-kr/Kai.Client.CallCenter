@@ -35,6 +35,9 @@ public class CtrlCppFuncs
     [DllImport(c_sHookDllPath, CallingConvention = CallingConvention.Cdecl)]
     public static extern void SetKeyboardLock(bool bLock);
 
+    [DllImport("user32.dll")]
+    public static extern short GetAsyncKeyState(int vKey);
+
     #region System
     //[DllImport(c_sHookDllPath, CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
     //public static extern bool _ChangeMonitorResolution(string deviceName, int width, int height);

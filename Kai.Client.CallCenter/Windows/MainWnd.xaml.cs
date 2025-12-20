@@ -54,6 +54,18 @@ public partial class MainWnd : Window
     public VirtualMonitorWnd m_WndForVirtualMonitor = null; // 가상모니터 를 보기위한 윈도
     public MasterModeManager m_MasterManager = null; // Master 모드 관리자
     private AnimatedShutdownWnd _shutdownWnd = null; // 애니메이션 종료 화면
+    
+    [StructLayout(LayoutKind.Sequential)]
+    private struct KBDLLHOOKSTRUCT
+    {
+        public int vkCode;
+        public int scanCode;
+        public int flags;
+        public int time;
+        public IntPtr dwExtraInfo;
+    }
+    [DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
     #endregion
 
     #region Basic
@@ -189,20 +201,9 @@ public partial class MainWnd : Window
         await s_SrLClient.ConnectAsync();
         Debug.WriteLine($"[MainWnd] SignalR ConnectAsync 호출 완료");
 
-        // 시스템 전역 후킹 등록 (인성 앱이 포커스된 상태에서도 ESC 감지 가능)
-        if (!CtrlCppFuncs.SetKeyboardHook(s_hWndMain, CommonVars.MYMSG_KEYBOARDHOOK))
-        {
-            Debug.WriteLine("[MainWnd] 키보드 전역 후킹 실패");
-        }
-        else
-        {
-            Debug.WriteLine("[MainWnd] 키보드 전역 후킹 성공 (ESC 중단 대기)");
-        }
-
         // WindowProc 메시지 루프를 통해 전역 키 감지
         HwndSource source = HwndSource.FromHwnd(s_hWndMain);
         source.AddHook(new HwndSourceHook(WindowProc));
-
         #endregion
 
         // 가상모니터 를 보기위한 윈도 - 너무 일찍 만들어지지 않게한다(Timer Error)
@@ -410,13 +411,35 @@ public partial class MainWnd : Window
         m_WndForVirtualMonitor = null; // Clear reference
     }
 
-    // 테스트 메뉴
-    public void Menu_TmpTest_Click(object sender, RoutedEventArgs e)
+    public async void Menu_TmpTest_Click(object sender, RoutedEventArgs e)
     {
-        //Debug.WriteLine("Menu_TmpTest_Click");
-        //await CtrlOtherApps.ctrlCancelToken.PauseAsync();
-        //MsgBox("PauseAsync");
-        //CtrlOtherApps.ctrlCancelToken.Resume();
+        s_GlobalCancelToken.Reset(); 
+
+        Debug.WriteLine("[MainWnd] 마우스 후킹 테스트 시작 (20초간 잠금)");
+        StdWin32.BlockInput(true);
+
+        CommonFuncs.SetKeyboardHook();
+
+
+        try
+        {
+            await Task.Delay(20000, s_GlobalCancelToken.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.WriteLine("[MainWnd] ESC에 의해 테스트가 중단되었습니다.");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[MainWnd] 테스트 중 예외: {ex.Message}");
+        }
+        finally
+        {
+            StdWin32.BlockInput(false);
+            CommonFuncs.ReleaseKeyboardHook();
+
+            Debug.WriteLine("[MainWnd] 마우스 후킹 테스트 종료 및 해제 완료");
+        }
     }
     #endregion
 
@@ -444,35 +467,26 @@ public partial class MainWnd : Window
     {
         switch ((uint)msg) 
         {
+            case CommonVars.MYMSG_MOUSEHOOK:
+                break;
+
             case CommonVars.MYMSG_KEYBOARDHOOK:
                 {
                     try
                     {
-                        int msgType = (int)wParam; // 0x100 (KEYDOWN), 0x101 (KEYUP) 등
-                        
-                        // [복구] lParam은 포인터 주소이므로 Marshal로 읽어야 함
-                        int vkCode = Marshal.ReadInt32(lParam); 
-
-                        // [로그 정돈] 테스트 완료 후 일반 키 로그는 주석 처리
-                        // Debug.WriteLine($"[WindowProc] Hook - Msg: 0x{msgType:X}, Key: 0x{vkCode:X}");
-
-                        // WM_KEYDOWN(0x100) 또는 WM_SYSKEYDOWN(0x104) 일 때만 체크
-                        if (msgType == 0x100 || msgType == 0x104)
+                        int vkCode = (int)wParam;
+                        if (vkCode == 0x1B) // VK_ESCAPE
                         {
-                            // 만약 vkCode가 너무 큰 값이면 포인터일 수 있으나, 
-                            // 일단 일반적인 VirtualKey 값(ESC=0x1B)과 비교합니다.
-                            if (vkCode == 0x1B) 
-                            {
-                                Debug.WriteLine("[MainWnd] ★★★ 전역 ESC 감지 - 자동화 중단 및 입력 제한 해제! ★★★");
-                                s_GlobalCancelToken.Cancel();
-                                Simulation_Mouse.SafeBlockInputForceStop(); 
-                                handled = true;
-                            }
+                            Debug.WriteLine("[WindowProc] ESC 감지 - 자동화 중단 및 후킹 해제");
+                            CommonVars.s_GlobalCancelToken.Cancel();
+                            CommonFuncs.ReleaseKeyboardHook();
+                            Kai.Common.StdDll_Common.StdWin32.StdWin32.BlockInput(false);
+                            handled = true;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"[WindowProc] 후킹 메시지 처리 중 예외: {ex.Message}");
+                        Debug.WriteLine($"[WindowProc] 키보드 메시지 분석 중 예외: {ex.Message}");
                     }
                 }
                 break;

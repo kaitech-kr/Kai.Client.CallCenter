@@ -14,18 +14,6 @@ namespace Kai.Client.CallCenter.Classes;
 // 마우스 시뮬레이션 헬퍼 클래스 (순수 시뮬레이션 - 차단 로직 전면 배제 테스트)
 public static class Simulation_Mouse
 {
-    #region Blocking Control (무력화 상태)
-    public static bool IsMouseHookLocked => false; 
-    public static bool IsSimulating { get; set; } = false;
-
-    public static void SafeBlockInputStart() { }
-    public static void SafeBlockInputStop() { }
-    public static void SafeBlockInputForceStop() { }
-    public static void SafeBlockMouseHookStart() { }
-    public static void SafeBlockMouseHookStop() { }
-    public static void SafeBlockMouseHookForceStop() { }
-    #endregion
-
     #region Mouse Events - Click
     public static async Task SafeMouseEvent_ClickLeft_ptRelAsync(
         IntPtr hWnd, Draw.Point ptClickRel, bool bBkCursor = true, int nDelay = 50)

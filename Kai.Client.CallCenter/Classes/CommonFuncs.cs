@@ -1,18 +1,18 @@
-using System.IO;
-using System.Windows;
-using System.Windows.Controls;
-using System.Text.Json;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics;
-using Draw = System.Drawing;
-
-// using Kai.Common.FrmDll_FormCtrl;
-using Kai.Common.StdDll_Common;
-using Kai.Common.NetDll_WpfCtrl.NetMsgs;
-using Kai.Common.NetDll_WpfCtrl.NetOFR;
-using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
 using Kai.Client.CallCenter.Networks;
 using Kai.Client.CallCenter.OfrWorks;
+using Kai.Common.NetDll_WpfCtrl.NetMsgs;
+using Kai.Common.NetDll_WpfCtrl.NetOFR;
+// using Kai.Common.FrmDll_FormCtrl;
+using Kai.Common.StdDll_Common;
+using Kai.Server.Main.KaiWork.DBs.Postgres.CharDB.Models;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Interop;
+using Draw = System.Drawing;
 
 namespace Kai.Client.CallCenter.Classes;
 #nullable disable
@@ -170,6 +170,24 @@ public class CommonFuncs : CommonVars
             return mode.GetString() ?? "Sub";
 
         return "Sub";
+    }
+    #endregion
+
+    #region Hooking
+    public static void SetKeyboardHook()
+    {
+        CtrlCppFuncs.SetKeyboardHook(s_hWndMain, CommonVars.MYMSG_KEYBOARDHOOK);
+    }
+    public static void ReleaseKeyboardHook()
+    {
+        CtrlCppFuncs.ReleaseKeyboardHook();
+    }
+
+    public static async Task CheckCancelAndThrowAsync()
+    {
+        if (s_GlobalCancelToken.Token.IsCancellationRequested)
+            throw new OperationCanceledException(s_GlobalCancelToken.Token);
+        await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
     }
     #endregion
 

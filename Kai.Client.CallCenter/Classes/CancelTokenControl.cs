@@ -14,7 +14,7 @@ public class CancelTokenControl
     private readonly ManualResetEventSlim _pauseEvent = new(true);
     private volatile bool _isPaused = false;
 
-    public CancellationTokenSource TokenSource { get; } = new();
+    public CancellationTokenSource TokenSource { get; private set; } = new();
     public CancellationToken Token => TokenSource.Token;
 
     public bool IsPaused => _isPaused;
@@ -70,6 +70,24 @@ public class CancelTokenControl
             Debug.WriteLine("[CancelTokenControl] Cancel 호출됨");
             TokenSource.Cancel();
         }
+    }
+
+    /// <summary>
+    /// 상태 초기화 (재시작용)
+    /// </summary>
+    public void Reset()
+    {
+        Debug.WriteLine("[CancelTokenControl] Reset 호출됨 (토큰 재생성)");
+        
+        // 일시정지 해제
+        Resume();
+
+        // 기존 토큰 소스 정리 및 새 소스 생성
+        // 주의: 기존 토큰을 구독 중인 작업들은 취소 상태로 남음
+        try { TokenSource?.Dispose(); } catch { }
+        
+        // 새로운 인스턴스로 교체
+        TokenSource = new CancellationTokenSource();
     }
 }
 #nullable enable
