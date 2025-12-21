@@ -110,8 +110,13 @@ public partial class InsungsAct_RcptRegPage
 
             if (m_RcptPage.TopWnd_hWnd == IntPtr.Zero)
             {
+                // 디버깅: MDI Client의 모든 자식 윈도우 목록 출력
+                var childWnds = Std32Window.GetChildWindows_FirstLayer(m_Main.WndInfo_MdiClient.hWnd);
+                string childList = childWnds != null ? string.Join(", ", childWnds.Select(x => $"'{Std32Window.GetWindowCaption(x.hWnd)}'")) : "None";
+                Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 페이지 찾기 실패. 현재 자식 창 목록: {childList}");
+
                 return new StdResult_Error(
-                    $"[{m_Context.AppName}/RcptRegPage] 페이지 찾기 실패: {m_FileInfo.접수등록Page_TopWnd_sWndName}",
+                    $"[{m_Context.AppName}/RcptRegPage] 페이지 찾기 실패: {m_FileInfo.접수등록Page_TopWnd_sWndName} (자식창: {childList})",
                     "InsungsAct_RcptRegPage/InitializeAsync_01");
             }
             //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 접수현황 찾음");

@@ -275,7 +275,7 @@ public class OfrService
                 }
             }
 
-            Debug.WriteLine($"[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow={targetRow}, Brightness={Brightness}, xStartIndex={xStartIndex}");
+            //Debug.WriteLine($"[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow={targetRow}, Brightness={Brightness}, xStartIndex={xStartIndex}");
         }
         catch (Exception ex)
         {
@@ -1580,7 +1580,7 @@ public class OfrService
                 }
             }
 
-            Debug.WriteLine($"[OfrService] GetMinBrightnessAtRow: targetRow={targetRow}, min={min}");
+            //Debug.WriteLine($"[OfrService] GetMinBrightnessAtRow: targetRow={targetRow}, min={min}");
         }
         catch (Exception ex)
         {

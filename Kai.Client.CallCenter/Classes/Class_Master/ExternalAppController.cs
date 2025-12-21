@@ -144,14 +144,21 @@ public class ExternalAppController : IDisposable
         try
         {
             NetLoadingWnd.ShowLoading(s_MainWnd, "외부 앱(인성/원콜/24시) 통합 초기화 중입니다. 잠시만 기다려 주세요...");
-            Debug.WriteLine("[ExternalAppController] InitializeAsync 시작 (인성1 테스트 모드)");
+            Debug.WriteLine("[ExternalAppController] InitializeAsync 시작");
 
-            // 1. 앱 인스턴스 생성 (인성1만 우선 적용)
+            // 1. 앱 인스턴스 생성
             if (NwInsung01.s_Use)
             {
                 Insung01 = new NwInsung01();
                 m_ListApps.Add(Insung01);
                 Debug.WriteLine($"[ExternalAppController] Insung01 인스턴스 생성 완료");
+            }
+
+            if (NwInsung02.s_Use)
+            {
+                Insung02 = new NwInsung02();
+                m_ListApps.Add(Insung02);
+                Debug.WriteLine($"[ExternalAppController] Insung02 인스턴스 생성 완료");
             }
 
             Debug.WriteLine($"[ExternalAppController] 생성된 앱 개수: {m_ListApps.Count}");

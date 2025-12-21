@@ -1,5 +1,5 @@
 
-[SYSTEM] 로그 기록 시작: 2025-12-21 10:03:07
+[SYSTEM] 로그 기록 시작: 2025-12-21 10:29:37
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
 [CommonFuncs] sUse 확인: 'True'
@@ -12,7 +12,7 @@ HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:0
 연결 시도 시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=swXwUo0Wk33OkwbnE0VpoQ *****
+***** SrReport_ConnectedAsync 시작: connectedID=JrBDkdvOZkLVC_CfGsLaHg *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
@@ -28,9 +28,10 @@ SignalR 연결 성공
 [MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
 [MasterModeManager] ExternalAppController 초기화 시작
 [ExternalAppController] 생성자 호출
-[ExternalAppController] InitializeAsync 시작 (인성1 테스트 모드)
+[ExternalAppController] InitializeAsync 시작
 [ExternalAppController] Insung01 인스턴스 생성 완료
-[ExternalAppController] 생성된 앱 개수: 1
+[ExternalAppController] Insung02 인스턴스 생성 완료
+[ExternalAppController] 생성된 앱 개수: 2
 [ExternalAppController] INSUNG1 초기화 시퀀스 시작...
 [INSUNG1] InitializeAsync 시작: Id=동신MSI-S
 [INSUNG1] FileInfo 파일 로드 완료: D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Data\Insung01_FileInfo.txt
@@ -43,16 +44,40 @@ SignalR 연결 성공
 [INSUNG1/MainWnd] 초기화 시작
 [INSUNG1/MainWnd] 초기화 성공
 [INSUNG1/RcptRegPage] 초기화 시작
-[INSUNG1/UI] 신규버튼 확인 완료: hWnd=C0C68 (시도=1/10)
-[INSUNG1/UI] 조회버튼 확인 완료: hWnd=A0C6C (시도=1/10)
-[INSUNG1/UI] 기사버튼 확인 완료: hWnd=C0C66 (시도=1/10)
+[INSUNG1/UI] 신규버튼 확인 완료: hWnd=100E94 (시도=1/10)
+[INSUNG1/UI] 조회버튼 확인 완료: hWnd=100E98 (시도=1/10)
+[INSUNG1/UI] 기사버튼 확인 완료: hWnd=100E90 (시도=1/10)
 [INSUNG1/RcptRegPage] CallCount 핸들 찾기 성공
 [INSUNG1/RcptRegPage] SetDG오더RectsAsync 시작
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[INSUNG1/RcptRegPage] OFR 완료: No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요
+[*] ValidateDatagridState 검증 통과 (정상)
+[INSUNG1/RcptRegPage] 초기화 완료
+[INSUNG1] InitializeAsync 완료
+[ExternalAppController] INSUNG1 초기화 성공
+[ExternalAppController] INSUNG2 초기화 시퀀스 시작...
+[INSUNG2] InitializeAsync 시작: Id=디에스MSI-S
+[INSUNG2] FileInfo 파일 로드 완료: D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Data\Insung02_FileInfo.txt
+[INSUNG2] 확인된 앱 경로: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션\WooriNetWorkUpdater.exe
+[INSUNG2/UpdaterWork] 업데이터 실행 시도: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션\WooriNetWorkUpdater.exe
+[INSUNG2/UpdaterWork] 프로세스 종료 대기 시작...
+[INSUNG2/UpdaterWork] 업데이터 정상 종료 확인
+[INSUNG2/SplashWork] 시작 (ID: 디에스MSI-S)
+[INSUNG2/SplashWork] 로그인 입력 완료, 백업본 팝업 처리 로직 시작
+[INSUNG2/MainWnd] 초기화 시작
+[INSUNG2/MainWnd] 초기화 성공
+[INSUNG2/RcptRegPage] 초기화 시작
+[INSUNG2/UI] 신규버튼 확인 완료: hWnd=1D0B5C (시도=1/10)
+[INSUNG2/UI] 조회버튼 확인 완료: hWnd=70F8C (시도=1/10)
+[INSUNG2/UI] 기사버튼 확인 완료: hWnd=60FF2 (시도=1/10)
+[INSUNG2/RcptRegPage] CallCount 핸들 찾기 성공
+[INSUNG2/RcptRegPage] SetDG오더RectsAsync 시작
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
 [INSUNG1/RcptRegPage] [검증 실패] 컬럼 개수가 맞지 않습니다.  - Issue: InvalidColumnCount - 검출: 28개 - 예상: 21개  [검출된 헤더 텍스트] No, 주문번호, 접수시간, 공유, 상태, 고객명, 담당자, 전화번호, 출발동, 도착동, 차량, 왕복, 형태, 지급, 계산서, 라이더, 요금, 기사요금, 처리비, 부가세, 적요, 최초접수시간, 오더메모, 접수자, 부서명, 출발지역, 도착지역, 기사그룹  확인을 누르면 초기화(Init)를 다시 시도합니다.
-[INSUNG1] BlockInput(true) & KeyboardHook - 데이터그리드 초기화 시작
-[INSUNG1] 데이터그리드 수동 초기화 강제 실행 (Step 1)
+[INSUNG2] BlockInput(true) & KeyboardHook - 데이터그리드 초기화 시작
+[INSUNG2] 데이터그리드 수동 초기화 강제 실행 (Step 1)
 [InitDG오더] Step 1: 접수화면초기화 시작
 [InitDG오더] Step 2: 컬럼 확보 시작
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
@@ -80,6 +105,29 @@ SignalR 연결 성공
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=0,Width=36,Height=11}, W=36,H=11,Hex=0xFEC10F002010020100022110F8EF1FFC004100000010F43FFF032220000020E21FFE011410211040011102010810E11F0000
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=2, idx=1~2, rcChar={X=12,Y=0,Width=24,Height=11}, W=24,H=11,Hex=0xFC00000201000281FFFC0041000041FF0322000022FE0114020114020108FE0100
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=2~2, rcChar={X=27,Y=2,Width=9,Height=8}, W=9,H=8,Hex=0xFF0509224204050A08
+[StartEndList 검색결과] 찾음: '▽'
+[StartEndList 마킹] foundChar='▽', x=2, consumed=1, startIdx=2
+  processed[2]=true
+[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=0,Width=22,Height=11}, W=22,H=11,Hex=0xFEC18F4008241002F9073F0000C0FFFC0F0200F8877F10211044080411FE01
+[StartEndList 검색결과] 없음
+[StartEndList 검색] len=1, idx=1~1, rcChar={X=12,Y=0,Width=10,Height=11}, W=10,H=11,Hex=0xFC0824103F00FC0F807F0209E41F
+[StartEndList 검색결과] 찾음: '음'
+[StartEndList 마킹] foundChar='음', x=1, consumed=1, startIdx=1
+  processed[1]=true
+[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F00FC0F827F10410411
+[StartEndList 검색결과] 찾음: '묶'
+[StartEndList 마킹] foundChar='묶', x=0, consumed=1, startIdx=0
+  processed[0]=true
+[StartEndList] 음소 개수=3
+  [0] processed=True, result=묶
+  [1] processed=True, result=음
+  [2] processed=True, result=▽
+[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: '묶음▽' (241ms)
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
@@ -121,15 +169,15 @@ SignalR 연결 성공
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
-[INSUNG1/RcptRegPage] Datagrid 재시도 2/50
+[INSUNG2] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
+[INSUNG2/RcptRegPage] Datagrid 재시도 2/50
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1/RcptRegPage] OFR 완료: No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요
+[INSUNG2/RcptRegPage] OFR 완료: No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요
 [*] ValidateDatagridState 검증 통과 (정상)
-[INSUNG1/RcptRegPage] 초기화 완료
-[INSUNG1] InitializeAsync 완료
-[ExternalAppController] INSUNG1 초기화 성공
+[INSUNG2/RcptRegPage] 초기화 완료
+[INSUNG2] InitializeAsync 완료
+[ExternalAppController] INSUNG2 초기화 성공
 [ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
 [ExternalAppController] InitializeAsync 전체 완료
 [MasterModeManager] ExternalAppController 초기화 완료
@@ -152,891 +200,14 @@ SrLocalClient 재접속 중지 플래그 설정
 [INSUNG1/Close] 스플래시 윈도우 정리 전송
 [INSUNG1] Close 성공
 [INSUNG1] Shutdown 완료
+[ExternalAppController] INSUNG2 종료 및 Dispose 시도...
+[INSUNG2] Shutdown 시작
+[INSUNG2/Close] 종료 시퀀스 시작
+[INSUNG2/Close] 메인 윈도우 종료 메시지 전송
+[INSUNG2/Close] 스플래시 윈도우 정리 전송
+[INSUNG2] Close 성공
+[INSUNG2] Shutdown 완료
 [ExternalAppController] 모든 리소스 정리 완료
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
-,Width=22,Height=14}
-[ImageToCharWnd] Window_Loaded 시작
-[대화상자] len=1, currentIdx=3, endIdx=3, rcChar={X=24,Y=0,Width=10,Height=7}
-[ImageToCharWnd] Window_Loaded 시작
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒☒☒☒' (6214ms)
-[InitDG오더] ESC 키에 의해 자동화 작업이 취소되었습니다.
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
-[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-ernalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-0000888E00000008080000000000008F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=2~3, rcChar={X=36,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=3~3, rcChar={X=48,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F0000F03F082208E01F
-[StartEndList 검색결과] 찾음: '문'
-[StartEndList 마킹] foundChar='문', x=3, consumed=1, startIdx=3
-  processed[3]=true
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=3,Width=46,Height=11}, W=46,H=11,Hex=0x11000000E05F04000000803001000000504C0E00000022550400006050150100000090450000000064110000C0FF510400000042E40000008000000000002000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=6,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x000000807F000000000800000000140E00000022110000804111000000001100000000110000C0FF11000000080E000000080000000008
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=36,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE81000522060100C0FF20800002
-[StartEndList 검색결과] 찾음: '주'
-[StartEndList 마킹] foundChar='주', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=3,Width=11,Height=10}, W=11,H=10,Hex=0x1188C0042657C52A66318B518C1C
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=6,Y=6,Width=5,Height=7}, W=5,H=7,Hex=0x2EC618A303
-[StartEndList 검색결과] 찾음: '미'
-[StartEndList 마킹] foundChar='미', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=3,Width=5,Height=10}, W=5,H=10,Hex=0x31CE596BCE3102
-[StartEndList 검색결과] 찾음: 'N'
-[StartEndList 마킹] foundChar='N', x=0, consumed=1, startIdx=0
-  processed[0]=true
-[StartEndList] 음소 개수=13
-  [0] processed=True, result=N
-  [1] processed=True, result=미
-  [2] processed=True, result=주
-  [3] processed=True, result=문
-  [4] processed=True, result=번
-  [5] processed=True, result=호
-  [6] processed=True, result=접
-  [7] processed=True, result=수
-  [8] processed=True, result=시
-  [9] processed=True, result=null
-  [10] processed=True, result=간
-  [11] processed=True, result=공
-  [12] processed=True, result=유
-[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: 'N미주문번호접수시간공유' (531ms)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[InitDG오더] Step 4: 규격 너비 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
-[INSUNG1/RcptRegPage] Datagrid 재시도 2/50
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=104
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=106, xStartIndex=2
-[StartEndList 검색] len=3, idx=10~12, rcChar={X=144,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x3F0100807FF003120000008440200100004408047200004082401001000004F083100000FC0F0007010000000000100000F0C3FF02000080401022000000080421FE0100003F1002
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=11~12, rcChar={X=174,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEC10F400804110241824010C0CFFF00000000F0C3FF0241884010C20F8400
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=12~12, rcChar={X=186,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFC08249040FC0000C0FF84104208
-[StartEndList 검색결과] 찾음: '유'
-[StartEndList 마킹] foundChar='유', x=12, consumed=1, startIdx=12
-  processed[12]=true
-[StartEndList 검색] len=3, idx=9~11, rcChar={X=140,Y=3,Width=44,Height=11}, W=44,H=11,Hex=0xF1130000F81720010000400112000040142007000024011100004010080100C0FF711000000010000100003F2100000008140200008040E11F0000F003
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=10~11, rcChar={X=144,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x3F0100807F2001000040200100004420070000241001000004080100C0FF0701000000000100003F02000080400200008040FE0100003F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=11~11, rcChar={X=174,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0104112410FC0F003F0209C40F
-[StartEndList 검색결과] 찾음: '공'
-[StartEndList 마킹] foundChar='공', x=11, consumed=1, startIdx=11
-  processed[11]=true
-[StartEndList 검색] len=3, idx=8~10, rcChar={X=132,Y=3,Width=23,Height=11}, W=23,H=11,Hex=0x08F11384000942800421408E1010A1088450C441440220222180A0100040F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=9~10, rcChar={X=140,Y=3,Width=15,Height=11}, W=15,H=11,Hex=0xF19300498024401E100984C441022021801040F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=10~10, rcChar={X=144,Y=3,Width=11,Height=11}, W=11,H=11,Hex=0x3F010948400E11841C04200210807F00
-[StartEndList 검색결과] 찾음: '간'
-[StartEndList 마킹] foundChar='간', x=10, consumed=1, startIdx=10
-  processed[10]=true
-[StartEndList 검색] len=3, idx=7~9, rcChar={X=120,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0x208010041042014244406830080180220050FC1F912020120482820040
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=8~9, rcChar={X=132,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x08112244889022459122830204
-[StartEndList 검색결과] 찾음: '시'
-[StartEndList 마킹] foundChar='시', x=9, consumed=2, startIdx=8
-  processed[8]=true
-  processed[9]=true
-[StartEndList 검색] len=3, idx=5~7, rcChar={X=72,Y=3,Width=58,Height=11}, W=58,H=11,Hex=0x78000000F0132000000000004180F03F000000C4010512000000300422840000002011061302000040480080070000000000000800000008C4FF20000000E01F20FC0F00008040800000000000FE0102
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=6~7, rcChar={X=108,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x3F01024180401C50300422126170480000000008C4FFFE01824080E01F2000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=7~7, rcChar={X=120,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0x2080000522060300C0FF20800002
-[StartEndList 검색결과] 찾음: '수'
-[StartEndList 마킹] foundChar='수', x=7, consumed=1, startIdx=7
-  processed[7]=true
-[StartEndList 검색] len=3, idx=4~6, rcChar={X=60,Y=3,Width=57,Height=11}, W=57,H=11,Hex=0x2181070000003F43020000000008FEC7FF000000100F09240000006018128400000020F12708010000202440E0010000000080000100000081020002000000FE05E07F00000004FA0700000000F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=5~6, rcChar={X=72,Y=3,Width=45,Height=11}, W=45,H=11,Hex=0x78000000F0130000000008FE0F0000007124000000604808000000120901000020241E0000000000010000008120000000E0FF7F0000000402000000807F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=6~6, rcChar={X=108,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x3F0912672831240081FE05FA07
-[StartEndList 검색결과] 찾음: '접'
-[StartEndList 마킹] foundChar='접', x=6, consumed=1, startIdx=6
-  processed[6]=true
-[StartEndList 검색] len=3, idx=3~5, rcChar={X=48,Y=3,Width=34,Height=11}, W=34,H=11,Hex=0xFE111278084448002010FFF1BF7F8404120010128400C04F10F23F0081070800040822200020088000FCEF1FFE0100
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=4~5, rcChar={X=60,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0x2181474800F01FFF8704122141C84F1002107800040802008200FCEF1F0000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=5~5, rcChar={X=72,Y=3,Width=10,Height=10}, W=10,H=10,Hex=0x7800F03F12841082070820FC0F
-[StartEndList 검색결과] 찾음: '호'
-[StartEndList 마킹] foundChar='호', x=5, consumed=1, startIdx=5
-  processed[5]=true
-[StartEndList 검색] len=3, idx=2~4, rcChar={X=36,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEE11F2141402042428140FC4704FF0869100010120000E02700FC0FC0FF010180202002024040000480807FF807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=3~4, rcChar={X=48,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFE115220420AC47FFF0809002101E0E7FF000401802220400004F8877F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=4~4, rcChar={X=60,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
-[StartEndList 검색결과] 찾음: '번'
-[StartEndList 마킹] foundChar='번', x=4, consumed=1, startIdx=4
-  processed[4]=true
-[StartEndList 검색] len=3, idx=1~3, rcChar={X=6,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x000000807FF807000000808040000000001408E400000020827F110000804100100100000000001100000000FC1F010000FC0F08110000000888E00000008080000000000008F807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=2~3, rcChar={X=36,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=3~3, rcChar={X=48,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE0924907F0000F03F082208E01F
-[StartEndList 검색결과] 찾음: '문'
-[StartEndList 마킹] foundChar='문', x=3, consumed=1, startIdx=3
-  processed[3]=true
-[StartEndList 검색] len=3, idx=0~2, rcChar={X=0,Y=3,Width=46,Height=11}, W=46,H=11,Hex=0x11000000E05F04000000803001000000504C0E00000022550400006050150100000090450000000064110000C0FF510400000042E40000008000000000002000
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=1~2, rcChar={X=6,Y=3,Width=40,Height=11}, W=40,H=11,Hex=0x000000807F000000000800000000140E00000022110000804111000000001100000000110000C0FF11000000080E000000080000000008
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=2~2, rcChar={X=36,Y=3,Width=10,Height=11}, W=10,H=11,Hex=0xFE81000522060100C0FF20800002
-[StartEndList 검색결과] 찾음: '주'
-[StartEndList 마킹] foundChar='주', x=2, consumed=1, startIdx=2
-  processed[2]=true
-[StartEndList 검색] len=2, idx=0~1, rcChar={X=0,Y=3,Width=11,Height=10}, W=11,H=10,Hex=0x1188C0042657C52A66318B518C1C
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=1~1, rcChar={X=6,Y=6,Width=5,Height=7}, W=5,H=7,Hex=0x2EC618A303
-[StartEndList 검색결과] 찾음: '미'
-[StartEndList 마킹] foundChar='미', x=1, consumed=1, startIdx=1
-  processed[1]=true
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=3,Width=5,Height=10}, W=5,H=10,Hex=0x31CE596BCE3102
-[StartEndList 검색결과] 찾음: 'N'
-[StartEndList 마킹] foundChar='N', x=0, consumed=1, startIdx=0
-  processed[0]=true
-[StartEndList] 음소 개수=13
-  [0] processed=True, result=N
-  [1] processed=True, result=미
-  [2] processed=True, result=주
-  [3] processed=True, result=문
-  [4] processed=True, result=번
-  [5] processed=True, result=호
-  [6] processed=True, result=접
-  [7] processed=True, result=수
-  [8] processed=True, result=시
-  [9] processed=True, result=null
-  [10] processed=True, result=간
-  [11] processed=True, result=공
-  [12] processed=True, result=유
-[StartEndList 완전성공] OfrStr_ComplexCharSetAsync: 'N미주문번호접수시간공유' (281ms)
-[INSUNG1/RcptRegPage] [검증 실패] 컬럼 개수가 맞지 않습니다.  - Issue: InvalidColumnCount - 검출: 1개 - 예상: 21개  [검출된 헤더 텍스트] N미주문번호접수시간공유  확인을 누르면 초기화(Init)를 다시 시도합니다.
-[INSUNG1] 데이터그리드 수동 초기화 강제 실행 (Step 1)
-[InitDG오더] Step 1: 접수화면초기화 시작
-[InitDG오더] Step 2: 컬럼 확보 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[CancelTokenControl] Cancel 호출됨
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[StartEndList 검색] len=1, idx=0~0, rcChar={X=0,Y=0,Width=10,Height=14}, W=10,H=14,Hex=0x02118207218410F23F0000F807104080FC0F
-[StartEndList 검색결과] 없음
-[StartEndList] x=0, foundChar=null → 마킹 안 함
-[StartEndList] 음소 개수=1
-  [0] processed=False, result=null
-[미처리 그룹] 총 1개: [0~0]
-  processed[0]=False, result=null
-[RightSliding 인식 시작] 이미지 크기: 10x14
-[RightSliding 1단계] 마지막 문자 RightSliding (첫 매칭 시 break)
-[RightSliding 1단계] 검색 범위: w=3~10
-[RightSliding 1단계 성능] w=3, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=4, HexString생성=0ms, DB검색=7ms
-[RightSliding 1단계 성능] w=5, HexString생성=0ms, DB검색=6ms
-[RightSliding 1단계 성능] w=6, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=7, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=8, HexString생성=0ms, DB검색=9ms
-[RightSliding 1단계 성능] w=9, HexString생성=0ms, DB검색=5ms
-[RightSliding 1단계 성능] w=10, HexString생성=0ms, DB검색=3ms
-[RightSliding 1단계 실패] 전경영역={X=0,Y=0,Width=10,Height=14}, 오른쪽문자영역={X=0,Y=0,Width=10,Height=14}
-[RightSliding 1단계 실패] failFunc 호출, failFunc=False, rcFail={X=0,Y=0,Width=10,Height=14}
-[RightSliding 1단계 실패]
-[대화상자] len=1, currentIdx=0, endIdx=0, rcChar={X=0,Y=0,Width=10,Height=14}
-[ImageToCharWnd] Window_Loaded 시작
-[WindowProc] KEYHOOK - vkCode(wParam):0x15, msgType(lParam):0x100, PhysEsc:False
-[WindowProc] KEYHOOK - vkCode(wParam):0x15, msgType(lParam):0x101, PhysEsc:False
-[WindowProc] KEYHOOK - vkCode(wParam):0xA2, msgType(lParam):0x100, PhysEsc:False
-[WindowProc] KEYHOOK - vkCode(wParam):0x56, msgType(lParam):0x100, PhysEsc:False
-[WindowProc] KEYHOOK - vkCode(wParam):0x56, msgType(lParam):0x101, PhysEsc:False
-[WindowProc] KEYHOOK - vkCode(wParam):0xA2, msgType(lParam):0x101, PhysEsc:False
-[WindowProc] KEYHOOK - vkCode(wParam):0xD, msgType(lParam):0x100, PhysEsc:False
-[WindowProc] KEYHOOK - vkCode(wParam):0xD, msgType(lParam):0x101, PhysEsc:False
-[최종 결과] OfrStr_ComplexCharSetAsync: '☒' (18782ms)
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
-[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 3: 컬럼 순서 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 4: 규격 너비 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[CancelTokenControl] Cancel 호출됨
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
-[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
- Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[Simulation_Mouse] L-Click DOWN (Drag Start)
-[Simulation_Mouse] L-Click UP (Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x100, PhysEsc:True
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:True) - 자동화 중단 ★★★
-[CancelTokenControl] Cancel 호출됨
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[WindowProc] KEYHOOK - vkCode(wParam):0x1B, msgType(lParam):0x101, PhysEsc:False
-[MainWnd] ★★★ ESC 감지 (WParam:True, Phys:False) - 자동화 중단 ★★★
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[Simulation_Mouse] L-Click DOWN (Horizon Drag Start)
-[Simulation_Mouse] L-Click UP (Horizon Drag End)
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-[Simulation_Mouse] Mouse Hook Lock Force Disabled
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
-[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
-sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
-sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
-예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Net.Http.dll)
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
-예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
-예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
-예외 발생: 'System.OperationCanceledException'(System.Net.WebSockets.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.TimeoutException'(WindowsBase.dll)
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(WindowsBase.dll)
-'[10412] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).

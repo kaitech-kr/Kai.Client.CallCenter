@@ -6,9 +6,7 @@ using Kai.Client.CallCenter.Networks.NwInsungs;
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable
 
-/// <summary>
-/// 인성1 자동배차 앱 (InsungAutoAllocBase 상속)
-/// </summary>
+// 인성1 자동배차 앱 (InsungAutoAllocBase 상속)
 public class NwInsung01 : InsungAutoAllocBase
 {
     #region 1. Static Configuration - 정적 설정
