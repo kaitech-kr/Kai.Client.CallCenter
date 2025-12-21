@@ -13,9 +13,7 @@ using static Kai.Client.CallCenter.Classes.CommonVars;
 namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 #nullable disable
 
-/// <summary>
-/// 원콜 앱 제어 (프로세스 시작, 로그인 처리 등)
-/// </summary>
+// 원콜 앱 제어 (프로세스 시작, 로그인 처리, 종료 등)
 public class OnecallAct_App
 {
     #region Private Fields
@@ -23,6 +21,8 @@ public class OnecallAct_App
     private OnecallInfo_File fInfo => m_Context.FileInfo;
     private OnecallInfo_Mem mInfo => m_Context.MemInfo;
     private string AppName => m_Context.AppName;
+    
+    private HashSet<IntPtr> m_HandledPopups = new HashSet<IntPtr>();
     #endregion
 
     #region 생성자
@@ -33,227 +33,200 @@ public class OnecallAct_App
     #endregion
 
     #region UpdaterWorkAsync
-    ///// <summary>
-    ///// 앱 실행 및 Splash 윈도우 대기
-    ///// </summary>
-    //public async Task<StdResult_Error> UpdaterWorkAsync(string sPath)
-    //{
-    //    try
-    //    {
-    //        //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 시작: {sPath}");
+    public async Task<StdResult_Status> UpdaterWorkAsync(string sPath)
+    {
+        Process procExec = null;
+        EventHandler exitHandler = null;
+        bool bClosed = false;
 
-    //        // 1. 기존 프로세스 종료
-    //        await Application.Current.Dispatcher.InvokeAsync(() =>
-    //        {
-    //            bool b = NwCommon.CloseSplash(null, fInfo.Splash_TopWnd_sWndName);
-    //            if (!b)
-    //            {
-    //                Debug.WriteLine($"[{AppName}] 기존 프로세스 종료 실패 (무시)");
-    //            }
-    //        });
+        try
+        {
+            Debug.WriteLine($"[{AppName}] UpdaterWork 시작: Path={sPath}");
 
-    //        // 2. 앱 실행
-    //        ProcessStartInfo processInfo = new ProcessStartInfo
-    //        {
-    //            UseShellExecute = true,
-    //            FileName = sPath
-    //        };
-    //        Process procExec = Process.Start(processInfo);
-    //        if (procExec == null)
-    //            return new StdResult_Error($"[{AppName}] 실행실패: procExec == null", "OnecallAct_App/UpdaterWorkAsync_01");
+            if (!System.IO.File.Exists(sPath))
+            {
+                string err = $"업데이터 경로가 존재하지 않습니다: {sPath}";
+                return new StdResult_Status(StdResult.Fail, err, "OnecallAct_App/UpdaterWorkAsync_NotFound");
+            }
 
-    //        // 3. Splash 윈도우 대기 (5분)
-    //        procExec.EnableRaisingEvents = true;
-    //        bool bClosed = false;
-    //        procExec.Exited += (sender, e) => { bClosed = true; };
+            procExec = Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = sPath });
+            if (procExec == null) return new StdResult_Status(StdResult.Fail, $"[{AppName}] 실행 실패", "OnecallAct_App/UpdaterWorkAsync_01");
 
-    //        for (int i = 0; i < 3000; i++) // 300초
-    //        {
-    //            await Task.Delay(c_nWaitNormal);
+            procExec.EnableRaisingEvents = true;
+            exitHandler = (sender, e) => { bClosed = true; };
+            procExec.Exited += exitHandler;
 
-    //            if (bClosed) break;
+            for (int i = 0; i < 3000; i++)
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested) return new StdResult_Status(StdResult.Skip, "취소됨", "OnecallAct_App/UpdaterWorkAsync_Cancel");
+                await Task.Delay(c_nWaitShort);
+                if (bClosed) break;
+                mInfo.Splash.TopWnd_hWnd = Std32Window.FindWindow(null, fInfo.Splash_TopWnd_sWndName);
+                if (mInfo.Splash.TopWnd_hWnd != IntPtr.Zero) break;
+            }
 
-    //            mInfo.Splash.TopWnd_hWnd = Std32Window.FindWindow(null, fInfo.Splash_TopWnd_sWndName);
-    //            if (mInfo.Splash.TopWnd_hWnd != IntPtr.Zero) break;
-    //        }
+            if (mInfo.Splash.TopWnd_hWnd == IntPtr.Zero) return new StdResult_Status(StdResult.Fail, "스플래시 대기 타임아웃", "OnecallAct_App/UpdaterWorkAsync_Timeout");
 
-    //        if (!bClosed && mInfo.Splash.TopWnd_hWnd == IntPtr.Zero)
-    //            return new StdResult_Error($"[{AppName}] 업데이터 (5분안에)종료실패", "OnecallAct_App/UpdaterWorkAsync_02");
-
-    //        //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 완료");
-    //        return null;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Error($"[{AppName}] UpdaterWorkAsync 예외: {ex.Message}", "OnecallAct_App/UpdaterWorkAsync_99");
-    //    }
-    //}
+            return new StdResult_Status(StdResult.Success);
+        }
+        finally
+        {
+            if (procExec != null)
+            {
+                if (exitHandler != null) procExec.Exited -= exitHandler;
+                procExec.Dispose();
+            }
+        }
+    }
     #endregion
 
     #region SplashWorkAsync
-    ///// <summary>
-    ///// Splash 윈도우 로그인 처리
-    ///// </summary>
-    //public async Task<StdResult_Error> SplashWorkAsync(string sAppName, string sId, string sPw)
-    //{
-    //    OnecallInfo_Mem.SplashWnd mSplash = mInfo.Splash;
-    //    Draw.Rectangle rcCur = StdUtil.s_rcDrawEmpty;
+    // Splash 윈도우 처리 및 로그인
+    public async Task<StdResult_Status> SplashWorkAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    {
+        OnecallInfo_Mem.SplashWnd mSplash = mInfo.Splash;
+        try
+        {
+            Debug.WriteLine($"[{AppName}] SplashWork 시작");
+            if (mSplash.TopWnd_hWnd == IntPtr.Zero) return new StdResult_Status(StdResult.Fail, "핸들 없음", "OnecallAct_App/SplashWorkAsync_01");
 
-    //    try
-    //    {
-    //        //Debug.WriteLine($"[{AppName}] SplashWorkAsync 시작");
+            // 1. 창 활성화 및 중앙 이동
+            Std32Window.SetForegroundWindow(mSplash.TopWnd_hWnd);
+            Std32Window.SetWindowTopMost(mSplash.TopWnd_hWnd, true);
+            var rcCur = Std32Window.GetWindowRect_DrawAbs(mSplash.TopWnd_hWnd);
+            var rcNew = s_Screens.m_WorkingMonitor.GetCenterDrawRectangle(rcCur);
+            StdWin32.MoveWindow(mSplash.TopWnd_hWnd, rcNew.X, rcNew.Y, rcNew.Width, rcNew.Height, true);
+            await Task.Delay(500);
 
-    //        // 1. Splash 윈도우 확인
-    //        if (mSplash.TopWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error($"[{AppName}] 스플래쉬윈도 찾기실패[{fInfo.Splash_TopWnd_sWndName}]",
-    //                "OnecallAct_App/SplashWorkAsync_01");
-    //        }
+            // 2. 정보 및 자식 핸들 취득
+            mSplash.TopWnd_uThreadId = Std32Window.GetWindowThreadProcessId(mSplash.TopWnd_hWnd, out mSplash.TopWnd_uProcessId);
+            mSplash.IdWnd_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, fInfo.Splash_IdWnd_ptChk);
+            mSplash.PwWnd_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, fInfo.Splash_PwWnd_ptChk);
+            mSplash.LoginBtn_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, fInfo.Splash_LoginBtn_ptChk);
 
-    //        await Task.Delay(c_nWaitVeryLong);
+            if (mSplash.LoginBtn_hWnd == IntPtr.Zero) return new StdResult_Status(StdResult.Fail, "로그인 버튼 찾기 실패", "OnecallAct_App/SplashWorkAsync_03");
 
-    //        // 2. Splash 윈도우를 화면 중앙으로 이동
-    //        rcCur = Std32Window.GetWindowRect_DrawAbs(mSplash.TopWnd_hWnd);
-    //        Draw.Rectangle rcNew = s_Screens.m_WorkingMonitor.GetCenterDrawRectangle(rcCur);
-    //        StdWin32.MoveWindow(mSplash.TopWnd_hWnd, rcNew.X, rcNew.Y, rcNew.Width, rcNew.Height, true);
+            // 3. 로그인 정보 입력
+            StdWin32.BlockInput(true);
+            try
+            {
+                await Task.Delay(500);
+                Std32Window.SetWindowCaption(mSplash.IdWnd_hWnd, m_Context.Id);
+                await Task.Delay(500);
+                Std32Window.SetWindowCaption(mSplash.PwWnd_hWnd, m_Context.Pw);
+                await Task.Delay(500);
 
-    //        for (int i = 0; i < c_nRepeatNormal; i++)
-    //        {
-    //            rcCur = Std32Window.GetWindowRect_DrawAbs(mSplash.TopWnd_hWnd);
-    //            if (rcCur == rcNew) break;
-    //            await Task.Delay(c_nWaitNormal);
-    //        }
+                // 로그인 버튼 마우스 클릭
+                Debug.WriteLine($"[{AppName}] 로그인 버튼 직접 클릭 시도");
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(mSplash.LoginBtn_hWnd);
+                await Task.Delay(300);
+            }
+            finally { StdWin32.BlockInput(false); }
 
-    //        if (rcCur != rcNew)
-    //            return new StdResult_Error($"[{AppName}] 스플래쉬윈도 위치이동실패", "OnecallAct_App/SplashWorkAsync_02");
+            // [초고속] 클릭 후 로그인 처리가 시작될 시간을 최소화하여 메인 창 감시를 빨리 시작합니다.
+            await Task.Delay(100);
 
-    //        // 3. TopMost 설정
-    //        Std32Window.SetWindowTopMost(mSplash.TopWnd_hWnd, true);
-    //        await Task.Delay(1000); // 1초 대기
+            // 4. 클릭 후 즉시 은폐 및 추방
+            if (Std32Window.IsWindow(mSplash.TopWnd_hWnd))
+            {
+                StdWin32.ShowWindow(mSplash.TopWnd_hWnd, (int)StdCommon32.SW_HIDE);
+                StdWin32.MoveWindow(mSplash.TopWnd_hWnd, -20000, -20000, 100, 100, true);
+            }
 
-    //        // 4. 공지사항 팝업 닫기
-    //        IntPtr hWndNotice = Std32Window.FindWindow(null, "공지사항");
-    //        if (hWndNotice != IntPtr.Zero)
-    //        {
-    //            Std32Window.PostCloseTwiceWindow(hWndNotice);
-    //            await Task.Delay(c_nWaitVeryLong);
-    //        }
+            // 5. 스플래시 창이 사라질 때까지 감시 및 강제 은폐 유지
+            for (int i = 0; i < 100; i++)
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested) break;
+                
+                if (Std32Window.IsWindow(mSplash.TopWnd_hWnd))
+                {
+                    StdWin32.ShowWindow(mSplash.TopWnd_hWnd, (int)StdCommon32.SW_HIDE);
+                    StdWin32.MoveWindow(mSplash.TopWnd_hWnd, -20000, -20000, 100, 100, true);
+                }
+                else break;
 
-    //        // 5. ThreadId, ProcessId 얻기
-    //        mSplash.TopWnd_uThreadId = Std32Window.GetWindowThreadProcessId(mSplash.TopWnd_hWnd, out mSplash.TopWnd_uProcessId);
-    //        if (mSplash.TopWnd_uThreadId == 0)
-    //        {
-    //            return new StdResult_Error($"[{AppName}] 프로세스 찾기실패", "OnecallAct_App/SplashWorkAsync_03");
-    //        }
+                await Task.Delay(50);
+            }
 
-    //        // 6. ID 입력창 찾기
-    //        mSplash.IdWnd_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, fInfo.Splash_IdWnd_ptChk);
-    //        if (mSplash.IdWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error($"[{AppName}] 아이디 입력창 찾기실패", "OnecallAct_App/SplashWorkAsync_04");
-    //        }
+            // 6. [최적화] 메인 로딩 대기를 여기서 하지 않고 즉시 반환 (MainWndAct.InitAsync에서 대기함)
+            // 팝업 정리는 백그라운드에서 병렬로 수행
+            _ = ClosePopupsAsync(mSplash.TopWnd_uProcessId); 
 
-    //        // 7. PW 입력창 찾기
-    //        mSplash.PwWnd_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, fInfo.Splash_PwWnd_ptChk);
-    //        if (mSplash.PwWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error($"[{AppName}] 비밀번호 입력창 찾기실패", "OnecallAct_App/SplashWorkAsync_05");
-    //        }
+            Debug.WriteLine($"[{AppName}] SplashWork 완료 (즉시 반환)");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, $"예외: {ex.Message}", "OnecallAct_App/SplashWorkAsync_99");
+        }
+    }
 
-    //        // 8. 로그인 처리
-    //        StdWin32.BlockInput(true);
+    // 팝업 감시 및 정리
+    private async Task ClosePopupsAsync(uint uProcessId)
+    {
+        for (int i = 0; i < 10; i++) 
+        {
+            var lstWnds = Std32Window.FindMainWindows_SameProcessId(uProcessId);
+            foreach (var hWnd in lstWnds)
+            {
+                if (m_HandledPopups.Contains(hWnd)) continue;
+                if (hWnd == mInfo.Splash.TopWnd_hWnd || hWnd == mInfo.Main.TopWnd_hWnd) continue;
 
-    //        string id = Std32Window.GetWindowCaption(mSplash.IdWnd_hWnd);
-    //        string pw = Std32Window.GetWindowCaption(mSplash.PwWnd_hWnd);
-
-    //        if (id != sId) Std32Window.SetWindowCaption(mSplash.IdWnd_hWnd, sId);
-    //        if (pw != sPw) Std32Window.SetWindowCaption(mSplash.PwWnd_hWnd, sPw);
-
-    //        // 9. 로그인 버튼 클릭
-    //        IntPtr hWndLogin = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, fInfo.Splash_LoginBtn_ptChk);
-    //        if (hWndLogin == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error($"[{AppName}] 로그인 버튼 찾기실패", "OnecallAct_App/SplashWorkAsync_06");
-    //        }
-
-    //        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndLogin);
-    //        StdWin32.BlockInput(false);
-
-    //        //Debug.WriteLine($"[{AppName}] SplashWorkAsync 완료");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Error($"[{AppName}] SplashWorkAsync 예외: {ex.Message}", "OnecallAct_App/SplashWorkAsync_99");
-    //    }
-    //    finally
-    //    {
-    //        StdWin32.BlockInput(false);
-    //        Std32Window.SetWindowTopMost(mSplash.TopWnd_hWnd, false);
-    //        await Task.Delay(c_nWaitNormal);
-    //    }
-
-    //    return null;
-    //}
+                string caption = Std32Window.GetWindowCaption(hWnd);
+                if (StdUtil.ContainsHangul(caption) && !caption.Contains("원콜")) 
+                {
+                    m_HandledPopups.Add(hWnd);
+                    StdWin32.ShowWindow(hWnd, (int)StdCommon32.SW_HIDE);
+                    if (Std32Window.IsWindow(hWnd)) StdWin32.PostMessage(hWnd, 0x0010, 0, IntPtr.Zero); // WM_CLOSE
+                }
+            }
+            await Task.Delay(500);
+        }
+    }
     #endregion
 
     #region Close
-    ///// <summary>
-    ///// 앱 종료
-    ///// </summary>
-    //public StdResult_Error Close(int nDelayMiliSec = 100)
-    //{
-    //    OnecallInfo_Mem.MainWnd mMain = mInfo.Main;
-    //    OnecallInfo_Mem.SplashWnd mSplash = mInfo.Splash;
+    // 원콜 앱 종료 (MainWindow 닫기 시도 후 프로세스 강제 종료 fallback)
+    public StdResult_Status Close(int nDelayMiliSec = 100)
+    {
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Close 시작");
 
-    //    try
-    //    {
-    //        Debug.WriteLine($"[{AppName}] Close 시작");
+            // 1. 메인 윈도우 닫기 시도
+            if (mInfo.Main.TopWnd_hWnd != IntPtr.Zero && Std32Window.IsWindow(mInfo.Main.TopWnd_hWnd))
+            {
+                StdWin32.PostMessage(mInfo.Main.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, (uint)StdCommon32.SC_CLOSE, IntPtr.Zero);
+                Debug.WriteLine($"[{AppName}] 메인윈도우 종료 메시지 전송");
+                Thread.Sleep(500); // 윈도우가 닫힐 시간 대기
+            }
 
-    //        // MainWindow 종료
-    //        if (mMain.TopWnd_hWnd != IntPtr.Zero)
-    //        {
-    //            if (!Std32Window.IsWindowVisible(mMain.TopWnd_hWnd)) return null;
+            // 2. 프로세스 강제 종료 (확실한 정리를 위해)
+            uint uPid = mInfo.Splash.TopWnd_uProcessId;
+            if (uPid != 0)
+            {
+                try
+                {
+                    var process = Process.GetProcessById((int)uPid);
+                    if (!process.HasExited)
+                    {
+                        process.Kill();
+                        Debug.WriteLine($"[{AppName}] 프로세스 강제 종료됨 (PID: {uPid})");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[{AppName}] 프로세스 종료 시도 중 오류: {ex.Message}");
+                }
+            }
 
-    //            StdWin32.PostMessage(mMain.TopWnd_hWnd, WM_SYSCOMMAND, SC_CLOSE, 0);
-
-    //            for (int i = 0; i < 30; i++)
-    //            {
-    //                if (!StdWin32.IsWindowVisible(mMain.TopWnd_hWnd))
-    //                {
-    //                    Debug.WriteLine($"[{AppName}] MainWnd 종료 성공");
-    //                    return null;
-    //                }
-    //                Thread.Sleep(c_nWaitNormal);
-    //            }
-    //        }
-
-    //        // SplashWnd 종료
-    //        if (mSplash.TopWnd_hWnd != IntPtr.Zero)
-    //        {
-    //            Std32Window.PostCloseTwiceWindow(mSplash.TopWnd_hWnd);
-
-    //            bool bShow = true;
-    //            for (int i = 0; i < 50; i++)
-    //            {
-    //                bShow = Std32Window.IsWindowVisible(mSplash.TopWnd_hWnd);
-    //                if (!bShow) break;
-    //                Thread.Sleep(c_nWaitNormal);
-    //            }
-
-    //            if (bShow)
-    //            {
-    //                return new StdResult_Error($"[{AppName}] 스플래쉬윈도 종료실패", "OnecallAct_App/Close_01");
-    //            }
-    //        }
-
-    //        Debug.WriteLine($"[{AppName}] Close 완료");
-    //        return null;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Error($"[{AppName}] Close 예외: {ex.Message}", "OnecallAct_App/Close_99");
-    //    }
-    //}
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, $"Close 예외: {ex.Message}", "OnecallAct_App/Close_99");
+        }
+    }
     #endregion
 }
 #nullable restore

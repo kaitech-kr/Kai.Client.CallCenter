@@ -161,11 +161,17 @@ public class ExternalAppController : IDisposable
             //    Debug.WriteLine($"[ExternalAppController] Insung02 인스턴스 생성 완료");
             //}
 
-            if (NwCargo24.s_Use)
+            //if (NwCargo24.s_Use)
+            //{
+            //    Cargo24 = new NwCargo24();
+            //    m_ListApps.Add(Cargo24);
+            //    Debug.WriteLine($"[ExternalAppController] Cargo24 인스턴스 생성 완료");
+            //}
+            if (NwOnecall.s_Use)
             {
-                Cargo24 = new NwCargo24();
-                m_ListApps.Add(Cargo24);
-                Debug.WriteLine($"[ExternalAppController] Cargo24 인스턴스 생성 완료");
+                Onecall = new NwOnecall();
+                m_ListApps.Add(Onecall);
+                Debug.WriteLine($"[ExternalAppController] Onecall 인스턴스 생성 완료");
             }
 
             Debug.WriteLine($"[ExternalAppController] 생성된 앱 개수: {m_ListApps.Count}");

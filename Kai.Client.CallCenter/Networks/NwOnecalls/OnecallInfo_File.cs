@@ -8,19 +8,17 @@ namespace Kai.Client.CallCenter.Networks.NwOnecalls;
 public class OnecallInfo_File
 {
     #region App
-    //public string App_sPredictFolder = @"C:\Program Files\원콜(주선사)";
-    //public string App_sExeFileName = "OneCallShipper.exe";
     #endregion
 
     #region Splash
     // TopWnd
-    //public string Splash_TopWnd_sClassName = "WindowsForms10.Window.20008.app.0.34f5582_r7_ad1"; // ClassName
-    //public string Splash_TopWnd_sWndName = " ";   // WndName
-   
-    //public Draw.Point Splash_IdWnd_ptChk = new Draw.Point(549, 342); // ID Wnd   
-    //public Draw.Point Splash_PwWnd_ptChk = new Draw.Point(549, 375); // PW Wnd   
-    //public Draw.Point Splash_LoginBtn_ptChk = new Draw.Point(684, 359); // Login Btn   
-    //public Draw.Point Splash_CloseBtn_ptChk = new Draw.Point(684, 417); // Close Btn
+    //public string Splash_TopWnd_sClassName = "WindowsForms10.Window.20008.app.0.34f5582_r7_ad1"; // ClassName - OS에 따라 변경되므로 사용자제
+    public string Splash_TopWnd_sWndName = " ";   // WndName
+
+    public Draw.Point Splash_IdWnd_ptChk = new Draw.Point(549, 342); // ID Wnd   
+    public Draw.Point Splash_PwWnd_ptChk = new Draw.Point(549, 375); // PW Wnd   
+    public Draw.Point Splash_LoginBtn_ptChk = new Draw.Point(684, 359); // Login Btn   
+    public Draw.Point Splash_CloseBtn_ptChk = new Draw.Point(684, 417); // Close Btn
     #endregion
 
     #region Main
@@ -118,19 +116,19 @@ public class OnecallInfo_File
     //      new CModel_ComboBox("윙바디", "윙바디", new Draw.Point(45, 52)),         // 윙바디
     //      new CModel_ComboBox("탑", "탑", new Draw.Point(45, 74)),             // 탑
     //      new CModel_ComboBox("냉장탑", "냉장탑", new Draw.Point(45, 96)),         // 냉장탑
-       
+
     //      new CModel_ComboBox("카고/윙", "카고/윙", new Draw.Point(45, 118)),       // 카고/윙
     //      //new CModel_ComboBox("", "윙바디/탑", new Draw.Point(45, 140)),     // 윙바디/탑
     //      new CModel_ComboBox("리프트카고", "리프트", new Draw.Point(45, 162)),        // 리프트
     //      new CModel_ComboBox("리프트윙", "리프트윙", new Draw.Point(45, 184)),      // 리프트윙
     //      new CModel_ComboBox("리프트호루", "호로리프트", new Draw.Point(45, 206)),    // 호로리프트
-       
+
     //      new CModel_ComboBox("플러스윙", "윙플러스", new Draw.Point(45, 228)),      // 윙플러스
     //      new CModel_ComboBox("호루", "호로", new Draw.Point(45, 250)),          // 호로
     //      new CModel_ComboBox("냉동탑", "냉동탑", new Draw.Point(45, 272)),        // 냉동탑
     //      new CModel_ComboBox("리프트탑", "탑리프트", new Draw.Point(45, 294)),      // 탑리프트
     //      //new CModel_ComboBox("츄레라", "추레라", new Draw.Point(45, 316)),        // 추레라
-       
+
     //      new CModel_ComboBox("다마", "다마스", new Draw.Point(45, 338)),        // 다마스
     //      new CModel_ComboBox("라보", "라보", new Draw.Point(45, 360)),          // 라보
     //      new CModel_ComboBox("리프트카고", "카고리프트", new Draw.Point(45, 382)),    // 카고리프트
@@ -139,7 +137,7 @@ public class OnecallInfo_File
     //      new CModel_ComboBox("냉장윙", "냉장윙", new Draw.Point(45, 426)),        // 냉장윙
     //      new CModel_ComboBox("냉장플축윙", "냉장윙", new Draw.Point(45, 426)),        // 냉장윙
     //      new CModel_ComboBox("냉장플축윙리", "냉장윙", new Draw.Point(45, 426)),        // 냉장윙
-       
+
     //      new CModel_ComboBox("초장축", "초장축", new Draw.Point(45, 448)),        // 초장축
     //};
 

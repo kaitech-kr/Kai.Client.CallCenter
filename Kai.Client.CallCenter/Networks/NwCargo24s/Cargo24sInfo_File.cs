@@ -9,8 +9,6 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 public class Cargo24sInfo_File
 {
     #region App
-    public string App_sPredictFolder { get; set; } = @"C:\Cargo24";
-    public string App_sExeFileName { get; set; } = "Cargo24.exe";
     #endregion
 
     #region Splash

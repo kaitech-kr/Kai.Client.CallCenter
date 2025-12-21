@@ -16,14 +16,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{57A80752-2A57-48B5-A51C-6185227C3E0A}"
 	ProjectSection(SolutionItems) = preProject
 		Kai.Client.CallCenter\appsettings.json = Kai.Client.CallCenter\appsettings.json
-		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwCargo24s\Cargo24Act_ReceiptRegPage.cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwCargo24s\Cargo24Act_ReceiptRegPage.cs
 		..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt = ..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt
-		AppBackup\Kai.Client.CallCenter\Networks\NwInsungs\InsungsAct_App.cs = AppBackup\Kai.Client.CallCenter\Networks\NwInsungs\InsungsAct_App.cs
-		Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt = Kai.Client.CallCenter\bin\Debug\net8.0-windows\Log\Log_20250518.txt
 		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallAct_ReceiptRegPage.cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallAct_ReceiptRegPage.cs
+		AppBackup\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallInfo_Mem.cs = AppBackup\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallInfo_Mem.cs
 		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\Onecall_ReceiptRegPage(Tmp).cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\Onecall_ReceiptRegPage(Tmp).cs
 		..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt = ..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt
-		AppBackup\Kai.Client.CallCenter\Classes\Simulation_Mouse.cs = AppBackup\Kai.Client.CallCenter\Classes\Simulation_Mouse.cs
 		보관.cs = 보관.cs
 		임시.cs = 임시.cs
 	EndProjectSection

@@ -20,9 +20,6 @@ namespace Kai.Client.CallCenter.Networks;
 /// <summary>
 /// 원콜 앱 (IExternalApp 구현)
 /// </summary>
-/// <summary>
-/// 원콜 앱 (IExternalApp 구현)
-/// </summary>
 public class NwOnecall : IExternalApp
 {
     #region Static Configuration (appsettings.json에서 로드)
@@ -42,30 +39,6 @@ public class NwOnecall : IExternalApp
     private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
     #endregion
 
-    #region Dispose
-    private bool disposedValue;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                Debug.WriteLine($"[{AppName}] Dispose 호출");
-                // 관리형 리소스 해제
-            }
-
-            disposedValue = true;
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-    #endregion
-
     #region 생성자
     // 원콜 생성자
     public NwOnecall()
@@ -73,6 +46,7 @@ public class NwOnecall : IExternalApp
         Debug.WriteLine($"[{AppName}] 생성자 호출");
         m_Context = new OnecallContext(StdConst_Network.ONECALL, s_Id, s_Pw);
         m_Context.AppAct = new OnecallAct_App(m_Context);
+        m_Context.MainWndAct = new OnecallAct_MainWnd(m_Context);
     }
     #endregion
 
@@ -84,49 +58,50 @@ public class NwOnecall : IExternalApp
     {
         try
         {
-            //// 1. UpdaterWorkAsync - 앱 실행 및 Splash 윈도우 찾기
-            //var resultErr = await m_Context.AppAct.UpdaterWorkAsync(s_AppPath);
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_01");
-            //}
-            //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 성공");
+            Debug.WriteLine($"[{AppName}] InitializeAsync 시작: Id={s_Id}");
 
-            //// 2. SplashWorkAsync - 로그인 처리
-            //resultErr = await m_Context.AppAct.SplashWorkAsync(AppName, s_Id, s_Pw);
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] SplashWorkAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_02");
-            //}
-            //Debug.WriteLine($"[{AppName}] SplashWorkAsync 성공");
+            // 1. 앱 경로 확인 (인성/화물24시 로직 반영)
+            if (string.IsNullOrEmpty(s_AppPath))
+            {
+                string err = "AppPath가 appsettings.json에 설정되지 않았습니다.";
+                Debug.WriteLine($"[{AppName}] {err}");
+                return new StdResult_Status(StdResult.Fail, err, $"{AppName}/InitializeAsync_AppPath_Null");
+            }
+            Debug.WriteLine($"[{AppName}] 확인된 앱 경로: {s_AppPath}");
 
-            //// 3. MainWndAct 생성
-            //m_Context.MainWndAct = new OnecallAct_MainWnd(m_Context);
+            // 2. UpdaterWorkAsync - 앱 실행 및 Splash 윈도우 찾기
+            var result = await m_Context.AppAct.UpdaterWorkAsync(s_AppPath);
+            if (result.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 실패: {result.sErr}");
+                return result;
+            }
+            Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 성공");
 
-            //// 4. InitAsync - 메인 윈도우 초기화 (찾기 + 이동 + 최대화 + 자식 윈도우)
-            //resultErr = await m_Context.MainWndAct.InitAsync();
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] MainWnd InitAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_03");
-            //}
-            //Debug.WriteLine($"[{AppName}] MainWnd InitAsync 성공");
+            // 3. SplashWorkAsync - 로그인 처리 및 공지사항 닫기
+            result = await m_Context.AppAct.SplashWorkAsync();
+            if (result.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[{AppName}] SplashWorkAsync 실패: {result.sErr}");
+                return result;
+            }
+            Debug.WriteLine($"[{AppName}] SplashWorkAsync 성공");
 
-            //// 5. RcptRegPageAct 생성 및 초기화
-            //m_Context.RcptRegPageAct = new OnecallAct_RcptRegPage(m_Context);
+            // 4. 메인 윈도우 초기화 (찾기, 이동, 최대화)
+            result = await m_Context.MainWndAct.InitAsync();
+            if (result.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[{AppName}] MainWndAct.InitAsync 실패: {result.sErr}");
+                return result;
+            }
+            Debug.WriteLine($"[{AppName}] MainWndAct.InitAsync 성공");
 
-            //resultErr = await m_Context.RcptRegPageAct.InitializeAsync();
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_04");
-            //}
-            //Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 성공");
-
-            //Debug.WriteLine($"[{AppName}] InitializeAsync 완료");
-            return new StdResult_Status(StdResult.Success, string.Empty, $"{AppName}/InitializeAsync");
+            Debug.WriteLine($"[{AppName}] InitializeAsync 모든 단계 완료");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            return new StdResult_Status(StdResult.Skip, "사용자 요청으로 취소됨", $"{AppName}/InitializeAsync_Cancel");
         }
         catch (Exception ex)
         {
@@ -525,30 +500,51 @@ public class NwOnecall : IExternalApp
 
     public void Shutdown()
     {
-        //try
-        //{
-        //    Debug.WriteLine($"[{AppName}] Shutdown 시작");
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 시작");
 
-        //    // AppAct.Close() 호출 - Onecall 앱 종료
-        //    if (m_Context?.AppAct != null)
-        //    {
-        //        StdResult_Error resultClose = m_Context.AppAct.Close();
-        //        if (resultClose != null)
-        //        {
-        //            Debug.WriteLine($"[{AppName}] Close 실패: {resultClose.sErrNPos}");
-        //        }
-        //        else
-        //        {
-        //            Debug.WriteLine($"[{AppName}] Close 성공");
-        //        }
-        //    }
+            if (m_Context?.AppAct != null)
+            {
+                var resultClose = m_Context.AppAct.Close();
+                if (resultClose.Result != StdResult.Success)
+                {
+                    Debug.WriteLine($"[{AppName}] Close 실패: {resultClose.sErr}");
+                }
+                else
+                {
+                    Debug.WriteLine($"[{AppName}] Close 성공");
+                }
+            }
 
-        //    Debug.WriteLine($"[{AppName}] Shutdown 완료");
-        //}
-        //catch (Exception ex)
-        //{
-        //    Debug.WriteLine($"[{AppName}] Shutdown 예외 발생: {ex.Message}");
-        //}
+            Debug.WriteLine($"[{AppName}] Shutdown 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 예외 발생: {ex.Message}");
+        }
+    }
+    #endregion
+
+    #region 4. Dispose - 리소스 해제
+    private bool disposedValue;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                Debug.WriteLine($"[{AppName}] Dispose 호출");
+            }
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
     #endregion
 }
