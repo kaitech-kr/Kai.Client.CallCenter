@@ -166,7 +166,7 @@ public class ExternalAppController : IDisposable
                 {
                     string tracePos = $"{result.sErrNPos} -> ExternalAppController/InitializeAsync";
                     Debug.WriteLine($"[ExternalAppController] {app.AppName} 초기화 최종 실패: {tracePos}");
-                    return new StdResult_Status(StdResult.Fail, result.sErr, tracePos);
+                    return result; // 원래 결과(Fail 또는 Skip)를 그대로 반환
                 }
                 
                 Debug.WriteLine($"[ExternalAppController] {app.AppName} 초기화 성공");
@@ -178,6 +178,12 @@ public class ExternalAppController : IDisposable
 
             Debug.WriteLine("[ExternalAppController] InitializeAsync 전체 완료");
             return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            string errPos = "ExternalAppController/InitializeAsync_Cancel";
+            Debug.WriteLine($"[ExternalAppController] {errPos}");
+            return new StdResult_Status(StdResult.Skip, "사용자의 요청으로 종료합니다...", errPos);
         }
         catch (Exception ex)
         {

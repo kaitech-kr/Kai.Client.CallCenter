@@ -1,5 +1,5 @@
 
-[SYSTEM] 로그 기록 시작: 2025-12-20 20:01:31
+[SYSTEM] 로그 기록 시작: 2025-12-21 10:03:07
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
 [CommonFuncs] sUse 확인: 'True'
@@ -12,7 +12,7 @@ HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:0
 연결 시도 시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=Mk9oQcgvSC9WZ8SmwN0CHg *****
+***** SrReport_ConnectedAsync 시작: connectedID=swXwUo0Wk33OkwbnE0VpoQ *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
@@ -43,15 +43,15 @@ SignalR 연결 성공
 [INSUNG1/MainWnd] 초기화 시작
 [INSUNG1/MainWnd] 초기화 성공
 [INSUNG1/RcptRegPage] 초기화 시작
-[INSUNG1/UI] 신규버튼 확인 완료: hWnd=E0F2E (시도=1/10)
-[INSUNG1/UI] 조회버튼 확인 완료: hWnd=F0F34 (시도=1/10)
-[INSUNG1/UI] 기사버튼 확인 완료: hWnd=110F28 (시도=1/10)
+[INSUNG1/UI] 신규버튼 확인 완료: hWnd=C0C68 (시도=1/10)
+[INSUNG1/UI] 조회버튼 확인 완료: hWnd=A0C6C (시도=1/10)
+[INSUNG1/UI] 기사버튼 확인 완료: hWnd=C0C66 (시도=1/10)
 [INSUNG1/RcptRegPage] CallCount 핸들 찾기 성공
 [INSUNG1/RcptRegPage] SetDG오더RectsAsync 시작
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1/RcptRegPage] [검증 실패] 컬럼 개수가 맞지 않습니다.  - Issue: InvalidColumnCount - 검출: 22개 - 예상: 21개  [검출된 헤더 텍스트] No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요, 오더일자  확인을 누르면 초기화(Init)를 다시 시도합니다.
-[INSUNG1] BlockInput(true) - 데이터그리드 초기화 시작
+[INSUNG1/RcptRegPage] [검증 실패] 컬럼 개수가 맞지 않습니다.  - Issue: InvalidColumnCount - 검출: 28개 - 예상: 21개  [검출된 헤더 텍스트] No, 주문번호, 접수시간, 공유, 상태, 고객명, 담당자, 전화번호, 출발동, 도착동, 차량, 왕복, 형태, 지급, 계산서, 라이더, 요금, 기사요금, 처리비, 부가세, 적요, 최초접수시간, 오더메모, 접수자, 부서명, 출발지역, 도착지역, 기사그룹  확인을 누르면 초기화(Init)를 다시 시도합니다.
+[INSUNG1] BlockInput(true) & KeyboardHook - 데이터그리드 초기화 시작
 [INSUNG1] 데이터그리드 수동 초기화 강제 실행 (Step 1)
 [InitDG오더] Step 1: 접수화면초기화 시작
 [InitDG오더] Step 2: 컬럼 확보 시작
@@ -121,7 +121,7 @@ SignalR 연결 성공
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 해제)
+[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
 [INSUNG1/RcptRegPage] Datagrid 재시도 2/50
 [OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
@@ -156,16 +156,20 @@ SrLocalClient 재접속 중지 플래그 설정
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
-Page] OFR 완료: No, 상태, 주문번호, 최초접수시간, 접수시간, 고객명, 담당자, 전화번호, 출발동, 도착동, 요금, 지급, 형태, 차량, 계산서, 왕복, 공유, 라이더, 기사전번, 오더메모, 적요
-[*] ValidateDatagridState 검증 통과 (정상)
-[INSUNG1/RcptRegPage] 초기화 완료
-[INSUNG1] InitializeAsync 완료
-[ExternalAppController] INSUNG1 초기화 성공
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
-[ExternalAppController] InitializeAsync 전체 완료
-[MasterModeManager] ExternalAppController 초기화 완료
-[MainWnd] Master 모드 초기화 완료
-[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
+,Width=22,Height=14}
+[ImageToCharWnd] Window_Loaded 시작
+[대화상자] len=1, currentIdx=3, endIdx=3, rcChar={X=24,Y=0,Width=10,Height=7}
+[ImageToCharWnd] Window_Loaded 시작
+[최종 결과] OfrStr_ComplexCharSetAsync: '☒☒☒☒' (6214ms)
+[InitDG오더] ESC 키에 의해 자동화 작업이 취소되었습니다.
+[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
+[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
+[INSUNG1] RcptRegPage 초기화 실패: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: sErr: 작업 취소됨
+sPos: InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel
+sPos: INSUNG1/InitializeAsync_06 -> ExternalAppController/InitializeAsync
+[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
 === Window_Closing 시작 (안전 모드 복구) ===
 SrGlobalClient 재접속 중지 플래그 설정
 SignalR OnClosedAsync called
@@ -187,15 +191,18 @@ SrLocalClient 재접속 중지 플래그 설정
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
-{X=36,Y=3,Width=33,Height=11}, W=33,H=11,Hex=0xFEE11F2141402042428140FC4704FF0869100010120000E02700FC0FC0FF010180202002024040000480807FF807
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=2, idx=3~4, rcChar={X=48,Y=3,Width=21,Height=11}, W=21,H=11,Hex=0xFE115220420AC47FFF0809002101E0E7FF000401802220400004F8877F
-[StartEndList 검색결과] 없음
-[StartEndList 검색] len=1, idx=4~4, rcChar={X=60,Y=3,Width=9,Height=11}, W=9,H=11,Hex=0x2143FE0F19F22740800204F807
-[StartEndList 검색결과] 찾음: '번'
-[StartEndList 마킹] foundChar='번', x=4, consumed=1, startIdx=4
-  processed[4]=true
-[StartEndList 검색] len=3, idx=1~3, rcChar={X=6,Y=3,Width=52,Height=11}, W=52,H=11,Hex=0x000000807FF807000000808040000000001408E400000020827F110000804100100100000000001100000000FC1F010000FC0F08110000000888E00000008080000000000008F807
+ernalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
+[INSUNG1] Shutdown 시작
+[INSUNG1/Close] 종료 시퀀스 시작
+[INSUNG1/Close] 스플래시 윈도우 정리 전송
+[INSUNG1] Close 성공
+[INSUNG1] Shutdown 완료
+[ExternalAppController] 모든 리소스 정리 완료
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+0000888E00000008080000000000008F807
 [StartEndList 검색결과] 없음
 [StartEndList 검색] len=2, idx=2~3, rcChar={X=36,Y=3,Width=22,Height=11}, W=22,H=11,Hex=0xFEE11F080804050221827F06010000000000FFFF0F0820200208080002FE01
 [StartEndList 검색결과] 없음

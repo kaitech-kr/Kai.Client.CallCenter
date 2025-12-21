@@ -115,11 +115,19 @@ public abstract class InsungAutoAllocBase : IExternalApp
             }
             Debug.WriteLine($"[{AppName}] 확인된 앱 경로: {m_Context.AppPath}");
 
+            // 작업 전 취소 체크
+            if (s_GlobalCancelToken.Token.IsCancellationRequested) throw new OperationCanceledException();
+
             // 3. UpdaterWork - Updater 실행 및 종료 대기
             StdResult_Error resultUpdater = await m_Context.AppAct.UpdaterWorkAsync(m_Context.AppPath);
             if (resultUpdater != null)
             {
                 Debug.WriteLine($"[{AppName}] UpdaterWork 실패: {resultUpdater.sErrNPos}");
+
+                // 취소 요청 시 Skip 반환
+                if (s_GlobalCancelToken.Token.IsCancellationRequested)
+                    return new StdResult_Status(StdResult.Skip, "사용자의 요청으로 종료합니다...", $"{AppName}/InitializeAsync_Updater_Cancel");
+
                 return new StdResult_Status(StdResult.Fail, resultUpdater.sErrNPos, $"{AppName}/InitializeAsync_03");
             }
 
@@ -128,6 +136,11 @@ public abstract class InsungAutoAllocBase : IExternalApp
             if (resultSplash != null)
             {
                 Debug.WriteLine($"[{AppName}] SplashWork 실패: {resultSplash.sErrNPos}");
+                
+                // ESC 등으로 인한 취소 요청 시 Skip 반환
+                if (s_GlobalCancelToken.Token.IsCancellationRequested)
+                    return new StdResult_Status(StdResult.Skip, "사용자 요청으로 종료합니다...", $"{AppName}/InitializeAsync_Splash_Cancel");
+
                 return new StdResult_Status(StdResult.Fail, resultSplash.sErrNPos, $"{AppName}/InitializeAsync_04");
             }
 
@@ -137,6 +150,11 @@ public abstract class InsungAutoAllocBase : IExternalApp
             if (resultMainWnd != null)
             {
                 Debug.WriteLine($"[{AppName}] MainWnd 초기화 실패: {resultMainWnd.sErrNPos}");
+
+                // 취소 요청 시 Skip 반환
+                if (s_GlobalCancelToken.Token.IsCancellationRequested)
+                    return new StdResult_Status(StdResult.Skip, "사용자 요청으로 종료합니다...", $"{AppName}/InitializeAsync_MainWnd_Cancel");
+
                 return new StdResult_Status(StdResult.Fail, resultMainWnd.sErrNPos, $"{AppName}/InitializeAsync_05");
             }
 
@@ -146,11 +164,21 @@ public abstract class InsungAutoAllocBase : IExternalApp
             if (resultRcptRegPage != null)
             {
                 Debug.WriteLine($"[{AppName}] RcptRegPage 초기화 실패: {resultRcptRegPage.sErrNPos}");
+
+                // 취소 요청 시 Skip 반환
+                if (s_GlobalCancelToken.Token.IsCancellationRequested)
+                    return new StdResult_Status(StdResult.Skip, "사용자 요청으로 종료합니다...", $"{AppName}/InitializeAsync_RcptRegPage_Cancel");
+
                 return new StdResult_Status(StdResult.Fail, resultRcptRegPage.sErrNPos, $"{AppName}/InitializeAsync_06");
             }
 
             Debug.WriteLine($"[{AppName}] InitializeAsync 완료");
             return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.WriteLine($"[{AppName}] InitializeAsync 사용자 취소(ESC)");
+            return new StdResult_Status(StdResult.Skip, "사용자의 요청으로 종료합니다...", $"{AppName}/InitializeAsync_Cancel");
         }
         catch (Exception ex)
         {

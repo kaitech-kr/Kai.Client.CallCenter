@@ -125,118 +125,133 @@ public class MasterModeManager : IDisposable
 
     public async Task<StdResult_Status> InitializeAsync()
     {
-        // 1. 가상모니터 생성
-        List<MonitorInfo> listOrg = await s_Screens.MonitorInfosToListAsync();
-        if (s_Screens.m_VirtualMonitor == null) // 가상모니터가 없으면 생성
+        try
         {
-            // 커서 위치 백업 (가상모니터 생성 시 Windows가 자동으로 마우스를 이동시키는 것을 방지)
-            var cursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
-            
-            try
+            // 1. 가상모니터 생성
+            List<MonitorInfo> listOrg = await s_Screens.MonitorInfosToListAsync();
+            if (s_Screens.m_VirtualMonitor == null) // 가상모니터가 없으면 생성
             {
-                // ShowLoading
-                NetLoadingWnd.ShowLoading(s_MainWnd, "가상모니터를 생성중 입니다.");
+                // 커서 위치 백업 (가상모니터 생성 시 Windows가 자동으로 마우스를 이동시키는 것을 방지)
+                var cursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
 
-                int nOldCount = s_Screens.m_ListMonitorInfo.Count;
-
-                StdResult_Bool resultBool = await FrmVirtualMonitor.MakeVirtualMonitorAsync();
-                if (!resultBool.bResult)
+                try
                 {
-                    return new StdResult_Status(StdResult.Fail, "가상모니터 생성실패", "MasterModeManager/InitializeAsync_01");
-                }
+                    // ShowLoading
+                    NetLoadingWnd.ShowLoading(s_MainWnd, "가상모니터를 생성중 입니다.");
 
-                // 가상 모니터 생성 후 시스템이 인식할 때까지 재시도 (최대 3초, 500ms 간격)
-                int retryCount = 0;
-                int maxRetries = 6; // 6번 * 500ms = 3초
-                List<MonitorInfo> listNew = null;
-                while (retryCount < maxRetries)
-                {
-                    await Task.Delay(500);
-                    listNew = await s_Screens.MonitorInfosToListAsync();
+                    int nOldCount = s_Screens.m_ListMonitorInfo.Count;
 
-                    if (s_Screens.m_VirtualMonitor != null)
+                    StdResult_Bool resultBool = await FrmVirtualMonitor.MakeVirtualMonitorAsync();
+                    if (!resultBool.bResult)
                     {
-                        Debug.WriteLine($"[MasterModeManager] 가상모니터 인식 성공 (재시도 {retryCount + 1}회)");
-                        break;
+                        return new StdResult_Status(StdResult.Fail, "가상모니터 생성실패", "MasterModeManager/InitializeAsync_01");
                     }
 
-                    retryCount++;
-                    Debug.WriteLine($"[MasterModeManager] 가상모니터 미인식, 재시도 중... ({retryCount}/{maxRetries})");
-                }
+                    // 가상 모니터 생성 후 시스템이 인식할 때까지 재시도 (최대 3초, 500ms 간격)
+                    int retryCount = 0;
+                    int maxRetries = 6; // 6번 * 500ms = 3초
+                    List<MonitorInfo> listNew = null;
+                    while (retryCount < maxRetries)
+                    {
+                        await Task.Delay(500);
+                        listNew = await s_Screens.MonitorInfosToListAsync();
 
-                int nNewCount = s_Screens.m_ListMonitorInfo.Count;
-                if (s_Screens.m_VirtualMonitor == null)  // 개수가 아닌 m_VirtualMonitor로 체크
+                        if (s_Screens.m_VirtualMonitor != null)
+                        {
+                            Debug.WriteLine($"[MasterModeManager] 가상모니터 인식 성공 (재시도 {retryCount + 1}회)");
+                            break;
+                        }
+
+                        retryCount++;
+                        Debug.WriteLine($"[MasterModeManager] 가상모니터 미인식, 재시도 중... ({retryCount}/{maxRetries})");
+                    }
+
+                    int nNewCount = s_Screens.m_ListMonitorInfo.Count;
+                    if (s_Screens.m_VirtualMonitor == null)  // 개수가 아닌 m_VirtualMonitor로 체크
+                    {
+                        return new StdResult_Status(StdResult.Fail,
+                            $"가상모니터 생성실패: s_Screens.m_VirtualMonitor == null (전: {nOldCount}개, 후: {nNewCount}개)",
+                            "MasterModeManager/InitializeAsync_02");
+                    }
+
+                    // Check Virtual Monitor Resolution
+                    if (!FrmVirtualMonitor.AdjustVirtualMonitorPosAndSize(s_Screens))
+                    {
+                        return new StdResult_Status(StdResult.Fail, "가상모니터 해상도 조정실패", "MasterModeManager/InitializeAsync_03");
+                    }
+
+                    // 원상복귀
+                    int lastX = 0;
+                    for (int i = 0; i < listOrg.Count; i++)
+                    {
+                        lastX = i * 1920;
+                        s_Screens.ChangePosition(listOrg[i].DeviceName, lastX, 0);
+                        int index = listNew.FindIndex(x => x.DeviceName == listOrg[i].DeviceName);
+                        if (index >= 0) listNew.RemoveAt(index);
+                    }
+
+                    if (listNew.Count != 1)
+                    {
+                        return new StdResult_Status(StdResult.Fail, "가상모니터 생성실패", "MasterModeManager/InitializeAsync_04");
+                    }
+
+                    lastX += (1920);
+                    s_Screens.ChangePosition(listNew[0].DeviceName, lastX, 1080);
+                    await s_Screens.MonitorInfosToListAsync();
+
+                    // 가상모니터 뷰 윈도 생성
+                    m_VirtualMonitorWnd = new VirtualMonitorWnd();
+                }
+                finally
                 {
-                    return new StdResult_Status(StdResult.Fail,
-                        $"가상모니터 생성실패: s_Screens.m_VirtualMonitor == null (전: {nOldCount}개, 후: {nNewCount}개)",
-                        "MasterModeManager/InitializeAsync_02");
+                    // 커서 위치 복원
+                    Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);
+
+                    NetLoadingWnd.HideLoading();
                 }
-
-                // Check Virtual Monitor Resolution
-                if (!FrmVirtualMonitor.AdjustVirtualMonitorPosAndSize(s_Screens))
-                {
-                    return new StdResult_Status(StdResult.Fail, "가상모니터 해상도 조정실패", "MasterModeManager/InitializeAsync_03");
-                }
-
-                // 원상복귀
-                int lastX = 0;
-                for (int i = 0; i < listOrg.Count; i++)
-                {
-                    lastX = i * 1920;
-                    s_Screens.ChangePosition(listOrg[i].DeviceName, lastX, 0);
-                    int index = listNew.FindIndex(x => x.DeviceName == listOrg[i].DeviceName);
-                    if (index >= 0) listNew.RemoveAt(index);
-                }
-
-                if (listNew.Count != 1)
-                {
-                    return new StdResult_Status(StdResult.Fail, "가상모니터 생성실패", "MasterModeManager/InitializeAsync_04");
-                }
-
-                lastX += (1920);
-                s_Screens.ChangePosition(listNew[0].DeviceName, lastX, 1080);
-                await s_Screens.MonitorInfosToListAsync();
-
-                // 가상모니터 뷰 윈도 생성
-                m_VirtualMonitorWnd = new VirtualMonitorWnd();
             }
-            finally
+            else
             {
-                // 커서 위치 복원
-                Std32Cursor.SetCursorPos_AbsDrawPt(cursorBackup);
-
-                NetLoadingWnd.HideLoading();
+                Debug.WriteLine("[MasterModeManager] 가상모니터가 이미 존재합니다.");
             }
-        }
-        else
-        {
-            Debug.WriteLine("[MasterModeManager] 가상모니터가 이미 존재합니다.");
-        }
 
-        // WorkingMonitor 설정 - 가상모니터가 있다는 전제하에 설정 (신규 생성 or 기존 사용 모두 여기서 설정)
-        if (s_Screens.m_VirtualMonitor != null)
-        {
-            s_Screens.m_WorkingMonitor = s_Screens.m_ListMonitorInfo[1];  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
-            //s_Screens.m_WorkingMonitor = s_Screens.m_VirtualMonitor;  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
-            Debug.WriteLine($"[MasterModeManager] m_WorkingMonitor 설정 완료: {s_Screens.m_WorkingMonitor}");
-        }
-        else
-        {
-            return new StdResult_Status(StdResult.Fail, "가상모니터가 없습니다. Master 모드는 가상모니터가 필수입니다.", "MasterModeManager/InitializeAsync_05");
-        }
+            // WorkingMonitor 설정 - 가상모니터가 있다는 전제하에 설정 (신규 생성 or 기존 사용 모두 여기서 설정)
+            if (s_Screens.m_VirtualMonitor != null)
+            {
+                s_Screens.m_WorkingMonitor = s_Screens.m_ListMonitorInfo[1];  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
+                                                                             //s_Screens.m_WorkingMonitor = s_Screens.m_VirtualMonitor;  // m_VirtualMonitor, m_PrimaryMonitor, m_ListMonitorInfo[0]
+                Debug.WriteLine($"[MasterModeManager] m_WorkingMonitor 설정 완료: {s_Screens.m_WorkingMonitor}");
+            }
+            else
+            {
+                return new StdResult_Status(StdResult.Fail, "가상모니터가 없습니다. Master 모드는 가상모니터가 필수입니다.", "MasterModeManager/InitializeAsync_05");
+            }
 
-        // 2. ExternalAppController 초기화 (New - Refactored)
-        Debug.WriteLine("[MasterModeManager] ExternalAppController 초기화 시작");
-        m_ExternalAppController = new ExternalAppController();
-        StdResult_Status resultExternalApp = await m_ExternalAppController.InitializeAsync();
-        if (resultExternalApp.Result != StdResult.Success)
-        {
-            Debug.WriteLine($"[MasterModeManager] ExternalAppController 초기화 실패: {resultExternalApp}");
-            return new StdResult_Status(StdResult.Fail, resultExternalApp.sErrNPos, "MasterModeManager/InitializeAsync_ExternalApp");
-        }
-        Debug.WriteLine("[MasterModeManager] ExternalAppController 초기화 완료");
+            // 2. ExternalAppController 초기화 (New - Refactored)
+            Debug.WriteLine("[MasterModeManager] ExternalAppController 초기화 시작");
+            m_ExternalAppController = new ExternalAppController();
+            StdResult_Status resultExternalApp = await m_ExternalAppController.InitializeAsync();
+            if (resultExternalApp.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[MasterModeManager] ExternalAppController 초기화 실패: {resultExternalApp}");
+                return resultExternalApp; // 결과 상태(Fail or Skip)를 그대로 반환
+            }
+            Debug.WriteLine("[MasterModeManager] ExternalAppController 초기화 완료");
 
-        return new StdResult_Status(StdResult.Success);
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            string errPos = "MasterModeManager/InitializeAsync_Cancel";
+            Debug.WriteLine($"[MasterModeManager] {errPos}");
+            return new StdResult_Status(StdResult.Skip, "사용자의 요청으로 종료합니다...", errPos);
+        }
+        catch (Exception ex)
+        {
+            string errPos = "MasterModeManager/InitializeAsync_Exception";
+            Debug.WriteLine($"[MasterModeManager] {errPos}: {ex.Message}");
+            return new StdResult_Status(StdResult.Fail, ex.Message, errPos);
+        }
     }
 }
 #nullable restore

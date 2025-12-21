@@ -29,6 +29,7 @@ using static Kai.Client.CallCenter.Classes.SrGlobalClient;
 using static Kai.Client.CallCenter.Classes.SrLocalClient;
 using static Kai.Client.CallCenter.Pythons.Py309Common;
 using Kai.Common.NetDll_WpfCtrl.NetMsgs;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable
@@ -210,7 +211,6 @@ public partial class MainWnd : Window
         m_WndForVirtualMonitor = new VirtualMonitorWnd();
 
         // Master 모드일 때만 초기화
-        // Master 모드일 때만 초기화
         if (IsMasterMode)
         {
             m_MasterManager = new MasterModeManager();
@@ -218,7 +218,12 @@ public partial class MainWnd : Window
 
             if (result.Result != StdResult.Success)
             {
-                ErrMsgBox($"Master 모드 초기화 실패: {result}", "MainWnd/Window_Loaded_Master");
+                // 취소 중 알림창이 떠있다면 닫기
+                CommonFuncs.CloseExtMsgWndSimple();
+
+                if (result.Result != StdResult.Skip) // 능동적으로 작업취소하는 경우가 아니라면
+                    ErrMsgBox($"Master 모드 초기화 실패: {result.sErr}\n\n위치: {result.sErrNPos}", "MainWnd/Window_Loaded_Master");
+
                 goto ERR_EXIT;
             }
             Debug.WriteLine("[MainWnd] Master 모드 초기화 완료");
@@ -478,6 +483,10 @@ public partial class MainWnd : Window
                         if (vkCode == 0x1B) // VK_ESCAPE
                         {
                             Debug.WriteLine("[WindowProc] ESC 감지 - 자동화 중단 및 후킹 해제");
+                            
+                            // 즉시 취소 안내창 표시 (루프가 길어서 피드백이 느린 점 보완)
+                            CommonFuncs.ShowExtMsgWndSimple(this, "초기화를 취소 중입니다...", "작업 중단");
+
                             CommonVars.s_GlobalCancelToken.Cancel();
                             CommonFuncs.ReleaseKeyboardHook();
                             Kai.Common.StdDll_Common.StdWin32.StdWin32.BlockInput(false);

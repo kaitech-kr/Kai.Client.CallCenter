@@ -90,7 +90,11 @@ public partial class SplashWnd : Window
             }
 
             SrGlobalClient_LoginEvent -= OnSignalRLogin;
-            UpdateStatus($"로그인 성공! ({SrGlobalClient.s_nLoginRetryCount}번째) 화면 준비 중...");
+
+            if(SrGlobalClient.s_nLoginRetryCount > 1)
+                UpdateStatus($"로그인 성공! ({SrGlobalClient.s_nLoginRetryCount}번째), 화면 준비 중...");
+            else
+                UpdateStatus($"로그인 성공!, 화면 준비 중...");
 
             await Task.Delay(c_nRepeatVeryMany);
 

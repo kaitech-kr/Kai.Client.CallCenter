@@ -244,6 +244,10 @@ public partial class InsungsAct_RcptRegPage
             Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 초기화 완료");
             return null;
         }
+        catch (OperationCanceledException)
+        {
+            throw; // 상위에서 Skip으로 처리하도록 예외 전파
+        }
         catch (Exception ex)
         {
             return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] 예외 발생: {ex.Message}", "InsungsAct_RcptRegPage/InitializeAsync_999");
@@ -424,7 +428,7 @@ public partial class InsungsAct_RcptRegPage
         catch (OperationCanceledException)
         {
             Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.");
-            return new StdResult_Error("작업 취소됨", "InsungsAct_RcptRegPage/SetDG오더RectsAsync_Cancel");
+            throw; // 상위에서 Skip으로 처리하도록 예외 전파
         }
         catch (Exception ex)
         {
@@ -483,9 +487,10 @@ public partial class InsungsAct_RcptRegPage
         try
         {
             // Step 1: 사전작업 
-            // 입력 제한 시작
+            // 입력 제한 및 ESC 취소 활성화
+            CommonFuncs.SetKeyboardHook();
             Kai.Common.StdDll_Common.StdWin32.StdWin32.BlockInput(true);
-            Debug.WriteLine($"[{m_Context.AppName}] BlockInput(true) - 데이터그리드 초기화 시작");
+            Debug.WriteLine($"[{m_Context.AppName}] BlockInput(true) & KeyboardHook - 데이터그리드 초기화 시작");
 
             Debug.WriteLine($"[{m_Context.AppName}] 데이터그리드 수동 초기화 강제 실행 (Step 1)");
             Draw.Rectangle rcDG = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
@@ -679,8 +684,9 @@ public partial class InsungsAct_RcptRegPage
         }
         finally
         {
-            Debug.WriteLine($"[{m_Context.AppName}] 데이터그리드 초기화 로직 종료 (입력제한 해제)");
+            Debug.WriteLine($"[{m_Context.AppName}] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)");
             Std32Cursor.SetCursorPos_AbsDrawPt(ptCursorBackup);
+            CommonFuncs.ReleaseKeyboardHook();
             Kai.Common.StdDll_Common.StdWin32.StdWin32.BlockInput(false);
         }
     }
