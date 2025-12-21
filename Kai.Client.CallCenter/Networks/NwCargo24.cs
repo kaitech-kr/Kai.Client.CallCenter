@@ -38,7 +38,17 @@ public class NwCargo24 : IExternalApp
     private string GetCargo24Seqno(AutoAllocModel item) => item.NewOrder.Cargo24;
     #endregion
 
-    #region 3. IExternalApp Implementation - 인터페이스 구현
+    #region 3. Constructor - 생성자
+    public NwCargo24()
+    {
+        m_Context = new Cargo24Context(StdConst_Network.CARGO24, s_Id, s_Pw);
+        m_Context.AppAct = new Cargo24sAct_App(m_Context);
+        m_Context.MainWndAct = new Cargo24sAct_MainWnd(m_Context);
+        m_Context.RcptRegPageAct = new Cargo24sAct_RcptRegPage(m_Context);
+    }
+    #endregion
+
+    #region 4. IExternalApp Implementation - 인터페이스 구현
     public bool IsUsed => s_Use;
     public string AppName => StdConst_Network.CARGO24;
 
@@ -48,54 +58,57 @@ public class NwCargo24 : IExternalApp
         {
             Debug.WriteLine($"[{AppName}] InitializeAsync 시작: Id={s_Id}");
 
-            //// 1. UpdaterWorkAsync - 앱 실행 및 Splash 윈도우 찾기
-            //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 호출...");
-            //var resultErr = await m_Context.AppAct.UpdaterWorkAsync(s_AppPath, bEdit: true, bWrite: true, bMsgBox: true);
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_01");
-            //}
-            //Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 성공");
+            // 1. 앱 경로 확인 (인성 로직 반영)
+            if (string.IsNullOrEmpty(s_AppPath))
+            {
+                string err = "AppPath가 appsettings.json에 설정되지 않았습니다.";
+                Debug.WriteLine($"[{AppName}] {err}");
+                return new StdResult_Status(StdResult.Fail, err, $"{AppName}/InitializeAsync_AppPath_Null");
+            }
+            Debug.WriteLine($"[{AppName}] 확인된 앱 경로: {s_AppPath}");
 
-            //// 2. SplashWorkAsync - 로그인 처리
-            //Debug.WriteLine($"[{AppName}] SplashWorkAsync 호출...");
-            //resultErr = await m_Context.AppAct.SplashWorkAsync(bEdit: true, bWrite: true, bMsgBox: true);
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] SplashWorkAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_02");
-            //}
-            //Debug.WriteLine($"[{AppName}] SplashWorkAsync 성공");
+            // 2. UpdaterWorkAsync - 앱 실행 및 Splash 윈도우 찾기
+            var result = await m_Context.AppAct.UpdaterWorkAsync(s_AppPath, bEdit: true, bWrite: true, bMsgBox: true);
+            if (result.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 실패: {result.sErr}");
+                return result;
+            }
+            Debug.WriteLine($"[{AppName}] UpdaterWorkAsync 성공");
 
-            //// 3. MainWndAct 생성
-            //m_Context.MainWndAct = new Cargo24sAct_MainWnd(m_Context);
-            //Debug.WriteLine($"[{AppName}] MainWndAct 생성 완료");
+            // 3. SplashWorkAsync - 로그인 처리
+            result = await m_Context.AppAct.SplashWorkAsync(bEdit: true, bWrite: true, bMsgBox: true);
+            if (result.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[{AppName}] SplashWorkAsync 실패: {result.sErr}");
+                return result;
+            }
+            Debug.WriteLine($"[{AppName}] SplashWorkAsync 성공");
 
-            //// 4. InitializeAsync - 메인 윈도우 초기화 (찾기 + 이동 + 최대화 + 자식 윈도우)
-            //Debug.WriteLine($"[{AppName}] InitializeAsync 호출...");
-            //resultErr = await m_Context.MainWndAct.InitializeAsync(bEdit: true, bWrite: true, bMsgBox: true);
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] InitializeAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_03");
-            //}
-            //Debug.WriteLine($"[{AppName}] InitializeAsync 성공");
+            // 4. MainWndAct InitializeAsync - 메인 윈도우 초기화
+            result = await m_Context.MainWndAct.InitializeAsync(bEdit: true, bWrite: true, bMsgBox: true);
+            if (result.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[{AppName}] MainWndAct.InitializeAsync 실패: {result.sErr}");
+                return result;
+            }
+            Debug.WriteLine($"[{AppName}] MainWndAct.InitializeAsync 성공");
 
-            //// 5. RcptRegPageAct 생성 및 초기화
-            //m_Context.RcptRegPageAct = new Cargo24sAct_RcptRegPage(m_Context);
-            ////Debug.WriteLine($"[{AppName}] RcptRegPageAct 생성 완료");
+            // 5. RcptRegPage InitializeAsync
+            result = await m_Context.RcptRegPageAct.InitializeAsync();
+            if (result.Result != StdResult.Success)
+            {
+                Debug.WriteLine($"[{AppName}] RcptRegPageAct.InitializeAsync 실패: {result.sErr}");
+                return result;
+            }
+            Debug.WriteLine($"[{AppName}] RcptRegPageAct.InitializeAsync 성공");
 
-            //resultErr = await m_Context.RcptRegPageAct.InitializeAsync(bEdit: true, bWrite: true, bMsgBox: true);
-            //if (resultErr != null)
-            //{
-            //    Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 실패: {resultErr.sErrNPos}");
-            //    return new StdResult_Status(StdResult.Fail, resultErr.sErrNPos, $"{AppName}/InitializeAsync_04");
-            //}
-            //Debug.WriteLine($"[{AppName}] RcptRegPage InitializeAsync 성공");
-
-            //Debug.WriteLine($"[{AppName}] InitializeAsync 완료");
+            Debug.WriteLine($"[{AppName}] InitializeAsync 완료");
             return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            return new StdResult_Status(StdResult.Skip, "사용자 요청으로 취소됨", $"{AppName}/InitializeAsync_Cancel");
         }
         catch (Exception ex)
         {
@@ -513,30 +526,30 @@ public class NwCargo24 : IExternalApp
 
     public void Shutdown()
     {
-        //try
-        //{
-        //    Debug.WriteLine($"[{AppName}] Shutdown 시작");
+        try
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 시작");
 
-        //    // AppAct.CloseAsync() 호출 - Cargo24 앱 종료
-        //    if (m_Context?.AppAct != null)
-        //    {
-        //        StdResult_Error resultClose = m_Context.AppAct.Close();
-        //        if (resultClose != null)
-        //        {
-        //            Debug.WriteLine($"[{AppName}] Close 실패: {resultClose.sErrNPos}");
-        //        }
-        //        else
-        //        {
-        //            Debug.WriteLine($"[{AppName}] Close 성공");
-        //        }
-        //    }
+            // AppAct.Close() 호출 - Cargo24 앱 종료
+            if (m_Context?.AppAct != null)
+            {
+                var resultClose = m_Context.AppAct.Close();
+                if (resultClose.Result != StdResult.Success)
+                {
+                    Debug.WriteLine($"[{AppName}] Close 실패: {resultClose.sErr}");
+                }
+                else
+                {
+                    Debug.WriteLine($"[{AppName}] Close 성공");
+                }
+            }
 
-        //    Debug.WriteLine($"[{AppName}] Shutdown 완료");
-        //}
-        //catch (Exception ex)
-        //{
-        //    Debug.WriteLine($"[{AppName}] Shutdown 예외 발생: {ex.Message}");
-        //}
+            Debug.WriteLine($"[{AppName}] Shutdown 완료");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] Shutdown 예외 발생: {ex.Message}");
+        }
     }
     #endregion
 
@@ -564,15 +577,6 @@ public class NwCargo24 : IExternalApp
     }
     #endregion
 
-    #region 5. Constructor - 생성자
-    // 화물24시 생성자
-    public NwCargo24()
-    {
-        Debug.WriteLine($"[{AppName}] 생성자 호출");
-        m_Context = new Cargo24Context(StdConst_Network.CARGO24, s_Id, s_Pw);
-        m_Context.AppAct = new Cargo24sAct_App(m_Context);
-    }
-    #endregion
 
     #region 6. Test Methods - 테스트 함수
     ///// <summary>

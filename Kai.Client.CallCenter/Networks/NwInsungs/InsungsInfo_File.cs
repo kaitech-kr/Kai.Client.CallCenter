@@ -101,16 +101,16 @@ public class InsungsInfo_File
     //public Draw.Point 접수등록Page_SearchDay_ptChkRelEndM = new Draw.Point(480, 135); // Check Point 
 
     // StatusBtns - For Find 메인윈도 기준
-    public Draw.Point 접수등록Page_StatusBtn_ptChkRel접수T { get; set; } = new Draw.Point(65, 140); // Check Point {X=65,Y=140}
+    public Draw.Point 접수등록Page_StatusBtn_접수_ptChkRelTT { get; set; } = new Draw.Point(65, 140); // Check Point {X=65,Y=140}
     public Draw.Point 접수등록Page_StatusBtn_ptChkRel배차T { get; set; } = new Draw.Point(141, 140); // Check Point {X=141,Y=140}
-    public Draw.Point 접수등록Page_StatusBtn_ptChkRel운행T { get; set; } = new Draw.Point(217, 140); // Check Point {X=217,Y=140}
-    public Draw.Point 접수등록Page_StatusBtn_ptChkRel완료T { get; set; } = new Draw.Point(65, 181); // Check Point  {X=65,Y=181}
-    public Draw.Point 접수등록Page_StatusBtn_ptChkRel취소M { get; set; } = new Draw.Point(141, 181); // Check Point {X=141,Y=181}
-    public Draw.Point 접수등록Page_StatusBtn_ptChkRel전체T { get; set; } = new Draw.Point(217, 181); // Check Point {X=217,Y=181}
+    public Draw.Point 접수등록Page_StatusBtn_운행_ptChkRelTT { get; set; } = new Draw.Point(217, 140); // Check Point {X=217,Y=140}
+    public Draw.Point 접수등록Page_StatusBtn_완료_ptChkRelTT { get; set; } = new Draw.Point(65, 181); // Check Point  {X=65,Y=181}
+    public Draw.Point 접수등록Page_StatusBtn_취소_ptChkRelTM { get; set; } = new Draw.Point(141, 181); // Check Point {X=141,Y=181}
+    public Draw.Point 접수등록Page_StatusBtn_전체_ptChkRelTT { get; set; } = new Draw.Point(217, 181); // Check Point {X=217,Y=181}
 
     // CommandBtns GroupBox
-    public Draw.Point 접수등록Page_CmdBtn_ptChkRel신규T { get; set; } = new Draw.Point(867, 143); // Check Point  {X=867,Y=143}
-    public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회T { get; set; } = new Draw.Point(961, 143); // Check Point  {X=961,Y=143}
+    public Draw.Point 접수등록Page_CmdBtn_신규_ptChkRelT { get; set; } = new Draw.Point(867, 143); // Check Point  {X=867,Y=143}
+    public Draw.Point 접수등록Page_CmdBtn_조회_ptChkRelT { get; set; } = new Draw.Point(961, 143); // Check Point  {X=961,Y=143}
     public Draw.Point 접수등록Page_CmdBtn_ptChkRel기사T { get; set; } = new Draw.Point(1122, 143); // Check Point {X=1122,Y=143}
 
     // CallCount

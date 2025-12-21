@@ -128,7 +128,7 @@ public partial class InsungsAct_RcptRegPage
             {
                 await Task.Delay(c_nWaitNormal);
 
-                m_RcptPage.StatusBtn_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel접수T);
+                m_RcptPage.StatusBtn_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_접수_ptChkRelTT);
                 string sText = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd접수);
 
                 if (sText == "접수")
@@ -145,10 +145,10 @@ public partial class InsungsAct_RcptRegPage
 
             // 나머지 상태 버튼 핸들 확정
             m_RcptPage.StatusBtn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel배차T);
-            m_RcptPage.StatusBtn_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel운행T);
-            m_RcptPage.StatusBtn_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel완료T);
-            m_RcptPage.StatusBtn_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel취소M);
-            m_RcptPage.StatusBtn_hWnd전체 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel전체T);
+            m_RcptPage.StatusBtn_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_운행_ptChkRelTT);
+            m_RcptPage.StatusBtn_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_완료_ptChkRelTT);
+            m_RcptPage.StatusBtn_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_취소_ptChkRelTM);
+            m_RcptPage.StatusBtn_hWnd전체 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_전체_ptChkRelTT);
 
             //Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 상태 버튼 핸들 수집 완료");
 
@@ -200,12 +200,12 @@ public partial class InsungsAct_RcptRegPage
 
             // 6. 커맨드 버튼 찾기 및 OFR 검증 (신규, 조회, 기사)
             var (hWnd신규, error신규) = await FindCommandButtonWithOfrAsync(
-                "신규", m_FileInfo.접수등록Page_CmdBtn_ptChkRel신규T, "Img_신규버튼", "InsungsAct_RcptRegPage/InitializeAsync_08", true, true, true);
+                "신규", m_FileInfo.접수등록Page_CmdBtn_신규_ptChkRelT, "Img_신규버튼", "InsungsAct_RcptRegPage/InitializeAsync_08", true, true, true);
             if (error신규 != null) return error신규;
             m_RcptPage.CmdBtn_hWnd신규 = hWnd신규;
 
             var (hWnd조회, error조회) = await FindCommandButtonWithOfrAsync(
-                "조회", m_FileInfo.접수등록Page_CmdBtn_ptChkRel조회T, "Img_조회버튼", "InsungsAct_RcptRegPage/InitializeAsync_09", true, true, true);
+                "조회", m_FileInfo.접수등록Page_CmdBtn_조회_ptChkRelT, "Img_조회버튼", "InsungsAct_RcptRegPage/InitializeAsync_09", true, true, true);
             if (error조회 != null) return error조회;
             m_RcptPage.CmdBtn_hWnd조회 = hWnd조회;
 

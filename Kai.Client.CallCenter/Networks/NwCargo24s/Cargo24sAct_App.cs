@@ -16,8 +16,8 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 /// </summary>
 public class Cargo24sAct_App
 {
-    #region Context Reference
-    // Context에 대한 읽기 전용 참조
+    #region 2. Context Reference - 컨텍스트 참조
+    // Context 참조
     private readonly Cargo24Context m_Context;
 
     // 편의를 위한 로컬 참조들
@@ -25,443 +25,277 @@ public class Cargo24sAct_App
     private Cargo24sInfo_Mem m_MemInfo => m_Context.MemInfo;
     #endregion
 
-    #region Constructor
+    #region 3. Constructor - 생성자
     // 생성자 - Context를 받아서 초기화
     public Cargo24sAct_App(Cargo24Context context)
     {
         m_Context = context ?? throw new ArgumentNullException(nameof(context));
-        //Debug.WriteLine($"[Cargo24sAct_App] 생성자 호출: AppName={m_Context.AppName}");
     }
     #endregion
 
-    #region UpdaterWork
-    ///// <summary>
-    ///// Updater 실행 및 Splash 윈도우 대기
-    ///// - Cargo24.exe 실행
-    ///// - Updater 종료 또는 Splash 윈도우 나타날 때까지 대기 (최대 5분)
-    ///// </summary>
-    //public async Task<StdResult_Error> UpdaterWorkAsync(string sPath, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
-    //{
-    //    try
-    //    {
-    //        Debug.WriteLine($"[Cargo24sAct_App] UpdaterWork 시작: Path={sPath}");
+    #region 4. UpdaterWork - 앱 실행 및 스플래시 대기
+    // Updater 실행 및 Splash 윈도우 대기 (화물24시 앱 실행)
+    public async Task<StdResult_Status> UpdaterWorkAsync(string sPath, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    {
+        Process procExec = null;
+        EventHandler exitHandler = null;
+        bool bClosed = false;
 
-    //        // Updater 실행
-    //        ProcessStartInfo processInfo = new ProcessStartInfo
-    //        {
-    //            UseShellExecute = true,
-    //            FileName = sPath
-    //        };
-    //        Process procExec = Process.Start(processInfo);
-    //        if (procExec == null)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/UpdaterWork]실행실패: procExec == null",
-    //                "Cargo24sAct_App/UpdaterWorkAsync_01", bWrite, bMsgBox);
-    //        }
+        try
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/App] UpdaterWork 시작: Path={sPath}");
 
-    //        Debug.WriteLine($"[Cargo24sAct_App] Updater 프로세스 시작됨: PID={procExec.Id}");
+            // 1. 실행 파일 존재 확인 (인성 로직 반영)
+            if (!System.IO.File.Exists(sPath))
+            {
+                string err = $"업데이터 경로가 존재하지 않습니다: {sPath}";
+                Debug.WriteLine($"[{m_Context.AppName}/App] {err}");
+                return new StdResult_Status(StdResult.Fail, err, "Cargo24sAct_App/UpdaterWorkAsync_NotFound");
+            }
 
-    //        // 프로세스가 종료될 때 이벤트를 받기 위해 EnableRaisingEvents를 true로 설정
-    //        procExec.EnableRaisingEvents = true;
-    //        bool bClosed = false;
-    //        procExec.Exited += (sender, e) =>
-    //        {
-    //            bClosed = true;
-    //            Debug.WriteLine($"[Cargo24sAct_App] Updater 프로세스 종료됨");
-    //        };
+            // 2. Updater 실행
+            procExec = Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = sPath });
+            if (procExec == null)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/App] 실행 실패: procExec == null", "Cargo24sAct_App/UpdaterWorkAsync_01");
+            }
 
-    //        // 300초(5분) 동안 Updater 종료 또는 Splash 창 나타나기 대기
-    //        for (int i = 0; i < 3000; i++)
-    //        {
-    //            await Task.Delay(100);
+            Debug.WriteLine($"[{m_Context.AppName}/App] Updater 프로세스 시작됨: PID={procExec.Id}");
 
-    //            if (bClosed) break;
+            procExec.EnableRaisingEvents = true;
+            exitHandler = (sender, e) =>
+            {
+                bClosed = true;
+                Debug.WriteLine($"[{m_Context.AppName}/App] Updater 프로세스 종료됨");
+            };
+            procExec.Exited += exitHandler;
 
-    //            m_MemInfo.Splash.TopWnd_hWnd =
-    //                Std32Window.FindWindow(m_FileInfo.Splash_TopWnd_sClassName, m_FileInfo.Splash_TopWnd_sWndName);
-    //            Thread.Sleep(100); // 무조건 대기
-    //            if (m_MemInfo.Splash.TopWnd_hWnd != IntPtr.Zero) break;
-    //        }
+            for (int i = 0; i < 6000; i++) // 5분
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested)
+                {
+                    return new StdResult_Status(StdResult.Skip, "사용자의 요청으로 작업이 취소되었습니다.", "Cargo24sAct_App/UpdaterWorkAsync_Cancel");
+                }
 
-    //        // 프로세스가 종료되지않거나 SplashWnd가 안보이면..
-    //        if (!bClosed && m_MemInfo.Splash.TopWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/UpdaterWork]업데이터 (5분안에)종료실패",
-    //                "Cargo24sAct_App/UpdaterWorkAsync_02", bWrite, bMsgBox);
-    //        }
+                await Task.Delay(c_nWaitShort);
+                if (bClosed) break;
 
-    //        Debug.WriteLine($"[Cargo24sAct_App] UpdaterWork 완료: SplashWnd={m_MemInfo.Splash.TopWnd_hWnd}");
-    //        return null;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Error(
-    //            $"[{m_Context.AppName}/UpdaterWork]예외발생: {ex.Message}",
-    //            "Cargo24sAct_App/UpdaterWorkAsync_99", bWrite, bMsgBox);
-    //    }
-    //}
+                m_MemInfo.Splash.TopWnd_hWnd = Std32Window.FindWindow(m_FileInfo.Splash_TopWnd_sClassName, m_FileInfo.Splash_TopWnd_sWndName);
+                if (m_MemInfo.Splash.TopWnd_hWnd != IntPtr.Zero) break;
+            }
+
+            // 3. 결과 확인
+            if (m_MemInfo.Splash.TopWnd_hWnd == IntPtr.Zero)
+            {
+                if (bClosed)
+                {
+                    return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/App] 업데이터가 종료되었으나 스플래시 창을 찾을 수 없습니다.", "Cargo24sAct_App/UpdaterWorkAsync_ClosedNoWnd");
+                }
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/App] 스플래시 창 대기 타임아웃 (5분)", "Cargo24sAct_App/UpdaterWorkAsync_Timeout");
+            }
+
+            Debug.WriteLine($"[{m_Context.AppName}/App] UpdaterWork 완료: SplashWnd={m_MemInfo.Splash.TopWnd_hWnd}");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/App] 예외발생: {ex.Message}", "Cargo24sAct_App/UpdaterWorkAsync_99");
+        }
+        finally
+        {
+            if (procExec != null)
+            {
+                if (exitHandler != null) procExec.Exited -= exitHandler;
+                procExec.Dispose();
+            }
+        }
+    }
     #endregion
 
-    #region SplashWork
-    ///// <summary>
-    ///// Splash 윈도우 처리 및 로그인
-    ///// - Splash 윈도우 중앙 이동
-    ///// - ProcessId, ThreadId 취득
-    ///// - 아이디/비밀번호 입력창 찾기
-    ///// - 로그인 처리
-    ///// </summary>
-    //public async Task<StdResult_Error> SplashWorkAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
-    //{
-    //    Cargo24sInfo_Mem.SplashWnd mSplash = m_MemInfo.Splash;
-    //    IntPtr hWndTmp = IntPtr.Zero; // 임시 핸들
-    //    Draw.Rectangle rcCur = StdUtil.s_rcDrawEmpty;
+    // Splash 윈도우 처리 및 로그인 (중앙 이동, 정보 취득, 로그인 시도)
+    public async Task<StdResult_Status> SplashWorkAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    {
+        Cargo24sInfo_Mem.SplashWnd mSplash = m_MemInfo.Splash;
+        IntPtr hWndTmp = IntPtr.Zero;
+        Draw.Rectangle rcCur = StdUtil.s_rcDrawEmpty;
 
-    //    try
-    //    {
-    //        Debug.WriteLine($"[Cargo24sAct_App] SplashWork 시작");
+        try
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/Splash] SplashWork 시작");
 
-    //        // Find SplashWindow
-    //        if (mSplash.TopWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/SplashWork]스플래쉬윈도 찾기실패[{m_FileInfo.Splash_TopWnd_sClassName}, {m_FileInfo.Splash_TopWnd_sWndName}]",
-    //                "Cargo24sAct_App/SplashWorkAsync_01", bWrite, bMsgBox);
-    //        }
+            // 1. SplashWindow 확인
+            if (mSplash.TopWnd_hWnd == IntPtr.Zero)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/Splash] 스플래쉬윈도 찾기 실패", "Cargo24sAct_App/SplashWorkAsync_01");
+            }
 
-    //        Debug.WriteLine($"[Cargo24sAct_App] 스플래시 윈도우 확인: {mSplash.TopWnd_hWnd}");
+            // 2. 창을 최상위로 올리고 중앙으로 이동
+            Std32Window.SetWindowTopMost(mSplash.TopWnd_hWnd, true);
+            rcCur = Std32Window.GetWindowRect_DrawAbs(mSplash.TopWnd_hWnd);
+            Draw.Rectangle rcNew = s_Screens.m_WorkingMonitor.GetCenterDrawRectangle(rcCur);
+            StdWin32.MoveWindow(mSplash.TopWnd_hWnd, rcNew.X, rcNew.Y, rcNew.Width, rcNew.Height, true);
 
-    //        // Make TopWindow ...
-    //        Std32Window.SetWindowTopMost(mSplash.TopWnd_hWnd, true);
+            // 이동 완료 대기 (최대 10초)
+            for (int i = 0; i < 200; i++) // 200회 * 50ms = 10초
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested) return new StdResult_Status(StdResult.Fail, "작업 취소됨", "Cargo24sAct_App/SplashWorkAsync_Cancel1");
+                hWndTmp = Std32Window.GetWndHandle_FromAbsDrawPos(rcNew.X, rcNew.Y);
+                if (hWndTmp != IntPtr.Zero && hWndTmp == mSplash.TopWnd_hWnd) break;
+                await Task.Delay(c_nWaitShort);
+            }
 
-    //        // Move SplashWindow to the center of the screen
-    //        rcCur = Std32Window.GetWindowRect_DrawAbs(mSplash.TopWnd_hWnd);
-    //        Draw.Rectangle rcNew = s_Screens.m_WorkingMonitor.GetCenterDrawRectangle(rcCur);
-    //        StdWin32.MoveWindow(mSplash.TopWnd_hWnd, rcNew.X, rcNew.Y, rcNew.Width, rcNew.Height, true);
+            if (hWndTmp != mSplash.TopWnd_hWnd)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/Splash] 스플래쉬윈도 위치 이동 실패", "Cargo24sAct_App/SplashWorkAsync_02");
+            }
+            await Task.Delay(c_nWaitUltraLong); // 1000ms 안정화 대기
 
-    //        for (int i = 0; i < 100; i++) // 10초 동안..
-    //        {
-    //            hWndTmp = Std32Window.GetWndHandle_FromAbsDrawPos(rcNew.X, rcNew.Y);
-    //            if (hWndTmp != IntPtr.Zero && hWndTmp == mSplash.TopWnd_hWnd) break; // 위치가 맞으면 break
-    //            await Task.Delay(100); // 무조건 대기
-    //        }
+            // 3. ThreadId, ProcessId 취득
+            mSplash.TopWnd_uThreadId = Std32Window.GetWindowThreadProcessId(mSplash.TopWnd_hWnd, out mSplash.TopWnd_uProcessId);
+            if (mSplash.TopWnd_uThreadId == 0)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/Splash] 프로세스 정보 취득 실패", "Cargo24sAct_App/SplashWorkAsync_03");
+            }
 
-    //        if (hWndTmp != mSplash.TopWnd_hWnd)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/SplashWork]스플래쉬윈도 위치이동실패",
-    //                "Cargo24sAct_App/SplashWorkAsync_02", bWrite, bMsgBox);
-    //        }
+            // 4. 입력창(ID/PW) 핸들 획득
+            mSplash.IdWnd_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, m_FileInfo.Splash_IdWnd_ptChk);
+            mSplash.PwWnd_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, m_FileInfo.Splash_PwWnd_ptChk);
 
-    //        await Task.Delay(1000); // ~초 대기 - 너무 짧으면 안됨
-    //        Debug.WriteLine($"[Cargo24sAct_App] 스플래시 윈도우 중앙 이동 완료");
+            if (mSplash.IdWnd_hWnd == IntPtr.Zero || mSplash.PwWnd_hWnd == IntPtr.Zero)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/Splash] 입력창 핸들 찾기 실패", "Cargo24sAct_App/SplashWorkAsync_04");
+            }
 
-    //        // Get ThreadId, ProcessId
-    //        mSplash.TopWnd_uThreadId = Std32Window.GetWindowThreadProcessId(mSplash.TopWnd_hWnd, out mSplash.TopWnd_uProcessId);
-    //        if (mSplash.TopWnd_uThreadId == 0)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/SplashWork]프로세스 찾기실패",
-    //                "Cargo24sAct_App/SplashWorkAsync_03", bWrite, bMsgBox);
-    //        }
+            // 5. 로그인 작업 시도
+            if (s_GlobalCancelToken.Token.IsCancellationRequested) return new StdResult_Status(StdResult.Fail, "작업 취소됨", "Cargo24sAct_App/SplashWorkAsync_Cancel2");
 
-    //        Debug.WriteLine($"[Cargo24sAct_App] ThreadId={mSplash.TopWnd_uThreadId}, ProcessId={mSplash.TopWnd_uProcessId}");
+            StdWin32.BlockInput(true); // 입력 차단
+            try
+            {
+                string id = Std32Window.GetWindowCaption(mSplash.IdWnd_hWnd);
+                string pw = Std32Window.GetWindowCaption(mSplash.PwWnd_hWnd);
 
-    //        // 아이디 텍스트박스의 핸들을 얻는다.
-    //        mSplash.IdWnd_hWnd =
-    //            Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, m_FileInfo.Splash_IdWnd_ptChk);
-    //        if (mSplash.IdWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/SplashWork]아이디 입력창 찾기실패",
-    //                "Cargo24sAct_App/SplashWorkAsync_04", bWrite, bMsgBox);
-    //        }
+                if (id != m_Context.Id) Std32Window.SetWindowCaption(mSplash.IdWnd_hWnd, m_Context.Id);
+                if (pw != m_Context.Pw) Std32Window.SetWindowCaption(mSplash.PwWnd_hWnd, m_Context.Pw);
 
-    //        Debug.WriteLine($"[Cargo24sAct_App] 아이디 입력창 찾음: {mSplash.IdWnd_hWnd}");
+                await Task.Delay(c_nWaitLong); // 250ms
+                Std32Key_Msg.KeyPost_Click(mSplash.PwWnd_hWnd, StdCommon32.VK_RETURN); // 엔터키 전송
+                await Task.Delay(c_nWaitLong); // 250ms
+            }
+            finally
+            {
+                StdWin32.BlockInput(false); // 입력 차단 해제
+            }
 
-    //        // 비밀번호 텍스트박스의 핸들을 얻는다.
-    //        mSplash.PwWnd_hWnd =
-    //            Std32Window.GetWndHandle_FromRelDrawPt(mSplash.TopWnd_hWnd, m_FileInfo.Splash_PwWnd_ptChk);
-    //        if (mSplash.PwWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/SplashWork]비밀번호 입력창 찾기실패",
-    //                "Cargo24sAct_App/SplashWorkAsync_05", bWrite, bMsgBox);
-    //        }
-
-    //        Debug.WriteLine($"[Cargo24sAct_App] 비밀번호 입력창 찾음: {mSplash.PwWnd_hWnd}");
-
-    //        #region Login 작업
-    //        // Disable
-    //        StdWin32.BlockInput(true); // BlockInput - 마우스와 키보드 입력을 차단한다
-    //        string id = Std32Window.GetWindowCaption(mSplash.IdWnd_hWnd);
-    //        string pw = Std32Window.GetWindowCaption(mSplash.PwWnd_hWnd);
-    //        if (id != m_Context.Id) Std32Window.SetWindowCaption(mSplash.IdWnd_hWnd, m_Context.Id); // 아이디를 쓴다 // 경우의 수가 좀 있어서 우선 간편하게 처리
-    //        if (pw != m_Context.Pw) Std32Window.SetWindowCaption(mSplash.PwWnd_hWnd, m_Context.Pw); // 비밀번호를 쓴다 // 경우의 수가 좀 있어서 우선 간편하게
-    //                                                                              // 엔터키를 누른다 - 이 방식도 됨
-    //        Std32Key_Msg.KeyPost_Click(mSplash.PwWnd_hWnd, StdCommon32.VK_RETURN); // LoginBtn을 클릭해도 됨 - CheckReserved
-    //        StdWin32.BlockInput(false); // BlockInput - 마우스와 키보드 입력을 해제한다
-    //        await Task.Delay(300); // ~초 대기 - 너무 짧으면 안됨
-    //        #endregion
-
-    //        Debug.WriteLine($"[Cargo24sAct_App] 로그인 처리 완료");
-    //        return null;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Error(
-    //            $"[{m_Context.AppName}/SplashWork]예외발생: {ex.Message}",
-    //            "Cargo24sAct_App/SplashWorkAsync_99", bWrite, bMsgBox);
-    //    }
-    //    finally
-    //    {
-    //        // Enable
-    //        StdWin32.BlockInput(false); // BlockInput - 마우스와 키보드 입력을 해제한다
-    //        Std32Window.SetWindowTopMost(mSplash.TopWnd_hWnd, false); // TopMost를 해제한다
-    //        await Task.Delay(100); // ~초 대기 - 너무 짧으면 안됨
-    //    }
-    //}
-    #endregion
+            Debug.WriteLine($"[{m_Context.AppName}/Splash] 로그인 처리 완료");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            return new StdResult_Status(StdResult.Skip, "사용자 요청으로 취소됨", "SplashWorkAsync_Cancel");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/Splash] 예외발생: {ex.Message}", "Cargo24sAct_App/SplashWorkAsync_99");
+        }
+        finally
+        {
+            StdWin32.BlockInput(false);
+            if (mSplash.TopWnd_hWnd != IntPtr.Zero) Std32Window.SetWindowTopMost(mSplash.TopWnd_hWnd, false);
+        }
+    }
 
     #region Close
-    ///// <summary>
-    ///// 화물24시 앱 종료
-    ///// - MainWindow 닫기 시도
-    ///// - SplashWindow 강제 종료
-    ///// </summary>
-    //public StdResult_Error Close(int nDelayMiliSec = 100)
-    //{
-    //    Cargo24sInfo_Mem.MainWnd mMain = m_MemInfo.Main;
-    //    Cargo24sInfo_Mem.SplashWnd mSplash = m_MemInfo.Splash;
+    /// <summary>
+    /// 화물24시 앱 종료
+    /// - MainWindow 닫기 시도
+    /// - 예외시 프로세스 강제 종료
+    /// </summary>
+    public StdResult_Status Close(int nDelayMiliSec = 50)
+    {
+        Cargo24sInfo_Mem.MainWnd mMain = m_MemInfo.Main;
+        Cargo24sInfo_Mem.SplashWnd mSplash = m_MemInfo.Splash;
 
-    //    try
-    //    {
-    //        Debug.WriteLine($"[Cargo24sAct_App] Close 시작");
+        try
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/App] Close 시작");
 
-    //        // MainWindow가 Null이 아니면
-    //        if (mMain.TopWnd_hWnd != IntPtr.Zero)
-    //        {
-    //            StdWin32.PostMessage(mMain.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, StdCommon32.SC_CLOSE, 0); // 닫기
-    //            Debug.WriteLine($"[Cargo24sAct_App] MainWindow 닫기 메시지 전송");
+            // 1. MainWindow 닫기 시도
+            if (mMain.TopWnd_hWnd != IntPtr.Zero)
+            {
+                StdWin32.PostMessage(mMain.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, (uint)StdCommon32.SC_CLOSE, IntPtr.Zero);
+                Debug.WriteLine($"[{m_Context.AppName}/App] MainWindow 닫기 메시지 전송");
 
-    //            // 1초 동안 확인 다이아로그 찾음 (타임아웃 단축)
-    //            IntPtr hWndDlg = IntPtr.Zero;
-    //            IntPtr hWndBtn = IntPtr.Zero;
+                // 종료 확인 다이아로그 대기 (최대 1초)
+                IntPtr hWndDlg = IntPtr.Zero;
+                for (int i = 0; i < c_nRepeatVeryShort; i++) // 10회 * 50ms = 0.5초
+                {
+                    hWndDlg = Std32Window.FindMainWindow_Reduct(mSplash.TopWnd_uProcessId, "TMessageForm", "Confirm");
+                    if (hWndDlg == IntPtr.Zero) hWndDlg = Std32Window.FindWindow("TMessageForm", "Confirm");
 
-    //            for (int i = 0; i < c_nRepeatVeryShort; i++)
-    //            {
-    //                hWndDlg = Std32Window.FindMainWindow(mSplash.TopWnd_uProcessId, "TMessageForm", "Confirm");
-    //                if (hWndDlg == IntPtr.Zero)
-    //                {
-    //                    hWndDlg = Std32Window.FindWindow("TMessageForm", "Confirm");
-    //                }
-    //                Thread.Sleep(c_nWaitNormal);
-    //                if (hWndDlg != IntPtr.Zero) break;
-    //            }
+                    if (hWndDlg != IntPtr.Zero) break;
+                    Thread.Sleep(c_nWaitShort);
+                }
 
-    //            if (hWndDlg == IntPtr.Zero)
-    //            {
-    //                Debug.WriteLine($"[Cargo24sAct_App] 종료 확인창 없음 - 메인 윈도우가 바로 닫히는지 체크");
+                if (hWndDlg != IntPtr.Zero)
+                {
+                    Debug.WriteLine($"[{m_Context.AppName}/App] 종료 확인창 발견: {hWndDlg}");
+                    IntPtr hWndBtn = Std32Window.FindWindowEx(hWndDlg, IntPtr.Zero, "TButton", "&Yes");
+                    if (hWndBtn != IntPtr.Zero)
+                    {
+                        IntPtr lParam = StdUtil.MakeIntPtrLParam(3, 3);
+                        StdWin32.PostMessage(hWndBtn, StdCommon32.WM_LBUTTONDOWN, 1, lParam);
+                        Thread.Sleep(c_nWaitVeryShort);
+                        StdWin32.PostMessage(hWndBtn, StdCommon32.WM_LBUTTONUP, 0, lParam);
+                        Thread.Sleep(c_nWaitVeryShort);
+                        Debug.WriteLine($"[{m_Context.AppName}/App] YES 버튼 클릭됨");
+                    }
+                }
 
-    //                // 확인창 없이 바로 닫힐 수도 있음 - 메인 윈도우 닫힘 체크
-    //                for (int i = 0; i < c_nRepeatShort; i++)
-    //                {
-    //                    if (!Std32Window.IsWindowVisible(mMain.TopWnd_hWnd))
-    //                    {
-    //                        Debug.WriteLine($"[Cargo24sAct_App] MainWindow 바로 종료 확인됨");
-    //                        return null;
-    //                    }
-    //                    Thread.Sleep(c_nWaitShort);
-    //                }
+                // 윈도우 닫힘 대기 (최대 약 2.5초)
+                for (int i = 0; i < c_nRepeatShort; i++) // 50회 * 50ms = 2.5초 (근사값)
+                {
+                    if (!Std32Window.IsWindowVisible(mMain.TopWnd_hWnd))
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}/App] MainWindow 종료 확인됨");
+                        return new StdResult_Status(StdResult.Success);
+                    }
+                    Thread.Sleep(c_nWaitShort);
+                }
 
-    //                Debug.WriteLine($"[Cargo24sAct_App] 메인 윈도우도 안 닫힘 - 프로세스 강제 종료");
-    //                // 프로세스 강제 종료
-    //                try
-    //                {
-    //                    var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
-    //                    process.Kill();
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
-    //                    return null;
-    //                }
-    //                catch (Exception ex)
-    //                {
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
-    //                    return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_01");
-    //                }
-    //            }
+                // 안 닫히면 강제 종료
+                try
+                {
+                    var process = Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
+                    process.Kill();
+                    Debug.WriteLine($"[{m_Context.AppName}/App] 프로세스 강제 종료됨 (PID: {mSplash.TopWnd_uProcessId})");
+                    return new StdResult_Status(StdResult.Success);
+                }
+                catch (Exception ex)
+                {
+                    return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/App] 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_01");
+                }
+            }
 
-    //            Debug.WriteLine($"[Cargo24sAct_App] 종료 다이아로그 찾음: {hWndDlg}");
+            // 2. SplashWindow만 남은 경우 처리
+            if (mSplash.TopWnd_hWnd != IntPtr.Zero)
+            {
+                Std32Window.PostCloseTwiceWindow(mSplash.TopWnd_hWnd);
+                for (int i = 0; i < c_nRepeatShort; i++)
+                {
+                    if (!Std32Window.IsWindowVisible(mSplash.TopWnd_hWnd)) break;
+                    Thread.Sleep(c_nWaitShort);
+                }
+            }
 
-    //            // 확인창의 프로세스 ID 확인
-    //            uint dlgProcessId = 0;
-    //            StdWin32.GetWindowThreadProcessId(hWndDlg, out dlgProcessId);
-    //            Debug.WriteLine($"[Cargo24sAct_App] 확인창 프로세스 ID: {dlgProcessId}, Cargo24 프로세스 ID: {mSplash.TopWnd_uProcessId}");
-
-    //            if (dlgProcessId != mSplash.TopWnd_uProcessId)
-    //            {
-    //                Debug.WriteLine($"[Cargo24sAct_App] 경고: 확인창의 프로세스 ID가 다릅니다! 다시 찾기 시도");
-    //                // 다른 프로그램의 윈도우를 찾은 것이므로, 다시 프로세스 ID로만 찾기
-    //                hWndDlg = IntPtr.Zero;
-    //                for (int i = 0; i < c_nRepeatVeryShort; i++)
-    //                {
-    //                    hWndDlg = Std32Window.FindMainWindow(mSplash.TopWnd_uProcessId, "TMessageForm", null); // Title 없이 찾기
-    //                    if (hWndDlg != IntPtr.Zero)
-    //                    {
-    //                        string title = Std32Window.GetWindowText(hWndDlg);
-    //                        Debug.WriteLine($"[Cargo24sAct_App] 확인창 재발견 (시도 {i + 1}/{c_nRepeatVeryShort}): {hWndDlg:X}, Title: {title}");
-    //                        break;
-    //                    }
-    //                    Thread.Sleep(c_nWaitNormal);
-    //                }
-
-    //                if (hWndDlg == IntPtr.Zero)
-    //                {
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 확인창 재발견 실패 - 프로세스 강제 종료");
-    //                    try
-    //                    {
-    //                        var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
-    //                        process.Kill();
-    //                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
-    //                        return null;
-    //                    }
-    //                    catch (Exception ex)
-    //                    {
-    //                        Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
-    //                        return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_01_2");
-    //                    }
-    //                }
-    //            }
-
-    //            // YES 버튼 찾기
-    //            Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 찾기 시작");
-    //            for (int i = 0; i < 5; i++)
-    //            {
-    //                hWndBtn = Std32Window.FindWindowEx(hWndDlg, IntPtr.Zero, "TButton", "&Yes");
-    //                if (hWndBtn != IntPtr.Zero)
-    //                {
-    //                    Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 찾음 (시도 {i + 1}/5): {hWndBtn:X}");
-    //                    break;
-    //                }
-    //                Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 못 찾음 (시도 {i + 1}/5)");
-    //                Thread.Sleep(c_nWaitNormal);
-    //            }
-
-    //            if (hWndBtn == IntPtr.Zero)
-    //            {
-    //                Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 찾기 실패 - 프로세스 강제 종료");
-    //                try
-    //                {
-    //                    var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
-    //                    process.Kill();
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
-    //                    return null;
-    //                }
-    //                catch (Exception ex)
-    //                {
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
-    //                    return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_02");
-    //                }
-    //            }
-
-    //            // YES 버튼 클릭
-    //            IntPtr lParam = StdUtil.MakeIntPtrLParam(3, 3);
-    //            StdWin32.PostMessage(hWndBtn, StdCommon32.WM_LBUTTONDOWN, 1, lParam);
-    //            Thread.Sleep(c_nWaitUltraShort);
-    //            StdWin32.PostMessage(hWndBtn, StdCommon32.WM_LBUTTONUP, 0, lParam);
-    //            Thread.Sleep(c_nWaitUltraShort);
-    //            Debug.WriteLine($"[Cargo24sAct_App] YES 버튼 클릭 완료");
-
-    //            // 1. 먼저 확인창이 닫히는지 체크 (2초)
-    //            bool bDialogClosed = false;
-    //            for (int i = 0; i < 20; i++)
-    //            {
-    //                if (!Std32Window.IsWindowVisible(hWndDlg))
-    //                {
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 확인창 닫힘 확인");
-    //                    bDialogClosed = true;
-    //                    break;
-    //                }
-    //                Thread.Sleep(c_nWaitNormal);
-    //            }
-
-    //            if (!bDialogClosed)
-    //            {
-    //                Debug.WriteLine($"[Cargo24sAct_App] 확인창이 안 닫힘 - 프로세스 강제 종료");
-    //                try
-    //                {
-    //                    var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
-    //                    process.Kill();
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
-    //                    return null;
-    //                }
-    //                catch (Exception ex)
-    //                {
-    //                    Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
-    //                    return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_03");
-    //                }
-    //            }
-
-    //            // 2. 그 다음 메인 윈도우가 닫히는지 체크 (2초)
-    //            for (int i = 0; i < 20; i++)
-    //            {
-    //                if (!Std32Window.IsWindowVisible(mMain.TopWnd_hWnd))
-    //                {
-    //                    Debug.WriteLine($"[Cargo24sAct_App] MainWindow 종료 확인됨");
-    //                    return null;
-    //                }
-    //                Thread.Sleep(c_nWaitNormal);
-    //            }
-
-    //            Debug.WriteLine($"[Cargo24sAct_App] MainWindow가 안 닫힘 - 프로세스 강제 종료");
-    //            try
-    //            {
-    //                var process = System.Diagnostics.Process.GetProcessById((int)mSplash.TopWnd_uProcessId);
-    //                process.Kill();
-    //                Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 완료");
-    //                return null;
-    //            }
-    //            catch (Exception ex)
-    //            {
-    //                Debug.WriteLine($"[Cargo24sAct_App] 프로세스 강제 종료 실패: {ex.Message}");
-    //                return new StdResult_Error($"[{m_Context.AppName}/Close] 프로세스 강제 종료 실패: {ex.Message}", "Cargo24sAct_App/Close_04");
-    //            }
-    //        }
-
-    //        // SplashWnd가 Null이 아니면
-    //        if (mSplash.TopWnd_hWnd != IntPtr.Zero)
-    //        {
-    //            // Close Cargo24 - 필요하다면 Process를 죽이는 방법도 있음
-    //            Std32Window.PostCloseTwiceWindow(m_MemInfo.Splash.TopWnd_hWnd);
-    //            Debug.WriteLine($"[Cargo24sAct_App] SplashWindow 닫기 메시지 전송");
-
-    //            // 5초 동안 죽은거 확인..
-    //            bool bShow = true;
-    //            for (int i = 0; i < c_nRepeatShort; i++)
-    //            {
-    //                bShow = Std32Window.IsWindowVisible(m_MemInfo.Splash.TopWnd_hWnd);
-    //                if (!bShow) break;
-    //                Thread.Sleep(c_nWaitNormal);
-    //            }
-
-    //            if (bShow)
-    //            {
-    //                return new StdResult_Error($"[{m_Context.AppName}/Close]스플래쉬윈도 종료실패", "Cargo24sAct_App/Close_05");
-    //            }
-
-    //            Debug.WriteLine($"[Cargo24sAct_App] SplashWindow 종료 확인됨");
-    //            return null;
-    //        }
-
-    //        Debug.WriteLine($"[Cargo24sAct_App] Close 완료 (닫을 윈도우 없음)");
-    //        return null;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Debug.WriteLine($"[Cargo24sAct_App] Close 실패: {ex.Message}");
-    //        return new StdResult_Error($"[{m_Context.AppName}/Close]예외발생: {ex.Message}", "Cargo24sAct_App/Close_99");
-    //    }
-    //}
+            Debug.WriteLine($"[{m_Context.AppName}/App] Close 완료");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/App] 예외발생: {ex.Message}", "Cargo24sAct_App/Close_99");
+        }
+    }
     #endregion
 }
 #nullable restore

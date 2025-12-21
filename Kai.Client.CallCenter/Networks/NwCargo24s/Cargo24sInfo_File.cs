@@ -9,99 +9,99 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 public class Cargo24sInfo_File
 {
     #region App
-    //public string App_sPredictFolder { get; set; } = @"C:\Cargo24";
-    //public string App_sExeFileName { get; set; } = "Cargo24.exe";
+    public string App_sPredictFolder { get; set; } = @"C:\Cargo24";
+    public string App_sExeFileName { get; set; } = "Cargo24.exe";
     #endregion
 
     #region Splash
-    //// TopWnd
-    //public string Splash_TopWnd_sClassName { get; set; } = "TfrmCargoLogin"; // ClassName
-    //public string Splash_TopWnd_sWndName { get; set; } = "로그인";   // WndName
+    // TopWnd
+    public string Splash_TopWnd_sClassName { get; set; } = "TfrmCargoLogin"; // ClassName
+    public string Splash_TopWnd_sWndName { get; set; } = "로그인";   // WndName
 
-    //public Draw.Point Splash_IdWnd_ptChk { get; set; } = new Draw.Point(272, 266);  // ID Wnd
-    //public Draw.Point Splash_PwWnd_ptChk { get; set; } = new Draw.Point(272, 316); // PW Wnd
-    //public Draw.Point Splash_LoginBtn_ptChk { get; set; } = new Draw.Point(450, 285); // Login Btn
-    //public Draw.Point Splash_CloseBtn_ptChk { get; set; } = new Draw.Point(450, 355); // Close Btn
+    public Draw.Point Splash_IdWnd_ptChk { get; set; } = new Draw.Point(272, 266);  // ID Wnd
+    public Draw.Point Splash_PwWnd_ptChk { get; set; } = new Draw.Point(272, 316); // PW Wnd
+    public Draw.Point Splash_LoginBtn_ptChk { get; set; } = new Draw.Point(450, 285); // Login Btn
+    public Draw.Point Splash_CloseBtn_ptChk { get; set; } = new Draw.Point(450, 355); // Close Btn
     #endregion
 
     #region Main
-    //// TopWnd
-    //public string Main_TopWnd_sClassName { get; set; } = "TfrmCargoMain"; // ClassName // ClassName
-    //public string Main_TopWnd_sWndNameReduct { get; set; } = " ::::: 대한민국대표콜센터";   // WndName - Spase주의
+    // TopWnd
+    public string Main_TopWnd_sClassName { get; set; } = "TfrmCargoMain"; // ClassName // ClassName
+    public string Main_TopWnd_sWndNameReduct { get; set; } = " ::::: 대한민국대표콜센터";   // WndName - Spase주의
 
-    //// MainMenu_Rect (BarMenu와 동일 - 화물24시는 MainMenu=BarMenu)
-    //public Draw.Rectangle Main_MainMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // MainMenu_Title Wnd Rectangle
+    // MainMenu_Rect (BarMenu와 동일 - 화물24시는 MainMenu=BarMenu)
+    public Draw.Rectangle Main_MainMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // MainMenu_Title Wnd Rectangle
 
-    //// BarMenu
-    //public Draw.Rectangle Main_BarMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // BarMenu Wnd Rectangle
-    //public string Main_BarMenu_ClassName { get; set; } = "TAdvPanel";
+    // BarMenu
+    public Draw.Rectangle Main_BarMenu_rcRelF { get; set; } = new Draw.Rectangle(8, 51, 1920, 27);  // BarMenu Wnd Rectangle
+    public string Main_BarMenu_ClassName { get; set; } = "TAdvPanel";
 
-    //// MdiClient
-    //public Draw.Rectangle Main_MdiClient_rcRelF { get; set; } = new Draw.Rectangle(8, 78, 1920, 943); // MdiClient Wnd Rectangle
-    //public string Main_MdiClient_ClassName { get; set; } = "MDIClient"; // ClassName
+    // MdiClient
+    public Draw.Rectangle Main_MdiClient_rcRelF { get; set; } = new Draw.Rectangle(8, 78, 1920, 943); // MdiClient Wnd Rectangle
+    public string Main_MdiClient_ClassName { get; set; } = "MDIClient"; // ClassName
     #endregion
 
     #region 접수(화물)등록Page
-    //// TopWnd
-    //public string 접수등록Page_TopWnd_sClassName { get; set; } = "TfrmCargoOrder"; // ClassName
-    //public string 접수등록Page_TopWnd_sWndName { get; set; } = "오더접수관리";   // WndName
+    // TopWnd
+    public string 접수등록Page_TopWnd_sClassName { get; set; } = "TfrmCargoOrder"; // ClassName
+    public string 접수등록Page_TopWnd_sWndName { get; set; } = "오더접수관리";   // WndName
 
     ////public int 접수등록Page_PushBtn_FocusBright { get; set; } = 233; // Brightness - 미사용
     //public Draw.Point 접수등록Page_SearchRange_ptChkRelFrom { get; set; } = new Draw.Point(340, 140); // Check Point - From Date(임시)
 
-    //// StatusBtns - For Find
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel접수 { get; set; } = new Draw.Point(60, 130); // Check Point
-    //public string 접수등록Page_StatusBtn_sWndName접수 { get; set; } = "접수"; // Check Window Name
+    // StatusBtns - For Find
+    public Draw.Point 접수등록Page_StatusBtn_접수_ptChkRelT { get; set; } = new Draw.Point(66, 135); // Check Point {X=68,Y=134}
+    public string 접수등록Page_StatusBtn_접수_sWndName { get; set; } = "접수"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel운행 { get; set; } = new Draw.Point(60, 155); // Check Point
-    //public string 접수등록Page_StatusBtn_sWndName운행 { get; set; } = "운행"; // Check Window Name
+    public Draw.Point 접수등록Page_StatusBtn_운행_ptChkRelT { get; set; } = new Draw.Point(66, 158); // Check Point {X=66,Y=158}
+    public string 접수등록Page_StatusBtn_운행_sWndName { get; set; } = "운행"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel취소 { get; set; } = new Draw.Point(60, 180); // Check Point
-    //public string 접수등록Page_StatusBtn_sWndName취소 { get; set; } = "취소"; // Check Window Name
+    public Draw.Point 접수등록Page_StatusBtn_취소_ptChkRelT { get; set; } = new Draw.Point(66, 182); // Check Point {X=66,Y=182}
+    public string 접수등록Page_StatusBtn_취소_sWndName { get; set; } = "취소"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel완료 { get; set; } = new Draw.Point(130, 130); // Check Point
-    //public string 접수등록Page_StatusBtn_sWndName완료 { get; set; } = "완료"; // Check Window Name
+    public Draw.Point 접수등록Page_StatusBtn_완료_ptChkRelT { get; set; } = new Draw.Point(135, 135); // Check Point {X=136,Y=135}
+    public string 접수등록Page_StatusBtn_완료_sWndName { get; set; } = "완료"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel정산 { get; set; } = new Draw.Point(130, 155); // Check Point
-    //public string 접수등록Page_StatusBtn_sWndName정산 { get; set; } = "정산"; // Check Window Name
+    public Draw.Point 접수등록Page_StatusBtn_정산_ptChkRelT { get; set; } = new Draw.Point(135, 158); // Check Point {X=140,Y=158}
+    public string 접수등록Page_StatusBtn_정산_sWndName { get; set; } = "정산"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_StatusBtn_ptChkRel전체 { get; set; } = new Draw.Point(130, 180); // Check Point
-    //public string 접수등록Page_StatusBtn_sWndName전체 { get; set; } = "전체"; // Check Window Name
+    public Draw.Point 접수등록Page_StatusBtn_전체_ptChkRelT { get; set; } = new Draw.Point(135, 182); // Check Point {X=139,Y=182}
+    public string 접수등록Page_StatusBtn_전체_sWndName { get; set; } = "전체"; // Check Window Name
 
-    //// 오늘하루동안 감추기
-    //public Draw.Point 접수등록Page_안내문_ptChkRel오늘하루동안감추기 { get; set; } = new Draw.Point(717, 506); // Check Point
-    //public string 접수등록Page_안내문_sWndName오늘하루동안감추기 { get; set; } = "오늘하루동안 감추기"; // Check Window Name
+    // 오늘하루동안 감추기
+    public Draw.Point 접수등록Page_안내문_오늘하루동안감추기_ptChkRelT { get; set; } = new Draw.Point(717, 506); // Check Point
+    public string 접수등록Page_안내문_오늘하루동안감추기_sWndName { get; set; } = "오늘하루동안 감추기"; // Check Window Name
 
-    //// CommandBtns GroupBox
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel신규T { get; set; } = new Draw.Point(818, 96); // Check Point
-    //public string 접수등록Page_CmdBtn_sWndName신규 { get; set; } = "신규오더(F3)"; // Check Window Name
+    // CommandBtns GroupBox
+    public Draw.Point 접수등록Page_CmdBtn_신규_ptChkRelT { get; set; } = new Draw.Point(818, 96); // Check Point
+    public string 접수등록Page_CmdBtn_신규_sWndName { get; set; } = "신규오더(F3)"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회T { get; set; } = new Draw.Point(93, 96); // Check Point
-    //public string 접수등록Page_CmdBtn_sWndName조회 { get; set; } = "조회(F2)"; // Check Window Name
-    //public Draw.Point 접수등록Page_CmdBtn_ptChkRel조회L { get; set; } = new Draw.Point(5, 15);  // Check Point For Brightness
+    public Draw.Point 접수등록Page_CmdBtn_조회_ptChkRelT { get; set; } = new Draw.Point(93, 96); // Check Point
+    public string 접수등록Page_CmdBtn_조회_sWndName { get; set; } = "조회(F2)"; // Check Window Name
+    public Draw.Point 접수등록Page_CmdBtn_조회명도_ptChkRelL { get; set; } = new Draw.Point(5, 15);  // Check Point For Brightness
 
-    //// 접수 Datagrid
-    //public Draw.Point 접수등록Page_DG오더_ptChkRel { get; set; } = new Draw.Point(300, 547); // Check Point - Center(968, 547) From Loading Panel(rkqus)
-    //public Draw.Rectangle 접수등록Page_DG오더_rcRelT { get; set; } = new Draw.Rectangle(10, 229, 1916, 637);
+    // 접수 Datagrid
+    public Draw.Point 접수등록Page_DG오더_ptChkRel { get; set; } = new Draw.Point(300, 547); // Check Point - Center(968, 547) From Loading Panel(rkqus)
+    public Draw.Rectangle 접수등록Page_DG오더_rcRelT { get; set; } = new Draw.Rectangle(10, 229, 1916, 637);
 
-    //public string 접수등록Page_DG오더_sClassName { get; set; } = "TRealDBGrid"; // Check Window Name
-    //public int 접수등록Page_DG오더_headerHeight { get; set; } = 32; // HeaderRow Height
-    //public int 접수등록Page_DG오더_rowHeight { get; set; } = 23; // DataRow Height
-    //public int 접수등록Page_DG오더_rowCount { get; set; } = 25; // DataRow Count
-    //public int 접수등록Page_DG오더_dataGab { get; set; } = 4; // 셀 상하단 gap
-    //public string[] 접수등록Page_DG오더_colOrgTexts { get; set; } = new string[]
-    //{
-    //    "0", "화물번호", "SMS", "상태", "처리시간", "공유", "혼적", "고객명", "고객전화", "상차지",
-    //    "하차지", "화물정보", "운송료", "수수료", "요금구분", "톤수", "차종", "차량번호", "차주이름", "차주전화",
-    //    "적재옵션", "차량종류", "차량톤수", "차주사업자번호", "게산서발행일", "계산서금액", "도착지연락처", "하차일시", "접수경로", "등록자전화번호",
-    //    "등록자명", "화주명", "차주실적지위", "차주사업자명", "대표자명", "산재보험료차주분", "송금할운임", "산재적용", "상차일"
-    //};
+    public string 접수등록Page_DG오더_sClassName { get; set; } = "TRealDBGrid"; // Check Window Name
+    public int 접수등록Page_DG오더_headerHeight { get; set; } = 32; // HeaderRow Height
+    public int 접수등록Page_DG오더_rowHeight { get; set; } = 23; // DataRow Height
+    public int 접수등록Page_DG오더_rowCount { get; set; } = 25; // DataRow Count
+    public int 접수등록Page_DG오더_dataGab { get; set; } = 4; // 셀 상하단 gap
+    public string[] 접수등록Page_DG오더_colOrgTexts { get; set; } = new string[]
+    {
+        "0", "화물번호", "SMS", "상태", "처리시간", "공유", "혼적", "고객명", "고객전화", "상차지",
+        "하차지", "화물정보", "운송료", "수수료", "요금구분", "톤수", "차종", "차량번호", "차주이름", "차주전화",
+        "적재옵션", "차량종류", "차량톤수", "차주사업자번호", "게산서발행일", "계산서금액", "도착지연락처", "하차일시", "접수경로", "등록자전화번호",
+        "등록자명", "화주명", "차주실적지위", "차주사업자명", "대표자명", "산재보험료차주분", "송금할운임", "산재적용", "상차일"
+    };
 
-    //public Draw.Point 접수등록Page_리스트항목_ptChkRel순서저장 { get; set; } = new Draw.Point(90, 216); // Check Point {X=90,Y=216}
-    //public string 접수등록Page_리스트항목_sWndName순서저장 { get; set; } = "리스트항목 순서 저장"; // Check Window Name
+    public Draw.Point 접수등록Page_리스트항목_ptChkRel순서저장 { get; set; } = new Draw.Point(90, 216); // Check Point {X=90,Y=216}
+    public string 접수등록Page_리스트항목_sWndName순서저장 { get; set; } = "리스트항목 순서 저장"; // Check Window Name
 
-    //public Draw.Point 접수등록Page_리스트항목_ptChkRel원래대로 { get; set; } = new Draw.Point(260, 216); // Check Point {X=260,Y=216}
-    //public string 접수등록Page_리스트항목_sWndName원래대로 { get; set; } = "리스트항목  원래대로"; // Check Window Name
+    public Draw.Point 접수등록Page_리스트항목_ptChkRel원래대로 { get; set; } = new Draw.Point(260, 216); // Check Point {X=260,Y=216}
+    public string 접수등록Page_리스트항목_sWndName원래대로 { get; set; } = "리스트항목  원래대로"; // Check Window Name
 
     //// 스크롤 바
     //public Draw.Point 접수등록Page_DG오더_ptClkRelL페이지Down { get; set; } = new Draw.Point(1905, 600); // 스크롤 다운버튼 바로위 - Page다운 스크롤 하기 위해 - Datagrid기준
@@ -168,64 +168,64 @@ public class Cargo24sInfo_File
     //public Draw.Point 접수등록Wnd_톤수RdoBtns_ptRel18 { get; set; } = new Draw.Point(752, 190); // 18t
     //public Draw.Point 접수등록Wnd_톤수RdoBtns_ptRel25 { get; set; } = new Draw.Point(810, 190); // 25t
 
-//    public Draw.Point 접수등록Wnd_톤수Edit_ptRel몇톤 { get; set; } = new Draw.Point(891, 180); // 몇톤
-//    public Draw.Point 접수등록Wnd_톤수ChkBox_ptRel이하 { get; set; } = new Draw.Point(966, 180); // 이하
+    //    public Draw.Point 접수등록Wnd_톤수Edit_ptRel몇톤 { get; set; } = new Draw.Point(891, 180); // 몇톤
+    //    public Draw.Point 접수등록Wnd_톤수ChkBox_ptRel이하 { get; set; } = new Draw.Point(966, 180); // 이하
 
-//    public Draw.Point 접수등록Wnd_차종Combo_ptRel차종확인 { get; set; } = new Draw.Point(602, 216); // 확인
-//    public Draw.Point 접수등록Wnd_차종Btn_ptRel차종조회 { get; set; } = new Draw.Point(696, 215); // 확인 {X=696,Y=215}
-//    //public CommonModel_RadioBtn[] 접수등록Wnd_차종그룹 { get; set; } = new CommonModel_RadioBtn[]
-//    //{
-//    //    new CommonModel_RadioBtn(new Draw.Point(558, 255), "차종확인"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(558, 274), "전체"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(558, 293), "카고"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(558, 312), "윙바디"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(558, 331), "탑"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(558, 350), "카/윙"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(558, 369), "초장축"),
+    //    public Draw.Point 접수등록Wnd_차종Combo_ptRel차종확인 { get; set; } = new Draw.Point(602, 216); // 확인
+    //    public Draw.Point 접수등록Wnd_차종Btn_ptRel차종조회 { get; set; } = new Draw.Point(696, 215); // 확인 {X=696,Y=215}
+    //    //public CommonModel_RadioBtn[] 접수등록Wnd_차종그룹 { get; set; } = new CommonModel_RadioBtn[]
+    //    //{
+    //    //    new CommonModel_RadioBtn(new Draw.Point(558, 255), "차종확인"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(558, 274), "전체"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(558, 293), "카고"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(558, 312), "윙바디"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(558, 331), "탑"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(558, 350), "카/윙"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(558, 369), "초장축"),
 
-//    //    new CommonModel_RadioBtn(new Draw.Point(658, 255), "호루"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(658, 274), "냉동탑"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(658, 293), "리프트"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(658, 312), "리프트윙"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(658, 331), "냉장윙"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(658, 350), "리프트호"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(658, 369), "리프트탑"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(658, 255), "호루"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(658, 274), "냉동탑"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(658, 293), "리프트"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(658, 312), "리프트윙"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(658, 331), "냉장윙"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(658, 350), "리프트호"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(658, 369), "리프트탑"),
 
-//    //    new CommonModel_RadioBtn(new Draw.Point(758, 255), "초장축호"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(758, 274), "초장축탑"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(758, 293), "초장축윙"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(758, 312), "냉장탑"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(758, 331), "초장축호리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(758, 350), "초장축탑리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(758, 369), "초장축윙리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(758, 255), "초장축호"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(758, 274), "초장축탑"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(758, 293), "초장축윙"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(758, 312), "냉장탑"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(758, 331), "초장축호리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(758, 350), "초장축탑리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(758, 369), "초장축윙리"),
 
-//    //    new CommonModel_RadioBtn(new Draw.Point(858, 255), "초장축냉동탑"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(858, 274), "초냉장윙리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(858, 293), "냉장탑리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(858, 312), "초냉장탑리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(858, 331), "초장축리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(858, 350), "냉동윙"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(858, 369), "냉동윙리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(858, 255), "초장축냉동탑"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(858, 274), "초냉장윙리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(858, 293), "냉장탑리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(858, 312), "초냉장탑리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(858, 331), "초장축리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(858, 350), "냉동윙"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(858, 369), "냉동윙리"),
 
-//    //    new CommonModel_RadioBtn(new Draw.Point(958, 255), "냉장윙리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(958, 274), "냉동탑리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(958, 293), "초장축냉동윙"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(958, 312), "초냉동윙리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(958, 331), "초장축냉장윙"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(958, 350), "초냉동탑리"),
-//    //    new CommonModel_RadioBtn(new Draw.Point(958, 369), "초장축냉장탑")
-//    //};
-//    public OfrModel_RadioBtn[] 접수등록Wnd2_차종그룹 { get; set; } = new OfrModel_RadioBtn[]
-//{
-//        new OfrModel_RadioBtn("선불", new Draw.Rectangle(473, 301, 18, 18), new Draw.Rectangle(492, 301, 27, 19)),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(958, 255), "냉장윙리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(958, 274), "냉동탑리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(958, 293), "초장축냉동윙"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(958, 312), "초냉동윙리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(958, 331), "초장축냉장윙"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(958, 350), "초냉동탑리"),
+    //    //    new CommonModel_RadioBtn(new Draw.Point(958, 369), "초장축냉장탑")
+    //    //};
+    //    public OfrModel_RadioBtn[] 접수등록Wnd2_차종그룹 { get; set; } = new OfrModel_RadioBtn[]
+    //{
+    //        new OfrModel_RadioBtn("선불", new Draw.Rectangle(473, 301, 18, 18), new Draw.Rectangle(492, 301, 27, 19)),
 
-//};
+    //};
 
-//    public Draw.Point 접수등록Wnd_Combo_ptRel전자세금게산서 { get; set; } = new Draw.Point(863, 216); // 전자세금게산서
+    //    public Draw.Point 접수등록Wnd_Combo_ptRel전자세금게산서 { get; set; } = new Draw.Point(863, 216); // 전자세금게산서
 
-//    public Draw.Point 접수등록Wnd_옵션ChkBox_ptRel독차 { get; set; } = new Draw.Point(571, 245); // 독차
-//    public Draw.Point 접수등록Wnd_옵션ChkBox_ptRel혼적 { get; set; } = new Draw.Point(630, 245); // 혼적
-//    public Draw.Point 접수등록Wnd_옵션Combo_ptRel혼적길이 { get; set; } = new Draw.Point(712, 245); // 혼적길이
+    //    public Draw.Point 접수등록Wnd_옵션ChkBox_ptRel독차 { get; set; } = new Draw.Point(571, 245); // 독차
+    //    public Draw.Point 접수등록Wnd_옵션ChkBox_ptRel혼적 { get; set; } = new Draw.Point(630, 245); // 혼적
+    //    public Draw.Point 접수등록Wnd_옵션Combo_ptRel혼적길이 { get; set; } = new Draw.Point(712, 245); // 혼적길이
 
     //// 운송비구분
     //public Draw.Point 접수등록Wnd_운송비RdoBtns_ptRel선착불 { get; set; } = new Draw.Point(578, 273); // 선착불
@@ -274,7 +274,7 @@ public class Cargo24sInfo_File
     //public Draw.Point 접수등록Wnd_CmnBtn_ptRel배차취소 { get; set; } = new Draw.Point(1074, 180); // 배차취소 버튼 {X=1074,Y=180}
     //public Draw.Point 접수등록Wnd_CmnBtn_ptRel화물취소 { get; set; } = new Draw.Point(1074, 210); // 화물취소 버튼 {X=1074,Y=210}
     //public Draw.Point 접수등록Wnd_CmnBtn_ptRel저장 { get; set; } = new Draw.Point(1074, 398); // 저장 버튼 {X=1074,Y=398}
-    #endregion 
+    #endregion
 
     #region 주소/고객 검색창
     //// TopWnd

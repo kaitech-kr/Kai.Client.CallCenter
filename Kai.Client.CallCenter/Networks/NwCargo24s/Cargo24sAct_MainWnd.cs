@@ -16,207 +16,142 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 /// </summary>
 public class Cargo24sAct_MainWnd
 {
-    #region Context Reference
-    ///// <summary>
-    ///// Context에 대한 읽기 전용 참조
-    ///// </summary>
-    //private readonly Cargo24Context m_Context;
+    // Context 참조
+    private readonly Cargo24Context m_Context;
 
-    ///// <summary>
-    ///// 편의를 위한 로컬 참조들
-    ///// </summary>
-    //private Cargo24sInfo_File m_FileInfo => m_Context.FileInfo;
-    //private Cargo24sInfo_Mem m_MemInfo => m_Context.MemInfo;
-    //private Cargo24sInfo_Mem.MainWnd m_Main => m_MemInfo.Main;
-    //private Cargo24sInfo_Mem.SplashWnd m_Splash => m_MemInfo.Splash;
-    #endregion
+    // 편의를 위한 로컬 참조들
+    private Cargo24sInfo_File m_FileInfo => m_Context.FileInfo;
+    private Cargo24sInfo_Mem m_MemInfo => m_Context.MemInfo;
+    private Cargo24sInfo_Mem.MainWnd m_Main => m_MemInfo.Main;
+    private Cargo24sInfo_Mem.SplashWnd m_Splash => m_MemInfo.Splash;
 
-    #region Constructor
-    ///// <summary>
-    ///// 생성자 - Context를 받아서 초기화
-    ///// </summary>
-    //public Cargo24sAct_MainWnd(Cargo24Context context)
-    //{
-    //    m_Context = context ?? throw new ArgumentNullException(nameof(context));
-    //    //Debug.WriteLine($"[Cargo24sAct_MainWnd] 생성자 호출: AppName={m_Context.AppName}");
-    //}
-    #endregion
+    // 생성자 - Context를 받아서 초기화
+    public Cargo24sAct_MainWnd(Cargo24Context context)
+    {
+        m_Context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
     #region MainWnd Initialize
-    ///// <summary>
-    ///// 메인 윈도우 초기화 (백업 로직 완전 복원)
-    ///// 1. 메인 윈도우 찾기
-    ///// 2. TopMost 설정/해제
-    ///// 3. ShowWindow(SW_NORMAL) - 화물24시 필수!
-    ///// 4. 작업 모니터로 이동 및 최대화
-    ///// 5. 이동 확인
-    ///// 6. 차일드 윈도우 찾기
-    ///// 7. MainMenu, BarMenu, MdiClient 찾기
-    ///// </summary>
-    //public async Task<StdResult_Error> InitializeAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
-    //{
-    //    try
-    //    {
-    //        Debug.WriteLine($"[Cargo24sAct_MainWnd] 초기화 시작");
+    // 메인 윈도우 초기화 (핸들 취득, 모니터 이동, 최대화, 자식 윈도우 구성)
+    public async Task<StdResult_Status> InitializeAsync(bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    {
+        try
+        {
+            Debug.WriteLine($"[{m_Context.AppName}/MainWnd] 초기화 시작");
 
-    //        // 1. 메인 윈도우 찾기 (10초 대기)
-    //        for (int i = 0; i < c_nRepeatNormal; i++) // 10초 동안 (100회 * 100ms)
-    //        {
-    //            await Task.Run(() =>
-    //            {
-    //                // Main Window
-    //                m_Main.TopWnd_hWnd = Std32Window.FindMainWindow_Reduct(
-    //                    m_Splash.TopWnd_uProcessId,
-    //                    m_FileInfo.Main_TopWnd_sClassName,
-    //                    m_FileInfo.Main_TopWnd_sWndNameReduct);
-    //            });
+            // 1. 메인 윈도우 찾기 (최대 10초 대기)
+            for (int i = 0; i < c_nRepeatNormal; i++)
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested) return new StdResult_Status(StdResult.Fail, "작업 취소됨", "Cargo24sAct_MainWnd/InitializeAsync_Cancel1");
 
-    //            if (m_Main.TopWnd_hWnd != IntPtr.Zero) break;
-    //            await Task.Delay(c_nWaitNormal);
-    //        }
+                await Task.Run(() =>
+                {
+                    m_Main.TopWnd_hWnd = Std32Window.FindMainWindow_Reduct(
+                        m_Splash.TopWnd_uProcessId,
+                        m_FileInfo.Main_TopWnd_sClassName,
+                        m_FileInfo.Main_TopWnd_sWndNameReduct);
+                });
 
-    //        if (m_Main.TopWnd_hWnd == IntPtr.Zero)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/MainWnd]메인윈도 찾기실패",
-    //                "Cargo24sAct_MainWnd/InitializeAsync_01", bWrite, bMsgBox);
-    //        }
-    //        Debug.WriteLine($"[Cargo24sAct_MainWnd] 메인 윈도우 찾음: {m_Main.TopWnd_hWnd}");
+                if (m_Main.TopWnd_hWnd != IntPtr.Zero) break;
+                await Task.Delay(c_nWaitShort);
+            }
 
-    //        // 2. TopMost 설정 및 해제
-    //        await Std32Window.SetWindowTopMostAndReleaseAsync(m_Main.TopWnd_hWnd);
-    //        Debug.WriteLine($"[Cargo24sAct_MainWnd] TopMost 설정 및 해제 완료");
+            if (m_Main.TopWnd_hWnd == IntPtr.Zero)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/MainWnd] 메인 윈도우 찾기 실패", "Cargo24sAct_MainWnd/InitializeAsync_01");
+            }
+            Debug.WriteLine($"[{m_Context.AppName}/MainWnd] 메인 윈도우 확인: {m_Main.TopWnd_hWnd}");
 
-    //        // 3. 이동 및 최대화 (화물24시는 ShowWindow(SW_NORMAL) 필수!)
-    //        await Task.Run(async () =>
-    //        {
-    //            // ShowWindow(SW_NORMAL) - NormalSize Main Window For Move
-    //            StdWin32.ShowWindow(m_Main.TopWnd_hWnd, (int)StdCommon32.SW_NORMAL);
+            // 2. 초기화 과정 중 창을 전면에 고정 (다른 창에 가려짐 방지)
+            Std32Window.SetWindowTopMost(m_Main.TopWnd_hWnd, true);
 
-    //            Draw.Rectangle rcMain = Std32Window.GetWindowRect_DrawAbs(m_Main.TopWnd_hWnd);
-    //            StdWin32.MoveWindow(m_Main.TopWnd_hWnd,
-    //                s_Screens.m_WorkingMonitor.PositionX,
-    //                s_Screens.m_WorkingMonitor.PositionY,
-    //                rcMain.Width, rcMain.Height, true);
+            // 3. 모니터 이동 및 최대화 (화물24시는 SW_NORMAL 상태에서 이동해야 안전함)
+            StdWin32.ShowWindow(m_Main.TopWnd_hWnd, (int)StdCommon32.SW_NORMAL);
+            await Task.Delay(c_nWaitShort);
 
-    //            await Task.Delay(c_nWaitVeryLong); // 500ms
+            Draw.Rectangle rcMain = Std32Window.GetWindowRect_DrawAbs(m_Main.TopWnd_hWnd);
+            StdWin32.MoveWindow(m_Main.TopWnd_hWnd, 
+                s_Screens.m_WorkingMonitor.PositionX, s_Screens.m_WorkingMonitor.PositionY, rcMain.Width, rcMain.Height, true);
 
-    //            // Maximize Main Window
-    //            StdWin32.PostMessage(m_Main.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND,
-    //                StdCommon32.SC_MAXIMIZE, IntPtr.Zero);
-    //        });
+            await Task.Delay(c_nWaitLong); // 300ms 안정화
 
-    //        // 4. 이동 확인 대기 (10초)
-    //        IntPtr hWndFind = IntPtr.Zero;
-    //        Draw.Point ptTarget = s_Screens.m_WorkingMonitor._ptLeftTop;
-    //        for (int i = 0; i < c_nRepeatNormal; i++) // 10초 (100회 * 100ms)
-    //        {
-    //            hWndFind = Std32Window.GetParentWndHandle_FromAbsDrawPt(ptTarget);
-    //            if (hWndFind == m_Main.TopWnd_hWnd) break;
-    //            Thread.Sleep(c_nWaitNormal); // 100ms
-    //        }
+            if (s_GlobalCancelToken.Token.IsCancellationRequested) 
+                return new StdResult_Status(StdResult.Fail, "작업 취소됨", "Cargo24sAct_MainWnd/InitializeAsync_Cancel2");
 
-    //        if (hWndFind != m_Main.TopWnd_hWnd)
-    //        {
-    //            string capMain = Std32Window.GetWindowCaption(m_Main.TopWnd_hWnd);
-    //            string capFind = Std32Window.GetWindowCaption(hWndFind);
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/MainWnd]이동실패: {m_Main.TopWnd_hWnd:X}, {hWndFind:X}, {ptTarget}, {capMain}, {capFind}",
-    //                "Cargo24sAct_MainWnd/InitializeAsync_02", bWrite, bMsgBox);
-    //        }
-    //        await Task.Delay(c_nWaitVeryLong); // 500ms
-    //        Debug.WriteLine($"[Cargo24sAct_MainWnd] 메인 윈도우 이동 및 최대화 완료");
+            // 최대화 전송
+            StdWin32.PostMessage(m_Main.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, (uint)StdCommon32.SC_MAXIMIZE, IntPtr.Zero);
+            await Task.Delay(c_nWaitShort);
 
-    //        // 5. 차일드 윈도우 정보 수집 및 메뉴 찾기 (5초 대기)
-    //        for (int i = 0; i < 50; i++)
-    //        {
-    //            m_Main.FirstLayer_ChildWnds = Std32Window.GetChildWindows_FirstLayer(m_Main.TopWnd_hWnd);
+            // 4. 이동 결과 확인 (최대 약 3초 대기)
+            bool bMoved = false;
+            for (int i = 0; i < c_nRepeatShort; i++) // 50회 * 50ms = 2.5초 (근사값)
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested) return new StdResult_Status(StdResult.Fail, "작업 취소됨", "Cargo24sAct_MainWnd/InitializeAsync_Cancel_Moved");
 
-    //            if (m_Main.FirstLayer_ChildWnds.Count > 0)
-    //            {
-    //                // MainMenu 찾기 - Rect으로 찾기
-    //                m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
-    //                    x => x.rcRel == m_FileInfo.Main_MainMenu_rcRelF);
+                if (Std32Window.GetParentWndHandle_FromAbsDrawPt(s_Screens.m_WorkingMonitor._ptLeftTop) == m_Main.TopWnd_hWnd)
+                {
+                    bMoved = true;
+                    break;
+                }
+                await Task.Delay(c_nWaitShort);
+            }
 
-    //                // BarMenu 찾기 - ClassName으로 찾기
-    //                m_Main.WndInfo_BarMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
-    //                    x => x.className == m_FileInfo.Main_BarMenu_ClassName);
+            if (!bMoved)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/MainWnd] 이동 확인 실패 (작업 모니터 안착 실패)", "Cargo24sAct_MainWnd/InitializeAsync_02");
+            }
+            Debug.WriteLine($"[{m_Context.AppName}/MainWnd] 메인 윈도우 이동 및 안착 확인 완료");
 
-    //                // MdiClient 찾기 - ClassName으로 찾기
-    //                m_Main.WndInfo_MdiClient = m_Main.FirstLayer_ChildWnds.FirstOrDefault(
-    //                    x => x.className == m_FileInfo.Main_MdiClient_ClassName);
+            // 5. 자식 윈도우 및 메뉴 구성 요소 찾기 (최대 5초 대기)
+            for (int i = 0; i < c_nRepeatNormal; i++) // 100회 * 50ms = 5초
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested) return new StdResult_Status(StdResult.Fail, "작업 취소됨", "Cargo24sAct_MainWnd/InitializeAsync_Cancel3");
 
-    //                // 모두 찾으면 탈출
-    //                if (m_Main.WndInfo_MainMenu != null &&
-    //                    m_Main.WndInfo_BarMenu != null &&
-    //                    m_Main.WndInfo_MdiClient != null)
-    //                {
-    //                    break;
-    //                }
-    //            }
+                m_Main.FirstLayer_ChildWnds = Std32Window.GetChildWindows_FirstLayer(m_Main.TopWnd_hWnd);
+                if (m_Main.FirstLayer_ChildWnds != null && m_Main.FirstLayer_ChildWnds.Count > 0)
+                {
+                    m_Main.WndInfo_MainMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.rcRel == m_FileInfo.Main_MainMenu_rcRelF);
+                    m_Main.WndInfo_BarMenu = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.className == m_FileInfo.Main_BarMenu_ClassName);
+                    m_Main.WndInfo_MdiClient = m_Main.FirstLayer_ChildWnds.FirstOrDefault(x => x.className == m_FileInfo.Main_MdiClient_ClassName);
 
-    //            await Task.Delay(c_nWaitNormal);
-    //        }
+                    if (m_Main.WndInfo_MainMenu != null && m_Main.WndInfo_BarMenu != null && m_Main.WndInfo_MdiClient != null) break;
+                }
+                await Task.Delay(c_nWaitShort);
+            }
 
-    //        // 개별 에러 체크
-    //        if (m_Main.FirstLayer_ChildWnds == null || m_Main.FirstLayer_ChildWnds.Count == 0)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/MainWnd]자식윈도 못찾음",
-    //                "Cargo24sAct_MainWnd/InitializeAsync_03", bWrite, bMsgBox);
-    //        }
-    //        Debug.WriteLine($"[Cargo24sAct_MainWnd] 차일드 윈도우 개수: {m_Main.FirstLayer_ChildWnds.Count}");
+            // 필수 하위 핸들 체크
+            if (m_Main.WndInfo_MainMenu == null) return new StdResult_Status(StdResult.Fail, "MainMenu를 찾을 수 없습니다.", "Cargo24sAct_MainWnd/InitializeAsync_03");
+            if (m_Main.WndInfo_BarMenu == null) return new StdResult_Status(StdResult.Fail, "BarMenu를 찾을 수 없습니다.", "Cargo24sAct_MainWnd/InitializeAsync_04");
+            if (m_Main.WndInfo_MdiClient == null) return new StdResult_Status(StdResult.Fail, "MdiClient를 찾을 수 없습니다.", "Cargo24sAct_MainWnd/InitializeAsync_05");
 
-    //        if (m_Main.WndInfo_MainMenu == null)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/MainWnd]메인메뉴 못찾음",
-    //                "Cargo24sAct_MainWnd/InitializeAsync_04", bWrite, bMsgBox);
-    //        }
-
-    //        if (m_Main.WndInfo_BarMenu == null)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/MainWnd]바메뉴 못찾음",
-    //                "Cargo24sAct_MainWnd/InitializeAsync_05", bWrite, bMsgBox);
-    //        }
-
-    //        if (m_Main.WndInfo_MdiClient == null)
-    //        {
-    //            return new StdResult_Error(
-    //                $"[{m_Context.AppName}/MainWnd]MdiClient 못찾음",
-    //                "Cargo24sAct_MainWnd/InitializeAsync_06", bWrite, bMsgBox);
-    //        }
-    //        Debug.WriteLine($"[Cargo24sAct_MainWnd] MainMenu, BarMenu, MdiClient 찾기 완료");
-
-    //        Debug.WriteLine($"[Cargo24sAct_MainWnd] 초기화 완료");
-    //        return null; // 성공
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Error(
-    //            $"[{m_Context.AppName}/MainWnd]예외발생: {ex.Message}",
-    //            "Cargo24sAct_MainWnd/InitializeAsync_999", bWrite, bMsgBox);
-    //    }
-    //}
+            Debug.WriteLine($"[{m_Context.AppName}/MainWnd] 초기화 완료");
+            return new StdResult_Status(StdResult.Success);
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/MainWnd] 예외발생: {ex.Message}", "Cargo24sAct_MainWnd/InitializeAsync_99");
+        }
+        finally
+        {
+            if (m_Main.TopWnd_hWnd != IntPtr.Zero)
+            {
+                Std32Window.SetWindowTopMost(m_Main.TopWnd_hWnd, false);
+            }
+        }
+    }
     #endregion
 
     #region Utility Methods
-    ///// <summary>
-    ///// 메인 윈도우가 초기화되었는지 확인
-    ///// </summary>
-    //public bool IsInitialized()
-    //{
-    //    return m_Main.TopWnd_hWnd != IntPtr.Zero;
-    //}
+    // 메인 윈도우가 초기화되었는지 확인
+    public bool IsInitialized()
+    {
+        return m_Main.TopWnd_hWnd != IntPtr.Zero;
+    }
 
-    ///// <summary>
-    ///// 메인 윈도우 핸들 가져오기
-    ///// </summary>
-    //public IntPtr GetHandle()
-    //{
-    //    return m_Main.TopWnd_hWnd;
-    //}
+    public IntPtr GetHandle()
+    {
+        return m_Main.TopWnd_hWnd;
+    }
     #endregion
 }
 #nullable restore
