@@ -27,43 +27,32 @@ public partial class OnecallAct_RcptRegPage
     #endregion // Constants
     //
     #region Datagrid Column Header Info
-    // Datagrid 컬럼 헤더 정보 배열 (34개 완벽 동기화)
+    /// <summary>
+    /// Datagrid 컬럼 헤더 정보 배열 (21개)
+    /// </summary>
     public readonly CModel_DgColumnHeader[] m_ReceiptDgHeaderInfos = new CModel_DgColumnHeader[]
     {
         new CModel_DgColumnHeader() { sName = "순번", bOfrSeq = true, nWidth = 50 },
+        new CModel_DgColumnHeader() { sName = "처리상태", bOfrSeq = false, nWidth = 65 },
+        new CModel_DgColumnHeader() { sName = "오더번호", bOfrSeq = true, nWidth = 100 },
         new CModel_DgColumnHeader() { sName = "처리일자", bOfrSeq = true, nWidth = 105 },
         new CModel_DgColumnHeader() { sName = "처리시간", bOfrSeq = true, nWidth = 85 },
-        new CModel_DgColumnHeader() { sName = "처리상태", bOfrSeq = false, nWidth = 65 },
-        new CModel_DgColumnHeader() { sName = "상차일", bOfrSeq = true, nWidth = 70 },
-        new CModel_DgColumnHeader() { sName = "하차일", bOfrSeq = true, nWidth = 70 },
         new CModel_DgColumnHeader() { sName = "상차지", bOfrSeq = false, nWidth = 125 },
         new CModel_DgColumnHeader() { sName = "하차지", bOfrSeq = false, nWidth = 125 },
-        new CModel_DgColumnHeader() { sName = "혼적", bOfrSeq = false, nWidth = 60 },
-        new CModel_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 155 },
+        new CModel_DgColumnHeader() { sName = "결제방법", bOfrSeq = false, nWidth = 65 },
         new CModel_DgColumnHeader() { sName = "운임", bOfrSeq = true, nWidth = 80 },
         new CModel_DgColumnHeader() { sName = "수수료", bOfrSeq = true, nWidth = 75 },
-        new CModel_DgColumnHeader() { sName = "결제방법", bOfrSeq = false, nWidth = 65 },
-        new CModel_DgColumnHeader() { sName = "산재보험료 주선사부담", bOfrSeq = true, nWidth = 50 },
-        new CModel_DgColumnHeader() { sName = "산재보험료 차주부담", bOfrSeq = true, nWidth = 50 },
-        new CModel_DgColumnHeader() { sName = "톤수", bOfrSeq = false, nWidth = 50 },
         new CModel_DgColumnHeader() { sName = "차종", bOfrSeq = false, nWidth = 70 },
-        new CModel_DgColumnHeader() { sName = "차량번호", bOfrSeq = true, nWidth = 100 },
+        new CModel_DgColumnHeader() { sName = "톤수", bOfrSeq = false, nWidth = 50 },
+        new CModel_DgColumnHeader() { sName = "혼적", bOfrSeq = false, nWidth = 60 },
         new CModel_DgColumnHeader() { sName = "차주명", bOfrSeq = false, nWidth = 80 },
         new CModel_DgColumnHeader() { sName = "차주전화", bOfrSeq = true, nWidth = 135 },
-        new CModel_DgColumnHeader() { sName = "차주_톤수", bOfrSeq = false, nWidth = 50 },
-        new CModel_DgColumnHeader() { sName = "차주_차종", bOfrSeq = false, nWidth = 70 },
-        new CModel_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 130 },
-        new CModel_DgColumnHeader() { sName = "차주_사업자상호", bOfrSeq = false, nWidth = 100 },
-        new CModel_DgColumnHeader() { sName = "차주_사업자구분", bOfrSeq = false, nWidth = 80 },
-        new CModel_DgColumnHeader() { sName = "차주_사업자번호", bOfrSeq = true, nWidth = 100 },
-        new CModel_DgColumnHeader() { sName = "인수증", bOfrSeq = false, nWidth = 60 },
-        new CModel_DgColumnHeader() { sName = "매입계산서 발행일", bOfrSeq = true, nWidth = 100 },
-        new CModel_DgColumnHeader() { sName = "상차완료보고시간", bOfrSeq = true, nWidth = 100 },
-        new CModel_DgColumnHeader() { sName = "하차완료보고시간", bOfrSeq = true, nWidth = 100 },
         new CModel_DgColumnHeader() { sName = "담당자번호", bOfrSeq = true, nWidth = 135 },
-        new CModel_DgColumnHeader() { sName = "의뢰자", bOfrSeq = false, nWidth = 80 },
-        new CModel_DgColumnHeader() { sName = "의뢰자전화번호", bOfrSeq = true, nWidth = 135 },
-        new CModel_DgColumnHeader() { sName = "오더번호", bOfrSeq = true, nWidth = 100 },
+        new CModel_DgColumnHeader() { sName = "적재옵션", bOfrSeq = false, nWidth = 130 },
+        new CModel_DgColumnHeader() { sName = "화물정보", bOfrSeq = false, nWidth = 155 },
+        new CModel_DgColumnHeader() { sName = "인수증", bOfrSeq = false, nWidth = 60 },
+        new CModel_DgColumnHeader() { sName = "상차일", bOfrSeq = true, nWidth = 70 },
+        new CModel_DgColumnHeader() { sName = "하차일", bOfrSeq = true, nWidth = 70 },
     };
     #endregion
 
@@ -534,17 +523,16 @@ public partial class OnecallAct_RcptRegPage
 
                         Debug.WriteLine($"[{AppName}] 드래그 준비: x={x}, boundaryX={boundaryX}, targetX={targetX}, dx={dx}");
 
-                        // 2. 최대 3회 재시도 (실패 시에만 반복) - 50ms 광속 드래그 (조착 보정 옵션 5, 20 부활)
-                        for (int retry = 1; retry <= 3; retry++)
-                        {
-                            bool bDragSuccess = await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_Horizon_WatchAsync(
-                                mRcpt.DG오더_hWndTop, new Draw.Point(boundaryX, dragY), dx, false, 50, 5, 20);
-
-                            if (bDragSuccess) break; 
-                            
-                            Debug.WriteLine($"[{AppName}] 드래그 재시도 ({retry}/3)...");
-                            await Task.Delay(200, ctrl.Token);
-                        }
+                        // [최신형 엔진 적용] 명명된 인수를 사용하여 정확하게 호출
+                        await Simulation_Mouse.Drag_Precision_RetryAsync(
+                            hWnd: mRcpt.DG오더_hWndTop, 
+                            ptStartRel: new Draw.Point(boundaryX, dragY), 
+                            dx: dx, 
+                            gripCheck: Simulation_Mouse.IsHorizontalResizeCursor, 
+                            nRetryCount: 5, 
+                            nMiliSec: 50, 
+                            nSafetyMargin: 5, 
+                            nDelayAtSafety: 20);
                         
                         await Task.Delay(waitTime, ctrl.Token); 
                     }
@@ -553,33 +541,134 @@ public partial class OnecallAct_RcptRegPage
 
             // 최종 확인 전 그리드 상태 안정을 위해 충분히 대기
             await Task.Delay(500, ctrl.Token);
-
-            var checkResult = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-            checkResult.bmpHeader?.Dispose();
-            System.Windows.MessageBox.Show($"컬럼 확보 단계 종료\n최종 이미지 검출 컬럼 수: {checkResult.columns}개", "확인");
             #endregion
 
-            #region Step 3 - 컬럼 순서 조정
-            // Step 3: 컬럼 순서 조정
+            #region Step 3 - 컬럼 순서 조정 (화물24시 로직 이식)
             Debug.WriteLine($"[{AppName}] Step 3: 컬럼 순서 조정 시작");
+            
+            // 현재 그리드 상태를 추적할 배열 (최초에는 원본 순서와 동일하다고 가정)
+            string[] currentGridOrder = (string[])fInfo.접수등록Page_DG오더_colOrgTexts.Clone();
 
+            // 목표 순서(m_ReceiptDgHeaderInfos) 루프
+            for (int targetIdx = 0; targetIdx < m_ReceiptDgHeaderInfos.Length; targetIdx++)
+            {
+                await CommonFuncs.CheckCancelAndThrowAsync();
 
+                // 실시간 헤더 분석 (드래그 직전의 물리적 좌표 확보)
+                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                bmpHeader?.Dispose();
+
+                string targetName = m_ReceiptDgHeaderInfos[targetIdx].sName;
+                int currentPosInGrid = Array.IndexOf(currentGridOrder, targetName);
+
+                if (currentPosInGrid < 0 || currentPosInGrid == targetIdx) continue;
+
+                Debug.WriteLine($"[{AppName}] 컬럼 순서 이동: [{targetName}] {currentPosInGrid}번 -> {targetIdx}번 위치로");
+
+                // [정밀 조준] 
+                // 시작점: 이동할 컬럼의 물리적 중심 (Width / 2)
+                // 도착점: 목표 위치 컬럼의 1/4 지점 (Width / 4)
+                int startX = listLW[currentPosInGrid].nLeft + (listLW[currentPosInGrid].nWidth / 2);
+                int endX = listLW[targetIdx].nLeft + (listLW[targetIdx].nWidth / 4);
+
+                Draw.Point ptStart = new Draw.Point(startX, 15);
+                Draw.Point ptEnd = new Draw.Point(endX, 15);
+
+                // [순서 이동 전용] 조착 보정 없이 목표 좌표(ptEnd)로 정확히 이동
+                await Simulation_Mouse.Drag_Precision_RetryAsync(
+                    hWnd: mRcpt.DG오더_hWndTop, 
+                    ptStartRel: ptStart, 
+                    ptTargetRel: ptEnd, 
+                    nRetryCount: 5, 
+                    nMiliSec: 100, 
+                    nSafetyMargin: 0, 
+                    nDelayAtSafety: 0);
+
+                // 로컬 배열 동기화 (그리드 내부의 Insert 동작 시뮬레이션)
+                string temp = currentGridOrder[currentPosInGrid];
+                if (currentPosInGrid > targetIdx)
+                {
+                    // 뒤에서 앞으로 올 때 (사이 컬럼들 우측 Shift)
+                    for (int m = currentPosInGrid; m > targetIdx; m--) currentGridOrder[m] = currentGridOrder[m - 1];
+                }
+                else
+                {
+                    // 앞에서 뒤로 갈 때 (사이 컬럼들 좌측 Shift)
+                    for (int m = currentPosInGrid; m < targetIdx; m++) currentGridOrder[m] = currentGridOrder[m + 1];
+                }
+                currentGridOrder[targetIdx] = temp;
+
+                await Task.Delay(300, ctrl.Token); // 그리드 정렬 안정화 대기
+            }
+
+            Debug.WriteLine($"[{AppName}] Step 3 완료");
             #endregion
 
-            #region Step 4 - 컬럼 너비 조정
-            // Step 4: 컬럼 너비 조정
+            #region Step 4 - 컬럼 너비 조정 (최종 정밀 조정)
             Debug.WriteLine($"[{AppName}] Step 4: 컬럼 너비 조정 시작");
+            
+            // 실시간 헤더 상태 다시 파악
+            var finalLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+            finalLayout.bmpHeader?.Dispose();
 
+            // 뒤쪽 컬럼부터 앞으로 이동하며 폭 조정
+            for (int x = m_ReceiptDgHeaderInfos.Length - 1; x >= 0; x--)
+            {
+                await CommonFuncs.CheckCancelAndThrowAsync();
 
+                if (x + 1 >= finalLayout.listLW.Count) continue;
+
+                int currentWidth = finalLayout.listLW[x].nWidth;
+                int targetWidth = m_ReceiptDgHeaderInfos[x].nWidth;
+                int dx = targetWidth - currentWidth;
+
+                // 상세 로그 기록
+                Debug.WriteLine($"[{AppName}] Step 4. 너비 확인: [{m_ReceiptDgHeaderInfos[x].sName}] 현재={currentWidth}px, 목표={targetWidth}px, 차이={dx}px");
+
+                // 2픽셀 이상 차이날 때만 보정
+                if (Math.Abs(dx) >= 2)
+                {
+                    int boundaryX = finalLayout.listLW[x + 1].nLeft - 1;
+                    int dragY = 15;
+
+                    await Simulation_Mouse.Drag_Precision_RetryAsync(
+                        hWnd: mRcpt.DG오더_hWndTop, 
+                        ptStartRel: new Draw.Point(boundaryX, dragY), 
+                        dx: dx, 
+                        gripCheck: Simulation_Mouse.IsHorizontalResizeCursor, 
+                        nRetryCount: 5, 
+                        nMiliSec: 100, 
+                        nSafetyMargin: 5, 
+                        nDelayAtSafety: 20);
+                    
+                    // [테스트용 정밀 검증] 100ms 대기 후 재캡처하여 결과 비교
+                    await Task.Delay(100, ctrl.Token);
+                    var verifyLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                    if (verifyLayout.bmpHeader != null)
+                    {
+                        int verifiedWidth = (x < verifyLayout.listLW.Count) ? verifyLayout.listLW[x].nWidth : -1;
+                        int finalError = verifiedWidth - targetWidth;
+                        Debug.WriteLine($"[{AppName}] Step 4. 정밀 검증: [{m_ReceiptDgHeaderInfos[x].sName}] 조정후={verifiedWidth}px, 목표={targetWidth}px, 최종오차={finalError}px");
+                        
+                        // (옵션) 다음 컬럼 조정을 위해 최신 레이아웃 정보를 동기화
+                        // finalLayout = verifyLayout; 
+                        verifyLayout.bmpHeader.Dispose();
+                    }
+                    
+                    await Task.Delay(100, ctrl.Token);
+                }
+            }
             Debug.WriteLine($"[{AppName}] Step 4 완료");
+            System.Windows.MessageBox.Show("Step 4: 모든 컬럼의 너비 정밀 조정이 완료되었습니다.\n최종 상태를 확인해 주세요.", "초기화 작업 종료");
             #endregion
+
             Debug.WriteLine($"[{AppName}] InitDG오더Async 완료");
             return null;
         }
         catch (OperationCanceledException)
         {
             Debug.WriteLine($"[{AppName}/InitDG오더] ESC 키에 의해 자동화 작업이 취소되었습니다.");
-            throw; // 상위에서 처리
+            throw;
         }
         catch (Exception ex)
         {

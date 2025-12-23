@@ -27,11 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루�
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kai.Common.FrmDll_FormCtrl", "..\..\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl.csproj", "{EE2FC8AB-3639-4181-A164-0352D30EE9DB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "임시", "임시", "{C8D5274F-AC00-46C7-1F8D-E88E81087A52}"
-	ProjectSection(SolutionItems) = preProject
-		임시\OnecallAct_RcptRegPage.cs = 임시\OnecallAct_RcptRegPage.cs
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

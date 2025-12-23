@@ -20,8 +20,8 @@
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\netstandard.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.ThreadPool.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TraceSource.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.IO.Packaging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Concurrent.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.IO.Packaging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Uri.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.RegularExpressions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -77,7 +77,7 @@
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TextWriterTraceListener.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 예외 발생: 'System.IO.IOException'(System.Console.dll)
 
-[SYSTEM] 로그 기록 시작: 2025-12-23 14:50:59
+[SYSTEM] 로그 기록 시작: 2025-12-23 17:07:20
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
@@ -92,8 +92,8 @@
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Drawing.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 HubConnection 생성 중...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Logging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Drawing.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Protocols.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Drawing.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Logging.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Options.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Connections.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -101,11 +101,11 @@ HubConnection 생성 중...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.Http.Connections.Client.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.DependencyInjection.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encodings.Web.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationUI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Intrinsics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Numerics.Vectors.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationUI.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Cryptography.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationUI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationUI.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Channels.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
 연결 시도 시작...
@@ -120,7 +120,7 @@ HubConn.StartAsync() 호출...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Sockets.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NameResolution.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=zr6xoodKGYBVLLRee3eJag *****
+***** SrReport_ConnectedAsync 시작: connectedID=AvHpZPm8s_JHayZmxGhoyA *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
@@ -160,12 +160,12 @@ SignalR 연결 성공
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Formatters.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NetworkInformation.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Immutable.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Numerics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Hosting.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Formatters.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Identity.Stores.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Identity.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Relational.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -184,13 +184,13 @@ SignalR 연결 성공
 예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
 [MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
 [MainWnd] 프로세스 실행 성공. SignalR 연결 시도...
-7408 스레드가 종료되었습니다(코드: 0 (0x0)).
+1520 스레드가 종료되었습니다(코드: 0 (0x0)).
 HubConnection 생성 중...
 연결 시도시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
 [MainWnd] SignalR ConnectAsync 호출 완료
-21292 스레드가 종료되었습니다(코드: 0 (0x0)).
+25384 스레드가 종료되었습니다(코드: 0 (0x0)).
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 [MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
 [MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
@@ -217,15 +217,29 @@ SignalR 연결 성공
 [ONECALL] DG 캡처 완료: 1916x30
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 컬럼 검출: 33개 (목표: 34개)
-[ONECALL] 컬럼 개수 불일치: 검출=33개, 예상=34개 (재시도 1/3)
-[ONECALL] InitDG오더Async 시작: issues=InvalidColumnCount
+[ONECALL] 컬럼 검출: 21개 (목표: 21개)
+[ONECALL] 평가 2: 컬럼 헤더 OFR 시작
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Caching.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Npgsql.EntityFrameworkCore.PostgreSQL.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Npgsql.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Configuration.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Caching.Memory.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.Queryable.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+[ONECALL] 평가 3: Datagrid 상태 검증 시작
+[ValidateDatagridState] 순서 불일치[16]: '상차일' (예상 위치=19)
+[ValidateDatagridState] 너비 불일치[16]: '상차일', 실제=129, 예상=70, 오차=59
+[ValidateDatagridState] 유효하지 않은 컬럼[17]: '산재보험료주선사부담'
+[ValidateDatagridState] 순서 불일치[19]: '하차일' (예상 위치=20)
+[ValidateDatagridState] 순서 불일치[20]: '화물정보' (예상 위치=17)
+[ValidateDatagridState] 너비 불일치[20]: '화물정보', 실제=69, 예상=155, 오차=86
+[ONECALL] Datagrid 상태 검증 실패: InvalidColumn, WrongOrder, WrongWidth (재시도 1/3)
+[ONECALL] InitDG오더Async 시작: issues=InvalidColumn, WrongOrder, WrongWidth
 [ONECALL] Step 1: 목록초기화 시작
 [ONECALL] Step 1 완료
 [ONECALL] Step 2 시작: 컬럼 34개 확보 시도
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 1: 검출=17개, 총너비=1896px / 그리드=1916px
+[ONECALL] 반복 1: 검출=17개, 컬럼합=1852px / 그리드=1916px
   - 컬럼[0]: Left=3, Width=48px
   - 컬럼[1]: Left=52, Width=99px
   - 컬럼[2]: Left=152, Width=99px
@@ -245,13 +259,17 @@ SignalR 연결 성공
   - 컬럼[16]: Left=1772, Width=99px
   - 컬럼[17]: Left=1872, Width=44px
 [ONECALL] 드래그 준비: x=16, boundaryX=1871, targetX=1822, dx=-49
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (1/5)
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (2/5)
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (3/5)
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (4/5)
 [ONECALL] 드래그 준비: x=15, boundaryX=1771, targetX=1722, dx=-49
 [ONECALL] 드래그 준비: x=14, boundaryX=1671, targetX=1642, dx=-29
+'.NET TP Wait' (28332) 스레드가 종료되었습니다(코드: 0 (0x0)).
 [ONECALL] 드래그 준비: x=13, boundaryX=1591, targetX=1562, dx=-29
 [ONECALL] 드래그 준비: x=12, boundaryX=1511, targetX=1462, dx=-49
 [ONECALL] 드래그 준비: x=11, boundaryX=1411, targetX=1362, dx=-49
 [ONECALL] 드래그 준비: x=10, boundaryX=1311, targetX=1262, dx=-49
-'.NET TP Wait' (13020) 스레드가 종료되었습니다(코드: 0 (0x0)).
 [ONECALL] 드래그 준비: x=9, boundaryX=1211, targetX=962, dx=-249
 [ONECALL] 드래그 준비: x=8, boundaryX=911, targetX=862, dx=-49
 [ONECALL] 드래그 준비: x=7, boundaryX=811, targetX=712, dx=-99
@@ -263,7 +281,7 @@ SignalR 연결 성공
 [ONECALL] 드래그 준비: x=1, boundaryX=151, targetX=102, dx=-49
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 2: 검출=27개, 총너비=1886px / 그리드=1916px
+[ONECALL] 반복 2: 검출=27개, 컬럼합=1872px / 그리드=1916px
   - 컬럼[0]: Left=3, Width=48px
   - 컬럼[1]: Left=52, Width=49px
   - 컬럼[2]: Left=102, Width=49px
@@ -295,16 +313,19 @@ SignalR 연결 성공
 [ONECALL] 드래그 준비: x=26, boundaryX=1901, targetX=1892, dx=-9
 [ONECALL] 드래그 준비: x=25, boundaryX=1841, targetX=1762, dx=-79
 [ONECALL] 드래그 준비: x=24, boundaryX=1711, targetX=1632, dx=-79
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (1/5)
 [ONECALL] 드래그 준비: x=23, boundaryX=1581, targetX=1502, dx=-79
 [ONECALL] 드래그 준비: x=22, boundaryX=1451, targetX=1402, dx=-49
+632 스레드가 종료되었습니다(코드: 0 (0x0)).
 [ONECALL] 드래그 준비: x=21, boundaryX=1351, targetX=1302, dx=-49
 [ONECALL] 드래그 준비: x=20, boundaryX=1251, targetX=1202, dx=-49
 [ONECALL] 드래그 준비: x=19, boundaryX=1151, targetX=1102, dx=-49
 [ONECALL] 드래그 준비: x=18, boundaryX=1051, targetX=1002, dx=-49
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (1/5)
 [ONECALL] 드래그 준비: x=17, boundaryX=951, targetX=902, dx=-49
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 3: 검출=32개, 총너비=1881px / 그리드=1916px
+[ONECALL] 반복 3: 검출=32개, 컬럼합=1827px / 그리드=1916px
   - 컬럼[0]: Left=3, Width=48px
   - 컬럼[1]: Left=52, Width=49px
   - 컬럼[2]: Left=102, Width=49px
@@ -345,7 +366,7 @@ SignalR 연결 성공
 [ONECALL] 드래그 준비: x=27, boundaryX=1441, targetX=1402, dx=-39
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 4: 검출=34개, 총너비=1876px / 그리드=1916px
+[ONECALL] 반복 4: 검출=34개, 컬럼합=1796px / 그리드=1916px
   - 컬럼[0]: Left=3, Width=48px
   - 컬럼[1]: Left=52, Width=49px
   - 컬럼[2]: Left=102, Width=49px
@@ -373,20 +394,19 @@ SignalR 연결 성공
   - 컬럼[24]: Left=1202, Width=49px
   - 컬럼[25]: Left=1252, Width=49px
   - 컬럼[26]: Left=1302, Width=49px
-  - 컬럼[27]: Left=1352, Width=89px
-  - 컬럼[28]: Left=1442, Width=49px
-  - 컬럼[29]: Left=1492, Width=49px
-  - 컬럼[30]: Left=1542, Width=49px
-  - 컬럼[31]: Left=1592, Width=49px
-  - 컬럼[32]: Left=1642, Width=129px
-  - 컬럼[33]: Left=1772, Width=100px
-  - 컬럼[34]: Left=1873, Width=40px
-[ONECALL] 드래그 준비: x=33, boundaryX=1872, targetX=1822, dx=-50
-[ONECALL] 드래그 준비: x=32, boundaryX=1771, targetX=1692, dx=-79
-[ONECALL] 드래그 준비: x=27, boundaryX=1441, targetX=1402, dx=-39
+  - 컬럼[27]: Left=1352, Width=49px
+  - 컬럼[28]: Left=1402, Width=49px
+  - 컬럼[29]: Left=1452, Width=49px
+  - 컬럼[30]: Left=1502, Width=49px
+  - 컬럼[31]: Left=1552, Width=49px
+  - 컬럼[32]: Left=1602, Width=129px
+  - 컬럼[33]: Left=1732, Width=100px
+  - 컬럼[34]: Left=1833, Width=80px
+[ONECALL] 드래그 준비: x=33, boundaryX=1832, targetX=1782, dx=-50
+[ONECALL] 드래그 준비: x=32, boundaryX=1731, targetX=1652, dx=-79
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 5: 검출=34개, 총너비=1876px / 그리드=1916px
+[ONECALL] 반복 5: 검출=34개, 컬럼합=1666px / 그리드=1916px
   - 컬럼[0]: Left=3, Width=48px
   - 컬럼[1]: Left=52, Width=49px
   - 컬럼[2]: Left=102, Width=49px
@@ -422,198 +442,155 @@ SignalR 연결 성공
   - 컬럼[32]: Left=1602, Width=49px
   - 컬럼[33]: Left=1652, Width=50px
   - 컬럼[34]: Left=1703, Width=210px
+[ONECALL] Step 2 목표 달성 (34개 압축 완료)
+[ONECALL] Step 3: 컬럼 순서 조정 시작
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 6: 검출=34개, 총너비=1876px / 그리드=1916px
-  - 컬럼[0]: Left=3, Width=48px
-  - 컬럼[1]: Left=52, Width=49px
-  - 컬럼[2]: Left=102, Width=49px
-  - 컬럼[3]: Left=152, Width=49px
-  - 컬럼[4]: Left=202, Width=49px
-  - 컬럼[5]: Left=252, Width=49px
-  - 컬럼[6]: Left=302, Width=49px
-  - 컬럼[7]: Left=352, Width=49px
-  - 컬럼[8]: Left=402, Width=49px
-  - 컬럼[9]: Left=452, Width=49px
-  - 컬럼[10]: Left=502, Width=49px
-  - 컬럼[11]: Left=552, Width=49px
-  - 컬럼[12]: Left=602, Width=49px
-  - 컬럼[13]: Left=652, Width=49px
-  - 컬럼[14]: Left=702, Width=49px
-  - 컬럼[15]: Left=752, Width=49px
-  - 컬럼[16]: Left=802, Width=49px
-  - 컬럼[17]: Left=852, Width=49px
-  - 컬럼[18]: Left=902, Width=49px
-  - 컬럼[19]: Left=952, Width=49px
-  - 컬럼[20]: Left=1002, Width=49px
-  - 컬럼[21]: Left=1052, Width=49px
-  - 컬럼[22]: Left=1102, Width=49px
-  - 컬럼[23]: Left=1152, Width=49px
-  - 컬럼[24]: Left=1202, Width=49px
-  - 컬럼[25]: Left=1252, Width=49px
-  - 컬럼[26]: Left=1302, Width=49px
-  - 컬럼[27]: Left=1352, Width=49px
-  - 컬럼[28]: Left=1402, Width=49px
-  - 컬럼[29]: Left=1452, Width=49px
-  - 컬럼[30]: Left=1502, Width=49px
-  - 컬럼[31]: Left=1552, Width=49px
-  - 컬럼[32]: Left=1602, Width=49px
-  - 컬럼[33]: Left=1652, Width=50px
-  - 컬럼[34]: Left=1703, Width=210px
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 7: 검출=34개, 총너비=1876px / 그리드=1916px
-  - 컬럼[0]: Left=3, Width=48px
-  - 컬럼[1]: Left=52, Width=49px
-  - 컬럼[2]: Left=102, Width=49px
-  - 컬럼[3]: Left=152, Width=49px
-  - 컬럼[4]: Left=202, Width=49px
-  - 컬럼[5]: Left=252, Width=49px
-  - 컬럼[6]: Left=302, Width=49px
-  - 컬럼[7]: Left=352, Width=49px
-  - 컬럼[8]: Left=402, Width=49px
-  - 컬럼[9]: Left=452, Width=49px
-  - 컬럼[10]: Left=502, Width=49px
-  - 컬럼[11]: Left=552, Width=49px
-  - 컬럼[12]: Left=602, Width=49px
-  - 컬럼[13]: Left=652, Width=49px
-  - 컬럼[14]: Left=702, Width=49px
-  - 컬럼[15]: Left=752, Width=49px
-  - 컬럼[16]: Left=802, Width=49px
-  - 컬럼[17]: Left=852, Width=49px
-  - 컬럼[18]: Left=902, Width=49px
-  - 컬럼[19]: Left=952, Width=49px
-  - 컬럼[20]: Left=1002, Width=49px
-  - 컬럼[21]: Left=1052, Width=49px
-  - 컬럼[22]: Left=1102, Width=49px
-  - 컬럼[23]: Left=1152, Width=49px
-  - 컬럼[24]: Left=1202, Width=49px
-  - 컬럼[25]: Left=1252, Width=49px
-  - 컬럼[26]: Left=1302, Width=49px
-  - 컬럼[27]: Left=1352, Width=49px
-  - 컬럼[28]: Left=1402, Width=49px
-  - 컬럼[29]: Left=1452, Width=49px
-  - 컬럼[30]: Left=1502, Width=49px
-  - 컬럼[31]: Left=1552, Width=49px
-  - 컬럼[32]: Left=1602, Width=49px
-  - 컬럼[33]: Left=1652, Width=50px
-  - 컬럼[34]: Left=1703, Width=210px
+[ONECALL] 컬럼 순서 이동: [처리상태] 3번 -> 1번 위치로
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 8: 검출=34개, 총너비=1876px / 그리드=1916px
-  - 컬럼[0]: Left=3, Width=48px
-  - 컬럼[1]: Left=52, Width=49px
-  - 컬럼[2]: Left=102, Width=49px
-  - 컬럼[3]: Left=152, Width=49px
-  - 컬럼[4]: Left=202, Width=49px
-  - 컬럼[5]: Left=252, Width=49px
-  - 컬럼[6]: Left=302, Width=49px
-  - 컬럼[7]: Left=352, Width=49px
-  - 컬럼[8]: Left=402, Width=49px
-  - 컬럼[9]: Left=452, Width=49px
-  - 컬럼[10]: Left=502, Width=49px
-  - 컬럼[11]: Left=552, Width=49px
-  - 컬럼[12]: Left=602, Width=49px
-  - 컬럼[13]: Left=652, Width=49px
-  - 컬럼[14]: Left=702, Width=49px
-  - 컬럼[15]: Left=752, Width=49px
-  - 컬럼[16]: Left=802, Width=49px
-  - 컬럼[17]: Left=852, Width=49px
-  - 컬럼[18]: Left=902, Width=49px
-  - 컬럼[19]: Left=952, Width=49px
-  - 컬럼[20]: Left=1002, Width=49px
-  - 컬럼[21]: Left=1052, Width=49px
-  - 컬럼[22]: Left=1102, Width=49px
-  - 컬럼[23]: Left=1152, Width=49px
-  - 컬럼[24]: Left=1202, Width=49px
-  - 컬럼[25]: Left=1252, Width=49px
-  - 컬럼[26]: Left=1302, Width=49px
-  - 컬럼[27]: Left=1352, Width=49px
-  - 컬럼[28]: Left=1402, Width=49px
-  - 컬럼[29]: Left=1452, Width=49px
-  - 컬럼[30]: Left=1502, Width=49px
-  - 컬럼[31]: Left=1552, Width=49px
-  - 컬럼[32]: Left=1602, Width=49px
-  - 컬럼[33]: Left=1652, Width=50px
-  - 컬럼[34]: Left=1703, Width=210px
+[ONECALL] 컬럼 순서 이동: [오더번호] 33번 -> 2번 위치로
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 9: 검출=34개, 총너비=1876px / 그리드=1916px
-  - 컬럼[0]: Left=3, Width=48px
-  - 컬럼[1]: Left=52, Width=49px
-  - 컬럼[2]: Left=102, Width=49px
-  - 컬럼[3]: Left=152, Width=49px
-  - 컬럼[4]: Left=202, Width=49px
-  - 컬럼[5]: Left=252, Width=49px
-  - 컬럼[6]: Left=302, Width=49px
-  - 컬럼[7]: Left=352, Width=49px
-  - 컬럼[8]: Left=402, Width=49px
-  - 컬럼[9]: Left=452, Width=49px
-  - 컬럼[10]: Left=502, Width=49px
-  - 컬럼[11]: Left=552, Width=49px
-  - 컬럼[12]: Left=602, Width=49px
-  - 컬럼[13]: Left=652, Width=49px
-  - 컬럼[14]: Left=702, Width=49px
-  - 컬럼[15]: Left=752, Width=49px
-  - 컬럼[16]: Left=802, Width=49px
-  - 컬럼[17]: Left=852, Width=49px
-  - 컬럼[18]: Left=902, Width=49px
-  - 컬럼[19]: Left=952, Width=49px
-  - 컬럼[20]: Left=1002, Width=49px
-  - 컬럼[21]: Left=1052, Width=49px
-  - 컬럼[22]: Left=1102, Width=49px
-  - 컬럼[23]: Left=1152, Width=49px
-  - 컬럼[24]: Left=1202, Width=49px
-  - 컬럼[25]: Left=1252, Width=49px
-  - 컬럼[26]: Left=1302, Width=49px
-  - 컬럼[27]: Left=1352, Width=49px
-  - 컬럼[28]: Left=1402, Width=49px
-  - 컬럼[29]: Left=1452, Width=49px
-  - 컬럼[30]: Left=1502, Width=49px
-  - 컬럼[31]: Left=1552, Width=49px
-  - 컬럼[32]: Left=1602, Width=49px
-  - 컬럼[33]: Left=1652, Width=50px
-  - 컬럼[34]: Left=1703, Width=210px
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
-[ONECALL] 반복 10: 검출=34개, 총너비=1876px / 그리드=1916px
-  - 컬럼[0]: Left=3, Width=48px
-  - 컬럼[1]: Left=52, Width=49px
-  - 컬럼[2]: Left=102, Width=49px
-  - 컬럼[3]: Left=152, Width=49px
-  - 컬럼[4]: Left=202, Width=49px
-  - 컬럼[5]: Left=252, Width=49px
-  - 컬럼[6]: Left=302, Width=49px
-  - 컬럼[7]: Left=352, Width=49px
-  - 컬럼[8]: Left=402, Width=49px
-  - 컬럼[9]: Left=452, Width=49px
-  - 컬럼[10]: Left=502, Width=49px
-  - 컬럼[11]: Left=552, Width=49px
-  - 컬럼[12]: Left=602, Width=49px
-  - 컬럼[13]: Left=652, Width=49px
-  - 컬럼[14]: Left=702, Width=49px
-  - 컬럼[15]: Left=752, Width=49px
-  - 컬럼[16]: Left=802, Width=49px
-  - 컬럼[17]: Left=852, Width=49px
-  - 컬럼[18]: Left=902, Width=49px
-  - 컬럼[19]: Left=952, Width=49px
-  - 컬럼[20]: Left=1002, Width=49px
-  - 컬럼[21]: Left=1052, Width=49px
-  - 컬럼[22]: Left=1102, Width=49px
-  - 컬럼[23]: Left=1152, Width=49px
-  - 컬럼[24]: Left=1202, Width=49px
-  - 컬럼[25]: Left=1252, Width=49px
-  - 컬럼[26]: Left=1302, Width=49px
-  - 컬럼[27]: Left=1352, Width=49px
-  - 컬럼[28]: Left=1402, Width=49px
-  - 컬럼[29]: Left=1452, Width=49px
-  - 컬럼[30]: Left=1502, Width=49px
-  - 컬럼[31]: Left=1552, Width=49px
-  - 컬럼[32]: Left=1602, Width=49px
-  - 컬럼[33]: Left=1652, Width=50px
-  - 컬럼[34]: Left=1703, Width=210px
 [OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
 [OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [상차지] 7번 -> 5번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [하차지] 8번 -> 6번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [결제방법] 13번 -> 7번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [운임] 12번 -> 8번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [수수료] 13번 -> 9번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [차종] 17번 -> 10번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [톤수] 17번 -> 11번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [혼적] 14번 -> 12번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [차주명] 19번 -> 13번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [차주전화] 20번 -> 14번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [담당자번호] 31번 -> 15번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [적재옵션] 24번 -> 16번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [화물정보] 19번 -> 17번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 순서 이동: [인수증] 28번 -> 18번 위치로
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 3 완료
+[ONECALL] Step 4: 컬럼 너비 조정 시작
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 너비 확인: [하차일] 현재=49px, 목표=70px, 차이=21px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [하차일] 조정후=69px, 목표=70px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [상차일] 현재=49px, 목표=70px, 차이=21px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [상차일] 조정후=69px, 목표=70px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [인수증] 현재=49px, 목표=60px, 차이=11px
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (1/5)
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [인수증] 조정후=59px, 목표=60px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [화물정보] 현재=49px, 목표=155px, 차이=106px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [화물정보] 조정후=154px, 목표=155px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [적재옵션] 현재=49px, 목표=130px, 차이=81px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [적재옵션] 조정후=129px, 목표=130px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [담당자번호] 현재=49px, 목표=135px, 차이=86px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [담당자번호] 조정후=134px, 목표=135px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [차주전화] 현재=49px, 목표=135px, 차이=86px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [차주전화] 조정후=134px, 목표=135px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [차주명] 현재=49px, 목표=80px, 차이=31px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [차주명] 조정후=79px, 목표=80px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [혼적] 현재=49px, 목표=60px, 차이=11px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [혼적] 조정후=59px, 목표=60px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [톤수] 현재=49px, 목표=50px, 차이=1px
+[ONECALL] Step 4. 너비 확인: [차종] 현재=49px, 목표=70px, 차이=21px
+[DRAG RETRY] 드래그 이탈 감지됨. 재시도 중... (1/5)
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [차종] 조정후=69px, 목표=70px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [수수료] 현재=49px, 목표=75px, 차이=26px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [수수료] 조정후=74px, 목표=75px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [운임] 현재=49px, 목표=80px, 차이=31px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [운임] 조정후=79px, 목표=80px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [결제방법] 현재=49px, 목표=65px, 차이=16px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [결제방법] 조정후=64px, 목표=65px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [하차지] 현재=49px, 목표=125px, 차이=76px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [하차지] 조정후=124px, 목표=125px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [상차지] 현재=49px, 목표=125px, 차이=76px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [상차지] 조정후=124px, 목표=125px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [처리시간] 현재=49px, 목표=85px, 차이=36px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [처리시간] 조정후=84px, 목표=85px, 최종오차=-1px
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+[ONECALL] Step 4. 너비 확인: [처리일자] 현재=49px, 목표=105px, 차이=56px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [처리일자] 조정후=104px, 목표=105px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [오더번호] 현재=49px, 목표=100px, 차이=51px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [오더번호] 조정후=99px, 목표=100px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [처리상태] 현재=49px, 목표=65px, 차이=16px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [처리상태] 조정후=64px, 목표=65px, 최종오차=-1px
+[ONECALL] Step 4. 너비 확인: [순번] 현재=48px, 목표=50px, 차이=2px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] Step 4. 정밀 검증: [순번] 조정후=49px, 목표=50px, 최종오차=-1px
+[ONECALL] Step 4 완료
 === Window_Closing 시작 (안전 모드 복구) ===
 SrGlobalClient 재접속 중지 플래그 설정
 예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
@@ -628,7 +605,6 @@ SrLocalClient 재접속 중지 플래그 설정
 예외 발생: 'System.OperationCanceledException'(System.Net.WebSockets.dll)
 예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
 재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
 [MasterModeManager] Shutdown 시작
 [MasterModeManager] ExternalAppController 정리 중
 [ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
@@ -639,7 +615,7 @@ SrLocalClient 재접속 중지 플래그 설정
 [ONECALL] Close 시작
 [ONECALL] 메인윈도우 종료 메시지 전송
 예외 발생: 'System.ArgumentException'(System.Diagnostics.Process.dll)
-[ONECALL] 프로세스 종료 시도 중 오류: Process with an Id of 12400 is not running.
+[ONECALL] 프로세스 종료 시도 중 오류: Process with an Id of 10204 is not running.
 [ONECALL] Close 성공
 [ONECALL] Shutdown 완료
 [ONECALL] Dispose 호출
@@ -651,4 +627,4 @@ SrLocalClient 재접속 중지 플래그 설정
 예외 발생: 'System.TimeoutException'(WindowsBase.dll)
 예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
 예외 발생: 'System.Threading.Tasks.TaskCanceledException'(WindowsBase.dll)
-'[12008] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).
+'[30944] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).
