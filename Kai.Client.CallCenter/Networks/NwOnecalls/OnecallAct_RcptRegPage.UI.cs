@@ -22,11 +22,11 @@ public partial class OnecallAct_RcptRegPage
     private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
 
     // 포커스 탈출 (빈 영역 클릭)
-    //private async Task EscapeFocusAsync(CancellationToken ct = default, int nDelay = c_nWaitVeryShort)
-    //{
-    //    await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
-    //    await Task.Delay(nDelay, ct);
-    //}
+    private async Task EscapeFocusAsync(CancellationToken ct = default, int nDelay = c_nWaitVeryShort)
+    {
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
+        await Task.Delay(nDelay, ct);
+    }
 
     // 데이터그리드 로우 클릭 (원콜 DG오더_rcRelSmallCells는 row=0부터 데이터)
     /// <param name="nRowIndex">로우 인덱스 (0-based)</param>
@@ -236,159 +236,159 @@ public partial class OnecallAct_RcptRegPage
     //}
 
     // 헤더 캡처 및 컬럼 경계 검출 헬퍼
-    //private (Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns) CaptureAndDetectColumnBoundaries(Draw.Rectangle rcHeader, int targetRow)
-    //{
-    //    Draw.Bitmap bmpHeader = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcHeader);
-    //    if (bmpHeader == null) return (null, null, 0);
+    private (Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns) CaptureAndDetectColumnBoundaries(Draw.Rectangle rcHeader, int targetRow)
+    {
+        Draw.Bitmap bmpHeader = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcHeader);
+        if (bmpHeader == null) return (null, null, 0);
 
-    //    byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpHeader, targetRow);
-    //    minBrightness += 2;
+        byte minBrightness = OfrService.GetMinBrightnessAtRow_FromColorBitmapFast(bmpHeader, targetRow);
+        minBrightness += 2;
 
-    //    bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, targetRow, minBrightness, 2);
-    //    List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
+        bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, targetRow, minBrightness, 2);
+        List<OfrModel_LeftWidth> listLW = OfrService.GetLeftWidthList_FromBool1Array(boolArr, minBrightness);
 
-    //    if (listLW == null || listLW.Count < 2)
-    //        return (bmpHeader, listLW, 0);
+        if (listLW == null || listLW.Count < 2)
+            return (bmpHeader, listLW, 0);
 
-    //    // 마지막 경계선 유지 (폭 조정에 필요)
-    //    int columns = listLW.Count - 1;
-    //    return (bmpHeader, listLW, columns);
-    //}
+        // 마지막 경계선 유지 (폭 조정에 필요)
+        int columns = listLW.Count - 1;
+        return (bmpHeader, listLW, columns);
+    }
 
     // 모든 컬럼 OFR 헬퍼
-    //private async Task<string[]> OfrAllColumnsAsync(Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns, int gab, int height, bool bEdit = false)
-    //{
-    //    string[] texts = new string[columns];
+    private async Task<string[]> OfrAllColumnsAsync(Draw.Bitmap bmpHeader, List<OfrModel_LeftWidth> listLW, int columns, int gab, int height, bool bEdit = false)
+    {
+        string[] texts = new string[columns];
 
-    //    for (int x = 0; x < columns; x++)
-    //    {
-    //        Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
+        for (int x = 0; x < columns; x++)
+        {
+            Draw.Rectangle rcColHeader = new Draw.Rectangle(listLW[x].nLeft, gab, listLW[x].nWidth, height);
 
-    //        var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight, bEdit: bEdit);
+            var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpHeader, rcColHeader, bInvertRgb: false, bTextSave: true, dWeight: c_dOfrWeight);
 
-    //        texts[x] = result?.strResult;
-    //    }
+            texts[x] = result?.strResult;
+        }
 
-    //    return texts;
-    //}
+        return texts;
+    }
 
     // Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)
-    //private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
-    //{
-    //    CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
+    private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
+    {
+        CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
 
-    //    // 1. 컬럼 개수 체크
-    //    if (columnTexts == null || columnTexts.Length != m_ReceiptDgHeaderInfos.Length)
-    //    {
-    //        issues |= CEnum_DgValidationIssue.InvalidColumnCount;
-    //        Debug.WriteLine($"[ValidateDatagridState] 컬럼 개수 불일치: 실제={columnTexts?.Length}, 예상={m_ReceiptDgHeaderInfos.Length}");
-    //        return issues;
-    //    }
+        // 1. 컬럼 개수 체크
+        if (columnTexts == null || columnTexts.Length != m_ReceiptDgHeaderInfos.Length)
+        {
+            issues |= CEnum_DgValidationIssue.InvalidColumnCount;
+            Debug.WriteLine($"[ValidateDatagridState] 컬럼 개수 불일치: 실제={columnTexts?.Length}, 예상={m_ReceiptDgHeaderInfos.Length}");
+            return issues;
+        }
 
-    //    // 2. 각 컬럼 검증
-    //    for (int x = 0; x < columnTexts.Length; x++)
-    //    {
-    //        string columnText = columnTexts[x];
+        // 2. 각 컬럼 검증
+        for (int x = 0; x < columnTexts.Length; x++)
+        {
+            string columnText = columnTexts[x];
 
-    //        // 2-1. 컬럼명이 유효한지
-    //        int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
+            // 2-1. 컬럼명이 유효한지
+            int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
 
-    //        if (index < 0)
-    //        {
-    //            issues |= CEnum_DgValidationIssue.InvalidColumn;
-    //            Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}'");
-    //            continue;
-    //        }
+            if (index < 0)
+            {
+                issues |= CEnum_DgValidationIssue.InvalidColumn;
+                Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}'");
+                continue;
+            }
 
-    //        // 2-2. 컬럼 순서가 맞는지
-    //        if (index != x)
-    //        {
-    //            issues |= CEnum_DgValidationIssue.WrongOrder;
-    //            Debug.WriteLine($"[ValidateDatagridState] 순서 불일치[{x}]: '{columnText}' (예상 위치={index})");
-    //        }
+            // 2-2. 컬럼 순서가 맞는지
+            if (index != x)
+            {
+                issues |= CEnum_DgValidationIssue.WrongOrder;
+                Debug.WriteLine($"[ValidateDatagridState] 순서 불일치[{x}]: '{columnText}' (예상 위치={index})");
+            }
 
-    //        // 2-3. 컬럼 너비가 맞는지
-    //        int actualWidth = listLW[x].nWidth;
-    //        int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
-    //        int widthDiff = Math.Abs(actualWidth - expectedWidth);
+            // 2-3. 컬럼 너비가 맞는지
+            int actualWidth = listLW[x].nWidth;
+            int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
+            int widthDiff = Math.Abs(actualWidth - expectedWidth);
 
-    //        if (widthDiff > COLUMN_WIDTH_TOLERANCE)
-    //        {
-    //            issues |= CEnum_DgValidationIssue.WrongWidth;
-    //            Debug.WriteLine($"[ValidateDatagridState] 너비 불일치[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
-    //        }
-    //    }
+            if (widthDiff > COLUMN_WIDTH_TOLERANCE)
+            {
+                issues |= CEnum_DgValidationIssue.WrongWidth;
+                Debug.WriteLine($"[ValidateDatagridState] 너비 불일치[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
+            }
+        }
 
-    //    if (issues == CEnum_DgValidationIssue.None)
-    //    {
-    //        Debug.WriteLine($"[ValidateDatagridState] Datagrid 상태 정상");
-    //    }
+        if (issues == CEnum_DgValidationIssue.None)
+        {
+            Debug.WriteLine($"[ValidateDatagridState] Datagrid 상태 정상");
+        }
 
-    //    return issues;
-    //}
+        return issues;
+    }
     #endregion
 
     #region 2. DG State - DG오더 UI 상태
     // 데이터그리드 확장 상태 확인 (접수섹션 가시성 기준)
-    //public bool IsDG오더Expanded()
-    //{
-    //    bool bVisible = Std32Window.IsWindowVisible(mRcpt.접수섹션_hWndTop);
-    //    bool bExpanded = !bVisible;
-    //    Debug.WriteLine($"[{AppName}] IsDG오더Expanded: 접수섹션Visible={bVisible}, Result={bExpanded}");
-    //    return bExpanded;
-    //}
+    public bool IsDG오더Expanded()
+    {
+        bool bVisible = Std32Window.IsWindowVisible(mRcpt.접수섹션_hWndTop);
+        bool bExpanded = !bVisible;
+        Debug.WriteLine($"[{AppName}] IsDG오더Expanded: 접수섹션Visible={bVisible}, Result={bExpanded}");
+        return bExpanded;
+    }
 
     // 데이터그리드 확장 (축소 상태일 때만)
-    //public async Task<bool> ExpandDG오더Async()
-    //{
-    //    if (IsDG오더Expanded())
-    //    {
-    //        Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 이미 확장 상태");
-    //        return true;
-    //    }
+    public async Task<bool> ExpandDG오더Async()
+    {
+        if (IsDG오더Expanded())
+        {
+            Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 이미 확장 상태");
+            return true;
+        }
 
-    //    Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 확장 시도");
-    //    await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd확장버튼);
+        Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 확장 시도");
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd확장버튼);
 
-    //    // 확장 대기 (높이 체크)
-    //    for (int i = 0; i < c_nRepeatVeryShort; i++)
-    //    {
-    //        await Task.Delay(c_nWaitShort);
-    //        if (IsDG오더Expanded())
-    //        {
-    //            Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 확장 성공");
-    //            return true;
-    //        }
-    //    }
-    //    Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 확장 실패");
-    //    return false;
-    //}
+        // 확장 대기 (높이 체크)
+        for (int i = 0; i < c_nRepeatVeryShort; i++)
+        {
+            await Task.Delay(c_nWaitShort);
+            if (IsDG오더Expanded())
+            {
+                Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 확장 성공");
+                return true;
+            }
+        }
+        Debug.WriteLine($"[{AppName}] ExpandDG오더Async: 확장 실패");
+        return false;
+    }
 
     // 데이터그리드 축소 (확장 상태일 때만)
-    //public async Task<bool> CollapseDG오더Async()
-    //{
-    //    if (!IsDG오더Expanded())
-    //    {
-    //        Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 이미 축소 상태");
-    //        return true;
-    //    }
+    public async Task<bool> CollapseDG오더Async()
+    {
+        if (!IsDG오더Expanded())
+        {
+            Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 이미 축소 상태");
+            return true;
+        }
 
-    //    Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 축소 시도");
-    //    await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd확장버튼);
+        Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 축소 시도");
+        await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd확장버튼);
 
-    //    // 축소 대기 (높이 체크)
-    //    for (int i = 0; i < c_nRepeatVeryShort; i++)
-    //    {
-    //        await Task.Delay(c_nWaitShort);
-    //        if (!IsDG오더Expanded())
-    //        {
-    //            Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 축소 성공");
-    //            return true;
-    //        }
-    //    }
-    //    Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 축소 실패");
-    //    return false;
-    //}
+        // 축소 대기 (높이 체크)
+        for (int i = 0; i < c_nRepeatVeryShort; i++)
+        {
+            await Task.Delay(c_nWaitShort);
+            if (!IsDG오더Expanded())
+            {
+                Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 축소 성공");
+                return true;
+            }
+        }
+        Debug.WriteLine($"[{AppName}] CollapseDG오더Async: 축소 실패");
+        return false;
+    }
     #endregion
 
     #region 3. Input Helpers - 입력 공용함수
@@ -476,77 +476,77 @@ public partial class OnecallAct_RcptRegPage
     /// <param name="hWndTop">검증용 캡처 기준 핸들</param>
     /// <param name="rcVerifyRelS">검증용 캡처 영역 (hWndTop 기준 상대좌표)</param>
     /// <returns>성공/실패</returns>
-    //private async Task<StdResult_Status> SelectComboBoxItemAsync(IntPtr hWndComboBox, CModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerifyRelS)
-    //{
-    //    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 시작: target={model.sYourName}, hWnd={hWndComboBox:X}");
-    //    var sw = System.Diagnostics.Stopwatch.StartNew();
-    //
-    //    for (int i = 1; i <= c_nRepeatShort; i++)
-    //    {
-    //        // 1. 콤보박스 아래 위치에서 핸들 백업
-    //        Draw.Point ptCheck = StdUtil.GetAbsDrawPoint_BottomBelow(hWndComboBox);
-    //        IntPtr hWndBefore = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheck);
-    //        IntPtr hWndDropdown = IntPtr.Zero;
-    //
-    //        // 2. 콤보박스 클릭 (드롭다운 열기)
-    //        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndComboBox);
-    //
-    //        // 3. 드롭다운 열릴 때까지 대기
-    //        for (int j = 0; j < c_nRepeatShort; j++)
-    //        {
-    //            await Task.Delay(c_nWaitShort);
-    //            hWndDropdown = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheck);
-    //            if (hWndDropdown != hWndBefore) break;
-    //        }
-    //        if (hWndDropdown == hWndBefore)
-    //        {
-    //            Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] 드롭다운 열기 실패");
-    //            continue;
-    //        }
-    //
-    //        // 4. 항목 클릭
-    //        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndDropdown, model.ptPos);
-    //
-    //        // 5. 드롭다운 닫힐 때까지 대기
-    //        for (int j = 0; j < c_nRepeatShort; j++)
-    //        {
-    //            await Task.Delay(c_nWaitShort);
-    //            IntPtr hWndCurrent = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheck);
-    //            if (hWndCurrent != hWndDropdown) break;
-    //        }
-    //
-    //        // 6. OFR 검증
-    //        await Task.Delay(c_nWaitShort);
-    //        using (Draw.Bitmap bmpVerify = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcVerifyRelS))
-    //        {
-    //            if (bmpVerify == null)
-    //            {
-    //                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] 캡처 실패");
-    //                continue;
-    //            }
-    //
-    //            var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, true, dWeight: c_dOfrWeight, i == c_nRepeatShort);
-    //
-    //            if (ofrResult == null || string.IsNullOrEmpty(ofrResult.strResult))
-    //            {
-    //                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] OFR 실패");
-    //                continue;
-    //            }
-    //
-    //            if (ofrResult.strResult != model.sYourName)
-    //            {
-    //                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] OFR 불일치: '{ofrResult.strResult}' != '{model.sYourName}'");
-    //                continue;
-    //            }
-    //
-    //            Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 성공: {model.sYourName} ({sw.ElapsedMilliseconds}ms)");
-    //            return new StdResult_Status(StdResult.Success);
-    //        }
-    //    }
-    //
-    //    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 실패: {model.sYourName} ({sw.ElapsedMilliseconds}ms)");
-    //    return new StdResult_Status(StdResult.Fail, $"콤보박스 선택 실패: {model.sYourName}");
-    //}
+    private async Task<StdResult_Status> SelectComboBoxItemAsync(IntPtr hWndComboBox, CModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerifyRelS)
+    {
+        Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 시작: target={model.sYourName}, hWnd={hWndComboBox:X}");
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+
+        for (int i = 1; i <= c_nRepeatShort; i++)
+        {
+            // 1. 콤보박스 아래 위치에서 핸들 백업
+            Draw.Point ptCheck = StdUtil.GetAbsDrawPoint_BottomBelow(hWndComboBox);
+            IntPtr hWndBefore = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheck);
+            IntPtr hWndDropdown = IntPtr.Zero;
+
+            // 2. 콤보박스 클릭 (드롭다운 열기)
+            await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndComboBox);
+
+            // 3. 드롭다운 열릴 때까지 대기
+            for (int j = 0; j < c_nRepeatShort; j++)
+            {
+                await Task.Delay(c_nWaitShort);
+                hWndDropdown = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheck);
+                if (hWndDropdown != hWndBefore) break;
+            }
+            if (hWndDropdown == hWndBefore)
+            {
+                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] 드롭다운 열기 실패");
+                continue;
+            }
+
+            // 4. 항목 클릭
+            await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(hWndDropdown, model.ptPos);
+
+            // 5. 드롭다운 닫힐 때까지 대기
+            for (int j = 0; j < c_nRepeatShort; j++)
+            {
+                await Task.Delay(c_nWaitShort);
+                IntPtr hWndCurrent = Std32Window.GetWndHandle_FromAbsDrawPt(ptCheck);
+                if (hWndCurrent != hWndDropdown) break;
+            }
+
+            // 6. OFR 검증
+            await Task.Delay(c_nWaitShort);
+            using (Draw.Bitmap bmpVerify = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcVerifyRelS))
+            {
+                if (bmpVerify == null)
+                {
+                    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] 캡처 실패");
+                    continue;
+                }
+
+                var ofrResult = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpVerify, true, dWeight: c_dOfrWeight);
+
+                if (ofrResult == null || string.IsNullOrEmpty(ofrResult.strResult))
+                {
+                    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] OFR 실패");
+                    continue;
+                }
+
+                if (ofrResult.strResult != model.sYourName)
+                {
+                    Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync [{i}] OFR 불일치: '{ofrResult.strResult}' != '{model.sYourName}'");
+                    continue;
+                }
+
+                Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 성공: {model.sYourName} ({sw.ElapsedMilliseconds}ms)");
+                return new StdResult_Status(StdResult.Success);
+            }
+        }
+
+        Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 실패: {model.sYourName} ({sw.ElapsedMilliseconds}ms)");
+        return new StdResult_Status(StdResult.Fail, $"콤보박스 선택 실패: {model.sYourName}");
+    }
 
     /// <summary>
     /// 체크박스 상태 설정 (OFR 기반)
@@ -658,17 +658,17 @@ public partial class OnecallAct_RcptRegPage
     //    return fInfo.접수등록Page_접수_결재Open[4];
     //}
     //
-    //private CModel_ComboBox GetAutoRefreshResult(string sTime)
-    //{
-    //    if (string.IsNullOrEmpty(sTime)) return fInfo.접수등록Page_검색_자동조회Open[0];
-    //
-    //    foreach (var item in fInfo.접수등록Page_검색_자동조회Open)
-    //    {
-    //        if (item.sMyName == sTime) return item;
-    //    }
-    //
-    //    return fInfo.접수등록Page_검색_자동조회Open[0];
-    //}
+    private CModel_ComboBox GetAutoRefreshResult(string sTime)
+    {
+        if (string.IsNullOrEmpty(sTime)) return fInfo.접수등록Page_검색_자동조회Open[0];
+
+        foreach (var item in fInfo.접수등록Page_검색_자동조회Open)
+        {
+            if (item.sMyName == sTime) return item;
+        }
+
+        return fInfo.접수등록Page_검색_자동조회Open[0];
+    }
     #endregion
 
     #region 5. OFR - 오더번호/상태 읽기
@@ -787,56 +787,56 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    ///// <summary>
-    ///// 총계 OFR (DG오더_hWndTop 기준, 확장상태에 따라 Small/Large 영역 선택)
-    ///// </summary>
-    //public async Task<StdResult_Int> Get총계Async(CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
-    //{
-    //    try
-    //    {
-    //        Draw.Rectangle rcTotal = IsDG오더Expanded()
-    //            ? fInfo.접수등록Page_DG오더Large_rcTotalS
-    //            : fInfo.접수등록Page_DG오더Small_rcTotalS;
-    //
-    //        for (int i = 1; i <= retryCount; i++)
-    //        {
-    //            await ctrl.WaitIfPausedOrCancelledAsync();
-    //
-    //            Draw.Bitmap bmpTotal = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcTotal);
-    //            if (bmpTotal == null)
-    //            {
-    //                Debug.WriteLine($"[{AppName}] 총계 캡처 실패 (시도 {i}/{retryCount})");
-    //                if (i < retryCount) await Task.Delay(c_nWaitNormal, ctrl.Token);
-    //                continue;
-    //            }
-    //
-    //            try
-    //            {
-    //                var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpTotal, bTextSave: false, dWeight: c_dOfrWeight, bEdit: i == retryCount);
-    //                int nTotal = int.TryParse(new string(result.strResult?.Where(char.IsDigit).ToArray() ?? Array.Empty<char>()), out int n) ? n : -1;
-    //
-    //                if (nTotal >= 0)
-    //                {
-    //                    Debug.WriteLine($"[{AppName}] 총계 OFR 성공: {nTotal} (시도 {i}/{retryCount})");
-    //                    return new StdResult_Int(nTotal);
-    //                }
-    //            }
-    //            finally
-    //            {
-    //                bmpTotal.Dispose();
-    //            }
-    //
-    //            if (i < retryCount) await Task.Delay(c_nWaitNormal, ctrl.Token);
-    //        }
-    //
-    //        return new StdResult_Int(-1, $"총계 OFR 실패 ({retryCount}회 시도)", "Get총계Async_99");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Debug.WriteLine($"[{AppName}] Get총계Async 예외: {ex.Message}");
-    //        return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "Get총계Async_999");
-    //    }
-    //}
+    /// <summary>
+    /// 총계 OFR (DG오더_hWndTop 기준, 확장상태에 따라 Small/Large 영역 선택)
+    /// </summary>
+    public async Task<StdResult_Int> Get총계Async(CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
+    {
+        try
+        {
+            Draw.Rectangle rcTotal = IsDG오더Expanded()
+                ? fInfo.접수등록Page_DG오더Large_rcTotalS
+                : fInfo.접수등록Page_DG오더Small_rcTotalS;
+
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                Draw.Bitmap bmpTotal = OfrService.CaptureScreenRect_InWndHandle(mRcpt.DG오더_hWndTop, rcTotal);
+                if (bmpTotal == null)
+                {
+                    Debug.WriteLine($"[{AppName}] 총계 캡처 실패 (시도 {i}/{retryCount})");
+                    if (i < retryCount) await Task.Delay(c_nWaitNormal, ctrl.Token);
+                    continue;
+                }
+
+                try
+                {
+                    var result = await OfrWork_Common.OfrStr_ComplexCharSetAsync(bmpTotal, bTextSave: false, dWeight: c_dOfrWeight);
+                    int nTotal = int.TryParse(new string(result.strResult?.Where(char.IsDigit).ToArray() ?? Array.Empty<char>()), out int n) ? n : -1;
+
+                    if (nTotal >= 0)
+                    {
+                        Debug.WriteLine($"[{AppName}] 총계 OFR 성공: {nTotal} (시도 {i}/{retryCount})");
+                        return new StdResult_Int(nTotal);
+                    }
+                }
+                finally
+                {
+                    bmpTotal.Dispose();
+                }
+
+                if (i < retryCount) await Task.Delay(c_nWaitNormal, ctrl.Token);
+            }
+
+            return new StdResult_Int(-1, $"총계 OFR 실패 ({retryCount}회 시도)", "Get총계Async_99");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[{AppName}] Get총계Async 예외: {ex.Message}");
+            return new StdResult_Int(-1, StdUtil.GetExceptionMessage(ex), "Get총계Async_999");
+        }
+    }
     //
     // DG오더의 유효 로우 수 반환 (Small 모드 고정) - 배경보다 밝으면 데이터 있는 로우로 판단
     //public StdResult_Int GetValidRowCount()

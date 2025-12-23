@@ -1,175 +1,45 @@
-
-[SYSTEM] 로그 기록 시작: 2025-12-21 21:25:39
-[CommonFuncs] LoadExternalAppsConfig 실행
-[CommonFuncs] AutoAlloc 설정 로드: True
-[CommonFuncs] sUse 확인: 'True'
-[CommonFuncs] Insung01 설정 로드: Use=True, Id=동신MSI-S, AppPath=C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe -----------------------
-[CommonFuncs] Insung02 설정 로드: Use=True, Id=디에스MSI-S, AppPath=C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션\WooriNetWorkUpdater.exe -----------------------
-[CommonFuncs] Cargo24 설정 로드: Use=True, Id=10003, AppPath=C:\Cargo24\Cargo24.exe -----------------------
-[CommonFuncs] Onecall 설정 로드: Use=True, Id=3132-1005, AppPath=C:\Program Files\원콜(주선사)\OneCallShipper.exe -----------------------
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=ZELlA6UKLBP2FrqdQw1gxA *****
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-***** 로그인 요청 완료 *****
-***** 로그인 성공! (1번째) *****
-[MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
-[MainWnd] 프로세스 실행 성공. SignalR 연결 시도...
-HubConnection 생성 중...
-연결 시도시작...
-HubConn.StartAsync() 호출...
-SignalR 연결 성공
-[MainWnd] SignalR ConnectAsync 호출 완료
-[MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
-[MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
-[MasterModeManager] ExternalAppController 초기화 시작
-[ExternalAppController] 생성자 호출
-[ExternalAppController] InitializeAsync 시작
-[ExternalAppController] Cargo24 인스턴스 생성 완료
-[ExternalAppController] 생성된 앱 개수: 1
-[ExternalAppController] CARGO24 초기화 시퀀스 시작...
-[CARGO24] InitializeAsync 시작: Id=10003
-[CARGO24] 확인된 앱 경로: C:\Cargo24\Cargo24.exe
-[CARGO24/App] UpdaterWork 시작: Path=C:\Cargo24\Cargo24.exe
-[CARGO24/App] Updater 프로세스 시작됨: PID=32844
-[CARGO24/App] UpdaterWork 완료: SplashWnd=3019376
-[CARGO24] UpdaterWorkAsync 성공
-[CARGO24/Splash] SplashWork 시작
-[CARGO24/Splash] 로그인 처리 완료
-[CARGO24] SplashWorkAsync 성공
-[CARGO24/MainWnd] 초기화 시작
-[CARGO24/MainWnd] 메인 윈도우 확인: 4395128
-[CARGO24/MainWnd] 메인 윈도우 이동 및 안착 확인 완료
-[CARGO24/MainWnd] 초기화 완료
-[CARGO24] MainWndAct.InitializeAsync 성공
-[CARGO24/RcptRegPage] 초기화 시작
-[CARGO24/SetDG오더] SetDG오더RectsAsync 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/SetDG오더] 너비 오차: 컬럼[1] 63 != 40
-[CARGO24/SetDG오더] 검증 실패(WrongWidth), 초기화 시도 1/3
-[CARGO24/InitDG] InitDG오더Async 시작 (이슈: WrongWidth)
-[CARGO24/InitDG] Step 1: '원래대로' 클릭
-[CARGO24/InitDG] Step 2: 모든 컬럼 폭 줄이기 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[WindowProc] ESC 감지 - 자동화 중단 및 후킹 해제
-[CancelTokenControl] Cancel 호출됨
-[CARGO24] RcptRegPageAct.InitializeAsync 실패: 사용자 요청으로 취소됨
-[ExternalAppController] CARGO24 초기화 최종 실패: sErr: 사용자 요청으로 취소됨
-sPos: InitDG오더Async_Cancel -> ExternalAppController/InitializeAsync
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] CARGO24 종료 및 Dispose 시도...
-[CARGO24] Shutdown 시작
-[CARGO24/App] Close 시작
-[CARGO24/App] MainWindow 닫기 메시지 전송
-[CARGO24/App] 종료 확인창 발견: 4329074
-[CARGO24/App] YES 버튼 클릭됨
-[CARGO24/App] MainWindow 종료 확인됨
-[CARGO24] Close 성공
-[CARGO24] Shutdown 완료
-[CARGO24] Dispose 호출
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-rgetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [하차지] 11 -> 8
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [운송료] 13 -> 9
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [수수료] 14 -> 10
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [공유] 12 -> 11
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [요금구분] 15 -> 14
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [계산서금액] 25 -> 15
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [차량톤수] 23 -> 16
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [톤수] 18 -> 17
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [차종] 19 -> 18
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [적재옵션] 22 -> 19
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] 컬럼 이동: [차량종류] 23 -> 20
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] Step 3 완료: 컬럼 순서 재배치됨
-[CARGO24/InitDG] Step 4: 컬럼 폭 확장 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] Step 4 완료: 컬럼 폭 조정됨
-[CARGO24/InitDG] Step 5: 순서 저장 시작
-[CARGO24/InitDG] InitDG오더Async 전체 완료
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] '순서저장' 클릭
-[CARGO24/SetDG오더] 설정 성공
-[CARGO24/RcptRegPage] 초기화 완료
-[CARGO24] RcptRegPageAct.InitializeAsync 성공
-[CARGO24] InitializeAsync 완료 (현재 앱 실행 단계까지 활성)
-[ExternalAppController] CARGO24 초기화 성공
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
-[ExternalAppController] InitializeAsync 전체 완료
-[MasterModeManager] ExternalAppController 초기화 완료
-[MainWnd] Master 모드 초기화 완료
-[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] CARGO24 종료 및 Dispose 시도...
-[CARGO24] Shutdown 시작
-[CARGO24/App] Close 시작
-[CARGO24/App] MainWindow 닫기 메시지 전송
-[CARGO24/App] 종료 확인창 발견: 5180008
-[CARGO24/App] YES 버튼 클릭됨
-[CARGO24/App] MainWindow 종료 확인됨
-[CARGO24] Close 성공
-[CARGO24] Shutdown 완료
-[CARGO24] Dispose 호출
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-llCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebClient.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: DefaultDomain): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.CoreLib.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Client.CallCenter.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationFramework.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\WindowsBase.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Xaml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'c:\program files\microsoft visual studio\2022\community\common7\ide\commonextensions\microsoft\hotreload\Microsoft.Extensions.DotNetDeltaApplier.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.IO.Pipes.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Console.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.InteropServices.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Overlapped.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.AccessControl.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Principal.Windows.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Claims.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Loader.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\PrivateAssemblies\Runtime\Microsoft.VisualStudio.Debugger.Runtime.NetCoreApp.dll'을(를) 로드했습니다. 
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\netstandard.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.ThreadPool.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TraceSource.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.IO.Packaging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Concurrent.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Uri.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.RegularExpressions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Memory.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\DirectWriteForwarder.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Debug.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.CompilerServices.VisualC.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.Win32.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.Win32.Registry.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Specialized.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.NonGeneric.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Thread.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Configuration.ConfigurationManager.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Xml.ReaderWriter.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Xml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebClient.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encoding.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.TypeConverter.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -207,7 +77,7 @@ llCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCo
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TextWriterTraceListener.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 예외 발생: 'System.IO.IOException'(System.Console.dll)
 
-[SYSTEM] 로그 기록 시작: 2025-12-21 20:44:42
+[SYSTEM] 로그 기록 시작: 2025-12-23 14:50:59
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
@@ -231,14 +101,14 @@ HubConnection 생성 중...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.Http.Connections.Client.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.DependencyInjection.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encodings.Web.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationUI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Intrinsics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Numerics.Vectors.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationUI.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Cryptography.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Channels.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
 연결 시도 시작...
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationUI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationUI.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
 HubConn.StartAsync() 호출...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Features.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\System.IO.Pipelines.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -250,7 +120,7 @@ HubConn.StartAsync() 호출...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Sockets.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NameResolution.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=D_IPG1-KnZZteyavoWKrsg *****
+***** SrReport_ConnectedAsync 시작: connectedID=zr6xoodKGYBVLLRee3eJag *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
@@ -290,6 +160,7 @@ SignalR 연결 성공
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Formatters.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NetworkInformation.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Immutable.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Numerics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -298,7 +169,6 @@ SignalR 연결 성공
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Identity.Stores.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Identity.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Relational.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Formatters.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Data.Common.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Transactions.Local.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Server.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -314,78 +184,471 @@ SignalR 연결 성공
 예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
 [MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
 [MainWnd] 프로세스 실행 성공. SignalR 연결 시도...
-21840 스레드가 종료되었습니다(코드: 0 (0x0)).
+7408 스레드가 종료되었습니다(코드: 0 (0x0)).
 HubConnection 생성 중...
 연결 시도시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
 [MainWnd] SignalR ConnectAsync 호출 완료
-14120 스레드가 종료되었습니다(코드: 0 (0x0)).
+21292 스레드가 종료되었습니다(코드: 0 (0x0)).
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 [MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
 [MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
 [MasterModeManager] ExternalAppController 초기화 시작
 [ExternalAppController] 생성자 호출
 [ExternalAppController] InitializeAsync 시작
-[ExternalAppController] Cargo24 인스턴스 생성 완료
+[ONECALL] 생성자 호출
+[ExternalAppController] Onecall 인스턴스 생성 완료
 [ExternalAppController] 생성된 앱 개수: 1
-[ExternalAppController] CARGO24 초기화 시퀀스 시작...
-[CARGO24] InitializeAsync 시작: Id=10003
-[CARGO24/App] UpdaterWork 시작: Path=C:\Cargo24\Cargo24.exe
-[CARGO24/App] Updater 프로세스 시작됨: PID=9360
-[CARGO24/App] UpdaterWork 완료: SplashWnd=2691904
-[CARGO24] UpdaterWorkAsync 성공
-[CARGO24/Splash] SplashWork 시작
-[CARGO24/Splash] 로그인 처리 완료
-[CARGO24] SplashWorkAsync 성공
-[CARGO24/MainWnd] 초기화 시작
-[CARGO24/MainWnd] 메인 윈도우 확인: 1642684
-[CARGO24/MainWnd] 메인 윈도우 이동 및 안착 확인 완료
-[CARGO24/MainWnd] 초기화 완료
-[CARGO24] MainWndAct.InitializeAsync 성공
-[CARGO24/RcptRegPage] 초기화 시작
-[CARGO24/SetDG오더] SetDG오더RectsAsync 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/SetDG오더] 너비 오차: 컬럼[1] 63 != 40
-[CARGO24/SetDG오더] 검증 실패(WrongWidth), 초기화 시도 1/3
-[CARGO24/InitDG] InitDG오더Async 시작 (이슈: WrongWidth)
-[CARGO24/InitDG] Step 1: '원래대로' 클릭
-[CARGO24/InitDG] Step 2: 불필요한 컬럼 제거 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] Step 2 완료: 4개 컬럼 제거됨
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/SetDG오더] 너비 오차: 컬럼[1] 63 != 40
-[CARGO24/SetDG오더] 검증 실패(WrongWidth), 초기화 시도 2/3
-[CARGO24/InitDG] InitDG오더Async 시작 (이슈: WrongWidth)
-[CARGO24/InitDG] Step 1: '원래대로' 클릭
-[CARGO24/InitDG] Step 2: 불필요한 컬럼 제거 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] Step 2 완료: 4개 컬럼 제거됨
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/SetDG오더] 너비 오차: 컬럼[1] 63 != 40
-[CARGO24/SetDG오더] 검증 실패(WrongWidth), 초기화 시도 3/3
-[CARGO24/InitDG] InitDG오더Async 시작 (이슈: WrongWidth)
-[CARGO24/InitDG] Step 1: '원래대로' 클릭
-[CARGO24/InitDG] Step 2: 불필요한 컬럼 제거 시작
-[OfrService] GetMaxBrightnessAtRow: targetRow=2, max=240
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=2, Brightness=238, xStartIndex=2
-[CARGO24/InitDG] Step 2 완료: 4개 컬럼 제거됨
-[CARGO24/InitDG] '순서저장' 클릭
-[CARGO24/SetDG오더] 설정 성공
-[CARGO24/RcptRegPage] 초기화 완료
-[CARGO24] RcptRegPageAct.InitializeAsync 성공
-[CARGO24] InitializeAsync 완료 (현재 앱 실행 단계까지 활성)
-[ExternalAppController] CARGO24 초기화 성공
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
-[ExternalAppController] InitializeAsync 전체 완료
-[MasterModeManager] ExternalAppController 초기화 완료
-[MainWnd] Master 모드 초기화 완료
-[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
-'.NET TP Wait' (15212) 스레드가 종료되었습니다(코드: 0 (0x0)).
-22216 스레드가 종료되었습니다(코드: 0 (0x0)).
-'.NET TP Worker' (3788) 스레드가 종료되었습니다(코드: 0 (0x0)).
+[ExternalAppController] ONECALL 초기화 시퀀스 시작...
+[ONECALL] InitializeAsync 시작: Id=3132-1005
+[ONECALL] 확인된 앱 경로: C:\Program Files\원콜(주선사)\OneCallShipper.exe
+[ONECALL] UpdaterWork 시작: Path=C:\Program Files\원콜(주선사)\OneCallShipper.exe
+[ONECALL] UpdaterWorkAsync 성공
+[ONECALL] SplashWork 시작
+[ONECALL] 로그인 버튼 직접 클릭 시도
+[ONECALL] SplashWork 완료 (즉시 반환)
+[ONECALL] SplashWorkAsync 성공
+[ONECALL] MainWnd InitAsync 시작 (안정성 복구)
+[ONECALL] MainWndAct.InitAsync 성공
+[ONECALL] 초기화 시작: BlockInput(true) & KeyboardHook 활성화
+[ONECALL/Initialize] Background Brightness: 127, Margined: 137
+[ONECALL] SetDG오더ColumnHeaderAsync 시작
+[ONECALL] DG 캡처 완료: 1916x30
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 컬럼 검출: 33개 (목표: 34개)
+[ONECALL] 컬럼 개수 불일치: 검출=33개, 예상=34개 (재시도 1/3)
+[ONECALL] InitDG오더Async 시작: issues=InvalidColumnCount
+[ONECALL] Step 1: 목록초기화 시작
+[ONECALL] Step 1 완료
+[ONECALL] Step 2 시작: 컬럼 34개 확보 시도
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 1: 검출=17개, 총너비=1896px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=99px
+  - 컬럼[2]: Left=152, Width=99px
+  - 컬럼[3]: Left=252, Width=99px
+  - 컬럼[4]: Left=352, Width=79px
+  - 컬럼[5]: Left=432, Width=79px
+  - 컬럼[6]: Left=512, Width=149px
+  - 컬럼[7]: Left=662, Width=149px
+  - 컬럼[8]: Left=812, Width=99px
+  - 컬럼[9]: Left=912, Width=299px
+  - 컬럼[10]: Left=1212, Width=99px
+  - 컬럼[11]: Left=1312, Width=99px
+  - 컬럼[12]: Left=1412, Width=99px
+  - 컬럼[13]: Left=1512, Width=79px
+  - 컬럼[14]: Left=1592, Width=79px
+  - 컬럼[15]: Left=1672, Width=99px
+  - 컬럼[16]: Left=1772, Width=99px
+  - 컬럼[17]: Left=1872, Width=44px
+[ONECALL] 드래그 준비: x=16, boundaryX=1871, targetX=1822, dx=-49
+[ONECALL] 드래그 준비: x=15, boundaryX=1771, targetX=1722, dx=-49
+[ONECALL] 드래그 준비: x=14, boundaryX=1671, targetX=1642, dx=-29
+[ONECALL] 드래그 준비: x=13, boundaryX=1591, targetX=1562, dx=-29
+[ONECALL] 드래그 준비: x=12, boundaryX=1511, targetX=1462, dx=-49
+[ONECALL] 드래그 준비: x=11, boundaryX=1411, targetX=1362, dx=-49
+[ONECALL] 드래그 준비: x=10, boundaryX=1311, targetX=1262, dx=-49
+'.NET TP Wait' (13020) 스레드가 종료되었습니다(코드: 0 (0x0)).
+[ONECALL] 드래그 준비: x=9, boundaryX=1211, targetX=962, dx=-249
+[ONECALL] 드래그 준비: x=8, boundaryX=911, targetX=862, dx=-49
+[ONECALL] 드래그 준비: x=7, boundaryX=811, targetX=712, dx=-99
+[ONECALL] 드래그 준비: x=6, boundaryX=661, targetX=562, dx=-99
+[ONECALL] 드래그 준비: x=5, boundaryX=511, targetX=482, dx=-29
+[ONECALL] 드래그 준비: x=4, boundaryX=431, targetX=402, dx=-29
+[ONECALL] 드래그 준비: x=3, boundaryX=351, targetX=302, dx=-49
+[ONECALL] 드래그 준비: x=2, boundaryX=251, targetX=202, dx=-49
+[ONECALL] 드래그 준비: x=1, boundaryX=151, targetX=102, dx=-49
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 2: 검출=27개, 총너비=1886px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=99px
+  - 컬럼[18]: Left=952, Width=99px
+  - 컬럼[19]: Left=1052, Width=99px
+  - 컬럼[20]: Left=1152, Width=99px
+  - 컬럼[21]: Left=1252, Width=99px
+  - 컬럼[22]: Left=1352, Width=99px
+  - 컬럼[23]: Left=1452, Width=129px
+  - 컬럼[24]: Left=1582, Width=129px
+  - 컬럼[25]: Left=1712, Width=129px
+  - 컬럼[26]: Left=1842, Width=59px
+  - 컬럼[27]: Left=1902, Width=14px
+[ONECALL] 드래그 준비: x=26, boundaryX=1901, targetX=1892, dx=-9
+[ONECALL] 드래그 준비: x=25, boundaryX=1841, targetX=1762, dx=-79
+[ONECALL] 드래그 준비: x=24, boundaryX=1711, targetX=1632, dx=-79
+[ONECALL] 드래그 준비: x=23, boundaryX=1581, targetX=1502, dx=-79
+[ONECALL] 드래그 준비: x=22, boundaryX=1451, targetX=1402, dx=-49
+[ONECALL] 드래그 준비: x=21, boundaryX=1351, targetX=1302, dx=-49
+[ONECALL] 드래그 준비: x=20, boundaryX=1251, targetX=1202, dx=-49
+[ONECALL] 드래그 준비: x=19, boundaryX=1151, targetX=1102, dx=-49
+[ONECALL] 드래그 준비: x=18, boundaryX=1051, targetX=1002, dx=-49
+[ONECALL] 드래그 준비: x=17, boundaryX=951, targetX=902, dx=-49
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 3: 검출=32개, 총너비=1881px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=89px
+  - 컬럼[28]: Left=1442, Width=109px
+  - 컬럼[29]: Left=1552, Width=109px
+  - 컬럼[30]: Left=1662, Width=99px
+  - 컬럼[31]: Left=1762, Width=99px
+  - 컬럼[32]: Left=1862, Width=54px
+[ONECALL] 드래그 준비: x=31, boundaryX=1861, targetX=1812, dx=-49
+[ONECALL] 드래그 준비: x=30, boundaryX=1761, targetX=1712, dx=-49
+[ONECALL] 드래그 준비: x=29, boundaryX=1661, targetX=1602, dx=-59
+[ONECALL] 드래그 준비: x=28, boundaryX=1551, targetX=1492, dx=-59
+[ONECALL] 드래그 준비: x=27, boundaryX=1441, targetX=1402, dx=-39
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 4: 검출=34개, 총너비=1876px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=89px
+  - 컬럼[28]: Left=1442, Width=49px
+  - 컬럼[29]: Left=1492, Width=49px
+  - 컬럼[30]: Left=1542, Width=49px
+  - 컬럼[31]: Left=1592, Width=49px
+  - 컬럼[32]: Left=1642, Width=129px
+  - 컬럼[33]: Left=1772, Width=100px
+  - 컬럼[34]: Left=1873, Width=40px
+[ONECALL] 드래그 준비: x=33, boundaryX=1872, targetX=1822, dx=-50
+[ONECALL] 드래그 준비: x=32, boundaryX=1771, targetX=1692, dx=-79
+[ONECALL] 드래그 준비: x=27, boundaryX=1441, targetX=1402, dx=-39
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 5: 검출=34개, 총너비=1876px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=49px
+  - 컬럼[28]: Left=1402, Width=49px
+  - 컬럼[29]: Left=1452, Width=49px
+  - 컬럼[30]: Left=1502, Width=49px
+  - 컬럼[31]: Left=1552, Width=49px
+  - 컬럼[32]: Left=1602, Width=49px
+  - 컬럼[33]: Left=1652, Width=50px
+  - 컬럼[34]: Left=1703, Width=210px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 6: 검출=34개, 총너비=1876px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=49px
+  - 컬럼[28]: Left=1402, Width=49px
+  - 컬럼[29]: Left=1452, Width=49px
+  - 컬럼[30]: Left=1502, Width=49px
+  - 컬럼[31]: Left=1552, Width=49px
+  - 컬럼[32]: Left=1602, Width=49px
+  - 컬럼[33]: Left=1652, Width=50px
+  - 컬럼[34]: Left=1703, Width=210px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 7: 검출=34개, 총너비=1876px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=49px
+  - 컬럼[28]: Left=1402, Width=49px
+  - 컬럼[29]: Left=1452, Width=49px
+  - 컬럼[30]: Left=1502, Width=49px
+  - 컬럼[31]: Left=1552, Width=49px
+  - 컬럼[32]: Left=1602, Width=49px
+  - 컬럼[33]: Left=1652, Width=50px
+  - 컬럼[34]: Left=1703, Width=210px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 8: 검출=34개, 총너비=1876px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=49px
+  - 컬럼[28]: Left=1402, Width=49px
+  - 컬럼[29]: Left=1452, Width=49px
+  - 컬럼[30]: Left=1502, Width=49px
+  - 컬럼[31]: Left=1552, Width=49px
+  - 컬럼[32]: Left=1602, Width=49px
+  - 컬럼[33]: Left=1652, Width=50px
+  - 컬럼[34]: Left=1703, Width=210px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 9: 검출=34개, 총너비=1876px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=49px
+  - 컬럼[28]: Left=1402, Width=49px
+  - 컬럼[29]: Left=1452, Width=49px
+  - 컬럼[30]: Left=1502, Width=49px
+  - 컬럼[31]: Left=1552, Width=49px
+  - 컬럼[32]: Left=1602, Width=49px
+  - 컬럼[33]: Left=1652, Width=50px
+  - 컬럼[34]: Left=1703, Width=210px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+[ONECALL] 반복 10: 검출=34개, 총너비=1876px / 그리드=1916px
+  - 컬럼[0]: Left=3, Width=48px
+  - 컬럼[1]: Left=52, Width=49px
+  - 컬럼[2]: Left=102, Width=49px
+  - 컬럼[3]: Left=152, Width=49px
+  - 컬럼[4]: Left=202, Width=49px
+  - 컬럼[5]: Left=252, Width=49px
+  - 컬럼[6]: Left=302, Width=49px
+  - 컬럼[7]: Left=352, Width=49px
+  - 컬럼[8]: Left=402, Width=49px
+  - 컬럼[9]: Left=452, Width=49px
+  - 컬럼[10]: Left=502, Width=49px
+  - 컬럼[11]: Left=552, Width=49px
+  - 컬럼[12]: Left=602, Width=49px
+  - 컬럼[13]: Left=652, Width=49px
+  - 컬럼[14]: Left=702, Width=49px
+  - 컬럼[15]: Left=752, Width=49px
+  - 컬럼[16]: Left=802, Width=49px
+  - 컬럼[17]: Left=852, Width=49px
+  - 컬럼[18]: Left=902, Width=49px
+  - 컬럼[19]: Left=952, Width=49px
+  - 컬럼[20]: Left=1002, Width=49px
+  - 컬럼[21]: Left=1052, Width=49px
+  - 컬럼[22]: Left=1102, Width=49px
+  - 컬럼[23]: Left=1152, Width=49px
+  - 컬럼[24]: Left=1202, Width=49px
+  - 컬럼[25]: Left=1252, Width=49px
+  - 컬럼[26]: Left=1302, Width=49px
+  - 컬럼[27]: Left=1352, Width=49px
+  - 컬럼[28]: Left=1402, Width=49px
+  - 컬럼[29]: Left=1452, Width=49px
+  - 컬럼[30]: Left=1502, Width=49px
+  - 컬럼[31]: Left=1552, Width=49px
+  - 컬럼[32]: Left=1602, Width=49px
+  - 컬럼[33]: Left=1652, Width=50px
+  - 컬럼[34]: Left=1703, Width=210px
+[OfrService] GetMinBrightnessAtRow: targetRow=24, min=121
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=24, Brightness=123, xStartIndex=2
+=== Window_Closing 시작 (안전 모드 복구) ===
+SrGlobalClient 재접속 중지 플래그 설정
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Net.Http.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+SignalR OnClosedAsync called
+SrLocalClient 재접속 중지 플래그 설정
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
+예외 발생: 'System.OperationCanceledException'(System.Net.WebSockets.dll)
+예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
+재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
+[MasterModeManager] Shutdown 시작
+[MasterModeManager] ExternalAppController 정리 중
+[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
+[CancelTokenControl] Cancel 호출됨
+[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] ONECALL 종료 및 Dispose 시도...
+[ONECALL] Shutdown 시작
+[ONECALL] Close 시작
+[ONECALL] 메인윈도우 종료 메시지 전송
+예외 발생: 'System.ArgumentException'(System.Diagnostics.Process.dll)
+[ONECALL] 프로세스 종료 시도 중 오류: Process with an Id of 12400 is not running.
+[ONECALL] Close 성공
+[ONECALL] Shutdown 완료
+[ONECALL] Dispose 호출
+[ExternalAppController] 모든 리소스 정리 완료
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.TimeoutException'(WindowsBase.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(WindowsBase.dll)
+'[12008] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).

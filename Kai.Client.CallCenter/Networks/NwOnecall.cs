@@ -47,6 +47,7 @@ public class NwOnecall : IExternalApp
         m_Context = new OnecallContext(StdConst_Network.ONECALL, s_Id, s_Pw);
         m_Context.AppAct = new OnecallAct_App(m_Context);
         m_Context.MainWndAct = new OnecallAct_MainWnd(m_Context);
+        m_Context.RcptRegPageAct = new OnecallAct_RcptRegPage(m_Context);
     }
     #endregion
 
@@ -95,6 +96,19 @@ public class NwOnecall : IExternalApp
                 return result;
             }
             Debug.WriteLine($"[{AppName}] MainWndAct.InitAsync 성공");
+
+            // 5. 접수등록 페이지 초기화
+            var resultRcpt = await m_Context.RcptRegPageAct.InitializeAsync(s_GlobalCancelToken);
+            if (resultRcpt != null)
+            {
+                if (resultRcpt.sErr == "Skip")
+                {
+                    return new StdResult_Status(StdResult.Skip, "사용자 요청으로 취소됨", resultRcpt.sPos);
+                }
+                Debug.WriteLine($"[{AppName}] RcptRegPageAct.InitializeAsync 실패: {resultRcpt.sErr}");
+                return new StdResult_Status(StdResult.Fail, resultRcpt.sErr, resultRcpt.sPos);
+            }
+            Debug.WriteLine($"[{AppName}] RcptRegPageAct.InitializeAsync 성공");
 
             Debug.WriteLine($"[{AppName}] InitializeAsync 모든 단계 완료");
             return new StdResult_Status(StdResult.Success);

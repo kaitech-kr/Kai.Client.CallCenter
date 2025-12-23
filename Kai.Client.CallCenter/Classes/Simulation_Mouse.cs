@@ -6,6 +6,7 @@ using Draw = System.Drawing;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using Kai.Common.NetDll_WpfCtrl.NetOFR;
+using System.Runtime.InteropServices; // 추가
 
 using static Kai.Client.CallCenter.Classes.CommonVars;
 
@@ -14,6 +15,32 @@ namespace Kai.Client.CallCenter.Classes;
 // 마우스 시뮬레이션 헬퍼 클래스 (순수 시뮬레이션 - 차단 로직 전면 배제 테스트)
 public static class Simulation_Mouse
 {
+    // Win32 API 추가
+    [DllImport("user32.dll")]
+    public static extern IntPtr SetCapture(IntPtr hWnd);
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool ReleaseCapture();
+
+    // 커서 상태 확인용 API/상수
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CURSORINFO
+    {
+        public Int32 cbSize;
+        public Int32 flags;
+        public IntPtr hCursor;
+        public Draw.Point ptScreenPos;
+    }
+
+    [DllImport("user32.dll")]
+    public static extern bool GetCursorInfo(out CURSORINFO pci);
+
+    [DllImport("user32.dll")]
+    public static extern IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
+
+    public const int IDC_SIZEWE = 32644; // 좌우 화살표 (↔)
+    public const int CURSOR_SHOWING = 0x00000001;
+
     #region Mouse Events - Click
     public static async Task SafeMouseEvent_ClickLeft_ptRelAsync(
         IntPtr hWnd, Draw.Point ptClickRel, bool bBkCursor = true, int nDelay = 50)
@@ -92,6 +119,80 @@ public static class Simulation_Mouse
         }
     }
 
+    public static async Task<bool> SafeMouseEvent_DragLeft_Smooth_Horizon_WatchAsync(
+        IntPtr hWnd, Draw.Point ptStartRel, int dx, bool bBkCursor = true, int nMiliSec = 100,
+        int nSafetyMargin = 0, int nDelayAtSafety = 0)
+    {
+        Draw.Point ptBk = Std32Cursor.GetCursorPos_AbsDrawPt();
+        try
+        {
+            Std32Window.SetForegroundWindow(hWnd);
+            Std32Cursor.SetCursorPos_RelDrawPt(hWnd, ptStartRel);
+            Draw.Point ptFirstAbs = Std32Cursor.GetCursorPos_AbsDrawPt();
+            Draw.Point ptTargetAbs = new Draw.Point(ptFirstAbs.X + dx, ptFirstAbs.Y);
+            
+            Std32Mouse_Event.MouseEvent_LeftBtnDown();
+            await Task.Delay(100); 
+
+            // 이동 루프 (감시 포함)
+            Stopwatch sw = Stopwatch.StartNew();
+            bool bSuccess = true;
+            
+            // 1. 목표 nSafetyMargin 픽셀 전까지만 루프 이동
+            int nDir = Math.Sign(dx);
+            int safetyOffset = nDir * nSafetyMargin;
+            int intermediateDx = (Math.Abs(dx) > nSafetyMargin) ? dx - safetyOffset : dx;
+
+            while (sw.ElapsedMilliseconds < nMiliSec)
+            {
+                double ratio = (double)sw.ElapsedMilliseconds / nMiliSec;
+                int moveX = (int)(intermediateDx * ratio);
+                Std32Cursor.SetCursorPos_AbsDrawPt(new Draw.Point(ptFirstAbs.X + moveX, ptFirstAbs.Y));
+
+                if (bSuccess && !IsHorizontalResizeCursor())
+                {
+                    Debug.WriteLine($"[DROP DETECTED] 이탈 발생 (재시도 필요)");
+                    bSuccess = false; 
+                }
+                await Task.Delay(10);
+            }
+            
+            // 2. 조착 및 정밀 crawl (실시간 현위치 기반 1픽셀 이동)
+            if (nSafetyMargin > 0)
+            {
+                // 조착 지점 딜레이
+                if (nDelayAtSafety > 0) await Task.Delay(nDelayAtSafety);
+
+                // 계속 현위치를 얻으면서 비교하여 목표 도달 (Closed-loop)
+                int maxCrawlSteps = 20; // 안전장치: 최대 20픽셀까지만 정밀 이동 허용
+                while (maxCrawlSteps-- > 0)
+                {
+                    Draw.Point ptCur = Std32Cursor.GetCursorPos_AbsDrawPt();
+                    if (ptCur.X == ptTargetAbs.X) break; // 목표 도달 시 즉시 종료
+
+                    int crawlDir = Math.Sign(ptTargetAbs.X - ptCur.X);
+                    // 현재 마우스 위치에서 목표 방향으로 딱 1픽셀만 이동
+                    Std32Cursor.SetCursorPos_AbsDrawPt(new Draw.Point(ptCur.X + crawlDir, ptTargetAbs.Y));
+                    
+                    await Task.Delay(5); // 픽셀당 5ms의 아주 정밀한 이동
+                }
+            }
+
+            // 3. 최종 안착 확인 및 해제
+            Std32Cursor.SetCursorPos_AbsDrawPt(ptTargetAbs);
+            await Task.Delay(20); // 윈도우가 위치를 완전히 인지할 시간 확보
+            Std32Mouse_Event.MouseEvent_LeftBtnUp();
+            await Task.Delay(30);
+            
+            return bSuccess;
+        }
+        finally
+        {
+            if (bBkCursor) Std32Cursor.SetCursorPos_AbsDrawPt(ptBk);
+        }
+    }
+
+
     public static async Task SafeMouseEvent_DragLeft_Smooth_HorizonAsync(
         IntPtr hWnd, Draw.Point ptStartRel, int dx, bool bBkCursor = true, int nMiliSec = 100)
     {
@@ -104,7 +205,7 @@ public static class Simulation_Mouse
             Draw.Point ptTargetAbs = new Draw.Point(ptCurAbs.X + dx, ptCurAbs.Y);
 
             Std32Mouse_Event.MouseEvent_LeftBtnDown();
-            await Task.Delay(100); 
+            await Task.Delay(50); // 500ms는 너무 비효율적이므로 50ms로 현실화 (가볍게 꽉 쥐기)
 
             await MoveSmooth_PrecisionAsync(ptCurAbs, ptTargetAbs, nMiliSec);
             
@@ -115,6 +216,50 @@ public static class Simulation_Mouse
         {
             if (bBkCursor) Std32Cursor.SetCursorPos_AbsDrawPt(ptBk);
         }
+    }
+
+    /// <summary>
+    /// 현재 마우스 커서가 좌우 리사이즈(↔) 모양인지 확인
+    /// </summary>
+    public static bool IsHorizontalResizeCursor()
+    {
+        CURSORINFO pci = new CURSORINFO();
+        pci.cbSize = Marshal.SizeOf(pci);
+        if (GetCursorInfo(out pci))
+        {
+            if (pci.flags == CURSOR_SHOWING)
+            {
+                // 시스템의 기본 ↔ 커서 핸들과 비교
+                IntPtr hResize = LoadCursor(IntPtr.Zero, IDC_SIZEWE);
+                return pci.hCursor == hResize;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 목표 좌표 근처에서 커서가 ↔로 변하는 지점을 정밀 스캔
+    /// </summary>
+    public static async Task<int> SmartAimBoundaryAsync(IntPtr hWnd, int startX, int y, int range = 3)
+    {
+        for (int i = 0; i <= range; i++)
+        {
+            // 제자리 -> +1 -> -1 -> +2 -> -2 순으로 스캔
+            int[] offsets = i == 0 ? new int[] { 0 } : new int[] { i, -i };
+            foreach (int offset in offsets)
+            {
+                int targetX = startX + offset;
+                Std32Cursor.SetCursorPos_RelDrawPt(hWnd, new Draw.Point(targetX, y));
+                await Task.Delay(30); // 커서 모양 변경 대기
+
+                if (IsHorizontalResizeCursor())
+                {
+                    Debug.WriteLine($"[SmartAim] 리사이즈 커서 발견! Offset: {offset}");
+                    return targetX;
+                }
+            }
+        }
+        return -1; // 발견 실패
     }
 
     private static async Task MoveSmooth_PrecisionAsync(Draw.Point ptStart, Draw.Point ptTarget, int nMiliSec)
