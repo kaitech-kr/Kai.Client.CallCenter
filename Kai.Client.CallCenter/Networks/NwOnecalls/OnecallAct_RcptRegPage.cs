@@ -25,11 +25,9 @@ public partial class OnecallAct_RcptRegPage
     #region Constants
     private const double c_dOfrWeight = 0.7;
     #endregion // Constants
-    //
+
     #region Datagrid Column Header Info
-    /// <summary>
-    /// Datagrid 컬럼 헤더 정보 배열 (21개)
-    /// </summary>
+    // Datagrid 컬럼 헤더 정보 배열 (21개)
     public readonly CModel_DgColumnHeader[] m_ReceiptDgHeaderInfos = new CModel_DgColumnHeader[]
     {
         new CModel_DgColumnHeader() { sName = "순번", bOfrSeq = true, nWidth = 50 },
@@ -66,7 +64,7 @@ public partial class OnecallAct_RcptRegPage
     public const int c_nCol오더번호 = 2;
     public const int c_nCol클릭 = 0; // 로우 클릭용 (처리일자) - 원콜은 로우전체에 테두리 그려저서 무의미
     #endregion
-    //
+
     #region Private Fields
     private readonly OnecallContext m_Context;
     private OnecallInfo_File fInfo => m_Context.FileInfo;
@@ -439,6 +437,7 @@ public partial class OnecallAct_RcptRegPage
             Debug.WriteLine($"[{AppName}] InitDG오더Async 시작: issues={issues}");
 
             // 사전 작업 - 이미 상위에서 설정했겠지만 혹시 모르니 보강
+
             CommonFuncs.SetKeyboardHook();
             StdWin32.BlockInput(true);
 
@@ -453,44 +452,44 @@ public partial class OnecallAct_RcptRegPage
             Draw.Rectangle rcHeader = new Draw.Rectangle(0, 0, rcDG.Width, headerHeight);
 
             #region Step 1 - 목록초기화
-            Debug.WriteLine($"[{AppName}] Step 1: 목록초기화 시작");
             await CommonFuncs.CheckCancelAndThrowAsync();
 
             await Std32Mouse_Post.MousePostAsync_ClickLeft(
                 Std32Window.GetWndHandle_FromRelDrawPt(mRcpt.접수섹션_hWndTop, fInfo.접수등록Page_접수_목록초기화Btn_ptRelS));
-            await Task.Delay(c_nWaitVeryLong, ctrl.Token);
-            Debug.WriteLine($"[{AppName}] Step 1 완료");
+            await Task.Delay(c_nWaitUltraLong, ctrl.Token);
             #endregion
 
             #region Step 2 - 컬럼 확보 및 50px 축소 (낚시형)
-            Debug.WriteLine($"[{AppName}] Step 2 시작: 컬럼 34개 확보 시도");
-            int center = headerHeight / 2; // 확실한 수직 중앙 (15px)
+            List<OfrModel_LeftWidth> listLW = null;
+            int columns = 0;
+            int waitTime = c_nWaitLong;
+            bool bResult = false;
 
-            int waitTime = 1000; // 초기 안정화 대기
-            for (int iter = 0; iter < 10; iter++) // 최대 10회 시도
+            for (int iter = 0; iter < 5; iter++) 
             {
                 await Task.Delay(waitTime, ctrl.Token);
-                waitTime = 300; // 드래그 후 그리드 렌더링 시간을 고려하여 300ms로 상향 (기존 100)
+                waitTime = 50; 
 
                 // 컬럼영역 캡쳐 및 경계추출
-                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-                if (bmpHeader == null) break;
-                bmpHeader.Dispose();
+                var analysis = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                if (analysis.bmpHeader == null) break;
+                analysis.bmpHeader.Dispose();
 
-                // 너비 합계 계산 (실제 컬럼들만 합산, 마지막 여백 제외)
+                listLW = analysis.listLW;
+                columns = analysis.columns;
+
+                // 너비 합계 및 마지막 컬럼 위치 계산
                 int totalWidth = 0;
                 for (int i = 0; i < columns; i++) totalWidth += listLW[i].nWidth;
+                int lastRight = (columns > 0) ? (listLW[columns - 1].nLeft + listLW[columns - 1].nWidth) : 0;
 
-                Debug.WriteLine($"[{AppName}] 반복 {iter + 1}: 검출={columns}개, 컬럼합={totalWidth}px / 그리드={rcHeader.Width}px");
-                for (int i = 0; i < listLW.Count; i++)
-                {
-                    Debug.WriteLine($"  - 컬럼[{i}]: Left={listLW[i].nLeft}, Width={listLW[i].nWidth}px");
-                }
+                Debug.WriteLine($"[{AppName}] Step 2 반복 {iter + 1}: 검출={columns}개, LastRight={lastRight}px / Grid={rcHeader.Width}px");
                 
-                // [탈출 조건] 34개 완벽 확보 AND 컬럼들 합계가 그리드 내부에 여유 있게 들어옴
-                if (columns >= 34 && totalWidth < rcHeader.Width - 200) 
+                // [탈출 조건] 34개 완벽 확보 AND 마지막 컬럼이 그리드 우측 경계 안쪽으로 충분히 들어옴
+                if (columns >= 34 && lastRight < rcHeader.Width - 50) 
                 {
-                    Debug.WriteLine($"[{AppName}] Step 2 목표 달성 (34개 압축 완료)");
+                    Debug.WriteLine($"[{AppName}] Step 2 목표 달성 (안착 완료)");
+                    bResult = true;
                     break;
                 }
 
@@ -499,167 +498,144 @@ public partial class OnecallAct_RcptRegPage
                 {
                     await CommonFuncs.CheckCancelAndThrowAsync();
 
-                    // [정밀조준] 경계선 바로 왼쪽(-1)을 잡아야 핸들이 확실히 잡힘
                     int boundaryX = listLW[x + 1].nLeft - 1;
-                    int dragY = 15; 
-                    
-                    // [안정성 복구] 다시 50px을 목표로 (51은 55px 오차의 원인이었음)
                     int targetX = listLW[x].nLeft + 50;
                     int dx = targetX - boundaryX;
 
-                    // 이미 충분히 압축되어 있다면(60px 미만) 굳이 또 드래그하지 않음 (시간 절약)
                     if (listLW[x].nWidth > 60 || Math.Abs(dx) > 5) 
                     {
-                        // 1. 마우스 조준 및 커서 변환 확인
-                        Std32Cursor.SetCursorPos_RelDrawPt(mRcpt.DG오더_hWndTop, new Draw.Point(boundaryX, dragY));
-                        await Task.Delay(100, ctrl.Token); 
+                        Std32Cursor.SetCursorPos_RelDrawPt(mRcpt.DG오더_hWndTop, new Draw.Point(boundaryX, 15));
+                        await Task.Delay(10, ctrl.Token);
 
-                        // ↔ 커서가 아닐 경우 건너뜜
-                        if (!Simulation_Mouse.IsHorizontalResizeCursor())
-                        {
-                            Debug.WriteLine($"[{AppName}] 커서 미검출 (X:{boundaryX}) - 건너뜀");
-                            continue;
-                        }
+                        if (!Simulation_Mouse.IsHorizontalResizeCursor()) continue;
 
-                        Debug.WriteLine($"[{AppName}] 드래그 준비: x={x}, boundaryX={boundaryX}, targetX={targetX}, dx={dx}");
-
-                        // [최신형 엔진 적용] 명명된 인수를 사용하여 정확하게 호출
-                        await Simulation_Mouse.Drag_Precision_RetryAsync(
+                        await OnecallAct_RcptRegPage.DragAsync_Horizontal_FromBoundary(
                             hWnd: mRcpt.DG오더_hWndTop, 
-                            ptStartRel: new Draw.Point(boundaryX, dragY), 
+                            ptStartRel: new Draw.Point(boundaryX, 15), 
                             dx: dx, 
                             gripCheck: Simulation_Mouse.IsHorizontalResizeCursor, 
-                            nRetryCount: 5, 
+                            nRetryCount: 3, 
                             nMiliSec: 50, 
                             nSafetyMargin: 5, 
                             nDelayAtSafety: 20);
-                        
-                        await Task.Delay(waitTime, ctrl.Token); 
+                            
+                        await Task.Delay(100, ctrl.Token); 
                     }
                 }
             }
-
-            // 최종 확인 전 그리드 상태 안정을 위해 충분히 대기
-            await Task.Delay(500, ctrl.Token);
+            if (!bResult) return new StdResult_Error(
+                $"[{AppName}] Step 2 실패: 목표 상태(34개 컬럼 및 안착) 도달 불가", "OnecallAct_RcptRegPage/InitDG오더Async_001");
             #endregion
 
-            #region Step 3 - 컬럼 순서 조정 (화물24시 로직 이식)
-            Debug.WriteLine($"[{AppName}] Step 3: 컬럼 순서 조정 시작");
+            #region Step 3 - 컬럼 순서 조정 (정밀 좌표 로직 리팩토링)
+            // currentGridOrder: 현재 물리적으로 그리드에 배치된 컬럼 순서 (최초에는 원본 순서로 시작)
+            List<string> currentGridOrder = new List<string>(fInfo.접수등록Page_DG오더_colOrgTexts);
             
-            // 현재 그리드 상태를 추적할 배열 (최초에는 원본 순서와 동일하다고 가정)
-            string[] currentGridOrder = (string[])fInfo.접수등록Page_DG오더_colOrgTexts.Clone();
+            // 가상 레이아웃 헬퍼: 현재 listLW의 순서와 너비를 기준으로 특정 슬롯의 시작 X좌표를 계산 (누적 오차 방지)
+            int GetVirtualSlotLeft(int index)
+            {
+                if (index <= 0) return listLW[0].nLeft;
+                int left = listLW[0].nLeft;
+                for (int i = 0; i < index; i++) left += listLW[i].nWidth + 1; // 1px 경계선(Grid Line) 포함
+                return left;
+            }
 
-            // 목표 순서(m_ReceiptDgHeaderInfos) 루프
+            Debug.WriteLine($"[{AppName}/Step3] 컬럼 순서 조정 시작 (대상: {m_ReceiptDgHeaderInfos.Length}개)");
+
             for (int targetIdx = 0; targetIdx < m_ReceiptDgHeaderInfos.Length; targetIdx++)
             {
                 await CommonFuncs.CheckCancelAndThrowAsync();
 
-                // 실시간 헤더 분석 (드래그 직전의 물리적 좌표 확보)
-                var (bmpHeader, listLW, columns) = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-                bmpHeader?.Dispose();
-
                 string targetName = m_ReceiptDgHeaderInfos[targetIdx].sName;
-                int currentPosInGrid = Array.IndexOf(currentGridOrder, targetName);
+                int currentIdx = currentGridOrder.IndexOf(targetName);
 
-                if (currentPosInGrid < 0 || currentPosInGrid == targetIdx) continue;
-
-                Debug.WriteLine($"[{AppName}] 컬럼 순서 이동: [{targetName}] {currentPosInGrid}번 -> {targetIdx}번 위치로");
-
-                // [정밀 조준] 
-                // 시작점: 이동할 컬럼의 물리적 중심 (Width / 2)
-                // 도착점: 목표 위치 컬럼의 1/4 지점 (Width / 4)
-                int startX = listLW[currentPosInGrid].nLeft + (listLW[currentPosInGrid].nWidth / 2);
-                int endX = listLW[targetIdx].nLeft + (listLW[targetIdx].nWidth / 4);
-
-                Draw.Point ptStart = new Draw.Point(startX, 15);
-                Draw.Point ptEnd = new Draw.Point(endX, 15);
-
-                // [순서 이동 전용] 조착 보정 없이 목표 좌표(ptEnd)로 정확히 이동
-                await Simulation_Mouse.Drag_Precision_RetryAsync(
-                    hWnd: mRcpt.DG오더_hWndTop, 
-                    ptStartRel: ptStart, 
-                    ptTargetRel: ptEnd, 
-                    nRetryCount: 5, 
-                    nMiliSec: 100, 
-                    nSafetyMargin: 0, 
-                    nDelayAtSafety: 0);
-
-                // 로컬 배열 동기화 (그리드 내부의 Insert 동작 시뮬레이션)
-                string temp = currentGridOrder[currentPosInGrid];
-                if (currentPosInGrid > targetIdx)
+                if (currentIdx < 0)
                 {
-                    // 뒤에서 앞으로 올 때 (사이 컬럼들 우측 Shift)
-                    for (int m = currentPosInGrid; m > targetIdx; m--) currentGridOrder[m] = currentGridOrder[m - 1];
+                    Debug.WriteLine($"[{AppName}/Step3] 경고: 컬럼 '{targetName}'을 찾을 수 없음");
+                    continue;
+                }
+
+                if (currentIdx == targetIdx) 
+                {
+                    Debug.WriteLine($"[{AppName}/Step3] [{targetName}] 이미 정위치 ({targetIdx})");
+                    continue;
+                }
+
+                // [Refactored] 정밀 좌표 산정
+                // 1. 출발지(Grab Point): 이동할 컬럼 슬롯의 정중앙 (50%)
+                int startX = GetVirtualSlotLeft(currentIdx) + (listLW[currentIdx].nWidth / 2);
+                
+                // 2. 도착지(Drop Sweet-Spot): 목표 슬롯의 1/4 지점 (삽입 인디케이터 유도를 위한 최적 좌표)
+                int targetSlotLeft = GetVirtualSlotLeft(targetIdx);
+                int endX = targetSlotLeft + (listLW[targetIdx].nWidth / 2) - 3; // 중앙에서 좌측으로 3px (안전한 드롭)
+
+                Debug.WriteLine($"[{AppName}/Step3] 순서 조정 실행: [{targetName}] (슬롯 {currentIdx} -> {targetIdx}), 좌표 {startX} -> {endX}");
+
+                // 3. 드래그 실행 (심해 전용 엔진)
+                bool success = await OnecallAct_RcptRegPage.DragAsync_Horizontal_FromCenter(
+                    hWnd: mRcpt.DG오더_hWndTop,
+                    ptStartRel: new Draw.Point(startX, 15),
+                    ptTargetRel: new Draw.Point(endX, 15),
+                    nRetryCount: 5);
+
+                if (success)
+                {
+                    // 4. 상태 동기화 (물리적 너비 리스트와 논리적 순서 리스트를 함께 재배치)
+                    var movedLW = listLW[currentIdx];
+                    listLW.RemoveAt(currentIdx);
+                    listLW.Insert(targetIdx, movedLW);
+
+                    currentGridOrder.RemoveAt(currentIdx);
+                    currentGridOrder.Insert(targetIdx, targetName);
+
+                    // MsgBox($"[{targetName}] 이동 완료 ({currentIdx} -> {targetIdx})\n현재 순서: {string.Join(", ", currentGridOrder)}");
+                    await Task.Delay(200, ctrl.Token); // 그리드 재배치 애니메이션 대기
                 }
                 else
                 {
-                    // 앞에서 뒤로 갈 때 (사이 컬럼들 좌측 Shift)
-                    for (int m = currentPosInGrid; m < targetIdx; m++) currentGridOrder[m] = currentGridOrder[m + 1];
+                    Debug.WriteLine($"[{AppName}/Step3] [{targetName}] 드래그 실패 또는 스킵됨");
+                    // MsgBox($"[{targetName}] 이동 실패 또는 스킵됨");
                 }
-                currentGridOrder[targetIdx] = temp;
-
-                await Task.Delay(300, ctrl.Token); // 그리드 정렬 안정화 대기
             }
 
-            Debug.WriteLine($"[{AppName}] Step 3 완료");
-            #endregion
+            MsgBox($"[{AppName}] Step 3 완료 (최종 순서: {string.Join(", ", currentGridOrder)})");
+            #endregion // Step 3
+
 
             #region Step 4 - 컬럼 너비 조정 (최종 정밀 조정)
-            Debug.WriteLine($"[{AppName}] Step 4: 컬럼 너비 조정 시작");
-            
-            // 실시간 헤더 상태 다시 파악
-            var finalLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-            finalLayout.bmpHeader?.Dispose();
 
-            // 뒤쪽 컬럼부터 앞으로 이동하며 폭 조정
-            for (int x = m_ReceiptDgHeaderInfos.Length - 1; x >= 0; x--)
-            {
-                await CommonFuncs.CheckCancelAndThrowAsync();
+            //// 실시간 헤더 상태 다시 파악
+            //var finalLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+            //finalLayout.bmpHeader?.Dispose();
 
-                if (x + 1 >= finalLayout.listLW.Count) continue;
+            //// 뒤쪽 컬럼부터 앞으로 이동하며 폭 조정
+            //for (int x = m_ReceiptDgHeaderInfos.Length - 1; x >= 0; x--)
+            //{
+            //    await CommonFuncs.CheckCancelAndThrowAsync();
 
-                int currentWidth = finalLayout.listLW[x].nWidth;
-                int targetWidth = m_ReceiptDgHeaderInfos[x].nWidth;
-                int dx = targetWidth - currentWidth;
+            //    if (x + 1 >= finalLayout.listLW.Count) continue;
 
-                // 상세 로그 기록
-                Debug.WriteLine($"[{AppName}] Step 4. 너비 확인: [{m_ReceiptDgHeaderInfos[x].sName}] 현재={currentWidth}px, 목표={targetWidth}px, 차이={dx}px");
+            //    int currentWidth = finalLayout.listLW[x].nWidth;
+            //    int targetWidth = m_ReceiptDgHeaderInfos[x].nWidth;
+            //    int dx = targetWidth - currentWidth;
 
-                // 2픽셀 이상 차이날 때만 보정
-                if (Math.Abs(dx) >= 2)
-                {
-                    int boundaryX = finalLayout.listLW[x + 1].nLeft - 1;
-                    int dragY = 15;
+            //    // 2픽셀 이상 차이날 때만 보정
+            //    if (Math.Abs(dx) >= 2)
+            //    {
+            //        int boundaryX = finalLayout.listLW[x + 1].nLeft - 1;
+            //        int dragY = 15;
 
-                    await Simulation_Mouse.Drag_Precision_RetryAsync(
-                        hWnd: mRcpt.DG오더_hWndTop, 
-                        ptStartRel: new Draw.Point(boundaryX, dragY), 
-                        dx: dx, 
-                        gripCheck: Simulation_Mouse.IsHorizontalResizeCursor, 
-                        nRetryCount: 5, 
-                        nMiliSec: 100, 
-                        nSafetyMargin: 5, 
-                        nDelayAtSafety: 20);
-                    
-                    // [테스트용 정밀 검증] 100ms 대기 후 재캡처하여 결과 비교
-                    await Task.Delay(100, ctrl.Token);
-                    var verifyLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-                    if (verifyLayout.bmpHeader != null)
-                    {
-                        int verifiedWidth = (x < verifyLayout.listLW.Count) ? verifyLayout.listLW[x].nWidth : -1;
-                        int finalError = verifiedWidth - targetWidth;
-                        Debug.WriteLine($"[{AppName}] Step 4. 정밀 검증: [{m_ReceiptDgHeaderInfos[x].sName}] 조정후={verifiedWidth}px, 목표={targetWidth}px, 최종오차={finalError}px");
-                        
-                        // (옵션) 다음 컬럼 조정을 위해 최신 레이아웃 정보를 동기화
-                        // finalLayout = verifyLayout; 
-                        verifyLayout.bmpHeader.Dispose();
-                    }
-                    
-                    await Task.Delay(100, ctrl.Token);
-                }
-            }
-            Debug.WriteLine($"[{AppName}] Step 4 완료");
-            System.Windows.MessageBox.Show("Step 4: 모든 컬럼의 너비 정밀 조정이 완료되었습니다.\n최종 상태를 확인해 주세요.", "초기화 작업 종료");
+            //        await Simulation_Mouse.Drag_Precision_RetryAsync(
+            //            hWnd: mRcpt.DG오더_hWndTop, 
+            //            ptStartRel: new Draw.Point(boundaryX, dragY), 
+            //            dx: dx, 
+            //            gripCheck: Simulation_Mouse.IsHorizontalResizeCursor, 
+            //            nRetryCount: 5, 
+            //            nMiliSec: 100, 
+            //            nSafetyMargin: 5, 
+            //            nDelayAtSafety: 20);
+            //    }
+            //}
             #endregion
 
             Debug.WriteLine($"[{AppName}] InitDG오더Async 완료");
