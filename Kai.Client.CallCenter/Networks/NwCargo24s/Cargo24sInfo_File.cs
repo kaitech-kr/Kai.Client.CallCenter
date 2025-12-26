@@ -67,7 +67,7 @@ public class Cargo24sInfo_File
     public string 접수등록Page_StatusBtn_전체_sWndName { get; set; } = "전체"; // Check Window Name
 
     // 오늘하루동안 감추기
-    public Draw.Point 접수등록Page_안내문_오늘하루동안감추기_ptChkRelT { get; set; } = new Draw.Point(717, 506); // Check Point
+    public Draw.Point 접수등록Page_안내문_오늘하루동안감추기_ptChkRelT { get; set; } = new Draw.Point(774, 510); // Check Point {X=774,Y=510}
     public string 접수등록Page_안내문_오늘하루동안감추기_sWndName { get; set; } = "오늘하루동안 감추기"; // Check Window Name
 
     // CommandBtns GroupBox
@@ -113,6 +113,10 @@ public class Cargo24sInfo_File
     //public Draw.Rectangle 접수등록Page_rcRelM계_정산 { get; set; } = new Draw.Rectangle(420, 929, 97, 17); // {X=419,Y=926,Width=99,Height=24} - Reserved
     //public Draw.Rectangle 접수등록Page_rcRelM계_취소 { get; set; } = new Draw.Rectangle(420, 952, 97, 17); // {X=419,Y=950,Width=99,Height=24} - Reserved
     //public Draw.Rectangle 접수등록Page_rcRelM계_전체 { get; set; } = new Draw.Rectangle(420, 980, 97, 17); // {X=419,Y=974,Width=99,Height=26} - Reserved
+
+    // UI로드 확인용 핸들
+    public Draw.Point 접수등록Page_로드확인_조회_ptChkRelT { get; set; } = new Draw.Point(923, 890); // Check Point {X=923,Y=890}
+    public string 접수등록Page_로드확인_조회_sWndName { get; set; } = "조회"; // Check Window Name
     #endregion
 
     #region 접수(화물)등록Wnd

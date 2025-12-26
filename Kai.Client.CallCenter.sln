@@ -17,15 +17,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루�
 	ProjectSection(SolutionItems) = preProject
 		Kai.Client.CallCenter\appsettings.json = Kai.Client.CallCenter\appsettings.json
 		..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt = ..\..\..\..\Common\Text\C#Tip\Coding-Tip.txt
-		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallAct_ReceiptRegPage.cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallAct_ReceiptRegPage.cs
-		AppBackup\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallInfo_Mem.cs = AppBackup\Kai.Client.CallCenter\Networks\NwOnecalls\OnecallInfo_Mem.cs
-		..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\Onecall_ReceiptRegPage(Tmp).cs = ..\..\..\Save\KaiWork_Backup002\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Networks\NwOnecalls\Onecall_ReceiptRegPage(Tmp).cs
 		..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt = ..\..\..\..\Common\Text\C#Tip\ReadMe-Kai.Common.DbFirst02.txt
 		보관.cs = 보관.cs
 		임시.cs = 임시.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kai.Common.FrmDll_FormCtrl", "..\..\Kai.Common\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl\Kai.Common.FrmDll_FormCtrl.csproj", "{EE2FC8AB-3639-4181-A164-0352D30EE9DB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "임시", "임시", "{C8D5274F-AC00-46C7-1F8D-E88E81087A52}"
+	ProjectSection(SolutionItems) = preProject
+		TmpBackup\Networks\NwOnecalls\OnecallAct_RcptRegPage.cs = TmpBackup\Networks\NwOnecalls\OnecallAct_RcptRegPage.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

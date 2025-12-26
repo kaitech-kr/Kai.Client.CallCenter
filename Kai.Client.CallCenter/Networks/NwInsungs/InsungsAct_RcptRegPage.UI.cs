@@ -2742,12 +2742,26 @@ public partial class InsungsAct_RcptRegPage
             return issues;
         }
 
-        // 2. 각 컬럼 검증
+        // 2. 컬럼 너비 확인 (물리적 속성 우선)
+        for (int x = 0; x < m_ReceiptDgHeaderInfos.Length; x++)
+        {
+            int actualWidth = listLW[x].nWidth;
+            int expectedWidth = m_ReceiptDgHeaderInfos[x].nWidth;
+            int widthDiff = Math.Abs(actualWidth - expectedWidth);
+
+            if (widthDiff > COLUMN_WIDTH_TOLERANCE)
+            {
+                issues |= CEnum_DgValidationIssue.WrongWidth;
+                Debug.WriteLine($"[{m_Context.AppName}] ValidateDatagridState - 컬럼 너비 불일치[{x}]: 실제={actualWidth}, 예상={expectedWidth}");
+            }
+        }
+
+        // 3. 컬럼 명칭 및 순서 확인
         for (int x = 0; x < columnTexts.Length; x++)
         {
             string columnText = columnTexts[x];
 
-            // 2-1. 컬럼명이 유효한지
+            // 3-1. 컬럼명이 유효한지
             int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
 
             if (index < 0)
@@ -2757,28 +2771,17 @@ public partial class InsungsAct_RcptRegPage
                 continue;
             }
 
-            // 2-2. 컬럼 순서 확인
+            // 3-2. 컬럼 순서 확인
             if (index != x)
             {
                 issues |= CEnum_DgValidationIssue.WrongOrder;
                 Debug.WriteLine($"[{m_Context.AppName}] ValidateDatagridState - 컬럼 순서 불일치[{x}]: '{columnText}' (예상={index})");
-            }
-
-            // 2-3. 컬럼 너비 확인
-            int actualWidth = listLW[x].nWidth;
-            int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
-            int widthDiff = Math.Abs(actualWidth - expectedWidth);
-
-            if (widthDiff > COLUMN_WIDTH_TOLERANCE)
-            {
-                issues |= CEnum_DgValidationIssue.WrongWidth;
             }
         }
 
         if (issues != CEnum_DgValidationIssue.None)
         {
             Debug.WriteLine($"[!!!] ValidateDatagridState 검증 실패: {issues}");
-            // 상세 원인 분석 로그는 위 각 루프 내의 Debug.WriteLine에서 이미 출력됨
         }
         else
         {
@@ -3241,6 +3244,93 @@ public partial class InsungsAct_RcptRegPage
     //         }
     //     }
     #endregion
+
+    public static async Task<bool> DragAsync_Vertical_Smooth(IntPtr hWnd, Draw.Point ptStartRel, int dy, int nMiliSec = 100)
+    {
+        for (int retry = 1; retry <= 5; retry++)
+        {
+            try
+            {
+                Std32Window.SetForegroundWindow(hWnd);
+                Std32Cursor.SetCursorPos_RelDrawPt(hWnd, ptStartRel);
+                IntPtr hStartCursor = Std32Cursor.GetCurrentCursorHandle();
+                Draw.Point ptStartAbs = Std32Cursor.GetCursorPos_AbsDrawPt();
+                Draw.Point ptEndAbs = new Draw.Point(ptStartAbs.X, ptStartAbs.Y + dy);
+
+                Std32Mouse_Event.MouseEvent_LeftBtnDown();
+                await Task.Delay(50);
+
+                Stopwatch sw = Stopwatch.StartNew();
+                while (sw.ElapsedMilliseconds < nMiliSec)
+                {
+                    double ratio = (double)sw.ElapsedMilliseconds / nMiliSec;
+                    int currentDy = (int)(dy * ratio);
+                    Std32Cursor.SetCursorPos_AbsDrawPt(new Draw.Point(ptStartAbs.X, ptStartAbs.Y + currentDy));
+                    await Task.Delay(10);
+                }
+
+                Std32Cursor.SetCursorPos_AbsDrawPt(ptEndAbs);
+                await Task.Delay(150); // 커서 변경 대기
+
+                // 커서 확인 (시작과 달라졌거나, IDC_NO: 32648 이거나)
+                IntPtr hCurrent = Std32Cursor.GetCurrentCursorHandle();
+                IntPtr hNo = StdWin32.LoadCursor(IntPtr.Zero, StdCommon32.IDC_NO);
+
+                if (hCurrent != hStartCursor || hCurrent == hNo)
+                {
+                    Std32Mouse_Event.MouseEvent_LeftBtnUp();
+                    await Task.Delay(200);
+                    return true;
+                }
+
+                Debug.WriteLine($"[DragAsync_Vertical_Smooth] 커서 변화 없음 (시도 {retry}/5): {hCurrent:X} == {hStartCursor:X}");
+                Std32Mouse_Event.MouseEvent_LeftBtnUp();
+                await Task.Delay(300);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DragAsync_Vertical_Smooth] 예외 발생 (시도 {retry}/5): {ex.Message}");
+                Std32Mouse_Event.MouseEvent_LeftBtnUp();
+                await Task.Delay(300);
+            }
+        }
+        return false;
+    }
+
+    public static async Task<bool> DragAsync_Horizon_Smooth(IntPtr hWnd, Draw.Point ptStartRel, Draw.Point ptEndRel, int nMiliSec = 100)
+    {
+        try
+        {
+            Std32Window.SetForegroundWindow(hWnd);
+            
+            // 시작점 이동 및 절대 좌표 확보
+            Std32Cursor.SetCursorPos_RelDrawPt(hWnd, ptStartRel);
+            Draw.Point ptStartAbs = Std32Cursor.GetCursorPos_AbsDrawPt();
+            
+            // 끝점 절대 좌표 확보
+            Draw.Point ptEndAbs = StdUtil.GetAbsDrawPointFromRel(hWnd, ptEndRel);
+
+            Std32Mouse_Event.MouseEvent_LeftBtnDown();
+            await Task.Delay(50);
+
+            Stopwatch sw = Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < nMiliSec)
+            {
+                double ratio = (double)sw.ElapsedMilliseconds / nMiliSec;
+                int curX = ptStartAbs.X + (int)((ptEndAbs.X - ptStartAbs.X) * ratio);
+                int curY = ptStartAbs.Y + (int)((ptEndAbs.Y - ptStartAbs.Y) * ratio);
+                Std32Cursor.SetCursorPos_AbsDrawPt(new Draw.Point(curX, curY));
+                await Task.Delay(10);
+            }
+
+            Std32Cursor.SetCursorPos_AbsDrawPt(ptEndAbs);
+            await Task.Delay(50);
+            Std32Mouse_Event.MouseEvent_LeftBtnUp();
+            await Task.Delay(200);
+            return true;
+        }
+        catch { return false; }
+    }
 }
 
 #nullable restore

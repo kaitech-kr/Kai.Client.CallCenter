@@ -147,12 +147,12 @@ public class ExternalAppController : IDisposable
             Debug.WriteLine("[ExternalAppController] InitializeAsync 시작");
 
             // 1. 앱 인스턴스 생성
-            //if (NwInsung01.s_Use)
-            //{
-            //    Insung01 = new NwInsung01();
-            //    m_ListApps.Add(Insung01);
-            //    Debug.WriteLine($"[ExternalAppController] Insung01 인스턴스 생성 완료");
-            //}
+            if (NwInsung01.s_Use)
+            {
+                Insung01 = new NwInsung01();
+                m_ListApps.Add(Insung01);
+                Debug.WriteLine($"[ExternalAppController] Insung01 인스턴스 생성 완료");
+            }
 
             //if (NwInsung02.s_Use)
             //{
@@ -167,12 +167,13 @@ public class ExternalAppController : IDisposable
             //    m_ListApps.Add(Cargo24);
             //    Debug.WriteLine($"[ExternalAppController] Cargo24 인스턴스 생성 완료");
             //}
-            if (NwOnecall.s_Use)
-            {
-                Onecall = new NwOnecall();
-                m_ListApps.Add(Onecall);
-                Debug.WriteLine($"[ExternalAppController] Onecall 인스턴스 생성 완료");
-            }
+
+            //if (NwOnecall.s_Use)
+            //{
+            //    Onecall = new NwOnecall();
+            //    m_ListApps.Add(Onecall);
+            //    Debug.WriteLine($"[ExternalAppController] Onecall 인스턴스 생성 완료");
+            //}
 
             Debug.WriteLine($"[ExternalAppController] 생성된 앱 개수: {m_ListApps.Count}");
 

@@ -50,7 +50,7 @@ public class Cargo24sInfo_Mem
         public IntPtr TopWnd_hWnd;  // hWnd
 
         // Sons
-        public IntPtr CloseBtn_hWnd; // hWnd
+        //public IntPtr CloseBtn_hWnd; // hWnd
 
         // ListSonWnd
         public List<StdCommon32_WndInfo> FirstLayer_ChildWnds;
@@ -59,16 +59,16 @@ public class Cargo24sInfo_Mem
         public StdCommon32_WndInfo WndInfo_MdiClient;
     }
 
-    public class RcptRegWnd
-    {
-        // TopWnd
-        public IntPtr TopWnd_hWnd;  // hWnd
-
-        public RcptRegWnd(IntPtr hWnd)
-        {
-            TopWnd_hWnd = hWnd;
-        }
-    }
+    //public class RcptRegWnd
+    //{
+    //    // TopWnd
+    //    public IntPtr TopWnd_hWnd;  // hWnd
+    //
+    //    public RcptRegWnd(IntPtr hWnd)
+    //    {
+    //        TopWnd_hWnd = hWnd;
+    //    }
+    //}
     #endregion Windows 끝
 
     #region Pages
@@ -102,6 +102,8 @@ public class Cargo24sInfo_Mem
         public IntPtr 리스트항목_hWnd원래대로;
 
         // DateFrom
+        public IntPtr hWnd시작일; // 필요시 활성화
+        public IntPtr hWnd종료일; // 필요시 활성화
     }
     #endregion Pages 끝
 

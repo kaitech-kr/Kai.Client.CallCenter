@@ -507,13 +507,13 @@ public partial class OnecallAct_RcptRegPage
                         Std32Cursor.SetCursorPos_RelDrawPt(mRcpt.DG오더_hWndTop, new Draw.Point(boundaryX, 15));
                         await Task.Delay(10, ctrl.Token);
 
-                        if (!Simulation_Mouse.IsHorizontalResizeCursor()) continue;
+                        if (!OnecallAct_RcptRegPage.IsHorizontalResizeCursor()) continue;
 
                         await OnecallAct_RcptRegPage.DragAsync_Horizontal_FromBoundary(
                             hWnd: mRcpt.DG오더_hWndTop, 
                             ptStartRel: new Draw.Point(boundaryX, 15), 
                             dx: dx, 
-                            gripCheck: Simulation_Mouse.IsHorizontalResizeCursor, 
+                            gripCheck: OnecallAct_RcptRegPage.IsHorizontalResizeCursor, 
                             nRetryCount: 3, 
                             nMiliSec: 50, 
                             nSafetyMargin: 5, 
@@ -630,7 +630,7 @@ public partial class OnecallAct_RcptRegPage
                             hWnd: mRcpt.DG오더_hWndTop,
                             ptStartRel: new Draw.Point(boundaryX, dragY),
                             dx: dx,
-                            gripCheck: Simulation_Mouse.IsHorizontalResizeCursor,
+                            gripCheck: OnecallAct_RcptRegPage.IsHorizontalResizeCursor,
                             nRetryCount: 5,
                             nMiliSec: 100,
                             nSafetyMargin: 5,

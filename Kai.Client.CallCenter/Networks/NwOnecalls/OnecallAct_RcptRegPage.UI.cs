@@ -7,6 +7,7 @@ using Kai.Common.NetDll_WpfCtrl.NetOFR;
 using Kai.Common.StdDll_Common;
 using Kai.Common.StdDll_Common.StdWin32;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgWnd;
 using Draw = System.Drawing;
@@ -26,6 +27,18 @@ public partial class OnecallAct_RcptRegPage
     {
         await Std32Mouse_Post.MousePostAsync_ClickLeft(mRcpt.검색섹션_hWnd포커스탈출);
         await Task.Delay(nDelay, ct);
+    }
+
+    public static bool IsHorizontalResizeCursor()
+    {
+        StdCommon32.CURSORINFO pci = new StdCommon32.CURSORINFO();
+        pci.cbSize = Marshal.SizeOf(typeof(StdCommon32.CURSORINFO));
+        if (StdWin32.GetCursorInfo(out pci))
+        {
+            IntPtr hResize = StdWin32.LoadCursor(IntPtr.Zero, StdCommon32.IDC_SIZEWE);
+            return pci.hCursor == hResize;
+        }
+        return false;
     }
 
     // 데이터그리드 로우 클릭 (원콜 DG오더_rcRelSmallCells는 row=0부터 데이터)
@@ -217,7 +230,7 @@ public partial class OnecallAct_RcptRegPage
     //    // 여기서는 OFR로 읽지 않고 SetCheckBoxAsync 내부에서 처리하도록 위임하거나
     //    // 직접 읽어서 비교 후 호출. 
     //    // 효율성을 위해 먼저 읽고 다를 때만 SetCheckBoxAsync 호출
-        
+
     //    // 1. 현재 상태 읽기
     //    var resultChk = await OfrWork_Insungs.OfrImgReChkValue_RectInHWndAsync(mRcpt.접수섹션_hWndTop, rcOfrRelS, true);
     //    if (resultChk.bResult == dbValue)
@@ -1391,7 +1404,7 @@ public partial class OnecallAct_RcptRegPage
                 while (sw.ElapsedMilliseconds < moveTime)
                 {
                     // 주행 중 유실 감지
-                    if (Simulation_Mouse.GetCurrentCursorHandle() == hArrow)
+                    if (Std32Cursor.GetCurrentCursorHandle() == hArrow)
                     {
                         Debug.WriteLine($"[DragCenter] 주행 중 유실 (Arrow 복귀). 재시도...");
                         throw new Exception("Drag Grip Lost");
@@ -1827,7 +1840,5 @@ public partial class OnecallAct_RcptRegPage
     //}
 
     #endregion
-
-
 }
 #nullable restore
