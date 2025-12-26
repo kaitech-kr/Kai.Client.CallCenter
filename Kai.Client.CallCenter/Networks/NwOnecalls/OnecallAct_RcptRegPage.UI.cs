@@ -272,7 +272,7 @@ public partial class OnecallAct_RcptRegPage
         return texts;
     }
 
-    // Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)
+    // Datagrid 상태 검증 (컬럼 개수 -> 너비 -> 컬럼명 유효성 및 순서 확인)
     private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
     {
         CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;
@@ -285,37 +285,38 @@ public partial class OnecallAct_RcptRegPage
             return issues;
         }
 
-        // 2. 각 컬럼 검증
-        for (int x = 0; x < columnTexts.Length; x++)
+        // 2. 각 컬럼 검증 (너비 -> 이름/순서)
+        for (int x = 0; x < m_ReceiptDgHeaderInfos.Length; x++)
         {
-            string columnText = columnTexts[x];
-
-            // 2-1. 컬럼명이 유효한지
-            int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
-
-            if (index < 0)
-            {
-                issues |= CEnum_DgValidationIssue.InvalidColumn;
-                Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}'");
-                continue;
-            }
-
-            // 2-2. 컬럼 순서가 맞는지
-            if (index != x)
-            {
-                issues |= CEnum_DgValidationIssue.WrongOrder;
-                Debug.WriteLine($"[ValidateDatagridState] 순서 불일치[{x}]: '{columnText}' (예상 위치={index})");
-            }
-
-            // 2-3. 컬럼 너비가 맞는지
+            // 2-1. 컬럼 너비 체크 (물리 위치 기준)
             int actualWidth = listLW[x].nWidth;
-            int expectedWidth = m_ReceiptDgHeaderInfos[index].nWidth;
+            int expectedWidth = m_ReceiptDgHeaderInfos[x].nWidth;
             int widthDiff = Math.Abs(actualWidth - expectedWidth);
 
             if (widthDiff > COLUMN_WIDTH_TOLERANCE)
             {
                 issues |= CEnum_DgValidationIssue.WrongWidth;
-                Debug.WriteLine($"[ValidateDatagridState] 너비 불일치[{x}]: '{columnText}', 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff}");
+                Debug.WriteLine($"[ValidateDatagridState] 너비 불일치[{x}]: 실제={actualWidth}, 예상={expectedWidth}, 오차={widthDiff} (컬럼명: {columnTexts[x]})");
+            }
+
+            // 2-2. 컬럼명 유효성 및 순서 체크
+            string columnText = columnTexts[x];
+            string expectedName = m_ReceiptDgHeaderInfos[x].sName;
+
+            if (columnText != expectedName)
+            {
+                // 정석 위치의 이름과 다르면, 다른 위치에라도 있는지 확인
+                int index = Array.FindIndex(m_ReceiptDgHeaderInfos, h => h.sName == columnText);
+                if (index < 0)
+                {
+                    issues |= CEnum_DgValidationIssue.InvalidColumn;
+                    Debug.WriteLine($"[ValidateDatagridState] 유효하지 않은 컬럼[{x}]: '{columnText}' (예상: '{expectedName}')");
+                }
+                else
+                {
+                    issues |= CEnum_DgValidationIssue.WrongOrder;
+                    Debug.WriteLine($"[ValidateDatagridState] 순서 불일치[{x}]: '{columnText}' (정석 위치: {index}, 현재 위치: {x})");
+                }
             }
         }
 
