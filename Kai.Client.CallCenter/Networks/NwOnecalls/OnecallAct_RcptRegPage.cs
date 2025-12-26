@@ -598,47 +598,76 @@ public partial class OnecallAct_RcptRegPage
                 }
             }
 
-            MsgBox($"[{AppName}] Step 3 완료 (최종 순서: {string.Join(", ", currentGridOrder)})");
             #endregion // Step 3
 
 
+
             #region Step 4 - 컬럼 너비 조정 (최종 정밀 조정)
+            // 1. 현재 헤더 상태 파악
+            var preLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+            preLayout.bmpHeader?.Dispose();
 
-            //// 실시간 헤더 상태 다시 파악
-            //var finalLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
-            //finalLayout.bmpHeader?.Dispose();
+            if (preLayout.listLW != null)
+            {
+                // 조정 루프 (과정 로그는 사용자 요청으로 제거)
+                for (int x = m_ReceiptDgHeaderInfos.Length - 1; x >= 0; x--)
+                {
+                    await CommonFuncs.CheckCancelAndThrowAsync();
 
-            //// 뒤쪽 컬럼부터 앞으로 이동하며 폭 조정
-            //for (int x = m_ReceiptDgHeaderInfos.Length - 1; x >= 0; x--)
-            //{
-            //    await CommonFuncs.CheckCancelAndThrowAsync();
+                    if (x + 1 >= preLayout.listLW.Count) continue;
 
-            //    if (x + 1 >= finalLayout.listLW.Count) continue;
+                    int currentWidth = preLayout.listLW[x].nWidth;
+                    int targetWidth = m_ReceiptDgHeaderInfos[x].nWidth;
+                    int dx = targetWidth - currentWidth;
 
-            //    int currentWidth = finalLayout.listLW[x].nWidth;
-            //    int targetWidth = m_ReceiptDgHeaderInfos[x].nWidth;
-            //    int dx = targetWidth - currentWidth;
+                    // 2픽셀 이상 차이날 때만 보정
+                    if (Math.Abs(dx) >= 2)
+                    {
+                        int boundaryX = preLayout.listLW[x + 1].nLeft - 1;
+                        int dragY = 15;
 
-            //    // 2픽셀 이상 차이날 때만 보정
-            //    if (Math.Abs(dx) >= 2)
-            //    {
-            //        int boundaryX = finalLayout.listLW[x + 1].nLeft - 1;
-            //        int dragY = 15;
+                        await OnecallAct_RcptRegPage.DragAsync_Horizontal_FromBoundary(
+                            hWnd: mRcpt.DG오더_hWndTop,
+                            ptStartRel: new Draw.Point(boundaryX, dragY),
+                            dx: dx,
+                            gripCheck: Simulation_Mouse.IsHorizontalResizeCursor,
+                            nRetryCount: 5,
+                            nMiliSec: 100,
+                            nSafetyMargin: 5,
+                            nDelayAtSafety: 20);
 
-            //        await Simulation_Mouse.Drag_Precision_RetryAsync(
-            //            hWnd: mRcpt.DG오더_hWndTop, 
-            //            ptStartRel: new Draw.Point(boundaryX, dragY), 
-            //            dx: dx, 
-            //            gripCheck: Simulation_Mouse.IsHorizontalResizeCursor, 
-            //            nRetryCount: 5, 
-            //            nMiliSec: 100, 
-            //            nSafetyMargin: 5, 
-            //            nDelayAtSafety: 20);
-            //    }
-            //}
+                        await Task.Delay(100, ctrl.Token);
+                    }
+                }
+
+                // 2. 조정 완료 후 최종 상태 다시 캡처 및 검증 로그 (요청 사항)
+                var postLayout = CaptureAndDetectColumnBoundaries(rcHeader, targetRow);
+                postLayout.bmpHeader?.Dispose();
+
+                if (postLayout.listLW != null)
+                {
+                    Debug.WriteLine($"[{AppName}/Step4] === 컬럼 너비 최종 조정 결과 검증 (Tolerance: {COLUMN_WIDTH_TOLERANCE}px) ===");
+                    for (int i = 0; i < m_ReceiptDgHeaderInfos.Length; i++)
+                    {
+                        if (i >= postLayout.listLW.Count) break;
+
+                        int actW = postLayout.listLW[i].nWidth;
+                        int expW = m_ReceiptDgHeaderInfos[i].nWidth;
+                        int diff = actW - expW;
+                        string status = (Math.Abs(diff) <= COLUMN_WIDTH_TOLERANCE) ? "[OK]" : "[CHECK]";
+                        
+                        Debug.WriteLine($"{status} {i:D2}. {m_ReceiptDgHeaderInfos[i].sName,-10} : 실측={actW} / 정석={expW} (오차={diff})");
+                    }
+                    Debug.WriteLine($"[{AppName}/Step4] ===================================================================");
+                }
+            }
+
             #endregion
 
+            MsgBox($"[{AppName}] 데이터그리드 정석 초기화 완료 (Step 1~4)");
+
             Debug.WriteLine($"[{AppName}] InitDG오더Async 완료");
+
             return null;
         }
         catch (OperationCanceledException)
