@@ -120,25 +120,63 @@ public partial class Cargo24sAct_RcptRegPage
             if (s_GlobalCancelToken.Token.IsCancellationRequested) 
                 return new StdResult_Status(StdResult.Fail, "작업 취소됨", "InitializeAsync_Cancel");
 
-            #region 1. 오늘하루동안감추기 처리
-            hWndTmp = Std32Window.GetWndHandle_FromRelDrawPt(hWndMain, m_FileInfo.접수등록Page_안내문_오늘하루동안감추기_ptChkRelT);
-            if (hWndTmp != IntPtr.Zero)
+            #region 1. UI 로드확인
+            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 단계 1: UI 로딩 대기 시작 ({m_FileInfo.접수등록Page_로드확인_조회_ptChkRelT})");
+            bool bLoaded = false;
+            for (int i = 0; i < 50; i++)
             {
-                string sCap = Std32Window.GetWindowCaption(hWndTmp);
-                if (sCap == m_FileInfo.접수등록Page_안내문_오늘하루동안감추기_sWndName)
+                if (s_GlobalCancelToken.Token.IsCancellationRequested)
+                    return new StdResult_Status(StdResult.Fail, "작업 취소됨", "InitializeAsync_Cancel");
+
+                hWndTmp = Std32Window.GetWndHandle_FromRelDrawPt(hWndMain, m_FileInfo.접수등록Page_로드확인_조회_ptChkRelT);
+                if (hWndTmp != IntPtr.Zero)
                 {
-                    Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 안내문 팝업 닫기 클릭");
-                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndTmp);
-                    for (int i = 0; i < c_nRepeatShort; i++)
+                    string sCap = Std32Window.GetWindowCaption(hWndTmp);
+                    if (sCap != null && sCap.Contains(m_FileInfo.접수등록Page_로드확인_조회_sWndName))
                     {
-                        if (!Std32Window.IsWindow(hWndTmp)) break;
-                        await Task.Delay(c_nWaitShort);
+                        bLoaded = true;
+                        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] UI 로딩 완료 확인 (시도 {i + 1})");
+                        break;
                     }
                 }
+                await Task.Delay(100);
+            }
+
+            if (!bLoaded)
+            {
+                return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/RcptRegPage] UI 로딩 대기 타임아웃: {m_FileInfo.접수등록Page_로드확인_조회_sWndName}", "InitializeAsync_Timeout");
             }
             #endregion
 
-            #region 2. StatusBtn 찾기
+            #region 2. 오늘하루동안감추기 처리
+            Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 단계 2: 안내문 팝업 체크 시작 ({m_FileInfo.접수등록Page_안내문_오늘하루동안감추기_ptChkRelT}/{m_FileInfo.접수등록Page_안내문_오늘하루동안감추기_sWndName})");
+            for (int i = 0; i < c_nRepeatShort; i++)
+            {
+                if (s_GlobalCancelToken.Token.IsCancellationRequested) break;
+
+                hWndTmp = Std32Window.GetWndHandle_FromRelDrawPt(hWndMain, m_FileInfo.접수등록Page_안내문_오늘하루동안감추기_ptChkRelT);
+                if (hWndTmp != IntPtr.Zero)
+                {
+                    string sCap = Std32Window.GetWindowCaption(hWndTmp);
+                    if (sCap == m_FileInfo.접수등록Page_안내문_오늘하루동안감추기_sWndName)
+                    {
+                        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 안내문 팝업 감지됨: {sCap} (시도 {i + 1})");
+                        await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndTmp);
+                        
+                        for (int j = 0; j < c_nRepeatShort; j++)
+                        {
+                            if (!Std32Window.IsWindow(hWndTmp)) break;
+                            await Task.Delay(c_nWaitShort);
+                        }
+                        Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] 안내문 팝업 처리 완료");
+                        break;
+                    }
+                }
+                await Task.Delay(c_nWaitShort);
+            }
+            #endregion
+
+            #region 3. StatusBtn 찾기
             var btnList = new (string name, Draw.Point pt, Action<IntPtr> setter, string code)[]
             {
                 (m_FileInfo.접수등록Page_StatusBtn_접수_sWndName, m_FileInfo.접수등록Page_StatusBtn_접수_ptChkRelT, h => m_RcptPage.StatusBtn_hWnd접수 = h, "01"),
@@ -157,7 +195,7 @@ public partial class Cargo24sAct_RcptRegPage
             }
             #endregion
 
-            #region 3. CmdBtn 찾기 (신규/조회)
+            #region 4. CmdBtn 찾기 (신규/조회)
             var (hWndNew, resNew) = await FindStatusButtonAsync(
                 m_FileInfo.접수등록Page_CmdBtn_신규_sWndName, m_FileInfo.접수등록Page_CmdBtn_신규_ptChkRelT, "InitializeAsync_07");
             if (resNew.Result != StdResult.Success) return resNew;
@@ -171,7 +209,7 @@ public partial class Cargo24sAct_RcptRegPage
             m_RcptPage.CmdBtn_조회_nBrightness = OfrService.GetPixelBrightnessFrmWndHandle(hWndQuery, m_FileInfo.접수등록Page_CmdBtn_조회명도_ptChkRelL);
             #endregion
 
-            #region 4. 리스트항목 버튼 찾기 (그리드 설정 복구용)
+            #region 5. 리스트항목 버튼 찾기 (그리드 설정 복구용)
             var (hWndSave, resSave) = await FindStatusButtonAsync(
                 m_FileInfo.접수등록Page_리스트항목_sWndName순서저장, m_FileInfo.접수등록Page_리스트항목_ptChkRel순서저장, "InitializeAsync_09");
             if (resSave.Result == StdResult.Success) m_RcptPage.리스트항목_hWnd순서저장 = hWndSave;
@@ -181,7 +219,7 @@ public partial class Cargo24sAct_RcptRegPage
             if (resOrig.Result == StdResult.Success) m_RcptPage.리스트항목_hWnd원래대로 = hWndOrig;
             #endregion
 
-            #region 5. Datagrid 찾기 및 초기화
+            #region 6. Datagrid 찾기 및 초기화
             var resDg = await SetDG오더RectsAsync();
             if (resDg.Result != StdResult.Success) return resDg;
             #endregion
@@ -306,9 +344,16 @@ public partial class Cargo24sAct_RcptRegPage
     // Datagrid 강제 초기화 (원래대로 -> 컬럼 제거 -> 순서 조정 -> 너비 조정)
     public async Task<StdResult_Status> InitDG오더Async(CEnum_DgValidationIssue issues)
     {
+        // 마우스 커서 위치 백업 (작업 완료 후 복원용)
+        Draw.Point ptCursorBackup = Std32Cursor.GetCursorPos_AbsDrawPt();
+
         try
         {
             Debug.WriteLine($"[{m_Context.AppName}/InitDG] InitDG오더Async 시작 (이슈: {issues})");
+
+            // 사전 작업 - 입력 차단 및 후킹
+            CommonFuncs.SetKeyboardHook();
+            StdWin32.BlockInput(true);
 
             // Step 1. "원래대로" 클릭
             if (m_RcptPage.리스트항목_hWnd원래대로 != IntPtr.Zero)
@@ -330,7 +375,8 @@ public partial class Cargo24sAct_RcptRegPage
             // 역순으로 훑으며 폭 축소 (1번부터 끝까지)
             for (int x = columns - 1; x > 0; x--)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
+
                 Draw.Point ptStart = new Draw.Point(listLW[x].nLeft, HEADER_GAB);
                 Draw.Point ptEnd = new Draw.Point(listLW[x - 1].nLeft + MIN_COLUMN_WIDTH, ptStart.Y);
                 
@@ -338,7 +384,7 @@ public partial class Cargo24sAct_RcptRegPage
                 if (x >= SPECIAL_COL_START && x <= SPECIAL_COL_END) ptEnd.X += SPECIAL_COL_OFFSET;
 
                 int dx = ptEnd.X - ptStart.X;
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, ptStart, dx, false, 100);
+                await Cargo24sAct_RcptRegPage.DragAsync_Horizontal_Smooth(m_RcptPage.DG오더_hWnd, ptStart, dx, false, 100);
                 await Task.Delay(DELAY_AFTER_DRAG);
             }
             Debug.WriteLine($"[{m_Context.AppName}/InitDG] Step 2 완료: {columns}개 컬럼 폭 축소됨");
@@ -349,7 +395,7 @@ public partial class Cargo24sAct_RcptRegPage
 
             for (int targetIdx = 1; targetIdx < m_ReceiptDgHeaderInfos.Length; targetIdx++)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
 
                 // 실시간 헤더 분석
                 listLW = await AnalyzeGridHeadersAsync();
@@ -367,7 +413,7 @@ public partial class Cargo24sAct_RcptRegPage
                 Draw.Point ptEnd = new Draw.Point(listLW[targetIdx].nLeft + 10, ptStart.Y);
                 int dx = ptEnd.X - ptStart.X;
 
-                await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, ptStart, dx, false, 100);
+                await Cargo24sAct_RcptRegPage.DragAsync_Horizontal_Smooth(m_RcptPage.DG오더_hWnd, ptStart, dx, false, 100);
 
                 // 배열 상태 업데이트 (회전식 이동)
                 string temp = orgColArr[currentPos];
@@ -386,7 +432,7 @@ public partial class Cargo24sAct_RcptRegPage
             // 뒤에서 앞으로 확장
             for (int x = m_ReceiptDgHeaderInfos.Length - 1; x > 0; x--)
             {
-                await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync();
+                await CommonFuncs.CheckCancelAndThrowAsync();
 
                 if (x + 1 >= listLW.Count) continue;
                 
@@ -397,7 +443,7 @@ public partial class Cargo24sAct_RcptRegPage
 
                 if (Math.Abs(dx) > COLUMN_WIDTH_TOLERANCE)
                 {
-                    await Simulation_Mouse.SafeMouseEvent_DragLeft_Smooth_HorizonAsync(m_RcptPage.DG오더_hWnd, ptHandle, dx, false, 100);
+                    await Cargo24sAct_RcptRegPage.DragAsync_Horizontal_Smooth(m_RcptPage.DG오더_hWnd, ptHandle, dx, false, 100);
                     await Task.Delay(DELAY_AFTER_DRAG);
                 }
             }
@@ -417,40 +463,22 @@ public partial class Cargo24sAct_RcptRegPage
         }
         catch (OperationCanceledException)
         {
-            return new StdResult_Status(StdResult.Skip, "사용자 요청으로 취소됨", "InitDG오더Async_Cancel");
+            Debug.WriteLine($"[{m_Context.AppName}/InitDG] ESC 키 또는 사용자 요청으로 작업이 취소되었습니다.");
+            throw; // 상위로 전파하여 전체 초기화 루프 중단
         }
         catch (Exception ex)
         {
             return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/InitDG] 예외: {ex.Message}");
         }
+        finally
+        {
+            // 마우스 커서 위치 복원 (작업 시작 전 위치로)
+            Std32Cursor.SetCursorPos_AbsDrawPt(ptCursorBackup);
+        }
     }
     #endregion
 
     #region 6. Helper 함수들
-    // 분석된 컬럼 정보를 바탕으로 셀 좌표 일괄 계산
-    private void CalculateCellRects(List<OfrModel_LeftWidth> listLW)
-    {
-        int columns = listLW.Count;
-        int rowCount = m_FileInfo.접수등록Page_DG오더_rowCount;
-        int rowHeight = m_FileInfo.접수등록Page_DG오더_rowHeight;
-        int gab = m_FileInfo.접수등록Page_DG오더_dataGab;
-        int textHeight = rowHeight - gab * 2;
-
-        m_RcptPage.DG오더_rcRelCells = new Draw.Rectangle[columns, rowCount];
-        m_RcptPage.DG오더_ptRelChkRows = new Draw.Point[rowCount];
-
-        for (int row = 0; row < rowCount; row++)
-        {
-            int cellY = HEADER_HEIGHT + (row * rowHeight) + 1;
-            m_RcptPage.DG오더_ptRelChkRows[row] = new Draw.Point(listLW[0].nLeft + (listLW[0].nWidth / 2), cellY + (rowHeight / 2));
-
-            for (int col = 0; col < columns; col++)
-            {
-                m_RcptPage.DG오더_rcRelCells[col, row] = new Draw.Rectangle(listLW[col].nLeft, cellY + gab, listLW[col].nWidth, textHeight);
-            }
-        }
-    }
-
     // 그리드 상태 저장 (합격 시점에만 호출)
     public async Task<StdResult_Status> SaveDG오더Async()
     {
@@ -468,61 +496,6 @@ public partial class Cargo24sAct_RcptRegPage
         {
             return new StdResult_Status(StdResult.Fail, $"[{m_Context.AppName}/SaveDG] 예외 발생: {ex.Message}");
         }
-    }
-
-    // 대화상자(TMessageForm) 대기 및 OK 버튼 클릭 헬퍼
-    private async Task WaitAndConfirmDialogAsync()
-    {
-        for (int i = 0; i < CommonVars.c_nRepeatVeryMany; i++)
-        {
-            await Task.Delay(CommonVars.c_nWaitShort);
-            List<IntPtr> lstMsg = Std32Window.FindMainWindows_SameProcessId(m_Splash.TopWnd_uProcessId);
-            if (lstMsg == null || lstMsg.Count == 0) continue;
-
-            foreach (IntPtr hWnd in lstMsg)
-            {
-                if (Std32Window.GetWindowClassName(hWnd) != DLG_MSG_CLASS) continue;
-                if (!Std32Window.IsWindowVisible(hWnd)) continue;
-
-                string caption = Std32Window.GetWindowCaption(hWnd) ?? "";
-                if (!DLG_CAPTIONS.Contains(caption)) continue;
-
-                IntPtr hWndBtn = IntPtr.Zero;
-                foreach (var btnCaption in BTN_CAPTIONS)
-                {
-                    hWndBtn = Std32Window.FindChildWindow(hWnd, BTN_OK_CLASS, btnCaption);
-                    if (hWndBtn != IntPtr.Zero) break;
-                }
-
-                if (hWndBtn != IntPtr.Zero)
-                {
-                    await Std32Mouse_Post.MousePostAsync_ClickLeft(hWndBtn);
-                    for (int j = 0; j < CommonVars.c_nRepeatShort; j++)
-                    {
-                        await Task.Delay(CommonVars.c_nWaitShort);
-                        if (!Std32Window.IsWindow(hWnd)) break;
-                    }
-                    return;
-                }
-            }
-        }
-    }
-
-    // 그리드 헤더 영역 픽셀 분석 헬퍼
-    private async Task<List<OfrModel_LeftWidth>> AnalyzeGridHeadersAsync()
-    {
-        using var bmpHeader = OfrService.CaptureScreenRect_InWndHandle(m_RcptPage.DG오더_hWnd, new Draw.Rectangle(0, 0, m_RcptPage.DG오더_AbsRect.Width, HEADER_HEIGHT));
-        if (bmpHeader == null) return null;
-
-        byte maxBrightness = OfrService.GetMaxBrightnessAtRow_FromColorBitmapFast(bmpHeader, TARGET_ROW);
-        if (maxBrightness == 0) return null;
-
-        maxBrightness -= (byte)BRIGHTNESS_OFFSET;
-        bool[] boolArr = OfrService.GetBoolArray_FromColorBitmapRowFast(bmpHeader, TARGET_ROW, maxBrightness, 2);
-        var list = OfrService.GetLeftWidthList_FromBool1Array(boolArr, maxBrightness);
-
-        if (list != null && list.Count > 0) list.RemoveAt(list.Count - 1);
-        return list;
     }
     #endregion
 }
