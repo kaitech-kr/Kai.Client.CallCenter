@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
         mc:Ignorable="d"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="오더접수" Height="745" Width="1513" ResizeMode="CanMinimize"
+        Title="오더접수" Height="745" Width="1013" ResizeMode="CanMinimize"
         Background="LightGray" >
     <Window.Resources>
         <!--Height-->
@@ -210,12 +210,10 @@
             <GridLength x:Key="RowHeight_01">22</GridLength>
         </Grid.Resources>
 
-        <!--전체를 3개의 컬럼으로-->
+        <!--전체를 2개의 컬럼으로-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="885" />
             <!--데이타-->
-            <ColumnDefinition Width="500" />
-            <!--맨우측-->
             <ColumnDefinition Width="102" />
             <!--버튼-->
         </Grid.ColumnDefinitions>
@@ -1272,8 +1270,8 @@
         </Grid>
         <!--#endregion C0-좌측열(데이타)-->
 
-        <!--#region C2-우측열(버튼)  -->
-        <Grid Grid.Column="2">
+        <!--#region C1-우측열(버튼)  -->
+        <Grid Grid.Column="1">
             <!--#region 신규등록일때 보임  -->
             <Border x:Name="ColumnRegist"  BorderThickness="0" Visibility="Collapsed">
                 <StackPanel>
@@ -1535,7 +1533,7 @@
             </Border>
             <!--#endregion 등록수정일때 보임-->
         </Grid>
-        <!--#endregion-->
+        <!--#endregion C1-우측열(버튼)-->
 
     </Grid>
 </Window>
