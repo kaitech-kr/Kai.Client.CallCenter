@@ -219,15 +219,13 @@
         </Grid.ColumnDefinitions>
 
         <!--#region C0-좌측열(데이타) -->
-        <Grid Grid.Column="0" Height="671" VerticalAlignment="Top">
-            <!--3개의 행으로-->
+        <Grid Grid.Column="0" Height="649" VerticalAlignment="Top">
+            <!--2개의 행으로-->
             <Grid.RowDefinitions>
                 <RowDefinition Height="44"/>
                 <!--고객정보-->
                 <RowDefinition Height="585"/>
                 <!--주문내역-->
-                <RowDefinition Height="22"/>
-                <!--고객저장-->
             </Grid.RowDefinitions>
 
             <!--C0-R0 검색명-->
@@ -325,7 +323,7 @@
                 <!--#region C0-R2-C0 오더정보 좌측(의뢰지, 출,도착지) 3개의 행으로  -->
                 <Grid Grid.Column="0" Margin="{StaticResource AppMargin0100}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="166"/>
+                        <RowDefinition Height="129"/>
                         <RowDefinition Height="186"/>
                         <RowDefinition Height="186"/>
                     </Grid.RowDefinitions>
@@ -337,7 +335,6 @@
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                            <RowDefinition Height="37"/>
                             <RowDefinition Height="37"/>
                         </Grid.RowDefinitions>
 
@@ -423,23 +420,8 @@
                             </Button>
                         </StackPanel>
 
-                        <!--위치-->
-                        <StackPanel Grid.Row="4" Orientation="Horizontal">
-                            <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="37" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
-                                <TextBlock Text="위치" Style="{StaticResource TextBlockStyle}" />
-                            </Border>
-
-                            <Border Style="{StaticResource BorderStyle_Black}" Width="381" Height="37" Background="White" BorderThickness="{StaticResource Thickness_RB}" >
-                                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Transparent">
-                                    <TextBox x:Name="Caller_TBoxDetailAddr" TabIndex="8"
-                                             TextWrapping="Wrap" AcceptsReturn="True"
-                                             Style="{StaticResource TextBoxStyle_Empty}" Width="365" Height="35"/>
-                                </ScrollViewer>
-                            </Border>
-                        </StackPanel>
-
                         <!--적요-->
-                        <StackPanel Grid.Row="5" Orientation="Horizontal">
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="37" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
                                 <TextBlock Text="적요" Style="{StaticResource TextBlockStyle}" />
                             </Border>
@@ -792,7 +774,7 @@
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="22"/>
                         <RowDefinition Height="22"/>
-                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="49"/>
                         <RowDefinition Height="44"/>
                         <RowDefinition Height="22"/>
                     </Grid.RowDefinitions>
@@ -1151,17 +1133,12 @@
 
                     <!--#region R-8 기사검색, 버튼들 -->
                     <StackPanel Grid.Row="8" Orientation="Horizontal" Margin="0,4,0,0">
-                        <Button x:Name="Btn_SearchDriverQ" Width="65" Style="{StaticResource ButtonStyle_03}" BorderThickness="1">
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                <TextBlock Text="기사검색" Foreground="Blue"/>
-                                <TextBlock Text="(F3)" HorizontalAlignment="Center" Foreground="Blue"/>
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="Btn_SearchDrvInfoQ" Width="105" Content="기사정보조회" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
-                        <Button x:Name="Btn_SearchSignQ" Width="80" Content="서명확인" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
-                        <Button x:Name="Btn_DriverPosQ" Width="75" Content="기사위치" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
-                        <Button x:Name="Btn_AllocDistQ" Width="70" Content="배차거리" Foreground="Red" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
-                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Width="55" Height="51" Background="{StaticResource AppBrush_PinkBackground}">
+                        <Button x:Name="Btn_SearchDriverQ" Width="65" Height="45" Content="기사검색" Foreground="Blue" Style="{StaticResource ButtonStyle_03}" BorderThickness="1"/>
+                        <Button x:Name="Btn_SearchDrvInfoQ" Width="105" Height="45" Content="기사정보조회" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Button x:Name="Btn_SearchSignQ" Width="80" Height="45" Content="서명확인" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Button x:Name="Btn_DriverPosQ" Width="75" Height="45" Content="기사위치" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Button x:Name="Btn_AllocDistQ" Width="70" Height="45" Content="배차거리" Foreground="Red" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Width="55" Height="45" Background="{StaticResource AppBrush_PinkBackground}">
                             <TextBlock x:Name="TBlock_AllocDistQ" Text="0" Foreground="Red" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Border>
                     </StackPanel>
@@ -1241,32 +1218,6 @@
                 </Grid>
                 <!--#endregion C0-R2-C1 오더정보 우측(그외 정보)-->
             </Grid>
-
-            <!--C0-R2 신규고객저장-->
-            <StackPanel  Grid.Row="2" Orientation="Horizontal">
-                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="1" Background="LightGray"
-                        Width="100" Height="22">
-                    <TextBlock Text="신규고객저장" Style="{StaticResource TextBlockStyle}"/>
-                </Border>
-
-                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}"
-                        Background="White" Width="185" Height="22">
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton GroupName="AllocGroup" Content="의뢰지" Margin="3,0,0,0"
-                                     VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
-                        <RadioButton GroupName="AllocGroup" Content="출발지" Margin="3,0,0,0"
-                                     VerticalContentAlignment="Center" HorizontalAlignment="Left" IsChecked="True"/>
-                        <RadioButton GroupName="AllocGroup" Content="도착지" Margin="3,0,0,0"
-                                     VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
-                    </StackPanel>
-                </Border>
-
-                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="LightGray"
-                        Width="599" Height="22">
-                    <TextBlock Text="       Alt + S : 저장, Alt + D : 대기저장, F2 : 고객저장, F4 : 신규저장, F5 : 오더복사"
-                               Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
-                </Border>
-            </StackPanel>
         </Grid>
         <!--#endregion C0-좌측열(데이타)-->
 
@@ -1381,8 +1332,8 @@
                     </Button>
 
                     <!--닫기 버튼-->
-                    <Button x:Name="BtnReg_Close" 
-                            Style="{StaticResource ButtonStyle_04}" Height="50" Margin="0,211,0,0" >
+                    <Button x:Name="BtnReg_Close"
+                            Style="{StaticResource ButtonStyle_04}" Height="50" Margin="0,62,0,0" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Close001.png" Style="{StaticResource ImageSizeMid}" />
                             <TextBlock Text="    닫기    " Style="{StaticResource TextBlockStyle}"/>
@@ -1464,15 +1415,6 @@
                         </StackPanel>
                     </Button>
 
-                    <!--송장인쇄 버튼-->
-                    <Button x:Name="BtnMod_PrintBill"
-                            Style="{StaticResource ButtonStyle_04}" Height="30" >
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="\Resources\Images\Printer001.png" Style="{StaticResource ImageSizeMid}" />
-                            <TextBlock Text="  송장인쇄 " Style="{StaticResource TextBlockStyle}"/>
-                        </StackPanel>
-                    </Button>
-
                     <!--처리완료 버튼-->
                     <Button x:Name="BtnMod_Finish"
                             Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF" >
@@ -1522,8 +1464,8 @@
                     </Button>
 
                     <!--닫기 버튼-->
-                    <Button x:Name="BtnMod_Close" 
-                            Style="{StaticResource ButtonStyle_04}" Height="50"  Margin="0,141,0,0" >
+                    <Button x:Name="BtnMod_Close"
+                            Style="{StaticResource ButtonStyle_04}" Height="50"  Margin="0,22,0,0" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Close001.png" Style="{StaticResource ImageSizeMid}" />
                             <TextBlock Text="    닫기    " Style="{StaticResource TextBlockStyle}"/>
