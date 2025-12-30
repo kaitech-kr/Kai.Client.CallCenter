@@ -798,6 +798,7 @@
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
                         </Grid.RowDefinitions>
 
                         <!--예약-->
@@ -861,6 +862,23 @@
                                     <CheckBox x:Name="ChkBox_왕복" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle}"/>
                                     <CheckBox x:Name="ChkBox_경유" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle}"/>
                                     <CheckBox x:Name="ChkBox_긴급" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle}"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!--차량-->
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="차량" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <RadioButton x:Name="RadioBtn_오토" GroupName="CarGroup" Content="오토" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True"/>
+                                    <RadioButton x:Name="RadioBtn_밴" GroupName="CarGroup" Content="밴" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_플렉" GroupName="CarGroup" Content="플렉스" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_다마" GroupName="CarGroup" Content="다마스" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_라보" GroupName="CarGroup" Content="라보" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_트럭" GroupName="CarGroup" Content="트럭" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -1033,16 +1051,6 @@
                 </Grid.ColumnDefinitions>
                 <Border Grid.Column="0" Style="{StaticResource BorderStyle_Black}" Width="65" Height="44" BorderThickness="{StaticResource Thickness_LRB}" Background="{StaticResource BackgroundBrush_Right01}">
                     <TextBlock Text="차량" Style="{StaticResource TextBlockStyle}"/>
-                </Border>
-                <Border Grid.Column="1" Style="{StaticResource BorderStyle_Black}" Width="188" Height="44" BorderThickness="{StaticResource Thickness_RB}" Background="White">
-                    <WrapPanel>
-                        <RadioButton x:Name="RadioBtn_오토3" GroupName="CarGroup3" Content="오토    " Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True"/>
-                        <RadioButton x:Name="RadioBtn_밴3" GroupName="CarGroup3" Content="밴    " Margin="5,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                        <RadioButton x:Name="RadioBtn_플렉3" GroupName="CarGroup3" Content="플렉스" Margin="5,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                        <RadioButton x:Name="RadioBtn_다마3" GroupName="CarGroup3" Content="다마스 " Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                        <RadioButton x:Name="RadioBtn_라보3" GroupName="CarGroup3" Content="라보  " Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                        <RadioButton x:Name="RadioBtn_트럭3" GroupName="CarGroup3" Content="트럭" Margin="0,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                    </WrapPanel>
                 </Border>
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
