@@ -788,8 +788,15 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="66"/>
                         <RowDefinition Height="180"/>
-                        <RowDefinition Height="121"/>
-                        <RowDefinition Height="61"/>
+                        <RowDefinition Height="26"/>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="22"/>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition Height="44"/>
+                        <RowDefinition Height="22"/>
                     </Grid.RowDefinitions>
 
                     <!--#region R-0 에약그룹 -->
@@ -1044,6 +1051,195 @@
 
                     </Grid>
                     <!--#endregion R-1 퀵정보그룹-->
+
+                    <!--#region R-2 요금헤더 -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,4,0,0">
+                        <Image Source="\Resources\Images\Money001.png" Style="{StaticResource ImageSizeSmall}" Margin="5,0,0,0"/>
+                        <TextBlock Text="요금" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}" FontWeight="DemiBold" Foreground="Blue" Width="36"/>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="78" BorderThickness="{StaticResource Thickness_LTR}" Background="White">
+                            <CheckBox x:Name="ChkBox_부가세Q" Style="{StaticResource CheckBoxStyle_Basic}" Content="부가세"/>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" BorderThickness="{StaticResource Thickness_TR}" Background="White">
+                            <CheckBox x:Name="ChkBox_거리요금Q" Style="{StaticResource CheckBoxStyle_Basic}" Content="거리요금"/>
+                        </Border>
+                        <TextBlock Text="화물중랑(110%이하)" Margin="3,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                        <TextBox x:Name="TBox_화물중량Q" Style="{StaticResource TextBoxStyle_Small}" Width="30" Margin="5,0,0,1" BorderThickness="1"/>
+                        <TextBlock Text="t" Margin="3,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                        <TextBlock Text="이하" Margin="3,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                    <!--#endregion R-2 요금헤더-->
+
+                    <!--#region R-3 부가세, 요금타입, 거리 -->
+                    <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="1">
+                            <TextBlock Text="부가세" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <TextBox x:Name="Fee_TBoxAddedTaxQ" Style="{StaticResource TextBoxStyle_Fee}" Width="87" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="67" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TRB}">
+                            <TextBlock Text="요금타입" Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Width="50">
+                            <ComboBox x:Name="CBox_요금타입Q" Style="{StaticResource ComboBoxStyle_Basic}"/>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TRB}" Width="30">
+                            <TextBlock Text="거리" Style="{StaticResource TextBlockStyle}" Foreground="Red"/>
+                        </Border>
+                        <TextBox x:Name="TBox_DistenceQ" Style="{StaticResource TextBoxStyle}" Width="50" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TRB}" Width="30">
+                            <TextBlock Text="Km" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Button x:Name="Btn_SearchFeeQ" Content="요금조회" Width="70" Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                    </StackPanel>
+                    <!--#endregion R-3 부가세, 요금타입, 거리-->
+
+                    <!--#region R-4 기본요금, 추가금액 -->
+                    <StackPanel Grid.Row="4" Orientation="Horizontal">
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                            <TextBlock Text="기본요금" Style="{StaticResource TextBlockStyle}" FontWeight="SemiBold" Foreground="Blue"/>
+                        </Border>
+                        <TextBox x:Name="TBox_FeeBasicQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                            <TextBlock Text="추가금액" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <TextBox x:Name="TBox_FeePlusQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"/>
+                    </StackPanel>
+                    <!--#endregion R-4 기본요금, 추가금액-->
+
+                    <!--#region R-5 할인금액, 탁송료 -->
+                    <StackPanel Grid.Row="5" Orientation="Horizontal">
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                            <TextBlock Text="할인금액" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <TextBox x:Name="TBox_FeeMinusQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                            <TextBlock Text="탁송료" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <TextBox x:Name="TBox_FeeConnQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"/>
+                    </StackPanel>
+                    <!--#endregion R-5 할인금액, 탁송료-->
+
+                    <!--#region R-6 합계금액, 기사금액 -->
+                    <StackPanel Grid.Row="6" Orientation="Horizontal">
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                            <TextBlock Text="합계금액" Style="{StaticResource TextBlockStyle}" FontWeight="SemiBold" Foreground="Blue"/>
+                        </Border>
+                        <TextBox x:Name="TBox_FeeTotQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                            <TextBlock Text="기사금액" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <TextBox x:Name="TBox_FeeDriverQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"/>
+                    </StackPanel>
+                    <!--#endregion R-6 합계금액, 기사금액-->
+
+                    <!--#region R-7 마일리지, 기사처리비 -->
+                    <StackPanel Grid.Row="7" Orientation="Horizontal">
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                            <TextBlock Text="마일리지" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" BorderThickness="{StaticResource Thickness_RB}" Width="154">
+                            <ComboBox x:Name="CBox_MileageQ" Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0">
+                                <ComboBoxItem Content="의뢰자마일리지"/>
+                            </ComboBox>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
+                            <TextBlock Text="기사처리비" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border BorderBrush="Black" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="22" Height="{StaticResource LineHeight_Table}">
+                            <CheckBox x:Name="ChkBox_FeeDrvChargeQ" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <TextBox x:Name="TBox_FeeDrvChargeQ" Style="{StaticResource TextBoxStyle_Fee}" Width="128" BorderThickness="{StaticResource Thickness_RB}"/>
+                    </StackPanel>
+                    <!--#endregion R-7 마일리지, 기사처리비-->
+
+                    <!--#region R-8 기사검색, 버튼들 -->
+                    <StackPanel Grid.Row="8" Orientation="Horizontal" Margin="0,4,0,0">
+                        <Button x:Name="Btn_SearchDriverQ" Width="65" Style="{StaticResource ButtonStyle_03}" BorderThickness="1">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <TextBlock Text="기사검색" Foreground="Blue"/>
+                                <TextBlock Text="(F3)" HorizontalAlignment="Center" Foreground="Blue"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="Btn_SearchDrvInfoQ" Width="105" Content="기사정보조회" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Button x:Name="Btn_SearchSignQ" Width="80" Content="서명확인" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Button x:Name="Btn_DriverPosQ" Width="75" Content="기사위치" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Button x:Name="Btn_AllocDistQ" Width="70" Content="배차거리" Foreground="Red" Style="{StaticResource ButtonStyle_03}" BorderThickness="{StaticResource Thickness_TRB}"/>
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Width="55" Height="51" Background="{StaticResource AppBrush_PinkBackground}">
+                            <TextBlock x:Name="TBlock_AllocDistQ" Text="0" Foreground="Red" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
+                    <!--#endregion R-8 기사검색, 버튼들-->
+
+                    <!--#region R-9 기사정보 -->
+                    <Grid Grid.Row="9">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="22"/>
+                            <RowDefinition Height="22"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65"/>
+                            <ColumnDefinition Width="65"/>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="75"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="25"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_LRB}" Background="{StaticResource BackgroundBrush_Right03}" Width="65" Height="44">
+                            <TextBlock Text="라이더" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="{StaticResource BackgroundBrush_Right03}" Width="65" Height="22">
+                            <TextBlock Text="번호/이름" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="{StaticResource BackgroundBrush_Right03}" Width="65" Height="22">
+                            <TextBlock Text="타입" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="50" Height="22">
+                            <TextBlock x:Name="TBlock_DrvNoQ" Text="0" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="3" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="70" Height="22">
+                            <TextBlock x:Name="TBlock_DrvNameQ" Text="" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="120" Height="22">
+                            <TextBlock x:Name="TBlock_DrvTypeQ" Text="" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="4" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="{StaticResource BackgroundBrush_Right03}" Width="75" Height="22">
+                            <TextBlock Text="소속" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="4" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="{StaticResource BackgroundBrush_Right03}" Width="75" Height="22">
+                            <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="125" Height="22">
+                            <TextBlock x:Name="TBlock_DrvBelongQ" Text="" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="5" Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="100" Height="22">
+                            <TextBlock x:Name="TBlock_DrvTelQ" Text="" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Button Grid.Row="1" Grid.Column="6" x:Name="Btn_StartTmQ" Width="25" Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
+                            <Image Source="\Resources\Images\Tel003.png" Style="{StaticResource ImageSizeSmall}"/>
+                        </Button>
+                    </Grid>
+                    <!--#endregion R-9 기사정보-->
+
+                    <!--#region R-10 기타 -->
+                    <StackPanel Grid.Row="10" Orientation="Horizontal">
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_LRB}" Background="White" Width="65" Height="22">
+                            <TextBlock x:Name="TBlock_EtcQ1" Text="" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="185" Height="22">
+                            <TextBlock x:Name="TBlock_EtcQ2" Text="" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="{StaticResource BackgroundBrush_Right01}" Width="75" Height="22">
+                            <TextBlock Text="세금계산서" Style="{StaticResource TextBlockStyle}"/>
+                        </Border>
+                        <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Width="60" Height="22">
+                            <ComboBox x:Name="CBox_TaxTypeQ" Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0">
+                                <ComboBoxItem Content="일반"/>
+                                <ComboBoxItem Content="간이"/>
+                            </ComboBox>
+                        </Border>
+                        <Button x:Name="Btn_CopyTelNoQ" Content="전번복사" Width="65" Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}"/>
+                    </StackPanel>
+                    <!--#endregion R-10 기타-->
                 </Grid>
                 <!--#endregion C0-R2-C1 오더정보 우측(그외 정보)-->
             </Grid>
