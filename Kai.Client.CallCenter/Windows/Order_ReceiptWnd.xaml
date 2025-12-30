@@ -787,7 +787,7 @@
                 <Grid Grid.Column="1" Margin="3,2,0,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="88"/>
-                        <RowDefinition Height="92"/>
+                        <RowDefinition Height="180"/>
                         <RowDefinition Height="121"/>
                         <RowDefinition Height="61"/>
                     </Grid.RowDefinitions>
@@ -893,30 +893,46 @@
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                            <RowDefinition Height="44"/>
                         </Grid.RowDefinitions>
 
                         <!--화물정보 Row 0-->
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LTR}">
-                                <TextBlock Text="화물" Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="배송" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TR}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <CheckBox x:Name="ChkBox_독차" Content="독차" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_혼적" Content="혼적" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_왕복2" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_경유2" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                </StackPanel>
                             </Border>
                         </StackPanel>
 
                         <!--화물정보 Row 1-->
                         <StackPanel Grid.Row="1" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="1">
-                                <TextBlock Text="" Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="톤수" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
-                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="White" Width="159" Height="{StaticResource LineHeight_Table}">
+                                <ComboBox x:Name="ChkBoxTon" Style="{StaticResource ComboBoxStyle_Basic}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TRB}">
+                                <TextBlock Text="차종" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="White" Width="159" Height="{StaticResource LineHeight_Table}">
+                                <ComboBox x:Name="ChkBox차종" Style="{StaticResource ComboBoxStyle_Basic}"/>
                             </Border>
                         </StackPanel>
 
                         <!--화물정보 Row 2-->
                         <StackPanel Grid.Row="2" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
-                                <TextBlock Text="" Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="상차" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
                             </Border>
@@ -925,9 +941,36 @@
                         <!--화물정보 Row 3-->
                         <StackPanel Grid.Row="3" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
-                                <TextBlock Text="" Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="옵션" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                            </Border>
+                        </StackPanel>
+
+                        <!--화물정보 Row 4-->
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="하차" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                            </Border>
+                        </StackPanel>
+
+                        <!--화물정보 Row 5-->
+                        <StackPanel Grid.Row="5" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="옵션" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                            </Border>
+                        </StackPanel>
+
+                        <!--화물정보 Row 6-->
+                        <StackPanel Grid.Row="6" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}" Width="65" Height="44">
+                                <TextBlock Text="적요" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="44">
                             </Border>
                         </StackPanel>
 
