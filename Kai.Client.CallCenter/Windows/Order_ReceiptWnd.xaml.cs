@@ -77,7 +77,7 @@ public partial class Order_ReceiptWnd : Window
         ColumnRegist.Visibility = Visibility.Visible;
         ColumnModify.Visibility = Visibility.Collapsed;
 
-        ChkBox_편도.IsChecked = true; // 체크 대상
+        ChkBox_편도Q.IsChecked = true; // 체크 대상
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)

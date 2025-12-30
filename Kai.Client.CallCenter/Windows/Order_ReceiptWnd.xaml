@@ -786,7 +786,7 @@
                 <!--#region C0-R2-C1 오더정보 우측(그외 정보) 4개의 행으로 -->
                 <Grid Grid.Column="1" Margin="3,2,0,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="88"/>
+                        <RowDefinition Height="66"/>
                         <RowDefinition Height="180"/>
                         <RowDefinition Height="121"/>
                         <RowDefinition Height="61"/>
@@ -795,7 +795,6 @@
                     <!--#region R-0 에약그룹 -->
                     <Grid Grid.Row="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
@@ -851,23 +850,8 @@
                             </Border>
                         </StackPanel>
 
-                        <!--배송-->
-                        <StackPanel Grid.Row="2" Orientation="Horizontal">
-                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
-                                <TextBlock Text="배송" Style="{StaticResource TextBlockStyle}"/>
-                            </Border>
-                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <CheckBox x:Name="ChkBox_편도" Content="편도" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" IsChecked="True"/>
-                                    <CheckBox x:Name="ChkBox_왕복" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox_경유" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox_긴급" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-
                         <!--차량-->
-                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
                                 <TextBlock Text="차량" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
@@ -992,9 +976,15 @@
                         <!--퀵정보 Row 0-->
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LTR}">
-                                <TextBlock Text="퀵1" Style="{StaticResource TextBlockStyle}"/>
+                                <TextBlock Text="배송" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TR}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <CheckBox x:Name="ChkBox_편도Q" Content="편도" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" IsChecked="True"/>
+                                    <CheckBox x:Name="ChkBox_왕복Q" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_경유Q" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_긴급Q" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                </StackPanel>
                             </Border>
                         </StackPanel>
 
