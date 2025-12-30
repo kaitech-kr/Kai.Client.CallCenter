@@ -233,7 +233,7 @@
             <!--C0-R0 검색명-->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="310"/>
+                    <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -247,9 +247,8 @@
 
                     <!--수신제한 버튼-->
                     <Button x:Name="BtnNoRcvTel"
-                            Width="50" Background="{StaticResource AppBrush_PinkBackground}" BorderBrush="Blue" BorderThickness="1,1,0,1" 
-                            Margin="1,0,0,0" HorizontalContentAlignment="Left">
-                        <Image Source="\Resources\Images\Tel006.png" Width="{StaticResource AppItemHeight_Normal}" Margin="5,0,0,0"/>
+                            Width="25" Background="{StaticResource AppBrush_PinkBackground}" BorderBrush="Blue" BorderThickness="1,1,0,1" Margin="1,0,0,0">
+                        <Image Source="\Resources\Images\Tel006.png" Width="{StaticResource AppItemHeight_Normal}"/>
                     </Button>
                 </StackPanel>
 
@@ -258,9 +257,9 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="92"/>
+                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="60"/>
-                        <ColumnDefinition Width="113"/>
+                        <ColumnDefinition Width="120"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -326,7 +325,7 @@
                 <!--#region C0-R2-C0 오더정보 좌측(의뢰지, 출,도착지) 3개의 행으로  -->
                 <Grid Grid.Column="0" Margin="{StaticResource AppMargin0100}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="210"/>
+                        <RowDefinition Height="166"/>
                         <RowDefinition Height="186"/>
                         <RowDefinition Height="186"/>
                     </Grid.RowDefinitions>
@@ -338,77 +337,29 @@
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="37"/>
                             <RowDefinition Height="37"/>
                         </Grid.RowDefinitions>
 
-                        <!--고객명-->
-                        <StackPanel Orientation="Horizontal" >
-                            <!--고객-->
-                            <Image Source="\Resources\Images\Customer001.png" Style="{StaticResource ImageSizeSmall}"/>
-                            <TextBlock Text="고객" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"
-                                       FontWeight="DemiBold" Foreground="Blue" Width="55" />
-
-                            <!--가져오기 버튼-->
-                            <Button x:Name="Caller_BtnPull" Content="가져오기" Width="70" 
-                                    Style="{StaticResource ButtonStyle_01}" BorderThickness="{StaticResource Thickness_LTR}"/>
-
-                            <!--내보내기-->
-                            <Button x:Name="Caller_BtnPush" Content="내보내기" Width="70" 
-                                    Style="{StaticResource ButtonStyle_01}" BorderThickness="{StaticResource Thickness_TR}"/>
-
-                            <!--외부-->
-                            <Button x:Name="Caller_BtnOuter" Content="외부" Width="40" 
-                                    Style="{StaticResource ButtonStyle_01}" BorderThickness="{StaticResource Thickness_TR}"/>
-
-                            <Button x:Name="Caller_BtnUseHistory" Content="이용내역" Width="70" 
-                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TR}"/>
-
-                            <!--고객검색버튼-->
-                            <Button x:Name="Caller_BtnSearch" Width="103" Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TR}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="\Resources\Images\Telescope001.png" Style="{StaticResource ImageSizeSmall}"/>
-                                    <TextBlock Text="고객검색" Style="{StaticResource TextBlockStyle}"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-
-                        <!--검색-->
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
-                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray">
-                                <TextBlock Text="검색" Style="{StaticResource TextBlockStyle}" />
-                            </Border>
-
-                            <TextBox x:Name="Caller_TBoxSearch" TabIndex="2"
-                                     Style="{StaticResource TextBoxStyle}" Width="347" BorderThickness="{StaticResource Thickness_TRB}"/>
-
-                            <Button x:Name="Caller_BtnSearch2" Width="34" 
-                                    Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}">
-                                <Image Source="\Resources\Images\Play007.png" Style="{StaticResource ImageSizeMid}"/>
-                            </Button>
-                        </StackPanel>
-
                         <!--고객, 동명-->
-                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
                             <!--고객-->
-                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="1">
                                 <TextBlock Text="고객" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
                             </Border>
-                            <TextBox x:Name="Caller_TBoxCustName" TabIndex="3" 
-                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_RB}"/>
+                            <TextBox x:Name="Caller_TBoxCustName" TabIndex="3"
+                                     Style="{StaticResource TextBoxStyle}" Width="165" BorderThickness="{StaticResource Thickness_TRB}"/>
 
                             <!--동명-->
-                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_RB}">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_TRB}">
                                 <TextBlock Text="동명" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
                             </Border>
-                            <TextBox x:Name="Caller_TBoxDongBasic" TabIndex="3" 
-                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"/>
+                            <TextBox x:Name="Caller_TBoxDongBasic" TabIndex="3"
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_TRB}"/>
                         </StackPanel>
 
                         <!--전화, 전화2-->
-                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
                             <!--전화1-->
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
                                 <TextBlock Text="전화" Style="{StaticResource TextBlockStyle}" Foreground="red"/>
@@ -439,7 +390,7 @@
                         </StackPanel>
 
                         <!--부서, 담당-->
-                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
                             <!--부서-->
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
                                 <TextBlock Text="부서" Style="{StaticResource TextBlockStyle}"/>
@@ -458,7 +409,7 @@
                         </StackPanel>
 
                         <!--주소-->
-                        <StackPanel Grid.Row="5" Orientation="Horizontal">
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width01}" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
                                 <TextBlock Text="주소" Style="{StaticResource TextBlockStyle}" />
                             </Border>
@@ -473,7 +424,7 @@
                         </StackPanel>
 
                         <!--위치-->
-                        <StackPanel Grid.Row="6" Orientation="Horizontal">
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="37" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
                                 <TextBlock Text="위치" Style="{StaticResource TextBlockStyle}" />
                             </Border>
@@ -488,7 +439,7 @@
                         </StackPanel>
 
                         <!--적요-->
-                        <StackPanel Grid.Row="7" Orientation="Horizontal">
+                        <StackPanel Grid.Row="5" Orientation="Horizontal">
                             <Border Style="{StaticResource BorderStyle_Black}" Width="50" Height="37" Background="LightGray" BorderThickness="{StaticResource Thickness_LRB}">
                                 <TextBlock Text="적요" Style="{StaticResource TextBlockStyle}" />
                             </Border>
