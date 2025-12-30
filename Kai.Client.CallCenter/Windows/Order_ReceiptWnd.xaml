@@ -222,7 +222,7 @@
         <Grid Grid.Column="0" Height="649" VerticalAlignment="Top">
             <!--2개의 행으로-->
             <Grid.RowDefinitions>
-                <RowDefinition Height="44"/>
+                <RowDefinition Height="46"/>
                 <!--고객정보-->
                 <RowDefinition Height="585"/>
                 <!--주문내역-->
@@ -286,7 +286,7 @@
                     </Border>
                     <Border Grid.Column="4" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
                         <TextBlock x:Name="TBlkRegister"
-                                   Text="카이테크" Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
+                                   Text="" Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
                     </Border>
 
                     <!--현재시각-->
@@ -1224,7 +1224,7 @@
         <!--#region C1-우측열(버튼)  -->
         <Grid Grid.Column="1">
             <!--#region 신규등록일때 보임  -->
-            <Border x:Name="ColumnRegist"  BorderThickness="0" Visibility="Collapsed">
+            <Border x:Name="ColumnRegist"  BorderThickness="0" Visibility="Visible">
                 <StackPanel>
                     <!--고객등록 버튼-->
                     <Button x:Name="BtnReg_CustRegist"
@@ -1332,8 +1332,8 @@
                     </Button>
 
                     <!--닫기 버튼-->
-                    <Button x:Name="BtnReg_Close"
-                            Style="{StaticResource ButtonStyle_04}" Height="50" Margin="0,62,0,0" >
+                    <Button x:Name="BtnReg_Close" Click="BtnCommon_Close_Click"
+                            Style="{StaticResource ButtonStyle_04}" Height="50" Margin="0,63,0,0" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Close001.png" Style="{StaticResource ImageSizeMid}" />
                             <TextBlock Text="    닫기    " Style="{StaticResource TextBlockStyle}"/>
@@ -1344,7 +1344,7 @@
             <!--#endregion 신규등록일때 보임-->
 
             <!--#region 등록수정일때 보임 -->
-            <Border x:Name="ColumnModify" BorderThickness="0" Visibility="Visible">
+            <Border x:Name="ColumnModify" BorderThickness="0" Visibility="Collapsed">
                 <StackPanel>
                     <!--고객수정 버튼-->
                     <Button x:Name="BtnMod_CustUpdate"  
@@ -1464,8 +1464,8 @@
                     </Button>
 
                     <!--닫기 버튼-->
-                    <Button x:Name="BtnMod_Close"
-                            Style="{StaticResource ButtonStyle_04}" Height="50"  Margin="0,22,0,0" >
+                    <Button x:Name="BtnMod_Close" Click="BtnCommon_Close_Click"
+                            Style="{StaticResource ButtonStyle_04}" Height="50"  Margin="0,23,0,0" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Close001.png" Style="{StaticResource ImageSizeMid}" />
                             <TextBlock Text="    닫기    " Style="{StaticResource TextBlockStyle}"/>
