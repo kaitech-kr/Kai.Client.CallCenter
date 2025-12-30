@@ -88,6 +88,22 @@ public partial class Order_ReceiptWnd : Window
     private void Window_Unloaded(object sender, RoutedEventArgs e)
     {
     }
+
+    // 퀵타입 선택 (오토, 밴, 플렉스)
+    private void RadioBtn_QuickType_Checked(object sender, RoutedEventArgs e)
+    {
+        if (GridQuickInfo == null || GridCargoInfo == null) return;
+        GridQuickInfo.Visibility = Visibility.Visible;
+        GridCargoInfo.Visibility = Visibility.Collapsed;
+    }
+
+    // 화물타입 선택 (다마스, 라보, 트럭)
+    private void RadioBtn_CargoType_Checked(object sender, RoutedEventArgs e)
+    {
+        if (GridQuickInfo == null || GridCargoInfo == null) return;
+        GridQuickInfo.Visibility = Visibility.Collapsed;
+        GridCargoInfo.Visibility = Visibility.Visible;
+    }
     #endregion
 
     #region Click - 주버튼(공용)
