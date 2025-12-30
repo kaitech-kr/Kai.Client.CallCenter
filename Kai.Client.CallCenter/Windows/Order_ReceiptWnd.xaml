@@ -797,11 +797,6 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                            <RowDefinition Height="82"/>
-                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                            <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                            <RowDefinition Height="44"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                         </Grid.RowDefinitions>
 
@@ -817,7 +812,7 @@
                             </Border>
 
 
-                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="205" BorderThickness="0">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="205" BorderThickness="{StaticResource Thickness_TR}">
                                 <xctk:DateTimePicker x:Name="DtPickerReserve"
                                                      Format="Custom"
                                                      FormatString="yyyy‑MM‑dd HH:mm      "
@@ -835,6 +830,38 @@
                             <Border Style="{StaticResource BorderStyle_Black}" Background="White"
                                     Width="110" BorderThickness="{StaticResource Thickness_TR}">
                                 <TextBlock Text="분전 예약해제" Style="{StaticResource TextBlockStyle}" Width="91" />
+                            </Border>
+                        </StackPanel>
+
+                        <!--요금-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="1">
+                                <TextBlock Text="요금" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="RadioBtn_선불" GroupName="FeeGroup" Content="선불" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True"/>
+                                    <RadioButton x:Name="RadioBtn_착불" GroupName="FeeGroup" Content="착불" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_신용" GroupName="FeeGroup" Content="신용" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_송금" GroupName="FeeGroup" Content="송금" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_수금" GroupName="FeeGroup" Content="수금" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    <RadioButton x:Name="RadioBtn_카드" GroupName="FeeGroup" Content="카드" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!--배송-->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                <TextBlock Text="배송" Style="{StaticResource TextBlockStyle}"/>
+                            </Border>
+                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <CheckBox x:Name="ChkBox_편도" Content="편도" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle}" IsChecked="True"/>
+                                    <CheckBox x:Name="ChkBox_왕복" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle}"/>
+                                    <CheckBox x:Name="ChkBox_경유" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle}"/>
+                                    <CheckBox x:Name="ChkBox_긴급" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle}"/>
+                                </StackPanel>
                             </Border>
                         </StackPanel>
 
@@ -1088,14 +1115,6 @@
                 </Border>
                 <Border Style="{StaticResource BorderStyle_Black}" Width="83" Height="22" BorderThickness="{StaticResource Thickness_RB}" Background="White">
                     <CheckBox Style="{StaticResource CheckBoxStyle_Basic}" Content="당일택배"/>
-                </Border>
-                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="180" Height="{StaticResource LineHeight_Table}">
-                    <StackPanel Orientation="Horizontal">
-                        <RadioButton x:Name="RadioBtn_편도2" GroupName="AllocGroup2" Content="편도" Margin="1,0,0,0" VerticalContentAlignment="Center" IsChecked="True"/>
-                        <RadioButton x:Name="RadioBtn_왕복2" GroupName="AllocGroup2" Content="왕복" Margin="1,0,0,0" VerticalContentAlignment="Center"/>
-                        <RadioButton x:Name="RadioBtn_경유2" GroupName="AllocGroup2" Content="경유" Margin="1,0,0,0" VerticalContentAlignment="Center"/>
-                        <RadioButton x:Name="RadioBtn_긴급2" GroupName="AllocGroup2" Content="긴급" Margin="1,0,0,0" VerticalContentAlignment="Center"/>
-                    </StackPanel>
                 </Border>
                 <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Width="60" Height="{StaticResource LineHeight_Table}">
                     <ComboBox Style="{StaticResource ComboBoxStyle_Basic}" SelectedIndex="0">
