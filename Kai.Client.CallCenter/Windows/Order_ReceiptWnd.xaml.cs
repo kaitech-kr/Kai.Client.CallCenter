@@ -58,7 +58,7 @@ public partial class Order_ReceiptWnd : Window
         //     ColumnRegist.Visibility = Visibility.Visible;
         //     ColumnModify.Visibility = Visibility.Collapsed;
         // 
-        //     RadioBtn_편도.IsChecked = true; // 체크 대상
+        //     RadioBtn_편도2.IsChecked = true; // 체크 대상
         // }
         // else // 수정 모드
         // {
@@ -77,7 +77,7 @@ public partial class Order_ReceiptWnd : Window
         ColumnRegist.Visibility = Visibility.Visible;
         ColumnModify.Visibility = Visibility.Collapsed;
 
-        RadioBtn_편도.IsChecked = true; // 체크 대상
+        ChkBox_편도.IsChecked = true; // 체크 대상
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -91,450 +91,448 @@ public partial class Order_ReceiptWnd : Window
     #endregion
 
     #region Click - 주버튼(공용)
-    // 의뢰자 고객수정 버튼
-    private void BtnCommon_CustUpdate_Click(object sender, RoutedEventArgs e)
-    {
-        if (CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
+    //// 의뢰자 고객수정 버튼
+    //private void BtnCommon_CustUpdate_Click(object sender, RoutedEventArgs e)
+    //{
+    //    if (CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
 
-        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(CallCustCodeK);
-        bool result = (bool)SafeShowDialog.WithMainWindowToOwner(wnd, this);
-        if (!result) return;
+    //    CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(CallCustCodeK);
+    //    bool result = (bool)SafeShowDialog.WithMainWindowToOwner(wnd, this);
+    //    if (!result) return;
 
-        // Table To 의뢰자
-        // TbAllTo의뢰자(wnd.tbAllWithNew);
-    }
+    //    // Table To 의뢰자
+    //    // TbAllTo의뢰자(wnd.tbAllWithNew);
+    //}
 
-    // 요금저장
-    private void BtnCommon_SaveFee_Click(object sender, RoutedEventArgs e)
-    {
+    //// 요금저장
+    //private void BtnCommon_SaveFee_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 거래처요금
-    private void BtnCommon_CompFee_Click(object sender, RoutedEventArgs e)
-    {
+    //// 거래처요금
+    //private void BtnCommon_CompFee_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 오더복사
-    private void BtnCommon_CopyOrder_Click(object sender, RoutedEventArgs e)
-    {
+    //// 오더복사
+    //private void BtnCommon_CopyOrder_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 마일리지
-    private void BtnCommon_Mileage_Click(object sender, RoutedEventArgs e)
-    {
+    //// 마일리지
+    //private void BtnCommon_Mileage_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 변경이력
-    private void BtnCommon_ChangeHistory_Click(object sender, RoutedEventArgs e)
-    {
+    //// 변경이력
+    //private void BtnCommon_ChangeHistory_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 닫기
-    private void BtnCommon_Close_Click(object sender, RoutedEventArgs e)
-    {
-         this.Close();
-    }
+    //// 닫기
+    //private void BtnCommon_Close_Click(object sender, RoutedEventArgs e)
+    //{
+    //     this.Close();
+    //}
 
     #endregion
 
     #region Button Clicks - Commented
-    /*
-    private async void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e)
-    {
-        bool success = await SaveOrderAsync("접수", "접수저장");
-        if (success)
-        {
-            DialogResult = true;
-            Close();
-        }
-    }
 
-    private async void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e)
-    {
-        bool success = await SaveOrderAsync("대기", "대기저장");
-        if (success)
-        {
-            DialogResult = true;
-            Close();
-        }
-    }
+    //private async void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e)
+    //{
+    //    bool success = await SaveOrderAsync("접수", "접수저장");
+    //    if (success)
+    //    {
+    //        DialogResult = true;
+    //        Close();
+    //    }
+    //}
 
-    private async void BtnMod_Save_Click(object sender, RoutedEventArgs e)
-    {
-        bool success = await UpdateOrderAsync();
-        if (success)
-        {
-            DialogResult = true;
-            Close();
-        }
-    }
-    */
+    //private async void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e)
+    //{
+    //    bool success = await SaveOrderAsync("대기", "대기저장");
+    //    if (success)
+    //    {
+    //        DialogResult = true;
+    //        Close();
+    //    }
+    //}
+
+    //private async void BtnMod_Save_Click(object sender, RoutedEventArgs e)
+    //{
+    //    bool success = await UpdateOrderAsync();
+    //    if (success)
+    //    {
+    //        DialogResult = true;
+    //        Close();
+    //    }
+    //}
+
     #endregion
 
     #region Click - 서브버튼
     // 수신거부
-    private void BtnNoRcvTel_Click(object sender, RoutedEventArgs e)
-    {
+    //private void BtnNoRcvTel_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 출발지 지우기
-    private void Start_BtnErase_Click(object sender, RoutedEventArgs e)
-    {
-        // Non UI
-        StartCustCodeE = 0;
-        StartCustCodeK = 0;
+    //// 출발지 지우기
+    //private void Start_BtnErase_Click(object sender, RoutedEventArgs e)
+    //{
+    //    // Non UI
+    //    StartCustCodeE = 0;
+    //    StartCustCodeK = 0;
 
-        // UI
-        Start_TBoxCustName.Text = "";
-        Start_TBoxChargeName.Text = "";
-        Start_TBoxDeptName.Text = "";
-        Start_TBoxDongBasic.Text = "";
-        Start_TBoxTelNo1.Text = "";
-        Start_TBoxTelNo2.Text = "";
-        Start_TBoxDongAddr.Text = "";
-        Start_TBoxDetailAddr.Text = "";
-    }
+    //    // UI
+    //    Start_TBoxCustName.Text = "";
+    //    Start_TBoxChargeName.Text = "";
+    //    Start_TBoxDeptName.Text = "";
+    //    Start_TBoxDongBasic.Text = "";
+    //    Start_TBoxTelNo1.Text = "";
+    //    Start_TBoxTelNo2.Text = "";
+    //    Start_TBoxDongAddr.Text = "";
+    //    Start_TBoxDetailAddr.Text = "";
+    //}
 
-    // 출발지 거래처등록
-    private void Start_BtnRegComp_Click(object sender, RoutedEventArgs e)
-    {
+    //// 출발지 거래처등록
+    //private void Start_BtnRegComp_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 출도착지 전환
-    private void StartDest_BtnSwap_Click(object sender, RoutedEventArgs e)
-    {
-        // 보관 - 필요
-        long startCustCodeK = StartCustCodeK;
-        long startCustCodeE = StartCustCodeE;
+    //// 출도착지 전환
+    //private void StartDest_BtnSwap_Click(object sender, RoutedEventArgs e)
+    //{
+    //    // 보관 - 필요
+    //    long startCustCodeK = StartCustCodeK;
+    //    long startCustCodeE = StartCustCodeE;
 
-        string startCustName = Start_TBoxCustName.Text;
-        string startChargeName = Start_TBoxChargeName.Text;
-        string startDeptName = Start_TBoxDeptName.Text;
-        string startDongBasic = Start_TBoxDongBasic.Text;
-        string startTelNo1 = Start_TBoxTelNo1.Text;
-        string startTelNo2 = Start_TBoxTelNo2.Text;
-        string startDongAddr = Start_TBoxDongAddr.Text;
-        string startDetailAddr = Start_TBoxDetailAddr.Text;
+    //    string startCustName = Start_TBoxCustName.Text;
+    //    string startChargeName = Start_TBoxChargeName.Text;
+    //    string startDeptName = Start_TBoxDeptName.Text;
+    //    string startDongBasic = Start_TBoxDongBasic.Text;
+    //    string startTelNo1 = Start_TBoxTelNo1.Text;
+    //    string startTelNo2 = Start_TBoxTelNo2.Text;
+    //    string startDongAddr = Start_TBoxDongAddr.Text;
+    //    string startDetailAddr = Start_TBoxDetailAddr.Text;
 
-        StartCustCodeK = DestCustCodeK;
-        StartCustCodeE = DestCustCodeE;
+    //    StartCustCodeK = DestCustCodeK;
+    //    StartCustCodeE = DestCustCodeE;
 
-        Start_TBoxCustName.Text = Dest_TBoxCustName.Text;
-        Start_TBoxChargeName.Text = Dest_TBoxChargeName.Text;
-        Start_TBoxDeptName.Text = Dest_TBoxDeptName.Text;
-        Start_TBoxDongBasic.Text = Dest_TBoxDongBasic.Text;
-        Start_TBoxTelNo1.Text = Dest_TBoxTelNo1.Text;
-        Start_TBoxTelNo2.Text = Dest_TBoxTelNo2.Text;
-        Start_TBoxDongAddr.Text = Dest_TBoxDongAddr.Text;
-        Start_TBoxDetailAddr.Text = Dest_TBoxDetailAddr.Text;
+    //    Start_TBoxCustName.Text = Dest_TBoxCustName.Text;
+    //    Start_TBoxChargeName.Text = Dest_TBoxChargeName.Text;
+    //    Start_TBoxDeptName.Text = Dest_TBoxDeptName.Text;
+    //    Start_TBoxDongBasic.Text = Dest_TBoxDongBasic.Text;
+    //    Start_TBoxTelNo1.Text = Dest_TBoxTelNo1.Text;
+    //    Start_TBoxTelNo2.Text = Dest_TBoxTelNo2.Text;
+    //    Start_TBoxDongAddr.Text = Dest_TBoxDongAddr.Text;
+    //    Start_TBoxDetailAddr.Text = Dest_TBoxDetailAddr.Text;
 
-        DestCustCodeK = startCustCodeK;
-        DestCustCodeE = startCustCodeE;
+    //    DestCustCodeK = startCustCodeK;
+    //    DestCustCodeE = startCustCodeE;
 
-        Dest_TBoxCustName.Text = startCustName;
-        Dest_TBoxChargeName.Text = startChargeName;
-        Dest_TBoxDeptName.Text = startDeptName;
-        Dest_TBoxDongBasic.Text = startDongBasic;
-        Dest_TBoxTelNo1.Text = startTelNo1;
-        Dest_TBoxTelNo2.Text = startTelNo2;
-        Dest_TBoxDongAddr.Text = startDongAddr;
-        Dest_TBoxDetailAddr.Text = startDetailAddr;
-    }
+    //    Dest_TBoxCustName.Text = startCustName;
+    //    Dest_TBoxChargeName.Text = startChargeName;
+    //    Dest_TBoxDeptName.Text = startDeptName;
+    //    Dest_TBoxDongBasic.Text = startDongBasic;
+    //    Dest_TBoxTelNo1.Text = startTelNo1;
+    //    Dest_TBoxTelNo2.Text = startTelNo2;
+    //    Dest_TBoxDongAddr.Text = startDongAddr;
+    //    Dest_TBoxDetailAddr.Text = startDetailAddr;
+    //}
 
-    // 도착지지우기
-    private void Dest_BtnErase_Click(object sender, RoutedEventArgs e)
-    {
-        // Non UI
-        DestCustCodeK = 0;
-        DestCustCodeE = 0;
+    //// 도착지지우기
+    //private void Dest_BtnErase_Click(object sender, RoutedEventArgs e)
+    //{
+    //    // Non UI
+    //    DestCustCodeK = 0;
+    //    DestCustCodeE = 0;
 
-        // UI
-        Dest_TBoxCustName.Text = "";
-        Dest_TBoxChargeName.Text = "";
-        Dest_TBoxDeptName.Text = "";
-        Dest_TBoxDongBasic.Text = "";
-        Dest_TBoxTelNo1.Text = "";
-        Dest_TBoxTelNo2.Text = "";
-        Dest_TBoxDongAddr.Text = "";
-        Dest_TBoxDetailAddr.Text = "";
-    }
+    //    // UI
+    //    Dest_TBoxCustName.Text = "";
+    //    Dest_TBoxChargeName.Text = "";
+    //    Dest_TBoxDeptName.Text = "";
+    //    Dest_TBoxDongBasic.Text = "";
+    //    Dest_TBoxTelNo1.Text = "";
+    //    Dest_TBoxTelNo2.Text = "";
+    //    Dest_TBoxDongAddr.Text = "";
+    //    Dest_TBoxDetailAddr.Text = "";
+    //}
 
-    // 도착지 거래처등록
-    private void Dest_BtnRegComp_Click(object sender, RoutedEventArgs e)
-    {
+    //// 도착지 거래처등록
+    //private void Dest_BtnRegComp_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
-    // 오더적요 지우기
-    private void BtnErase_OrderRemarks_Click(object sender, RoutedEventArgs e)
-    {
-         TBoxOrderRemarks.Text = string.Empty;
-    }
+    //// 오더적요 지우기
+    //private void BtnErase_OrderRemarks_Click(object sender, RoutedEventArgs e)
+    //{
+    //     TBoxOrderRemarks.Text = string.Empty;
+    //}
     #endregion
 
     #region Click - CheckBox 
-    private void ChkBoxReserve_Click(object sender, RoutedEventArgs e)
-    {
-        if ((bool)ChkBoxReserve.IsChecked)
-        {
-            DtPickerReserve.Value = DateTime.Now; // 예약일시를 현재로 설정
-        }
-        else
-        {
-            DtPickerReserve.Value = null; // 예약일시를 비움
-            TBoxReserveBreakMin.Text = "";        // 예약시간 텍스트박스 비움
-        }
-    }
+    //private void ChkBoxReserve_Click(object sender, RoutedEventArgs e)
+    //{
+    //    if ((bool)ChkBoxReserve.IsChecked)
+    //    {
+    //        DtPickerReserve.Value = DateTime.Now; // 예약일시를 현재로 설정
+    //    }
+    //    else
+    //    {
+    //        DtPickerReserve.Value = null; // 예약일시를 비움
+    //        TBoxReserveBreakMin.Text = "";        // 예약시간 텍스트박스 비움
+    //    }
+    //}
     #endregion
 
     #region KeyDown Events
-    // DateTimePicker
-    private void DtPickerReserve_PreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            DtPickerReserve.IsOpen = false; // Enter키를 누르면 DateTimePicker 닫기
-        }
-    }
+    //// DateTimePicker
+    //private void DtPickerReserve_PreviewKeyDown(object sender, KeyEventArgs e)
+    //{
+    //    if (e.Key == Key.Enter)
+    //    {
+    //        DtPickerReserve.IsOpen = false; // Enter키를 누르면 DateTimePicker 닫기
+    //    }
+    //}
 
-    #region KeyDown Events - Commented
-    /*
-    private async void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key != Key.Enter) return;
-        if (string.IsNullOrEmpty(TBoxHeader_Search.Text)) return;
+    //#region KeyDown Events - Commented
+    ///*
+    //private async void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e)
+    //{
+    //    if (e.Key != Key.Enter) return;
+    //    if (string.IsNullOrEmpty(TBoxHeader_Search.Text)) return;
 
-        // 고객 검색 및 로드
-        long lCallCustCode = await SearchAndLoadCustomerAsync(TBoxHeader_Search.Text, LocationType.Caller, null);
+    //    // 고객 검색 및 로드
+    //    long lCallCustCode = await SearchAndLoadCustomerAsync(TBoxHeader_Search.Text, LocationType.Caller, null);
 
-        if (lCallCustCode > 0)
-        {
-            의뢰자정보Mode(lCallCustCode);
-            Keyboard.Focus(Start_TBoxSearch);
-        }
-    }
+    //    if (lCallCustCode > 0)
+    //    {
+    //        의뢰자정보Mode(lCallCustCode);
+    //        Keyboard.Focus(Start_TBoxSearch);
+    //    }
+    //}
 
-    private async void Start_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
-    {
-         if (e.Key != Key.Enter) return;
+    //private async void Start_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
+    //{
+    //     if (e.Key != Key.Enter) return;
 
-        // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
-         long lStartCustCode = await SearchAndLoadCustomerAsync(Start_TBoxSearch.Text, LocationType.Start, true);
+    //    // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
+    //     long lStartCustCode = await SearchAndLoadCustomerAsync(Start_TBoxSearch.Text, LocationType.Start, true);
 
-        if (lStartCustCode > 0)
-        {
-            Keyboard.Focus(Dest_TBoxSearch);
-        }
-    }
+    //    if (lStartCustCode > 0)
+    //    {
+    //        Keyboard.Focus(Dest_TBoxSearch);
+    //    }
+    //}
 
-    private async void Dest_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
-    {
-         if (e.Key != Key.Enter) return;
+    //private async void Dest_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
+    //{
+    //     if (e.Key != Key.Enter) return;
 
-        // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
-        long lDestCustCode = await SearchAndLoadCustomerAsync(Dest_TBoxSearch.Text, LocationType.Dest, true);
+    //    // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
+    //    long lDestCustCode = await SearchAndLoadCustomerAsync(Dest_TBoxSearch.Text, LocationType.Dest, true);
 
-        if (lDestCustCode > 0)
-        {
-            Keyboard.Focus(TBoxFee_Basic);
-        }
-    }
-    */
-    #endregion
+    //    if (lDestCustCode > 0)
+    //    {
+    //        Keyboard.Focus(TBoxFee_Basic);
+    //    }
+    //}
+    //*/
+    //#endregion
 
-    // BasicFee
-    private void Fee_TBoxBasic_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            Keyboard.Focus(TBoxFee_Plus); // 추가요금으로 이동
-            e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
-        }
-    }
+    //// BasicFee
+    //private void Fee_TBoxBasic_KeyDown(object sender, KeyEventArgs e)
+    //{
+    //    if (e.Key == Key.Enter)
+    //    {
+    //        Keyboard.Focus(TBoxFee_Plus); // 추가요금으로 이동
+    //        e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
+    //    }
+    //}
 
-    // FeePlus
-    private void Fee_TBoxPlus_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            Keyboard.Focus(TBoxFee_Minus); // 할인요금으로 이동
-            e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
-        }
-    }
+    //// FeePlus
+    //private void Fee_TBoxPlus_KeyDown(object sender, KeyEventArgs e)
+    //{
+    //    if (e.Key == Key.Enter)
+    //    {
+    //        Keyboard.Focus(TBoxFee_Minus); // 할인요금으로 이동
+    //        e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
+    //    }
+    //}
 
-    // FeePlus
-    private void Fee_TBoxMinus_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            Keyboard.Focus(TBoxFee_Conn); // 탁송요금으로 이동
-            e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
-        }
-    }
+    //// FeePlus
+    //private void Fee_TBoxMinus_KeyDown(object sender, KeyEventArgs e)
+    //{
+    //    if (e.Key == Key.Enter)
+    //    {
+    //        Keyboard.Focus(TBoxFee_Conn); // 탁송요금으로 이동
+    //        e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
+    //    }
+    //}
 
-    // FeeConn
-    private void Fee_TBoxConn_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Enter)
-        {
-            // 신규 등록 모드
-            if (tbOrderOrg == null) Keyboard.Focus(BtnReg_SaveReceipt); // 접수저장 버튼으로 이동
-            else Keyboard.Focus(BtnMod_Save); // 저장 버튼으로 이동
+    //// FeeConn
+    //private void Fee_TBoxConn_KeyDown(object sender, KeyEventArgs e)
+    //{
+    //    if (e.Key == Key.Enter)
+    //    {
+    //        // 신규 등록 모드
+    //        if (tbOrderOrg == null) Keyboard.Focus(BtnReg_SaveReceipt); // 접수저장 버튼으로 이동
+    //        else Keyboard.Focus(BtnMod_Save); // 저장 버튼으로 이동
 
-            e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
-        }
-    }
+    //        e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
+    //    }
+    //}
     #endregion
 
     #region Focus Events
-    // GotFocus - Tel
-    private void Tel_TBoxAll_GotFocus(object sender, RoutedEventArgs e)
-    {
-        if (sender is TextBox textBox)
-        {
-            // 렌더링이 끝난 뒤 SelectAll을 실행
-            textBox.Dispatcher.InvokeAsync(() =>
-            {
-                textBox.Text = textBox.Text.Replace("-", "");
-                textBox.SelectAll();
-            });
-        }
-    }
+    //// GotFocus - Tel
+    //private void Tel_TBoxAll_GotFocus(object sender, RoutedEventArgs e)
+    //{
+    //    if (sender is TextBox textBox)
+    //    {
+    //        // 렌더링이 끝난 뒤 SelectAll을 실행
+    //        textBox.Dispatcher.InvokeAsync(() =>
+    //        {
+    //            textBox.Text = textBox.Text.Replace("-", "");
+    //            textBox.SelectAll();
+    //        });
+    //    }
+    //}
 
-    // GotFocus - Fee
-    private void Fee_TBoxAll_GotFocus(object sender, RoutedEventArgs e)
-    {
-        if (sender is TextBox textBox)
-        {
-            //렌더링이 끝난 뒤 SelectAll을 실행
-            textBox.Dispatcher.InvokeAsync(() =>
-            {
-                textBox.Text = textBox.Text.Replace(",", "");
-                textBox.SelectAll();
-            });
-        }
-    }
+    //// GotFocus - Fee
+    //private void Fee_TBoxAll_GotFocus(object sender, RoutedEventArgs e)
+    //{
+    //    if (sender is TextBox textBox)
+    //    {
+    //        //렌더링이 끝난 뒤 SelectAll을 실행
+    //        textBox.Dispatcher.InvokeAsync(() =>
+    //        {
+    //            textBox.Text = textBox.Text.Replace(",", "");
+    //            textBox.SelectAll();
+    //        });
+    //    }
+    //}
 
-    // LostFocus - Tel
-    private void Tel_TBoxAll_LostFocus(object sender, RoutedEventArgs e)
-    {
-        if (sender is TextBox textBox)
-        {
-            textBox.Dispatcher.InvokeAsync(() =>
-            {
-                textBox.Text = StdConvert.ToPhoneNumberFormat(textBox.Text);
-            });
-        }
-    }
+    //// LostFocus - Tel
+    //private void Tel_TBoxAll_LostFocus(object sender, RoutedEventArgs e)
+    //{
+    //    if (sender is TextBox textBox)
+    //    {
+    //        textBox.Dispatcher.InvokeAsync(() =>
+    //        {
+    //            textBox.Text = StdConvert.ToPhoneNumberFormat(textBox.Text);
+    //        });
+    //    }
+    //}
 
-    // LostFocus - Fee
-    private void Fee_TBoxBasic_LostFocus(object sender, RoutedEventArgs e)
-    {
-        int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
-        int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
-        int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
-        int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
+    //// LostFocus - Fee
+    //private void Fee_TBoxBasic_LostFocus(object sender, RoutedEventArgs e)
+    //{
+    //    int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
+    //    int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
+    //    int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
+    //    int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
 
-        int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
+    //    int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
-        TBoxFee_Basic.Text = StdConvert.IntToStringWonFormat(FeeBasic);
-        TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
-    }
-    private void Fee_TBoxPlus_LostFocus(object sender, RoutedEventArgs e)
-    {
-        int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
-        int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
-        int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
-        int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
+    //    TBoxFee_Basic.Text = StdConvert.IntToStringWonFormat(FeeBasic);
+    //    TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
+    //}
+    //private void Fee_TBoxPlus_LostFocus(object sender, RoutedEventArgs e)
+    //{
+    //    int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
+    //    int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
+    //    int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
+    //    int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
 
-        int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
+    //    int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
-        TBoxFee_Plus.Text = StdConvert.IntToStringWonFormat(FeePlus);
-        TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
-    }
-    private void Fee_TBoxMinus_LostFocus(object sender, RoutedEventArgs e)
-    {
-        int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
-        int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
-        int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
-        int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
+    //    TBoxFee_Plus.Text = StdConvert.IntToStringWonFormat(FeePlus);
+    //    TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
+    //}
+    //private void Fee_TBoxMinus_LostFocus(object sender, RoutedEventArgs e)
+    //{
+    //    int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
+    //    int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
+    //    int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
+    //    int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
 
-        int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
+    //    int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
-        TBoxFee_Minus.Text = StdConvert.IntToStringWonFormat(FeeMinus);
-        TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
-    }
-    private void Fee_TBoxConn_LostFocus(object sender, RoutedEventArgs e)
-    {
-        int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
-        int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
-        int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
-        int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
+    //    TBoxFee_Minus.Text = StdConvert.IntToStringWonFormat(FeeMinus);
+    //    TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
+    //}
+    //private void Fee_TBoxConn_LostFocus(object sender, RoutedEventArgs e)
+    //{
+    //    int FeeBasic = StdConvert.StringWonFormatToInt(TBoxFee_Basic.Text); // 기본요금
+    //    int FeePlus = StdConvert.StringWonFormatToInt(TBoxFee_Plus.Text); // 추가요금
+    //    int FeeMinus = StdConvert.StringWonFormatToInt(TBoxFee_Minus.Text); // 할인요금
+    //    int FeeConn = StdConvert.StringWonFormatToInt(TBoxFee_Conn.Text); // 탁송요금
 
-        int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
+    //    int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
-        TBoxFee_Conn.Text = StdConvert.IntToStringWonFormat(FeeConn);
-        TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
-    }
+    //    TBoxFee_Conn.Text = StdConvert.IntToStringWonFormat(FeeConn);
+    //    TBoxFee_Tot.Text = StdConvert.IntToStringWonFormat(FeeTot);
+    //}
     #endregion
 
     #region RadioBtn Events
-    private void RadioBtn_트럭_Checked(object sender, RoutedEventArgs e)
-    {
-        CmbBoxCarWeight.IsEnabled = true;
-        CmbBoxCarWeight.SelectedIndex = 1; // 강제로 1톤으로...
-        CmbBoxTruckDetail.IsEnabled = true;
-    }
+    //private void RadioBtn_트럭_Checked(object sender, RoutedEventArgs e)
+    //{
+    //    CmbBoxCarWeight.IsEnabled = true;
+    //    CmbBoxCarWeight.SelectedIndex = 1; // 강제로 1톤으로...
+    //    CmbBoxTruckDetail.IsEnabled = true;
+    //}
 
-    private void RadioBtn_트럭_Unchecked(object sender, RoutedEventArgs e)
-    {
-        CmbBoxCarWeight.IsEnabled = false;
-        CmbBoxCarWeight.SelectedIndex = 0;
-        CmbBoxTruckDetail.IsEnabled = false;
-        CmbBoxTruckDetail.SelectedIndex = 0;
-    } 
+    //private void RadioBtn_트럭_Unchecked(object sender, RoutedEventArgs e)
+    //{
+    //    CmbBoxCarWeight.IsEnabled = false;
+    //    CmbBoxCarWeight.SelectedIndex = 0;
+    //    CmbBoxTruckDetail.IsEnabled = false;
+    //    CmbBoxTruckDetail.SelectedIndex = 0;
+    //} 
     #endregion
 
     #region Tmp
-    private void BtnAppend_OrderRemarks_Click(object sender, RoutedEventArgs e)
-    {
+    //private void BtnAppend_OrderRemarks_Click(object sender, RoutedEventArgs e)
+    //{
 
-    }
+    //}
 
     #endregion
 
     #region EtcEvents
-    /// <summary>
-    /// TextBox 숫자 입력 제한 - PreviewTextInput 이벤트
-    /// </summary>
-    private void TBoxOnlyNum_PreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        // 정규식: 숫자가 아닌 문자가 있으면 입력 차단
-         e.Handled = s_RegexOnlyNum.IsMatch(e.Text);
-    }
+    //// TextBox 숫자 입력 제한 - PreviewTextInput 이벤트
+    //private void TBoxOnlyNum_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    //{
+    //    // 정규식: 숫자가 아닌 문자가 있으면 입력 차단
+    //     e.Handled = s_RegexOnlyNum.IsMatch(e.Text);
+    //}
 
-    private void TBoxOnlyNum_Pasting(object sender, DataObjectPastingEventArgs e)
-    {
-        if (e.DataObject.GetDataPresent(DataFormats.Text))
-        {
-            string text = e.DataObject.GetData(DataFormats.Text) as string;
-            if (!s_RegexOnlyNum.IsMatch(text)) // 숫자만 허용
-            {
-                e.CancelCommand();
-            }
-        }
-        else
-        {
-            e.CancelCommand();
-        }
-    }
+    //private void TBoxOnlyNum_Pasting(object sender, DataObjectPastingEventArgs e)
+    //{
+    //    if (e.DataObject.GetDataPresent(DataFormats.Text))
+    //    {
+    //        string text = e.DataObject.GetData(DataFormats.Text) as string;
+    //        if (!s_RegexOnlyNum.IsMatch(text)) // 숫자만 허용
+    //        {
+    //            e.CancelCommand();
+    //        }
+    //    }
+    //    else
+    //    {
+    //        e.CancelCommand();
+    //    }
+    //}
     #endregion
 
     #region Funcs
@@ -1681,20 +1679,20 @@ public partial class Order_ReceiptWnd : Window
     // ComboBox 헬퍼 메서드는 CommonFuncs로 이동됨
 
     #region Empty Stubs for XAML
-    private void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e) { }
-    private void Start_TBoxSearch_KeyDown(object sender, KeyEventArgs e) { }
-    private void Dest_TBoxSearch_KeyDown(object sender, KeyEventArgs e) { }
-    private void BtnReg_CustRegist_Click(object sender, RoutedEventArgs e) { }
-    private void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e) { }
-    private void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_Ask_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_Allocation_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_PrintBill_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_Finish_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_Wait_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_Cancel_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_Receipt_Click(object sender, RoutedEventArgs e) { }
-    private void BtnMod_Save_Click(object sender, RoutedEventArgs e) { }
+    //private void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e) { }
+    //private void Start_TBoxSearch_KeyDown(object sender, KeyEventArgs e) { }
+    //private void Dest_TBoxSearch_KeyDown(object sender, KeyEventArgs e) { }
+    //private void BtnReg_CustRegist_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_Ask_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_Allocation_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_PrintBill_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_Finish_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_Wait_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_Cancel_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_Receipt_Click(object sender, RoutedEventArgs e) { }
+    //private void BtnMod_Save_Click(object sender, RoutedEventArgs e) { }
     #endregion
 }
 #nullable enable
