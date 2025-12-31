@@ -1,5 +1,5 @@
 
-[SYSTEM] 로그 기록 시작: 2025-12-26 19:56:34
+[SYSTEM] 로그 기록 시작: 2025-12-30 22:56:04
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
 [CommonFuncs] sUse 확인: 'True'
@@ -12,7 +12,7 @@ HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:0
 연결 시도 시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=tXLadXXh3UgdfN8jDBkt5Q *****
+***** SrReport_ConnectedAsync 시작: connectedID=EWA0fvfOdIgLt5EkiWLzYw *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
@@ -29,31 +29,7 @@ SignalR 연결 성공
 [MasterModeManager] ExternalAppController 초기화 시작
 [ExternalAppController] 생성자 호출
 [ExternalAppController] InitializeAsync 시작
-[ExternalAppController] Insung01 인스턴스 생성 완료
-[ExternalAppController] 생성된 앱 개수: 1
-[ExternalAppController] INSUNG1 초기화 시퀀스 시작...
-[INSUNG1] InitializeAsync 시작: Id=동신MSI-S
-[INSUNG1] FileInfo 파일 로드 완료: D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Data\Insung01_FileInfo.txt
-[INSUNG1] 확인된 앱 경로: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe
-[INSUNG1/UpdaterWork] 업데이터 실행 시도: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe
-[INSUNG1/UpdaterWork] 프로세스 종료 대기 시작...
-[INSUNG1/UpdaterWork] 업데이터 정상 종료 확인
-[INSUNG1/SplashWork] 시작 (ID: 동신MSI-S)
-[INSUNG1/SplashWork] 로그인 입력 완료, 백업본 팝업 처리 로직 시작
-[INSUNG1/MainWnd] 초기화 시작
-[INSUNG1/MainWnd] 초기화 성공
-[INSUNG1/RcptRegPage] 초기화 시작
-[INSUNG1/UI] 신규버튼 확인 완료: hWnd=1113E4 (시도=1/10)
-[INSUNG1/UI] 조회버튼 확인 완료: hWnd=1013AC (시도=1/10)
-[INSUNG1/UI] 기사버튼 확인 완료: hWnd=1113E2 (시도=1/10)
-[INSUNG1/RcptRegPage] CallCount 핸들 찾기 성공
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[*] ValidateDatagridState 검증 통과 (정상)
-[INSUNG1/RcptRegPage] 초기화 완료
-[INSUNG1] InitializeAsync 완료
-[ExternalAppController] INSUNG1 초기화 성공
+[ExternalAppController] 생성된 앱 개수: 0
 [ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
 [ExternalAppController] InitializeAsync 전체 완료
 [MasterModeManager] ExternalAppController 초기화 완료
@@ -69,110 +45,87 @@ SrLocalClient 재접속 중지 플래그 설정
 [ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
 [CancelTokenControl] Cancel 호출됨
 [ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
 [ExternalAppController] 모든 리소스 정리 완료
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
-
-omColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 3: 컬럼 순서 조정 시작
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 4: 규격 너비 조정 시작
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[CaptureBoundaries] hWnd=270B2C, IsWnd=True, AbsRect={X=1946,Y=223,Width=1885,Height=639}
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
-[INSUNG1/RcptRegPage] Datagrid 재시도 2/50
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[*] ValidateDatagridState 검증 통과 (정상)
-[INSUNG1/RcptRegPage] 초기화 완료
-[INSUNG1] InitializeAsync 완료
-[ExternalAppController] INSUNG1 초기화 성공
+wing error: Connection closed with an error. *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 2번째 *****
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+SignalR 연결 성공
+***** SrReport_ConnectedAsync 시작: connectedID=VUj1DcPK_HxRjXVe-cr3zg *****
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+SignalR OnClosedAsync called
+SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
+***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 3번째 *****
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+***** SrReport_ConnectedAsync 시작: connectedID=c85GQgIYC8pIvW9AHRaTWA *****
+SignalR 연결 성공
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+SignalR OnClosedAsync called
+SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
+***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 4번째 *****
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+***** SrReport_ConnectedAsync 시작: connectedID=SPUkxwOXqL4X_JwXlKm6IA *****
+SignalR 연결 성공
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+SignalR OnClosedAsync called
+SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
+***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 5번째 *****
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+***** SrReport_ConnectedAsync 시작: connectedID=Og0gZcTYHlkO1jGWwM_XuA *****
+SignalR 연결 성공
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+***** 로그인 요청 완료 *****
+***** 로그인 성공! (6번째) *****
+[MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
+[MainWnd] 프로세스 실행 성공. SignalR 연결 시도...
+HubConnection 생성 중...
+연결 시도시작...
+HubConn.StartAsync() 호출...
+SignalR 연결 성공
+[MainWnd] SignalR ConnectAsync 호출 완료
+[MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
+[MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
+[MasterModeManager] ExternalAppController 초기화 시작
+[ExternalAppController] 생성자 호출
+[ExternalAppController] InitializeAsync 시작
+[ExternalAppController] 생성된 앱 개수: 0
 [ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
 [ExternalAppController] InitializeAsync 전체 완료
 [MasterModeManager] ExternalAppController 초기화 완료
@@ -188,56 +141,69 @@ SrLocalClient 재접속 중지 플래그 설정
 [ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
 [CancelTokenControl] Cancel 호출됨
 [ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
 [ExternalAppController] 모든 리소스 정리 완료
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
-7
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 1701243 != 10017
-[WindowProc] ESC 감지 - 자동화 중단 및 후킹 해제
-[CancelTokenControl] Cancel 호출됨
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 10003 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 10003 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 10003 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 10003 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 10003 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 10003 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 1/5): 1701243 != 10017
+�그인 요청 시작: ID=동신MSI-S *****
+SignalR OnClosedAsync called
+SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
+***** 로그인 예외 발생: InvalidOperationException - The 'InvokeCoreAsync' method cannot be called if the connection is not active *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.ReconnectingConnectionState.WaitForActiveConnectionAsync(String methodName, CancellationToken token)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 7번째 *****
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+***** SrReport_ConnectedAsync 시작: connectedID=ycqAnwIE9o9dE_4Ai2H0Ng *****
+SignalR 연결 성공
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+SignalR OnClosedAsync called
+SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
+***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 8번째 *****
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+***** SrReport_ConnectedAsync 시작: connectedID=bPJbIdRgSK7Kh78IXoAcYQ *****
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+SignalR 연결 성공
+SignalR OnClosedAsync called
+SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
+***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 9번째 *****
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+***** SrReport_ConnectedAsync 시작: connectedID=QluCVZy1EmUTgZhCNpT2tA *****
+SignalR 연결 성공
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+SignalR OnClosedAsync called
+SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
+***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
+***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
+***** 로그인 실패! 시도 횟수: 10번째 *****
+701243 != 10017
 [DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
 [DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
 [DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 1701243 != 10017

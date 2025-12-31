@@ -44,27 +44,30 @@ public partial class Order_ReceiptWnd : Window
     #endregion
 
     #region Basics
-    public Order_ReceiptWnd(TbOrder tbOrder = null) // 테이블 유: 수정, 무: 신규
+    public Order_ReceiptWnd(TbOrder tbOrder = null)
     {
         InitializeComponent();
 
-        TBlkRegister.Text = s_CenterCharge.Id;
+        // TBlkRegister.Text = s_CenterCharge.Id;
+        // TBlkRegistPlace.Text = s_CallCenter.CenterName;
         tbOrderOrg = tbOrder;
 
         // 모드에 따라 버튼그룹 보이기
-        if (tbOrderOrg == null) // 신규 등록 모드
-        {
-            ColumnRegist.Visibility = Visibility.Visible;
-            ColumnModify.Visibility = Visibility.Collapsed;
-        }
-        else // 수정 모드
-        {
-            ColumnRegist.Visibility = Visibility.Collapsed;
-            ColumnModify.Visibility = Visibility.Visible;
-        }
+        // if (tbOrderOrg == null) // 신규 등록 모드
+        // {
+        //     ColumnRegist.Visibility = Visibility.Visible;
+        //     ColumnModify.Visibility = Visibility.Collapsed;
+        // 
+        //     RadioBtn_편도.IsChecked = true; // 체크 대상
+        // }
+        // else // 수정 모드
+        // {
+        //     ColumnRegist.Visibility = Visibility.Collapsed;
+        //     ColumnModify.Visibility = Visibility.Visible;
+        // }
     }
 
-    public Order_ReceiptWnd(string sTelNo) // 전화에 의한 오더등록
+    public Order_ReceiptWnd(string sTelNo)
     {
         InitializeComponent();
 
@@ -74,31 +77,16 @@ public partial class Order_ReceiptWnd : Window
         ColumnRegist.Visibility = Visibility.Visible;
         ColumnModify.Visibility = Visibility.Collapsed;
 
-        ChkBox_편도Q.IsChecked = true; // 체크 대상
+        RadioBtn_편도.IsChecked = true; // 체크 대상
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+        // ... 주석 처리
     }
 
     private void Window_Unloaded(object sender, RoutedEventArgs e)
     {
-    }
-
-    // 퀵타입 선택 (오토, 밴, 플렉스)
-    private void RadioBtn_QuickType_Checked(object sender, RoutedEventArgs e)
-    {
-        if (GridQuickInfo == null || GridCargoInfo == null) return;
-        GridQuickInfo.Visibility = Visibility.Visible;
-        GridCargoInfo.Visibility = Visibility.Collapsed;
-    }
-
-    // 화물타입 선택 (다마스, 라보, 트럭)
-    private void RadioBtn_CargoType_Checked(object sender, RoutedEventArgs e)
-    {
-        if (GridQuickInfo == null || GridCargoInfo == null) return;
-        GridQuickInfo.Visibility = Visibility.Collapsed;
-        GridCargoInfo.Visibility = Visibility.Visible;
     }
     #endregion
 
@@ -146,11 +134,11 @@ public partial class Order_ReceiptWnd : Window
 
     //}
 
-    // 닫기
-    private void BtnCommon_Close_Click(object sender, RoutedEventArgs e)
-    {
-        this.Close();
-    }
+    //// 닫기
+    //private void BtnCommon_Close_Click(object sender, RoutedEventArgs e)
+    //{
+    //     this.Close();
+    //}
 
     #endregion
 
@@ -1687,6 +1675,8 @@ public partial class Order_ReceiptWnd : Window
     //    }
     //}
     #endregion
+
+    // ComboBox 헬퍼 메서드는 CommonFuncs로 이동됨
 
     #region Empty Stubs for XAML
     //private void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e) { }

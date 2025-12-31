@@ -1,0 +1,162 @@
+﻿<Window x:Class="Kai.Client.CallCenter.Windows.Config_CtrlAppWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
+        mc:Ignorable="d"
+        xmlns:sys="clr-namespace:System;assembly=netstandard"   
+        Title="제어용 앱 설정" Height="500" Width="800"
+        Loaded="Window_Loaded" Closing="Window_Closing">
+
+    <Window.Resources>
+        <sys:Double x:Key="TextBoxWidth">100</sys:Double>
+
+        <!--// 체크박스-->
+        <Style x:Key="ChkBoxStyle" TargetType="CheckBox">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="Height" Value="{StaticResource AppChkBoxHeight}"/>
+        </Style>
+
+        <!--// 라벨-->
+        <Style x:Key="LabelStyle" TargetType="Label">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="Height" Value="{StaticResource AppLabelHeight}"/>
+        </Style>
+
+        <!--// 텍스트박스-->
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="Height" Value="{StaticResource AppTextBoxHeight}"/>
+            <Setter Property="Width" Value="{StaticResource TextBoxWidth}"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="50, 20">
+        <!--#region Definitions -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" x:Name="Insung1"/>
+            <RowDefinition Height="30" x:Name="Insung2"/>
+            <RowDefinition Height="30" x:Name="Cargo24"/>
+            <RowDefinition Height="30" x:Name="Onecall"/>
+            <RowDefinition Height="30" x:Name="CargoMan"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="45"/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="57"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!--#endregion Definitions-->
+
+        <!--#region Row-0(인성1그룹) -->
+        <CheckBox Grid.Row="0" Grid.Column="0"
+                  x:Name="ChkBoxInsung01" Content="인성1그룹" 
+                  Style="{StaticResource ChkBoxStyle}"/>
+        <Label Grid.Row="0" Grid.Column="1"
+               Content="아이디" 
+               Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="0" Grid.Column="2"
+                 x:Name="TBoxIdInsung01" 
+                 Style="{StaticResource TextBoxStyle}"/>
+        <Label Grid.Row="0" Grid.Column="3"
+               Content="비밀번호" 
+               Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="0" Grid.Column="4"
+                 x:Name="TBoxPwInsung01"     
+                 Style="{StaticResource TextBoxStyle}"/>
+        <!--#endregion Row-0(인성1그룹)-->
+
+        <!--#region Row-1(인성2그룹) -->
+        <CheckBox Grid.Row="1" Grid.Column="0"
+                  x:Name="ChkBoxInsung02" Content="인성2그룹" 
+                  Style="{StaticResource ChkBoxStyle}"/>
+        <Label  Grid.Row="1" Grid.Column="1"
+                Content="아이디" 
+                Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="1" Grid.Column="2"
+                 x:Name="TBoxIdInsung02"    
+                 Style="{StaticResource TextBoxStyle}"/>
+        <Label Grid.Row="1" Grid.Column="3"
+               Content="비밀번호" 
+               Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="1" Grid.Column="4"
+                 x:Name="TBoxPwInsung02"
+                 Style="{StaticResource TextBoxStyle}"/>
+        <!--#endregion Row-1(인성1그룹)-->
+
+        <!--#region Row-2(24시콜화물) -->
+        <CheckBox Grid.Row="2" Grid.Column="0"
+                  x:Name="ChkBoxCargo24" Content="화물24시" 
+                  Style="{StaticResource ChkBoxStyle}"/>
+        <Label  Grid.Row="2" Grid.Column="1"
+                Content="아이디" 
+                Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="2" Grid.Column="2"
+                 x:Name="TBoxIdCargo24"    
+                 Style="{StaticResource TextBoxStyle}"/>
+        <Label Grid.Row="2" Grid.Column="3"
+               Content="비밀번호" 
+               Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="2" Grid.Column="4"
+                 x:Name="TBoxPwCargo24"  
+                 Style="{StaticResource TextBoxStyle}"/>
+        <!--#endregion Row-2(24시콜화물)-->
+
+        <!--#region Row-3(원콜) -->
+        <CheckBox Grid.Row="3" Grid.Column="0"
+                  x:Name="ChkBoxOnecall" Content="원콜" 
+                  Style="{StaticResource ChkBoxStyle}"/>
+        <Label  Grid.Row="3" Grid.Column="1"
+                Content="아이디" 
+                Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="3" Grid.Column="2"
+                 x:Name="TBoxIdOnecall"    
+                 Style="{StaticResource TextBoxStyle}"/>
+        <Label Grid.Row="3" Grid.Column="3"
+               Content="비밀번호" 
+               Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="3" Grid.Column="4"
+                 x:Name="TBoxPwOnecall"
+                 Style="{StaticResource TextBoxStyle}"/>
+        <!--#endregion Row-3(원콜)-->
+
+        <!--#region Row-4(화물맨) -->
+        <CheckBox Grid.Row="4" Grid.Column="0"
+                  x:Name="ChkBoxCargoMan" Content="화물맨"
+                  Style="{StaticResource ChkBoxStyle}"/>
+        <Label  Grid.Row="4" Grid.Column="1"
+                Content="아이디" 
+                Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="4" Grid.Column="2"
+                 x:Name="TBoxIdCargoMan"
+                 Style="{StaticResource TextBoxStyle}"/>
+        <Label Grid.Row="4" Grid.Column="3"
+               Content="비밀번호" 
+               Style="{StaticResource LabelStyle}"/>
+        <TextBox Grid.Row="4" Grid.Column="4"
+                 x:Name="TBoxPwCargoMan"
+                 Style="{StaticResource TextBoxStyle}"/>
+        <!--#endregion Row-4(화물맨)-->
+
+        <!--#region Row-5 버튼들 -->
+        <StackPanel Grid.Row="5" Grid.Column="4" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    VerticalAlignment="Bottom">
+            <Button x:Name="BtnClose" Content="닫기" 
+                    Height="30" Width="100" Margin="0, 10, 10, 0"
+                    Click="BtnClose_Click"/>
+            <Button x:Name="BtnSave" Content="저장" 
+                    Height="30" Width="100" Margin="0, 10, 0, 0"
+                    Click="BtnSave_Click"/>
+        </StackPanel>
+        <!--#endregion-->
+    </Grid>
+</Window>

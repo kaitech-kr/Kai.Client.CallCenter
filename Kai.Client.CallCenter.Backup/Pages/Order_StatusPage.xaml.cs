@@ -36,15 +36,15 @@ public partial class Order_StatusPage : Page
     {
         InitializeComponent();
 
-        // DataGrid의 ItemsSource를 설정
-        DGridOrder.ItemsSource = VsOrder_StatusPage.oc_VmOrdersWith;
-        DGridTel.ItemsSource = VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070;
+        //// DataGrid의 ItemsSource를 설정
+        //DGridOrder.ItemsSource = VsOrder_StatusPage.oc_VmOrdersWith;
+        //DGridTel.ItemsSource = VsOrder_StatusPage.oc_VmOrder_StatusPage_Tel070;
 
-        // Order Seq Watch Timer
-        MinuteTimer = new DispatcherTimer();
-        MinuteTimer.Interval = TimeSpan.FromMinutes(1);  // ~분마다 실행
-        MinuteTimer.Tick += MinuteTimer_Tick;
-        MinuteTimer.Start();
+        //// Order Seq Watch Timer
+        //MinuteTimer = new DispatcherTimer();
+        //MinuteTimer.Interval = TimeSpan.FromMinutes(1);  // ~분마다 실행
+        //MinuteTimer.Tick += MinuteTimer_Tick;
+        //MinuteTimer.Start();
 
         //// SignalR - Local Client
         ////SrLocalClient.SrLocalClient_Tel070_AnswerEvent += SrLocalClient_Tel070_AnswerEvent;
@@ -52,34 +52,34 @@ public partial class Order_StatusPage : Page
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        try
-        {
-            s_Order_StatusPage = this;
+        //try
+        //{
+        //    s_Order_StatusPage = this;
 
-            ////첫윈도 생성시 늦으므로 미리 만든다 - 보류
-            //Order_ReceiptWnd wnd = new Order_ReceiptWnd();
+        //    //첫윈도 생성시 늦으므로 미리 만든다 - 보류
+        //    Order_ReceiptWnd wnd = new Order_ReceiptWnd();
 
-            ////Load TelRings
-            //StdResult_Error resultErr = await VsOrder_StatusPage.Tel070_LoadDataAsync();
-            //if (resultErr != null)
-            //{
-            //    ErrMsgBox(resultErr.sErr, resultErr.sErrNPos);
-            //}
+        //    //Load TelRings
+        //    StdResult_Error resultErr = await VsOrder_StatusPage.Tel070_LoadDataAsync();
+        //    if (resultErr != null)
+        //    {
+        //        ErrMsgBox(resultErr.sErr, resultErr.sErrNPos);
+        //    }
 
-            //전체버튼 클릭
-            await Dispatcher.InvokeAsync(() => // Dispatcher를 사용해 UI가 완전히 그려진 이후 실행
-            {
-                TogBtnTotal.IsChecked = true;
-            }, DispatcherPriority.Background);  // 또는 DispatcherPriority.Loaded
-        }
-        finally
-        {
-            //Load TodayOrder
-            BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
-            BtnOrderSearch_Click(null, null); // 조회버튼 클릭
+        //    //전체버튼 클릭
+        //    await Dispatcher.InvokeAsync(() => // Dispatcher를 사용해 UI가 완전히 그려진 이후 실행
+        //    {
+        //        TogBtnTotal.IsChecked = true;
+        //    }, DispatcherPriority.Background);  // 또는 DispatcherPriority.Loaded
+        //}
+        //finally
+        //{
+        //    //Load TodayOrder
+        //    BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
+        //    BtnOrderSearch_Click(null, null); // 조회버튼 클릭
 
-            NetLoadingWnd.HideLoading();
-        }
+        //    NetLoadingWnd.HideLoading();
+        //}
     }
 
     private void Page_Unloaded(object sender, RoutedEventArgs e)

@@ -1,0 +1,25 @@
+﻿<Window x:Class="Kai.Client.CallCenter.Windows.CopyExcelToDbWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
+        mc:Ignorable="d"
+        Title="엑셀 -> 데이터베이스" Height="250" Width="650"
+        Loaded="Window_Loaded" ResizeMode="NoResize" Topmost="True" WindowStartupLocation="CenterOwner">
+
+    <Canvas>
+        <ProgressBar Height="10" Canvas.Left="75" Canvas.Top="50" Width="500" HorizontalAlignment="Left" VerticalAlignment="Top"
+                     x:Name="PrgBarDatas"/>
+        <Label Content="데이터: 0/0" Canvas.Left="75" Canvas.Top="60" HorizontalAlignment="Left" VerticalAlignment="Center" Width="500"
+               x:Name="LblDatas"/>
+
+        <ProgressBar Height="10" Canvas.Left="75" Canvas.Top="110" Width="500" HorizontalAlignment="Left" VerticalAlignment="Top"
+                     x:Name="PrgBarFiles"/>
+        <Label Content="파일: 0/0" Canvas.Left="75" Canvas.Top="120" Width="500" HorizontalAlignment="Left" VerticalAlignment="Top"
+               x:Name="LblFiles" />
+
+        <Button Content="취소" Canvas.Left="495" Canvas.Top="160" Height="30" Width="80" 
+                x:Name="BtnCancel" Click="BtnCancel_Click"/>
+    </Canvas>
+</Window>

@@ -1,0 +1,1294 @@
+﻿<Page x:Class="Kai.Client.CallCenter.Pages.Order_StatusPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Kai.Client.CallCenter.Pages"
+      mc:Ignorable="d"    
+      xmlns:sys="clr-namespace:System;assembly=netstandard"  
+      xmlns:vs="clr-namespace:Kai.Client.CallCenter.MVVM.ViewServices"
+      d:DesignHeight="900" d:DesignWidth="1415"     
+      Title="오더상황" Background="LightGray"
+      Loaded="Page_Loaded" Unloaded="Page_Unloaded">
+    <!--<Page.DataContext>
+        <vs:VsOrder_StatusPage/>
+    </Page.DataContext>-->
+
+    <!--#region Resources -->
+    <Page.Resources>
+
+        <!-- Context 메뉴 -->
+        <ContextMenu x:Key="OrderContextMenu">
+            <MenuItem Header="접수상태로..." Click="OrderContext_ToReceiptState_Click"/>
+            <MenuItem Header="대기" Click="OrderContext_ToWaitState_Click"/>
+            <MenuItem Header="주문취소" Click="OrderContext_ToCancelState_Click"/>
+            <Separator/>
+            <MenuItem Header="콜복사">
+                <MenuItem Header="접수로" Click="OrderContext_CopyToReceipt_Click"/>
+                <MenuItem Header="대기로" Click="OrderContext_CopyToWait_Click"/>
+            </MenuItem>
+        </ContextMenu>
+
+        <!-- Driver Context 메뉴 -->
+        <ContextMenu x:Key="DriverContextMenu">
+            <MenuItem Header="기사에게 전화걸기" Click="DriverContext_CallDriver_Click"/>
+        </ContextMenu>
+
+        <!--Brush-->
+        <SolidColorBrush x:Key="BrushGray" Color="#404040"/>
+
+        <!--Button-->
+        <Style x:Key="StateToggleBtnStyle" TargetType="ToggleButton"
+               BasedOn="{StaticResource AppToggleBtnStyle_Normal}">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style TargetType="Button" x:Key="ImageBtnStyle_Enabled">
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="Height" Value="54"/>
+            <Setter Property="Margin" Value="1,0,0,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ImageBtnStyle_Disabled" TargetType="Button" BasedOn="{StaticResource ImageBtnStyle_Enabled}">
+            <Setter Property="Opacity" Value="{StaticResource AppOpacity_Disabled}"/>
+        </Style>
+        <Style TargetType="Button" x:Key="ImageBtn2Style">
+            <Setter Property="Margin" Value="1,1,0,0"/>
+            <Setter Property="Width" Value="118" />
+            <Setter Property="Height" Value="29" />
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style TargetType="Button" x:Key="ImageBtn3Style">
+            <Setter Property="Margin" Value="1,1,0,0"/>
+            <Setter Property="Width" Value="98" />
+            <Setter Property="Height" Value="29" />
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+        </Style>
+        <Style TargetType="Button" x:Key="TextBtnStyle" BasedOn="{StaticResource AppButtonStyle_Normal}">
+            <Setter Property="Width" Value="90"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="1,2,0,0"/>
+        </Style>
+
+        <!--// Border-->
+        <Style x:Key="RedBorderStyle" TargetType="Border" >
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Red"/>
+        </Style>
+
+        <!--// 라벨-->
+        <Style TargetType="Label" x:Key="LabelStyle" BasedOn="{StaticResource AppLabelStyle_Normal}">
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="Background" Value="Beige" />
+        </Style>
+        <Style TargetType="Label" x:Key="LabelCountStyle" BasedOn="{StaticResource AppLabelStyle_Normal}">
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="Height" Value="30" />
+        </Style>
+
+        <!--// DatePicker-->
+        <Style TargetType="DatePicker" x:Key="DatePickerStyle">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Width" Value="110" />
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}" />
+        </Style>
+
+        <!--// ComboBox-->
+        <!--<Style TargetType="ComboBox" x:Key="ComboBoxStyle" BasedOn="{StaticResource AppComboBoxStyle_Normal}">
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>-->
+
+        <!--// 워터마크 텍스트박스-->
+        <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource AppTextBoxStyle_Normal}">
+            <Setter Property="Height" Value="{StaticResource AppItemHeight_Normal}"/>
+        </Style>
+
+        <!--// 워터마크 텍스트박스-->
+        <Style x:Key="WatermarkDarkStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxStyle}">
+            <Setter Property="Margin" Value="2,0,0,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="Background" Value="#F0F0F0" />
+            <Setter Property="Width" Value="119"/>
+        </Style>
+        <Style x:Key="WatermarkLightStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxStyle}">
+            <Setter Property="Margin" Value="2,0,0,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="DarkGray" />
+            <Setter Property="Background" Value="#F0F0F0" />
+            <Setter Property="Width" Value="119"/>
+        </Style>
+
+        <!--// CheckBox-->
+        <Style TargetType="CheckBox" x:Key="CheckBoxStyle" BasedOn="{StaticResource AppCheckBoxStyle_Normal}">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!--// Image-->
+        <Style x:Key="Image2Style" TargetType="Image">
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+        </Style>
+
+        <!--// 텍스트블럭-->
+        <Style TargetType="TextBlock" x:Key="TextBlockStyle" BasedOn="{StaticResource AppTextBlockStyle_Normal}">
+            <Setter Property="Margin" Value="10,0,0,0" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="TextBlockStyle_ImgBtn" BasedOn="{StaticResource AppTextBlockStyle_Normal}">
+            <Setter Property="Margin" Value="0,1,0,0" />
+        </Style>
+
+        <!--// StackPanel-->
+        <Style x:Key="StackPanelStyle" TargetType="StackPanel">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <!--// Ellipse-->
+        <Style TargetType="Ellipse" x:Key="EllipseStyle">
+            <Setter Property="Stroke" Value="{StaticResource BrushGray}" />
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="26"/>
+        </Style>
+    </Page.Resources>
+    <!--#endregion-->
+
+    <!--#region Render -->
+    <Grid>
+        <!--전체를 행 3개로 분할-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="122" x:Name="Header"/>
+            <!--헤더-->
+            <RowDefinition Height="*" x:Name="Order_DataGrid"/>
+            <!--오더목록(DataGrid)-->
+            <RowDefinition Height="150" x:Name="Tel_Order_Count"/>
+            <!--오더집계, 전화목록-->
+        </Grid.RowDefinitions>
+
+        <!--#region 헤더 -->
+        <Grid Grid.Row="0">
+            <!--헤더를 열 3개로 분할-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1216" x:Name="Header_Left"/>
+                <ColumnDefinition Width="120" x:Name="Header_Mid"/>
+                <ColumnDefinition Width="*" x:Name="Header_Right"/>
+            </Grid.ColumnDefinitions>
+
+            <!--#region Header_Left -->
+            <Grid Grid.Column="0">
+                <!--헤더(좌)를 행 2개로 분할-->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="90" x:Name="Header_Left_Upper"/>
+                    <RowDefinition Height="30" x:Name="Header_Left_Below"/>
+                </Grid.RowDefinitions>
+
+                <!--#region Header_Left_Upper(오더상태 버튼 그룹) -->
+                <Grid Grid.Row="0">
+                    <!--헤더(좌-상) 상단을 열 4개로 분할(상-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="292" x:Name="Header_Left_Upper_Col_0"/>
+                        <ColumnDefinition Width="288" x:Name="Header_Left_Upper_Col_1"/>
+                        <ColumnDefinition Width="268" x:Name="Header_Left_Upper_Col_2"/>
+                        <ColumnDefinition Width="369" x:Name="Header_Left_Upper_Col_3"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--#region Header_Left_Upper_Col_0(상태버튼들) -->
+                    <WrapPanel Grid.Column="0" Margin="1">
+                        <!--#region 접수버튼 -->
+                        <ToggleButton Content="접수" 
+                                      x:Name="TogBtnReceipt"
+                                      Checked="TogBtnReceipt_Checked"
+                                      Unchecked="TogBtnReceipt_Unchecked"
+                                      Margin="3,3,0,0">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkReceipt}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightReceipt}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 접수버튼-->
+
+                        <!--#region 대기버튼 -->
+                        <ToggleButton Content="대기" 
+                                  x:Name="TogBtnWait"
+                                  Checked="TogBtnWait_Checked"
+                                  Unchecked="TogBtnWait_Unchecked"
+                                  Margin="2,3,0,0">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkWait}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightWait}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 대기버튼-->
+
+                        <!--#region 배차버튼 -->
+                        <ToggleButton Content="배차"
+                                      x:Name="TogBtnAllocate"
+                                      Checked="TogBtnAllocate_Checked"
+                                      Unchecked="TogBtnAllocate_Unchecked"
+                                      Margin="2,3,0,0">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkAlloc}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightAlloc}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 배차버튼-->
+
+                        <!--#region 예약버튼 -->
+                        <ToggleButton Content="예약"
+                                      x:Name="TogBtnReserve"
+                                      Checked="TogBtnReserve_Checked"
+                                      Unchecked="TogBtnReserve_Unchecked"
+                                      Margin="2,3,0,0">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkReserve}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightReserve}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 예약버튼-->
+
+                        <!--#region 운행버튼 -->
+                        <ToggleButton Content="운행"
+                                      Margin="3,3,0,0"  
+                                      x:Name="TogBtnRun"
+                                      Checked="TogBtnRun_Checked"
+                                      Unchecked="TogBtnRun_Unchecked">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkRun}"/>
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightRun}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 운행버튼-->
+
+                        <!--#region 완료버튼 -->
+                        <ToggleButton Content="완료"
+                                      x:Name="TogBtnFinish"
+                                      Checked="TogBtnFinish_Checked"
+                                      Unchecked="TogBtnFinish_Unchecked"
+                                      Margin="2,3,0,0">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkFinish}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightFinish}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 완료버튼-->
+
+                        <!--#region 취소버튼 -->
+                        <ToggleButton Content="취소"
+                                      x:Name="TogBtnCancel"
+                                      Checked="TogBtnCancel_Checked"
+                                      Unchecked="TogBtnCancel_Unchecked"
+                                      Margin="2,3,0,0">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkCancel}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightCancel}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 취소버튼-->
+
+                        <!--#region 전체버튼 -->
+                        <ToggleButton x:Name="TogBtnTotal" Content="전체" Margin="2,3,0,0"
+                                      Checked="TogBtnTotal_Checked" Unchecked="TogBtnTotal_Unchecked">
+                            <ToggleButton.Style>
+                                <Style TargetType="{x:Type ToggleButton}" 
+                                       BasedOn="{StaticResource StateToggleBtnStyle}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                <Border x:Name="border"
+                                                        Background="{TemplateBinding Background}" 
+                                                        BorderBrush="{StaticResource BrushGray}" 
+                                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                                    <ContentPresenter x:Name="contentPresenter" 
+                                                                      Content="{TemplateBinding Content}"
+                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                      VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsChecked" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushDarkTotal}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Bold" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="False">
+                                                        <Setter TargetName="border" Property="Background" Value="{StaticResource AppBrushLightTotal}" />
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                                        <Setter TargetName="contentPresenter" Property="TextElement.FontWeight" Value="Thin" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ToggleButton.Style>
+                        </ToggleButton>
+                        <!--#endregion 전체버튼-->
+
+                    </WrapPanel>
+                    <!--#endregion Header_Left_Upper_Col_0(상태버튼들)-->
+
+                    <!--#region Header_Left_Upper_Col_1(검색조건 그룹)  -->
+                    <Border Grid.Column="1"
+                            BorderBrush="DarkGray" 
+                            BorderThickness="1"
+                            Background="LightGray"
+                            Margin="1"
+                            Width="Auto" Height="Auto">
+
+                        <StackPanel Margin="2">
+                            <!--일자 라벨 라인-->
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="일자" 
+                                       Style="{StaticResource LabelStyle}" 
+                                       Width="40" />                      
+                                
+                                <DatePicker x:Name="DatePickerStart"
+                                            Style="{StaticResource DatePickerStyle}" SelectedDate="{x:Static sys:DateTime.Now}" Margin="2,0,0,0"
+                                            LostFocus="DatePickerStart_LostFocus" SelectedDateChanged="DatePicker_SelectionChanged"/>
+                                <Label Content="~"/>
+                                <DatePicker x:Name="DatePickerEnd"
+                                            Style="{StaticResource DatePickerStyle}" SelectedDate="{x:Static sys:DateTime.Now}"
+                                            LostFocus="DatePickerEnd_LostFocus" SelectedDateChanged="DatePicker_SelectionChanged"/>
+                            </StackPanel>
+
+                            <!--// 검색라벨 라인-->
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+
+                                <Label Content="검색" 
+                                       Style="{StaticResource LabelStyle}"
+                                       Width="40"/>
+
+                                <ComboBox x:Name="CmbBoxSearch" 
+                                          Style="{StaticResource AppComboBoxStyle_Normal}" Width="75" SelectedIndex="0"
+                                          Margin="2,0,0,0">
+                                    <ComboBoxItem Content="전체"/>
+                                    <ComboBoxItem Content="전화"/>
+                                    <ComboBoxItem Content="자기사"/>
+                                    <ComboBoxItem Content="타기사"/>
+                                    <ComboBoxItem Content="고객명"/>
+                                    <ComboBoxItem Content="의뢰자"/>                                    
+                                    <ComboBoxItem Content="거래처명"/>
+                                    <ComboBoxItem Content="출발동"/>
+                                    <ComboBoxItem Content="출발지"/>                                    
+                                    <ComboBoxItem Content="도착동"/>
+                                    <ComboBoxItem Content="도착지"/>
+                                    <ComboBoxItem Content="주문번호"/>
+                                    <ComboBoxItem Content="적요"/>
+                                    <ComboBoxItem Content="접수자"/>
+                                    <ComboBoxItem Content="부서명"/>
+                                    <ComboBoxItem Content="담당자"/>
+                                </ComboBox>
+                                <TextBox x:Name="TBoxSearch"
+                                         Style="{StaticResource TextBoxStyle}"
+                                         Width="90"
+                                         Margin="2,0,0,0"/>
+
+                                <Border Style="{StaticResource RedBorderStyle}"
+                                        Width="69" Height="26" Margin="2,0,0,0"
+                                        Background="{StaticResource AppBrush_PinkBackground}">
+                                    <CheckBox x:Name="ChkBoxClear" Content="CLEAR"
+                                              Style="{StaticResource AppCheckBoxStyle_Normal}"/>
+                                </Border>
+                            </StackPanel>
+
+                            <!--// 차종라벨 라인-->
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                <Label Content="차종" 
+                                       Style="{StaticResource LabelStyle}"
+                                       Width="40" />
+
+                                <ComboBox x:Name="CmbBoxCarType" 
+                                          Style="{StaticResource AppComboBoxStyle_Normal}" Width="75" SelectedIndex="0"
+                                          Margin="2,0,0,0">
+                                    <ComboBoxItem Content="전체"/>
+                                    <ComboBoxItem Content="오토"/>
+                                    <ComboBoxItem Content="다마스"/>
+                                    <ComboBoxItem Content="트럭"/>
+                                    <ComboBoxItem Content="밴"/>
+                                    <ComboBoxItem Content="라보"/>
+                                    <ComboBoxItem Content="플렉스"/>
+                                </ComboBox>
+
+                                <Label Content="지급구분" 
+                                       Style="{StaticResource LabelStyle}" 
+                                       Width="90" Margin="2,0,0,0"/>
+
+                                <ComboBox x:Name="CmbBoxPayType" 
+                                          Style="{StaticResource AppComboBoxStyle_Normal}" Width="69" SelectedIndex="0"
+                                          Margin="2,0,0,0">
+                                    <ComboBoxItem Content="전체"/>
+                                    <ComboBoxItem Content="선불"/>
+                                    <ComboBoxItem Content="착불"/>
+                                    <ComboBoxItem Content="신용"/>
+                                    <ComboBoxItem Content="송금"/>
+                                    <ComboBoxItem Content="카드"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion Header_Left_Upper_Col_1(검색조건 그룹) -->
+
+                    <!--#region Header_Left_Upper_Col_2(오더타입 그룹) -->
+                    <Border Grid.Column="2"
+                            BorderBrush="DarkGray" 
+                            BorderThickness="1"
+                            Background="LightGray"
+                            Margin="1"
+                            Width="Auto" Height="Auto">
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30" x:Name="Header_Left_Upper_Col2_Upper"/>
+                                <RowDefinition Height="60" x:Name="Header_Left_Upper_Col2_Below"/>
+                            </Grid.RowDefinitions>
+
+                            <!--Header_Left_Upper_Col2_Upper(기사그룹)-->
+                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                <ComboBox x:Name="CmbBoxDateSelect"
+                                          Style="{StaticResource AppComboBoxStyle_Normal}" Width="85" Margin="2,0,0,0" SelectedIndex="0"
+                                          SelectionChanged="CmbBoxDateSelect_SelectionChanged">
+                                    <ComboBoxItem Content="오늘만"/>
+                                    <ComboBoxItem Content="어제만"/>
+                                    <ComboBoxItem Content="어제까지"/>
+                                    <ComboBoxItem Content="그제만"/>
+                                    <ComboBoxItem Content="그제까지"/>
+                                    <ComboBoxItem Content="금주만"/>
+                                    <ComboBoxItem Content="전주만"/>
+                                    <ComboBoxItem Content="전주까지"/>
+                                    <ComboBoxItem Content="금월만"/>
+                                    <ComboBoxItem Content="전월만"/>
+                                    <ComboBoxItem Content="전월까지"/>
+                                    <ComboBoxItem Content="직접입력"/>
+                                </ComboBox>
+
+                                <Label Content="기사그룹" 
+                                       Style="{StaticResource LabelStyle}"
+                                       Width="80" Margin="2,0,0,0"/>
+
+                                <ComboBox x:Name="CmbBoxDriver" 
+                                          Style="{StaticResource AppComboBoxStyle_Normal}" Width="90" SelectedIndex="0" Margin="2,0,0,0"/>
+                            </StackPanel>
+
+                            <!--Header_Left_Upper_Col2_Below(오더타입그룹)-->
+                            <WrapPanel Grid.Row="1" Margin="4,5,0,2">
+                                <CheckBox x:Name="ChkBoxNoCharge"
+                                          Content="수무"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="55"/>
+                                <CheckBox x:Name="ChkBoxTax"
+                                          Content="세금"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="55"/>
+                                <CheckBox x:Name="ChkBoxInternet"
+                                          Content="인터넷"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="75"/>
+                                <CheckBox x:Name="ChkBoxDirect"
+                                          Content="직배차"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="75"/>
+                                <CheckBox x:Name="ChkBoxSend"
+                                          Content="탁송"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="55"/>
+                                <CheckBox x:Name="ChkBoxQuestion"
+                                          Content="문의"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="55"/>
+                                <CheckBox x:Name="ChkBoxShare"
+                                          Content="공유"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="75"/>
+                                <CheckBox x:Name="ChkBoxPass"
+                                          Content="콜패스"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="75"/>
+                                <CheckBox x:Name="ChkBoxToday"
+                                          Content="당일택배"
+                                          Style="{StaticResource AppCheckBoxStyle_Normal}"
+                                          Width="110"/>
+                            </WrapPanel>
+                        </Grid>
+                    </Border>
+                    <!--#endregion Header_Left_Upper_Col_2(오더타입 그룹)-->
+
+                    <!--#region Header_Left_Upper_Col_3(실행버튼 그룹) -->
+                    <Border Grid.Column="3"
+                            BorderBrush="DarkGray" 
+                            BorderThickness="1"
+                            Background="LightGray"
+                            Width="368" Height="88">
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" x:Name="Header_Left_Upper_Col3_Upper"/>
+                                <RowDefinition Height="Auto" x:Name="Header_Left_Upper_Col3_Below"/>
+                            </Grid.RowDefinitions>
+
+                            <!--#region Header_Left_Upper_Col3_Upper(이미지버튼 그룹)-->
+                            <StackPanel Grid.Row="0"
+                                        Orientation="Horizontal" 
+                                        Height="Auto">
+
+                                <!--// 신규 버튼 //-->
+                                <Button x:Name="BtnOrderNew"
+                                        Style="{StaticResource ImageBtnStyle_Enabled}" 
+                                        Click="BtnOrderNew_Click">
+                                    <StackPanel >
+                                        <Image Source="\Resources\Images\NewPaper001.png" Height="{StaticResource AppImageHeight_Mid}"/>
+                                        <TextBlock Text="신규(F4)" Style="{StaticResource TextBlockStyle_ImgBtn}"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!--// 조회 버튼 //-->
+                                <Button x:Name="BtnOrderSearch"      
+                                        Style="{StaticResource ImageBtnStyle_Enabled}" 
+                                        Click="BtnOrderSearch_Click">
+                                    <StackPanel >
+                                        <Image Source="\Resources\Images\Search002.png" Height="{StaticResource AppImageHeight_Mid}"/>
+                                        <TextBlock Text="조회(F5)" Style="{StaticResource TextBlockStyle_ImgBtn}"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!--// 초기화 버튼 //-->
+                                <Button x:Name="BtnOrderInit"                                
+                                            Style="{StaticResource ImageBtnStyle_Enabled}" 
+                                            Click="BtnOrderInit_Click">
+                                    <StackPanel>
+                                        <Image Source="\Resources\Images\Clear001.png" Height="{StaticResource AppImageHeight_Mid}"/>
+                                        <TextBlock Text="초기화" Style="{StaticResource TextBlockStyle_ImgBtn}"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <!--// 기사 버튼 //-->
+                                <Button x:Name="BtnOrderDriver" 
+                                            Style="{StaticResource ImageBtnStyle_Enabled}" 
+                                            Click="BtnOrderDriver_Click">
+                                    <StackPanel>
+                                        <Image Source="\Resources\Images\Driver001.png" Height="{StaticResource AppImageHeight_Mid}"/>
+                                        <TextBlock Text="기사" Style="{StaticResource TextBlockStyle_ImgBtn}"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                            <!--#endregion Header_Left_Upper_Col3_Upper(이미지버튼 그룹)-->
+
+                            <!--#region  Header_Left_Upper_Col3_Below(텍스트버튼 그룹) -->
+                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                                <!--// 지연 버튼 //-->
+                                <Button x:Name="BtnOrderDelay" Content="픽업배송지연"
+                                        Style="{StaticResource TextBtnStyle}" 
+                                        Click="BtnOrderDelay_Click"/>
+                                <!--// 공유 버튼 //-->
+                                <Button x:Name="BtnOrderShare" Content="공유오더상황" 
+                                        Style="{StaticResource TextBtnStyle}" 
+                                        Click="BtnOrderShare_Click"/>
+
+                                <!--// 기사전화번호복사 버튼 //-->
+                                <Button x:Name="BtnOrderDrvTelCopy" Content="기사전번복사" 
+                                        Style="{StaticResource TextBtnStyle}" 
+                                        Click="BtnOrderDrvTelCopy_Click"/>
+
+                                <!--// 지난오더등록 버튼 //-->
+                                <Button x:Name="BtnOrderPastReg" Content="지난오더등록" 
+                                        Style="{StaticResource TextBtnStyle}" 
+                                        Click="BtnOrderPastReg_Click"/>
+                            </StackPanel>
+                            <!--#endregion Header_Left_Upper_Col3_Below(텍스트버튼 그룹)-->
+                        </Grid>
+                    </Border>
+                    <!--#endregion Header_Left_Upper_Col_3(실행버튼 그룹)-->
+                </Grid>
+                <!--#endregion Header_Left_Upper(오더상태 버튼 그룹)-->
+
+                <!--#region Header_Left_Below(일회성 검색, 적립금) -->
+                <Grid Grid.Row="1" Margin="1,0,0,0">
+                    <!--8개의 열로 분할-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="121" x:Name="Header_Left_Below_Col0"/>
+                        <ColumnDefinition Width="121" x:Name="Header_Left_Below_Col1"/>
+                        <ColumnDefinition Width="121" x:Name="Header_Left_Below_Col2"/>
+                        <ColumnDefinition Width="121" x:Name="Header_Left_Below_Col3"/>
+                        <ColumnDefinition Width="121" x:Name="Header_Left_Below_Col4"/>
+                        <ColumnDefinition Width="121" x:Name="Header_Left_Below_Col5"/>
+                        <ColumnDefinition Width="121" x:Name="Header_Left_Below_Col6"/>
+                        <ColumnDefinition Width="*" x:Name="Header_Left_Below_Col7_적립금"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--// 고객명-->
+                    <TextBox Grid.Column="0" x:Name="TBoxCustName" Style="{StaticResource WatermarkDarkStyle}"
+                             LostFocus="TBoxCustName_LostFocus"/>
+                    <TextBox Grid.Column="0" x:Name="_TBoxCustName" Style="{StaticResource WatermarkLightStyle}" Text="고객명"
+                             GotFocus="_TBoxCustName_GotFocus"/>
+
+                    <!--// 고객전화-->
+                    <TextBox Grid.Column="1" x:Name="TBoxCustTel" Style="{StaticResource WatermarkDarkStyle}"
+                             LostFocus="TBoxCustTel_LostFocus"/>
+                    <TextBox Grid.Column="1" x:Name="_TBoxCustTel" Style="{StaticResource WatermarkLightStyle}" Text="고객전화"
+                             GotFocus="_TBoxCustTel_GotFocus"/>
+
+                    <!--// 자기사-->
+                    <TextBox Grid.Column="2" x:Name="TBoxInternalDriver" Style="{StaticResource WatermarkDarkStyle}"
+                             LostFocus="TBoxInternalDriver_LostFocus"/>
+                    <TextBox Grid.Column="2" x:Name="_TBoxInternalDriver" Style="{StaticResource WatermarkLightStyle}" Text="자기사"
+                             GotFocus="_TBoxInternalDriver_GotFocus"/>
+
+                    <!--// 타기사-->
+                    <TextBox Grid.Column="3" x:Name="TBoxExternalDriver" Style="{StaticResource WatermarkDarkStyle}"
+                             LostFocus="TBoxExternalDriver_LostFocus"/>
+                    <TextBox Grid.Column="3" x:Name="_TBoxExternalDriver" Style="{StaticResource WatermarkLightStyle}" Text="타기사"
+                             GotFocus="_TBoxExternalDriver_GotFocus"/>
+
+                    <!--// 출발동-->
+                    <TextBox Grid.Column="4" x:Name="TBoxStartDong" Style="{StaticResource WatermarkDarkStyle}"
+                             LostFocus="TBoxStartDong_LostFocus"/>
+                    <TextBox Grid.Column="4" x:Name="_TBoxStartDong" Style="{StaticResource WatermarkLightStyle}" Text="출발동"
+                             GotFocus="_TBoxStartDong_GotFocus"/>
+
+                    <!--// 도착동-->
+                    <TextBox Grid.Column="5" x:Name="TBoxEndDong" Style="{StaticResource WatermarkDarkStyle}"
+                             LostFocus="TBoxEndDong_LostFocus"/>
+                    <TextBox Grid.Column="5" x:Name="_TBoxEndDong" Style="{StaticResource WatermarkLightStyle}" Text="도착동"
+                             GotFocus="_TBoxEndDong_GotFocus"/>
+
+                    <!--// 적요-->
+                    <TextBox Grid.Column="6" x:Name="TBoxRemarks" Style="{StaticResource WatermarkDarkStyle}"
+                             LostFocus="TBoxRemarks_LostFocus"/>
+                    <TextBox Grid.Column="6" x:Name="_TBoxRemarks" Style="{StaticResource WatermarkLightStyle}" Text="적요"
+                             GotFocus="_TBoxRemarks_GotFocus"/>
+
+                    <!--// 적립금-->
+                    <TextBlock Grid.Column="7" x:Name="TBlockChargeAmount" Text="동신퀵: 0원"
+                               Foreground="Blue" Background="Transparent" FontSize="18" FontWeight="Bold"
+                               FontFamily="굴림체" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+                <!--#endregion Header_Left_Below(일회성 검색, 적립금)-->
+            </Grid>
+            <!--#endregion Header_Left-->
+
+            <!--#region Header_Mid (오더상태 변경버튼 그룹)  -->
+            <StackPanel Grid.Column="1">
+                <!--// 오더취소 버튼 //-->
+                <Button x:Name="BtnOrderCancel" Style="{StaticResource ImageBtn2Style}" 
+                        Click="BtnOrderCancel_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="\Resources\Images\Cancel002.png" Width="{StaticResource AppImageHeight_Mid}"/>
+                        <TextBlock Text="오더취소" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+
+                <!--// 오더배차 버튼 //-->
+                <Button x:Name="BtnOrderAlloc" Style="{StaticResource ImageBtn2Style}" 
+                        Click="BtnOrderAlloc_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="\Resources\Images\Allocate003.png" Width="{StaticResource AppImageHeight_Mid}"/>
+                        <TextBlock Text="오더배차" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+
+                <!--// 접수상태 버튼 //-->
+                <Button x:Name="BtnOrderReceipt" Style="{StaticResource ImageBtn2Style}" 
+                        Click="BtnOrderReceipt_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="\Resources\Images\Receipt001.png" Width="{StaticResource AppImageHeight_Mid}"/>
+                        <TextBlock Text="접수상태" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+
+                <!--// 엑셀변환 버튼 //-->
+                <Button x:Name="BtnOrderExcel" Style="{StaticResource ImageBtn2Style}" 
+                        Click="BtnOrderExcel_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="\Resources\Images\Excel001.png" Width="{StaticResource AppImageHeight_Mid}"/>
+                        <TextBlock Text="엑셀변환" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <!--#endregion Header_Mid (오더상태 변경버튼 그룹) -->
+
+            <!--#region Header_Right(메세지)-->
+            <Border Grid.Column="2" x:Name="GridMessage" BorderBrush="DarkGray" BorderThickness="1"
+                    Background="LightGray" Margin="1" Width="Auto" Height="Auto"
+                    SizeChanged="GridMessage_SizeChanged">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" x:Name="TBlkMsgBig" Text="큰 메세지"
+                               FontSize="20" FontWeight="Black" Foreground="Blue" FontFamily="굴림체"
+                               VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+
+                    <TextBlock Grid.Row="1" x:Name="TBlkMsgSmall" Text="작은 메세지"
+                               FontSize="{StaticResource AppFontSize_Normal}" HorizontalAlignment="Center" Margin="10,20,10,10"/>
+                </Grid>
+            </Border>
+            <!--#endregion Header_Right(메세지)-->
+        </Grid>
+        <!--#endregion 헤더-->
+
+        <!--#region 오더목록(DataGrid) -->
+        <DataGrid Grid.Row="1" 
+                  x:Name="DGridOrder" ItemsSource="{Binding oc_VmOrdersWith}" Margin="3,0,3,0"
+                  Style="{StaticResource AppDatagridStyle_Normal}" 
+                  CellStyle="{StaticResource AppCellStyle_Normal}"
+                  ColumnHeaderStyle="{StaticResource AppColumnHeaderStyle_Normal}"
+                  SizeChanged="DGridOrder_SizeChanged" LoadingRow="DGridOrder_LoadingRow" MouseDoubleClick="DGridOrderMouseDoubleClick"
+                  MouseRightButtonDown="DGridOrder_MouseRightButtonDown">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <!-- 상태별 배경색 -->
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding OrderState}" Value="접수">
+                            <Setter Property="Background" Value="{StaticResource AppBrushLightReceipt}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrderState}" Value="대기">
+                            <Setter Property="Background" Value="{StaticResource AppBrushLightWait}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrderState}" Value="배차">
+                            <Setter Property="Background" Value="{StaticResource AppBrushLightAlloc}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrderState}" Value="예약">
+                            <Setter Property="Background" Value="{StaticResource AppBrushLightReserve}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrderState}" Value="운행">
+                            <Setter Property="Background" Value="{StaticResource AppBrushLightRun}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding OrderState}" Value="취소">
+                            <Setter Property="Background" Value="{StaticResource AppBrushLightCancel}"/>
+                        </DataTrigger>
+
+                        <!-- 선택된 행 색상 -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{StaticResource AppColor_SelectedBackground}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="No" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
+                                       Path=Header}" 
+                                       HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="상태" Binding="{Binding OrderState}" Width="50" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="생성시간" Binding="{Binding RegTime}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="접수시간" Binding="{Binding ReceiptTime}" Width="65" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="오더번호" Binding="{Binding KeyCode}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+
+                <DataGridTextColumn Header="이전소속" Binding="{Binding CallCustFrom}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+
+                <DataGridTextColumn Header="인성1" Binding="{Binding Insung1}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="인성2" Binding="{Binding Insung2}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="화물24시" Binding="{Binding Cargo24}" Width="90" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="원콜" Binding="{Binding Onecall}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="차량" Binding="{Binding CarType}" Width="50" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="고객명" Binding="{Binding CallCustName}" Width="180" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="부서명" Binding="{Binding CallDeptName}" Width="70"/>
+                <DataGridTextColumn Header="담당자" Binding="{Binding CallChargeName}" Width="70"/>
+                <DataGridTextColumn Header="전화번호" Binding="{Binding CallTelNo}" Width="120" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="출발동" Binding="{Binding StartDongBasic}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="도착동" Binding="{Binding DestDongBasic}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="합계" Binding="{Binding sFeeTotal}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="기본" Binding="{Binding FeeBasic}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="추가" Binding="{Binding FeePlus}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="할인" Binding="{Binding FeeMinus}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="탁송" Binding="{Binding FeeConn}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="기사" Binding="{Binding FeeDriver}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="처리비" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="지급" Binding="{Binding FeeType}" Width="50"/>
+                <DataGridTextColumn Header="형태" Binding="{Binding DeliverType}" Width="50"/>
+                <DataGridTextColumn Header="왕복" Width="50"/>
+                <DataGridTextColumn Header="공유" Width="50"/>
+                <DataGridTextColumn Header="기사"/>
+                <DataGridTextColumn Header="픽업" Binding="{Binding RunTime}" Width="50"/>
+                <DataGridTextColumn Header="완료" Binding="{Binding FinishTime}" Width="50"/>
+                <DataGridTextColumn Header="배차" Binding="{Binding AllocTime}" Width="50"/>
+                <DataGridTextColumn Header="적요" Binding="{Binding Remarks}" Width="200"/>
+                <DataGridTextColumn Header="오더메모" Binding="{Binding OrderMemo}" Width="150"/>
+                <DataGridCheckBoxColumn Header="출" />
+                <DataGridCheckBoxColumn Header="착" />
+                <DataGridTextColumn Header="출발지" Width="100"/>
+                <DataGridTextColumn Header="도착지" Width="100"/>
+                <DataGridTextColumn Header="거래처명" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--#endregion 오더목록(DataGrid)-->
+
+        <!--#region 오더집계, 전화목록 -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="105" x:Name="Tel_Order_Count_Col_0"/>
+                <ColumnDefinition Width="50" x:Name="Tel_Order_Count_Col_1"/>
+                <ColumnDefinition Width="70" x:Name="Tel_Order_Count_Col_2"/>
+                <ColumnDefinition Width="50" x:Name="Tel_Order_Count_Col_3"/>
+                <ColumnDefinition Width="100" x:Name="Tel_Order_Count_Col_4"/>
+                <ColumnDefinition Width="*" x:Name="Tel_Order_Count_Col_5"/>
+            </Grid.ColumnDefinitions>
+
+            <!--#region Col-0 Tel_Order_Count(오더상태 이미지버튼) -->
+            <StackPanel Grid.Column="0" Margin="3,0,0,0">
+                <!--// PDA 버튼 //-->
+                <Button x:Name="BtnPDA" Style="{StaticResource ImageBtn3Style}" 
+                        Click="BtnPDA_Click">
+                    <StackPanel Style="{StaticResource StackPanelStyle}">
+                        <Image Source="\Resources\Images\Pda001.png" Style="{StaticResource Image2Style}"/>
+                        <TextBlock Text="PDA" Margin="15,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+
+                <!--// 배차제한 버튼 //-->
+                <Button x:Name="BtnDenyAlloc" Style="{StaticResource ImageBtn3Style}" 
+                        Click="BtnDenyAlloc_Click">
+                    <StackPanel Style="{StaticResource StackPanelStyle}">
+                        <Image Source="\Resources\Images\Cancel002.png" Style="{StaticResource Image2Style}"/>
+                        <TextBlock Text="배차제한" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+
+                <!--// 기사현황 버튼 //-->
+                <Button x:Name="BtnDriverState" Style="{StaticResource ImageBtn3Style}" 
+                        Click="BtnDriverState_Click">
+                    <StackPanel Style="{StaticResource StackPanelStyle}">
+                        <Image Source="\Resources\Images\Driver001.png" Style="{StaticResource Image2Style}"/>
+                        <TextBlock Text="기사현황" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+
+                <!--// 배차현황 버튼 //-->
+                <Button x:Name="BtnAllocState" Style="{StaticResource ImageBtn3Style}" 
+                        Click="BtnAllocState_Click">
+                    <StackPanel Style="{StaticResource StackPanelStyle}">
+                        <Image Source="\Resources\Images\Allocate003.png" Style="{StaticResource Image2Style}"/>
+                        <TextBlock Text="배차현황" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+
+                <!--// 공유오더 버튼 //-->
+                <Button x:Name="BtnShareState" Style="{StaticResource ImageBtn3Style}" 
+                        Click="BtnShareState_Click">
+                    <StackPanel Style="{StaticResource StackPanelStyle}">
+                        <Image Source="\Resources\Images\Share001.png" Style="{StaticResource Image2Style}"/>
+                        <TextBlock Text="공유오더" Margin="5,0,0,0" Style="{StaticResource TextBlockStyle}"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <!--#endregion Col-0 Tel_Order_Count(오더상태 이미지버튼))-->
+
+            <!--#region Col-1(상태별 라벨1) -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+
+                <!--// Row - 0(접수)라벨-->
+                <Ellipse Grid.Row="0" x:Name="EllipseReceipt"
+                         Style="{StaticResource EllipseStyle}" Fill="{StaticResource AppBrushLightReceipt}"/>
+                <Label Grid.Row="0" x:Name="LblDispReceipt" Style="{StaticResource AppLabelStyle_Normal}"
+                       Content="접수" />
+
+                <!--// Row - 1(대기)라벨-->
+                <Ellipse Grid.Row="1" x:Name="EllipseWait"     
+                         Style="{StaticResource EllipseStyle}" Fill="{StaticResource AppBrushLightWait}"/>
+                <Label Grid.Row="1" x:Name="LblDispWait" Content="대기" Style="{StaticResource AppLabelStyle_Normal}"/>
+
+                <!--// Row - 2(배차)라벨-->
+                <Ellipse Grid.Row="2" x:Name="EllipseAlloc"     
+                         Style="{StaticResource EllipseStyle}" Fill="{StaticResource AppBrushLightAlloc}"/>
+                <Label Grid.Row="2" x:Name="LblDispAlloc" Content="배차" Style="{StaticResource AppLabelStyle_Normal}"/>
+
+                <!--// Row - 3(예약)라벨-->
+                <Ellipse Grid.Row="3" x:Name="EllipseReserve"      
+                         Style="{StaticResource EllipseStyle}" Fill="{StaticResource AppBrushLightReserve}"/>
+                <Label Grid.Row="3" x:Name="LblDispReserve" Content="예약" Style="{StaticResource AppLabelStyle_Normal}"/>
+
+                <!--// Row - 4(개수)라벨-->
+                <Ellipse Grid.Row="4" x:Name="EllipseCountTot"    
+                         Style="{StaticResource EllipseStyle}" Fill="LightGray"/>
+                <Label Grid.Row="4" x:Name="LblDispCountTot" Content="개수" FontWeight="Bold" Style="{StaticResource AppLabelStyle_Normal}"/>
+            </Grid>
+            <!--#endregion Col-1(상태별 라벨1)-->
+
+            <!--#region  Col - 2(상태별 합계1) -->
+            <StackPanel Grid.Column="2">
+                <!--// 접수계-->
+                <Label  x:Name="LblSumsReceipt" Content="0/0" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"/>
+                <!--// 대기계-->
+                <Label  x:Name="LblSumsWait" Content="0/0" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"/>
+                <!--// 배차계-->
+                <Label  x:Name="LblSumsAlloc" Content="0/0" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"/>
+                <!--// 예약계-->
+                <Label  x:Name="LblSumsReserve" Content="0/0" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"/>
+                <!--// 개수합계-->
+                <Label  x:Name="LblSumsTot" Content="0 개" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"      
+                        Foreground="Blue" FontWeight="Bold" Visibility="Visible"/>
+            </StackPanel>
+            <!--#endregion Col - 2(상태별 합계1)-->
+
+            <!--#region  Col - 3(상태별 라벨2) -->
+            <Grid Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+
+                <!--// Row - 2.3.0(운행)-->
+                <Ellipse Grid.Row="0" x:Name="EllipseRun" Style="{StaticResource EllipseStyle}" Fill="{StaticResource AppBrushLightRun}"/>
+                <Label Grid.Row="0" x:Name="LblDispRun" Content="운행" Style="{StaticResource AppLabelStyle_Normal}"/>
+
+                <!--// Row - 2.3.1(완료)-->
+                <Ellipse Grid.Row="1" x:Name="EllipseFinish" Style="{StaticResource EllipseStyle}" Fill="{StaticResource AppBrushLightFinish}"/>
+                <Label Grid.Row="1" x:Name="LblDispFinish" Content="완료" Style="{StaticResource AppLabelStyle_Normal}"/>
+
+                <!--// Row - 2.3.2(취소)-->
+                <Ellipse Grid.Row="2" x:Name="EllipseCancel" Style="{StaticResource EllipseStyle}" Fill="{StaticResource AppBrushLightCancel}"/>
+                <Label Grid.Row="2" x:Name="LblDispCancel" Content="취소" Style="{StaticResource AppLabelStyle_Normal}"/>
+
+                <!--// Row - 2.3.4(금액합)-->
+                <Ellipse Grid.Row="4" x:Name="EllipseWonTot" Style="{StaticResource EllipseStyle}" Fill="LightGray"/>
+                <Label Grid.Row="4" Content="금액" FontWeight="Bold" Style="{StaticResource AppLabelStyle_Normal}"/>
+            </Grid>
+            <!--#endregion Col - 3(상태별 라벨2)-->
+
+            <!--#region  Col - 4(상태별 합계2) -->
+            <StackPanel Grid.Column="4">
+                <!--// 운행계-->
+                <Label  x:Name="LblSumsRun" Content="0/0" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"/>
+                <!--// 완료계-->
+                <Label  x:Name="LblSumsFinish" Content="0/0" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"/>
+                <!--// 취소계-->
+                <Label  x:Name="LblSumsCancel" Content="0/0" Style="{StaticResource LabelCountStyle}" Margin="0,0,5,0"/>
+
+                <Label  x:Name="LblFeeTot" Content="0 원" Style="{StaticResource LabelCountStyle}" Margin="0,36,0,0"                        
+                        Foreground="Blue" FontWeight="Bold" Visibility="Visible"/>
+                <!--// 금액합계-->
+            </StackPanel>
+            <!--#endregion Col - 4(상태별 합계2)-->
+
+            <!--#region  Col - 5(전화상황:탭콘트롤로 바뀔것 같음) -->
+            <!--ItemsSource="{Binding Source={x:Static ViewServices:VsTelMainRing.s_TelRings}}"-->
+            <StackPanel Grid.Column="5">
+                <DataGrid  x:Name="DGridTel" ItemsSource="{Binding oc_VmOrder_StatusPage_Tel070}" 
+                           Height="150" Style="{StaticResource AppDatagridStyle_Normal}" Margin="3"
+                           SizeChanged="DGridOrder_SizeChanged" LoadingRow="DGridTel_LoadingRow" MouseLeftButtonUp="DGridTelMouseLeftButtonUp">
+                    <!--스타일을 DataGrid 레벨에서 정의--> 
+                    <DataGrid.Resources>
+                        <!--보기 모드에서 중앙 정렬 스타일-->
+                        <Style TargetType="TextBlock" x:Key="CenterTextBlockStyle">
+                            <Setter Property="TextAlignment" Value="Center"/>
+                        </Style>
+                        <!--편집 모드에서 중앙 정렬 스타일-->
+                        <Style TargetType="TextBox" x:Key="CenterTextBoxStyle">
+                            <Setter Property="TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <!--헤더 스타일-->
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            <Setter Property="FontWeight" Value="Normal"/>
+                            <Setter Property="Background" Value="LightGray"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+
+                    <DataGrid.Columns>
+                        <!--순번-->
+                        <DataGridTemplateColumn Header="순번" Width="40">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
+                                               Path=Header}" 
+                                               HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--수신시간-->
+                        <DataGridTextColumn Header="수신시간" Binding="{Binding RingDate}" Width="110"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--상대전화-->
+                        <DataGridTextColumn Header="상대전화" Binding="{Binding YourTelNum}" Width="110"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--고객명-->
+                        <DataGridTextColumn Header="고객명" Binding="{Binding CustName}" Width="150"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--담당자-->
+                        <DataGridTextColumn Header="담당자" Binding="{Binding ChargeName}" Width="100"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--부서명-->
+                        <DataGridTextColumn Header="부서명" Binding="{Binding DeptName}" Width="100"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--거래처명-->
+                        <DataGridTextColumn Header="거래처명" Binding="{Binding CompanyName}" Width="120"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--콜센터명-->
+                        <DataGridTextColumn Header="콜센터명" Binding="{Binding CenterName}" Width="100"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--내전화별명-->
+                        <DataGridTextColumn Header="내전화별명" Binding="{Binding Alias}" Width="120"
+                                    ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                    EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--내전화-->
+                        <DataGridTextColumn Header="내전화" Binding="{Binding MyTelNum}" Width="110"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--기준동-->
+                        <DataGridTextColumn Header="기준동" Binding="{Binding BasicDong}" Width="100"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+
+                        <!--메모-->
+                        <DataGridTextColumn Header="메모" Binding="{Binding Memo}" Width="*"
+                                        ElementStyle="{StaticResource CenterTextBlockStyle}"
+                                        EditingElementStyle="{StaticResource CenterTextBoxStyle}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+            <!--#endregion Col - 5(전화상황:탭콘트롤로 바뀔것 같음)-->
+        </Grid>
+        <!--#endregion 오더집계, 전화목록-->
+
+    </Grid>
+    <!--#endregion Render-->
+</Page>

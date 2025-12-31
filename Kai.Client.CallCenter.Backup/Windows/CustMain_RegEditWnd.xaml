@@ -1,0 +1,640 @@
+﻿<Window x:Class="Kai.Client.CallCenter.Windows.CustMain_RegEditWnd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
+        mc:Ignorable="d"
+        xmlns:sys="clr-namespace:System;assembly=netstandard"    
+        Title="고객관리" Height="720" Width="805" ResizeMode="CanMinimize"
+        FontSize="13" Background="LightGray" 
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded">
+    <Window.Resources>
+        <!--크기-->
+        <sys:Double x:Key="TBoxWidth01">100</sys:Double>
+        <sys:Double x:Key="TBoxWidth02">177</sys:Double>
+        <sys:Double x:Key="TBoxWidth03">200</sys:Double>
+        <GridLength x:Key="LineHeight01">28</GridLength>
+
+        <!--// 라벨-->
+        <Style TargetType="Label" x:Key="LabelStyle_Blue75" BasedOn="{StaticResource AppLabelStyle_Normal}">
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+
+        <Style TargetType="Label" x:Key="LabelStyle_Red75" BasedOn="{StaticResource AppLabelStyle_Normal}">
+            <Setter Property="BorderBrush" Value="Red"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+
+        <Style TargetType="Label" x:Key="LabelStyle_Red125" BasedOn="{StaticResource AppLabelStyle_Normal}">
+            <Setter Property="BorderBrush" Value="Red"/>
+            <Setter Property="Width" Value="125"/>
+            <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+
+        <!--버튼-->
+        <Style x:Key="ButtonStyle_Enabled" TargetType="Button" BasedOn="{StaticResource AppBtnStyle_Enabled}">
+            <Setter Property="Width" Value="65"/>
+            <Setter Property="Height" Value="{StaticResource AppImgBtnHeight_Big}"/>
+        </Style>
+        <Style x:Key="ButtonStyle_Disabled" TargetType="Button" BasedOn="{StaticResource AppBtnStyle_Disabled}">
+            <Setter Property="Width" Value="65"/>
+            <Setter Property="Height" Value="{StaticResource AppImgBtnHeight_Big}"/>
+        </Style>
+
+        <Style x:Key="PinkBtnStyle" TargetType="Button" BasedOn="{StaticResource AppButtonStyle_Normal}">
+            <Setter Property="BorderBrush" Value="Red"/>
+            <Setter Property="Background" Value="{StaticResource AppBrush_PinkBackground}"/>
+            <Setter Property="Opacity" Value="1"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.7"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--// 이미지-->
+        <Style x:Key="BigImageStyle" TargetType="Image">
+            <Setter Property="Height" Value="{StaticResource AppImageHeight_Big}"/>
+            <Setter Property="Width" Value="{StaticResource AppImageHeight_Big}"/>
+        </Style>
+
+        <!--// 텍스트블럭-->
+        <Style x:Key="ImageTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource AppTextBlockStyle_Normal}">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <!--// 텍스트박스-->
+        <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource AppTextBoxStyle_Normal}">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <!--<Setter Property="Width" Value="100"/>-->
+            <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+        <Style x:Key="TextBox02Style" TargetType="TextBox" BasedOn="{StaticResource AppTextBoxStyle_Normal}">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <!--<Setter Property="Width" Value="177"/>-->
+            <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+        <Style x:Key="TextBox03Style" TargetType="TextBox">
+            <Setter Property="FontSize" Value="{StaticResource AppFontSize_Normal}"/>
+            <Setter Property="FontFamily" Value="Italic" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AppColor_GrayBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="29"/>
+            <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid  Margin="10">
+        <!--전체를 3개의 행으로-->
+        <Grid.RowDefinitions>
+            <!--버튼들-->
+            <RowDefinition Height="70"/>
+            <!--메인정보, 종속정보-->
+            <RowDefinition Height="590"/>
+            <!--기타사항-->
+            <!--<RowDefinition Height="30"/>-->
+        </Grid.RowDefinitions>
+
+        <!--R0-버튼들-->
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <!--고객복사-->
+            <Button x:Name="BtnCopy"  
+                    Style="{StaticResource ButtonStyle_Disabled}"
+                    Margin="50,0,0,0">
+                <StackPanel>
+                    <Image Source="\Resources\Images\Copy001.png" Style="{StaticResource BigImageStyle}" />
+                    <TextBlock Text="고객복사" Style="{StaticResource ImageTextBlockStyle}"/>
+                </StackPanel>
+            </Button>
+
+            <!--저장-->
+            <Button x:Name="BtnSave" 
+                    Style="{StaticResource ButtonStyle_Disabled}"
+                    Margin="5,0,0,0"
+                    Click="BtnSave_Click">
+                <StackPanel>
+                    <Image Source="\Resources\Images\Save003.png" Style="{StaticResource BigImageStyle}" />
+                    <TextBlock Text="저장" Style="{StaticResource ImageTextBlockStyle}"/>
+                </StackPanel>
+            </Button>
+
+            <!--닫기-->
+            <Button x:Name="BtnClose" 
+                    Style="{StaticResource ButtonStyle_Enabled}"
+                    Margin="70,0,0,0"
+                    Click="BtnClose_Click">
+                <StackPanel>
+                    <Image Source="\Resources\Images\Close001.png" Style="{StaticResource BigImageStyle}" />
+                    <TextBlock Text="닫기" Style="{StaticResource ImageTextBlockStyle}"/>
+                </StackPanel>
+            </Button>
+
+            <!--전화번호추가-->
+            <Button x:Name="BtnAddTel" 
+                    Style="{StaticResource ButtonStyle_Enabled}" Width="90"
+                    Margin="140,0,0,0">
+                <StackPanel>
+                    <Image Source="\Resources\Images\Plus001.png" Style="{StaticResource BigImageStyle}" />
+                    <TextBlock Text="전화번호추가" Style="{StaticResource ImageTextBlockStyle}"/>
+                </StackPanel>
+            </Button>
+
+            <!--전화번호삭제-->
+            <Button x:Name="BtnRemoveTel" 
+                    Style="{StaticResource ButtonStyle_Enabled}" Width="90"
+                    Margin="5,0,0,0">
+                <StackPanel>
+                    <Image Source="\Resources\Images\Cut001.png" Style="{StaticResource BigImageStyle}" />
+                    <TextBlock Text="전화번호삭제" Style="{StaticResource ImageTextBlockStyle}"/>
+                </StackPanel>
+            </Button>
+
+            <!--엑셀-->
+            <Button x:Name="BtnToExcel"
+                    Style="{StaticResource ButtonStyle_Enabled}" 
+                    Margin="50,0,0,0"
+                    Click="BtnToExcel_Click">
+                <StackPanel>
+                    <Image Source="\Resources\Images\Excel001.png" Style="{StaticResource BigImageStyle}" />
+                    <TextBlock Text="엑셀" Style="{StaticResource ImageTextBlockStyle}"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <!--R1-메인정보, 종속정보-->
+        <Grid Grid.Row="1" Margin="0,2,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="465"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+
+            <!--R1-C0 메인정보-->
+            <Grid Grid.Column="0">
+                <!--메인정보 좌측 18개의 행-->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="44"/>
+                    <RowDefinition Height="54"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                    <RowDefinition Height="{StaticResource LineHeight01}"/>
+                </Grid.RowDefinitions>
+
+                <!--고객코드, 문자사절-->
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <!--고객코드-->
+                    <Label Content="고객코드" Style="{StaticResource LabelStyle_Blue75}"/>
+                    <TextBox x:Name="TBoxCustCode" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="Black" Width="{StaticResource TBoxWidth01}"
+                             IsEnabled="False" Background="{StaticResource AppBrush_DisableBackground}"/>
+
+                    <!--문자사절-->
+                    <CheckBox x:Name="ChkMsg" Content="문자사절" Margin="5,0,0,0"
+                              VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <!--고객명, 완료시차감-->
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <!--고객명-->
+                    <Label Content="고객명" Style="{StaticResource LabelStyle_Blue75}" Foreground="Red"/>
+                    <TextBox x:Name="TBoxCustName"
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="{StaticResource TBoxWidth02}"
+                             TextChanged="TBoxCustName_TextChanged"/>
+
+                    <!--고객명 검색버튼-->
+                    <Button x:Name="BtnSearchCustName"
+                            Style="{StaticResource PinkBtnStyle}" Width="60" Margin="2,0,0,0">
+                        <Image Source="\Resources\Images\Telescope001.png" Width="{StaticResource AppImageHeight_Mid}"/>
+                    </Button>
+
+                    <!--완료시차감-->
+                    <CheckBox x:Name="ChkDeduct" Content="완료시차감" Margin="10,0,0,0" 
+                              VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                </StackPanel>
+
+                <!--전화번호1, 전화번호2-->
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <!--전화번호1-->
+                    <Label Content="전화번호1" Style="{StaticResource LabelStyle_Blue75}" Foreground="Red"/>
+                    <TextBox x:Name="TBoxTelNo1" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="{StaticResource TBoxWidth01}"
+                             InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"
+                             TextChanged="TBoxTelNo1_TextChanged"/>
+
+                    <!--전화번호2-->
+                    <Label Content="전화번호2" Style="{StaticResource LabelStyle_Blue75}"/>
+                    <TextBox x:Name="TBoxTelNo2" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="{StaticResource TBoxWidth03}"
+                             InputMethod.IsInputMethodEnabled="False" PreviewTextInput="TBoxOnlyNum_PreviewTextInput"/>
+                </StackPanel>
+
+                <!--거래처명, ..., 동일고객좌표-->
+                <StackPanel Grid.Row="3" Orientation="Horizontal">
+                    <!--거래처명-->
+                    <Label Content="거래처명" Style="{StaticResource LabelStyle_Blue75}"/>
+                    <TextBox x:Name="TxtCompName" 
+                             Style="{StaticResource TextBox02Style}" BorderBrush="Black" Width="{StaticResource TBoxWidth02}"
+                             IsEnabled="False" Background="{StaticResource AppBrush_DisableBackground}"/>
+
+                    <!--거래처명 검색버튼-->
+                    <Button x:Name="BtnSearchComp"
+                            Style="{StaticResource PinkBtnStyle}" Width="35" Margin="2,0,0,0">
+                        <Image Source="\Resources\Images\Telescope001.png" Width="{StaticResource AppImageHeight_Mid}"/>
+                    </Button>
+
+                    <!--해제 버튼-->
+                    <Button x:Name="BtnRemoveComp" Content="해제"
+                            Style="{StaticResource PinkBtnStyle}" Width="35" VerticalAlignment="Center" Margin="2,0,0,0"/>
+
+                    <!--생성 버튼-->
+                    <Button x:Name="BtnCreateComp" Content="생성"
+                            Style="{StaticResource PinkBtnStyle}" Width="35" VerticalAlignment="Center" Margin="2,0,0,0"/>
+
+                    <!--동일고객좌표 버튼-->
+                    <Button x:Name="BtnSameCoordinate" Content="동일고객좌표"
+                            Style="{StaticResource PinkBtnStyle}" Width="89" VerticalAlignment="Center" Margin="2,0,0,0"/>
+                </StackPanel>
+
+                <!--부서명, ..., 담당/직위-->
+                <StackPanel Grid.Row="4" Orientation="Horizontal">
+                    <!--부서명-->
+                    <Label Content="부서명" Style="{StaticResource LabelStyle_Blue75}"/>
+                    <TextBox x:Name="TBoxDeptName" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="{StaticResource TBoxWidth01}"/>
+
+                    <!--담당/직위-->
+                    <Label Content="담당/직위" Style="{StaticResource LabelStyle_Blue75}"/>
+                    <TextBox x:Name="TBoxChargeName" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="{StaticResource TBoxWidth03}"/>
+                </StackPanel>
+
+                <!--동명, 현위치-->
+                <StackPanel Grid.Row="5" Orientation="Horizontal">
+                    <!--동명-->
+                    <Label Content="동명" Style="{StaticResource LabelStyle_Blue75}" Foreground="Red"/>
+                    <TextBox x:Name="TBoxDongBasic" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="{StaticResource TBoxWidth01}"
+                             TextChanged="TBoxDongBasic_TextChanged"/>
+
+                    <!--현위치, 검색버튼-->
+                    <TextBox x:Name="TBoxDongAddr" 
+                             Style="{StaticResource TextBox02Style}" BorderBrush="Black" Width="{StaticResource TBoxWidth02}"
+                             IsEnabled="False" Background="{StaticResource AppBrush_DisableBackground}"/>
+                    <Button x:Name="BtnSearchCurPos"
+                            Style="{StaticResource PinkBtnStyle}" Width="97" VerticalAlignment="Center" Margin="2,0,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="\Resources\Images\Flag002.png" Width="{StaticResource AppItemHeight_Normal}"/>
+                            <TextBlock Text="현위치" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!--상세위치-->
+                <StackPanel Grid.Row="6" Orientation="Horizontal">
+                    <!--상세위치-->
+                    <Label Content="상세위치" Style="{StaticResource LabelStyle_Blue75}" Height="41"/>
+                    <Border BorderThickness="1" BorderBrush="{StaticResource AppColor_GrayBorder}" Margin="2,0,0,0" 
+                            Width="378" Height="42">
+                        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+                                      Width="378" Height="42">
+                            <TextBox x:Name="TBoxDetailAddr"
+                                     VerticalAlignment="Top" HorizontalAlignment="Left"  
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     Width="361" Height="42" BorderThickness="0"/>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+
+                <!--적요-->
+                <StackPanel Grid.Row="7" Orientation="Horizontal">
+                    <!--적요-->
+                    <Label Content="적요" Style="{StaticResource LabelStyle_Blue75}" Height="41"/>
+                    <Border BorderThickness="1" BorderBrush="{StaticResource AppColor_GrayBorder}" Margin="2,0,0,0" 
+                            Width="378" Height="42">
+                        <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+                                      Width="378" Height="42">
+                            <TextBox x:Name="TBoxRemarks"
+                                     VerticalAlignment="Top" HorizontalAlignment="Left"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     Width="361" Height="42" BorderThickness="0"/>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+
+                <!--메모, 메모리스트, 기사설명-->
+                <Grid Grid.Row="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--메모, 메모리스트(버튼)-->
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,1,0,0">
+                        <!--부서명-->
+                        <Label Content="부서명" Style="{StaticResource LabelStyle_Blue75}"/>
+
+                        <!--메모리스트(버튼)-->
+                        <Button x:Name="BtnMemoList" Content="메모리스트"
+                                Style="{StaticResource PinkBtnStyle}" 
+                                Width="75" Height="{StaticResource AppItemHeight_Normal}" Margin="2,1,0,0">
+                        </Button>
+                    </StackPanel>
+
+                    <!--메모(TextBox)-->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Border BorderThickness="1" BorderBrush="{StaticResource AppColor_GrayBorder}" Margin="2,0,0,0" 
+                            Width="378" Height="53">
+                            <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+                                      Width="378" Height="53">
+                                <TextBox x:Name="TBoxMemo"
+                                     VerticalAlignment="Top" HorizontalAlignment="Left"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     Width="361" Height="53" BorderThickness="0"/>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!--거래구분, 요금구분-->
+                <StackPanel Grid.Row="9" Orientation="Horizontal">
+                    <!--거래구분-->
+                    <Label Content="거래구분" Style="{StaticResource LabelStyle_Red75}" Height="46"/>
+
+                    <!--거래구분(GroupRadioBtns)-->
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0"
+                            Width="180" Height="46">
+                        <WrapPanel>
+                            <RadioButton x:Name="Rdo선불" Content="선불" GroupName="TradeGroup" Margin="10,5,0,0" VerticalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rdo신용" Content="신용" GroupName="TradeGroup" Margin="10,5,0,0" VerticalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rdo카드" Content="카드" GroupName="TradeGroup" Margin="10,5,0,0" VerticalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rdo착불" Content="착불" GroupName="TradeGroup" Margin="10,5,0,0" VerticalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rdo송금" Content="송금" GroupName="TradeGroup" Margin="10,5,0,0" VerticalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rdo수금" Content="수금" GroupName="TradeGroup" Margin="10,5,0,0" VerticalContentAlignment="Center"/>
+                        </WrapPanel>
+                    </Border>
+
+                    <!--거래구분(TextBlock)-->
+                    <Label Content="요금구분" Style="{StaticResource LabelStyle_Red75}" Height="46"/>
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0" Width="119" Height="46" >
+                        <ComboBox x:Name="CmbFeeType" BorderThickness="0" HorizontalAlignment="Left" Width="119" IsEnabled="False"
+                                  SelectedIndex="0" VerticalContentAlignment="Center">
+                            <ComboBoxItem Content="기본설정"/>
+                        </ComboBox>
+                    </Border>
+                </StackPanel>
+
+                <!--할인구분, 할인액-->
+                <StackPanel Grid.Row="10" Orientation="Horizontal">
+                    <!--할인구분-->
+                    <Label Content="할인구분" Style="{StaticResource LabelStyle_Red75}" Height="29"/>
+                    <!--할인구분(GroupRadioBtns)-->
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0"
+                            Width="180" Height="29">
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton x:Name="Rdo할인" Content="할인" GroupName="DiscountGroup" Margin="10,0,0,0" VerticalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rdo마일리지" Content="마일" GroupName="DiscountGroup" Margin="10,0,0,0" VerticalContentAlignment="Center"/>
+                            <RadioButton x:Name="Rdo없음" Content="없음" GroupName="DiscountGroup" Margin="10,0,0,0" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!--할인액-->
+                    <Label Content="할인액" Style="{StaticResource LabelStyle_Red75}" Height="29"/>
+                    <TextBox x:Name="TxtDiscount" 
+                             Style="{StaticResource TextBox03Style}" Width="75" />
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0" Width="42" Height="29" >
+                        <ComboBox BorderThickness="0" HorizontalAlignment="Left" Width="42" IsEnabled="False" SelectedIndex="0">
+                            <ComboBoxItem Content="%"/>                            
+                            <ComboBoxItem Content="원"/>
+                        </ComboBox>
+                    </Border>
+                </StackPanel>
+
+                <!--할인방법, ...-->
+                <StackPanel Grid.Row="11" Orientation="Horizontal">
+                    <!--마일리지-->
+                    <Label Content="마일리지" Style="{StaticResource LabelStyle_Red75}"/>
+
+                    <!--마일리지 적용하한액(TextBlock)-->
+                    <TextBox x:Name="TxtMileageBasic" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="55"/>
+                    <!--이상-->
+                    <TextBlock Text="이상" Margin="2,0,0,0" VerticalAlignment="Center"/>
+                    <!--마일리지 적용액(TextBox)-->
+                    <TextBox x:Name="TxtMileagePer" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="51"/>
+
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0" Width="42" Height="{StaticResource AppItemHeight_Normal}" >
+                        <ComboBox x:Name="CmbBoxWonPercent" 
+                                  BorderThickness="0" HorizontalAlignment="Left" Width="42"  IsEnabled="False" SelectedIndex="0">
+                            <ComboBoxItem Content="%"/>
+                            <ComboBoxItem Content="원"/>
+                        </ComboBox>
+                    </Border>
+
+                    <!--마일리지(TextBlock)-->
+                    <Label Content="마일리지" Style="{StaticResource LabelStyle_Red75}"/>
+
+                    <TextBox x:Name="TBoxDiscountSum" 
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="Black" Width="75"
+                             IsEnabled="False" Background="{StaticResource AppBrush_DisableBackground}"/>
+
+                    <Button x:Name="BtnMileageMng" Content="관리"
+                                Style="{StaticResource PinkBtnStyle}" 
+                                Width="42" Height="{StaticResource AppItemHeight_Normal}" Margin="2,0,0,0">
+                    </Button>
+                </StackPanel>
+
+                <!--등록구분, 영업기사, 이력-->
+                <StackPanel Grid.Row="12" Orientation="Horizontal">
+                    <!--등록구분-->
+                    <Label Content="등록구분" Style="{StaticResource LabelStyle_Red75}"/>
+
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0" Width="103" Height="{StaticResource AppItemHeight_Normal}" >
+                        <ComboBox x:Name="CmbRegistType" 
+                                  BorderThickness="0" HorizontalAlignment="Left" Width="122"  IsEnabled="False" SelectedIndex="0">
+                            <ComboBoxItem Content="인터넷"/>
+                            <ComboBoxItem Content="유선"/>
+                            <ComboBoxItem Content="API"/>
+                            <ComboBoxItem Content="기타"/>
+                        </ComboBox>
+                    </Border>
+
+                    <Label Content="홍보구분" Style="{StaticResource LabelStyle_Red75}"/>
+
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0" Width="152" Height="{StaticResource AppItemHeight_Normal}" >
+                        <ComboBox x:Name="CmbSaleType" 
+                                  BorderThickness="0" HorizontalAlignment="Left" Width="152"  IsEnabled="False" SelectedIndex="0">
+                            <ComboBoxItem Content="유튜브"/>
+                        </ComboBox>
+                    </Border>
+
+                    <Button x:Name="BtnSalesHistory" Content="이력"
+                                Style="{StaticResource PinkBtnStyle}" 
+                                Width="42" Height="{StaticResource AppItemHeight_Normal}" Margin="2,0,0,0">
+                    </Button>
+                </StackPanel>
+
+                <!--등록일자, 등록자-->
+                <StackPanel Grid.Row="13" Orientation="Horizontal">
+                    <!--등록일자-->
+                    <Label Content="등록일자" Style="{StaticResource LabelStyle_Red75}"/>
+
+                    <TextBox x:Name="TBoxRegDate" 
+                             Style="{StaticResource TextBox02Style}" BorderBrush="Black" Width="180"
+                             IsEnabled="False" Background="{StaticResource AppBrush_DisableBackground}"/>
+
+                    <!--등록자-->
+                    <Label Content="등록자" Style="{StaticResource LabelStyle_Red75}"/>
+
+                    <TextBox x:Name="TBoxRegister" 
+                             Style="{StaticResource TextBox02Style}" BorderBrush="Black" Width="120"
+                             IsEnabled="False" Background="{StaticResource AppBrush_DisableBackground}"/>
+                </StackPanel>
+
+                <!--인터넷ID, 비밀번호-->
+                <StackPanel Grid.Row="14" Orientation="Horizontal">
+                    <!--사용자ID-->
+                    <Label Content="사용자ID" Style="{StaticResource LabelStyle_Red75}"/>
+                    <TextBox x:Name="TBoxUserId"
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="180"/>
+
+                    <!--사용자PW-->
+                    <Label Content="사용자PW" Style="{StaticResource LabelStyle_Red75}"/>
+                    <TextBox x:Name="TBoxUserPw"
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="120"/>
+                </StackPanel>
+
+                <!--사용구분, 팩스번호-->
+                <StackPanel Grid.Row="15" Orientation="Horizontal">
+                    <!--사용구분-->
+                    <Label Content="사용구분" Style="{StaticResource LabelStyle_Red75}"/>
+                    
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0" Width="180" Height="{StaticResource AppItemHeight_Normal}" >
+                        <ComboBox x:Name="CmbBoxUseType" 
+                                  BorderThickness="0" HorizontalAlignment="Left" Width="180"  IsEnabled="False" SelectedIndex="0">
+                            <ComboBoxItem Content="사용"/>
+                            <ComboBoxItem Content="미사용"/>
+                        </ComboBox>
+                    </Border>
+
+                    <!--팩스번호-->
+                    <Label Content="팩스번호" Style="{StaticResource LabelStyle_Red75}"/>
+                    <TextBox x:Name="TBoxFaxNo"
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="120"/>
+                </StackPanel>
+
+                <!--이메일, 기타1-->
+                <StackPanel Grid.Row="16" Orientation="Horizontal">
+                    <!--이메일-->
+                    <Label Content="이메일" Style="{StaticResource LabelStyle_Red75}"/>                    
+                    <TextBox x:Name="TBoxEmail"
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="180"/>
+
+                    <!--기타1-->
+                    <Label Content="기타1" Style="{StaticResource LabelStyle_Red75}"/>
+                    <TextBox x:Name="TBoxEtc01"
+                             Style="{StaticResource TextBoxStyle}" BorderBrush="{StaticResource AppColor_GrayBorder}" Width="120"/>
+                </StackPanel>
+
+                <!--해피콜, 자동공유, 좌표수정-->
+                <StackPanel Grid.Row="17" Orientation="Horizontal">
+                    <!--해피콜-->
+                    <Label Content="해피콜" Style="{StaticResource LabelStyle_Red75}"/>
+                    <Border BorderBrush="{StaticResource AppColor_GrayBorder}" BorderThickness="1" Margin="2,0,0,0" Width="180" Height="{StaticResource AppItemHeight_Normal}" >
+                        <ComboBox x:Name="CmbBoxHappyCall" 
+                                  BorderThickness="0" HorizontalAlignment="Left" Width="180"  IsEnabled="False" SelectedIndex="0">
+                            <ComboBoxItem Content="사용"/>
+                            <ComboBoxItem Content="미사용"/>
+                        </ComboBox>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+            <!--R1-C1 종속정보-->
+            <DataGrid Grid.Column="1" Margin="0,0,0,7" MinWidth="300"
+                      x:Name="DGridCustSub"
+                      Style="{StaticResource AppDatagridStyle_Normal}"
+                      CellStyle="{StaticResource AppCellStyle_Normal}"
+                      ColumnHeaderStyle="{StaticResource AppColumnHeaderStyle_Normal}"
+                      LoadingRow="DGridOrder_LoadingRow">
+
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="번호" Width="50">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, 
+                                       Path=Header}" 
+                                       HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="전화번호" Binding="{Binding 전화번호}" Width="80"/>
+                    <DataGridTextColumn Header="담당/직위" Binding="{Binding 담당직위}" Width="70"/>
+                    <DataGridTextColumn Header="등록자" Binding="{Binding 등록자}" Width="60"/>
+                    <DataGridTextColumn Header="등록일" Binding="{Binding 등록일}" Width="60"/>
+                    <DataGridTextColumn Header="적요" Binding="{Binding 적요}" Width="200"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!--R2-기타사항-->
+        <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,2,0,0">
+            인터넷 조회시작일
+            <Label Content="인터넷조회시작일" Style="{StaticResource LabelStyle_Red125}"/>
+            <Border BorderBrush="{StaticResource BrushBlue}" BorderThickness="1" Margin="0,2,0,0" 
+                    Width="125" Height="{StaticResource TBoxHeight}">
+                <TextBlock Text="인터넷 조회시작일" Style="{StaticResource TextBlock_Style}"/>
+            </Border>
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="2,2,0,0" Width="100" Height="21" >
+                <ComboBox x:Name="CmbInternetStartDay" BorderThickness="0">
+                    <ComboBoxItem Content="원"/>
+                    <ComboBoxItem Content="%"/>
+                </ComboBox>
+            </Border>
+
+            <Button x:Name="BtnChangeHistory" Content="변경이력"
+                    Width="{StaticResource ColSize01}" Height="{StaticResource TBoxHeight}" Margin="2,2,0,0"
+                    BorderBrush="{StaticResource BrushRed}" Background="{StaticResource BrushYellow}"/>
+
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="2,2,0,0" 
+                    Width="149" Height="{StaticResource TBoxHeight}">
+                <CheckBox x:Name="ChkSanJaeApply" Content="선착불산재적용" Margin="2,0,0,0" 
+                          VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            </Border>
+
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="8,2,0,0" 
+                    Width="75" Height="{StaticResource TBoxHeight}">
+                <CheckBox x:Name="ChkMasking" Content="마스킹" Margin="2,0,0,0" 
+                          VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            </Border>
+
+            <Border BorderBrush="Gray" BorderThickness="1" Margin="2,2,0,0" 
+                    Width="105" Height="{StaticResource TBoxHeight}">
+                <CheckBox x:Name="ChkExceptPlex" Content="플렉스제외" Margin="2,0,0,0" 
+                          VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+            </Border>
+        </StackPanel>-->
+    </Grid>
+</Window>
