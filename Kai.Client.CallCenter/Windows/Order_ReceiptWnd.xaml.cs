@@ -16,6 +16,7 @@ using static Kai.Client.CallCenter.Classes.CommonVars;
 using static Kai.Client.CallCenter.Classes.CommonFuncs;
 using static Kai.Common.NetDll_WpfCtrl.NetMsgs.NetMsgBox;
 using System.Diagnostics;
+using Kai.Client.CallCenter.Classes;
 
 namespace Kai.Client.CallCenter.Windows;
 #nullable disable
@@ -49,6 +50,8 @@ public partial class Order_ReceiptWnd : Window
         InitializeComponent();
 
         TBlkRegister.Text = s_CenterCharge.Id;
+        TBlkDrNow.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
         tbOrderOrg = tbOrder;
 
         // 모드에 따라 버튼그룹 보이기
@@ -57,7 +60,7 @@ public partial class Order_ReceiptWnd : Window
             ColumnRegist.Visibility = Visibility.Visible;
             ColumnModify.Visibility = Visibility.Collapsed;
         }
-        else // 수정 모드
+        else // 수정 모드 - 고객정보도 같이 와야함
         {
             ColumnRegist.Visibility = Visibility.Collapsed;
             ColumnModify.Visibility = Visibility.Visible;
@@ -74,7 +77,7 @@ public partial class Order_ReceiptWnd : Window
         ColumnRegist.Visibility = Visibility.Visible;
         ColumnModify.Visibility = Visibility.Collapsed;
 
-        ChkBox_편도Q.IsChecked = true; // 체크 대상
+        ChkBox_편도Q.IsChecked = true; // 체크 대상 - Xmal에서 해야지...
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -103,48 +106,48 @@ public partial class Order_ReceiptWnd : Window
     #endregion
 
     #region Click - 주버튼(공용)
-    //// 의뢰자 고객수정 버튼
-    //private void BtnCommon_CustUpdate_Click(object sender, RoutedEventArgs e)
-    //{
-    //    if (CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
+    // 의뢰자 고객수정 버튼
+    private void BtnCommon_CustUpdate_Click(object sender, RoutedEventArgs e)
+    {
+        if (CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
 
-    //    CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(CallCustCodeK);
-    //    bool result = (bool)SafeShowDialog.WithMainWindowToOwner(wnd, this);
-    //    if (!result) return;
+        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(CallCustCodeK);
+        bool result = (bool)SafeShowDialog.WithMainWindowToOwner(wnd, this);
+        if (!result) return;
 
-    //    // Table To 의뢰자
-    //    // TbAllTo의뢰자(wnd.tbAllWithNew);
-    //}
+        // Table To 의뢰자
+        // TbAllTo의뢰자(wnd.tbAllWithNew);
+    }
 
-    //// 요금저장
-    //private void BtnCommon_SaveFee_Click(object sender, RoutedEventArgs e)
-    //{
+    // 요금저장
+    private void BtnCommon_SaveFee_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
-    //// 거래처요금
-    //private void BtnCommon_CompFee_Click(object sender, RoutedEventArgs e)
-    //{
+    // 거래처요금
+    private void BtnCommon_CompFee_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
-    //// 오더복사
-    //private void BtnCommon_CopyOrder_Click(object sender, RoutedEventArgs e)
-    //{
+    // 오더복사
+    private void BtnCommon_CopyOrder_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
-    //// 마일리지
-    //private void BtnCommon_Mileage_Click(object sender, RoutedEventArgs e)
-    //{
+    // 마일리지
+    private void BtnCommon_Mileage_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
-    //// 변경이력
-    //private void BtnCommon_ChangeHistory_Click(object sender, RoutedEventArgs e)
-    //{
+    // 변경이력
+    private void BtnCommon_ChangeHistory_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
     // 닫기
     private void BtnCommon_Close_Click(object sender, RoutedEventArgs e)
@@ -156,158 +159,158 @@ public partial class Order_ReceiptWnd : Window
 
     #region Button Clicks - Commented
 
-    //private async void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e)
-    //{
-    //    bool success = await SaveOrderAsync("접수", "접수저장");
-    //    if (success)
-    //    {
-    //        DialogResult = true;
-    //        Close();
-    //    }
-    //}
+    private async void BtnReg_SaveReceipt_Click(object sender, RoutedEventArgs e)
+    {
+        //bool success = await SaveOrderAsync("접수", "접수저장");
+        //if (success)
+        //{
+        //    DialogResult = true;
+        //    Close();
+        //}
+    }
 
-    //private async void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e)
-    //{
-    //    bool success = await SaveOrderAsync("대기", "대기저장");
-    //    if (success)
-    //    {
-    //        DialogResult = true;
-    //        Close();
-    //    }
-    //}
+    private async void BtnReg_SaveWait_Click(object sender, RoutedEventArgs e)
+    {
+        //bool success = await SaveOrderAsync("대기", "대기저장");
+        //if (success)
+        //{
+        //    DialogResult = true;
+        //    Close();
+        //}
+    }
 
-    //private async void BtnMod_Save_Click(object sender, RoutedEventArgs e)
-    //{
-    //    bool success = await UpdateOrderAsync();
-    //    if (success)
-    //    {
-    //        DialogResult = true;
-    //        Close();
-    //    }
-    //}
+    private async void BtnMod_Save_Click(object sender, RoutedEventArgs e)
+    {
+        //bool success = await UpdateOrderAsync();
+        //if (success)
+        //{
+        //    DialogResult = true;
+        //    Close();
+        //}
+    }
 
     #endregion
 
     #region Click - 서브버튼
     // 수신거부
-    //private void BtnNoRcvTel_Click(object sender, RoutedEventArgs e)
-    //{
+    private void BtnNoRcvTel_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
-    //// 출발지 지우기
-    //private void Start_BtnErase_Click(object sender, RoutedEventArgs e)
-    //{
-    //    // Non UI
-    //    StartCustCodeE = 0;
-    //    StartCustCodeK = 0;
+    // 출발지 지우기
+    private void Start_BtnErase_Click(object sender, RoutedEventArgs e)
+    {
+        // Non UI
+        StartCustCodeE = 0;
+        StartCustCodeK = 0;
 
-    //    // UI
-    //    Start_TBoxCustName.Text = "";
-    //    Start_TBoxChargeName.Text = "";
-    //    Start_TBoxDeptName.Text = "";
-    //    Start_TBoxDongBasic.Text = "";
-    //    Start_TBoxTelNo1.Text = "";
-    //    Start_TBoxTelNo2.Text = "";
-    //    Start_TBoxDongAddr.Text = "";
-    //    Start_TBoxDetailAddr.Text = "";
-    //}
+        // UI
+        Start_TBoxCustName.Text = "";
+        Start_TBoxChargeName.Text = "";
+        Start_TBoxDeptName.Text = "";
+        Start_TBoxDongBasic.Text = "";
+        Start_TBoxTelNo1.Text = "";
+        Start_TBoxTelNo2.Text = "";
+        Start_TBoxDongAddr.Text = "";
+        Start_TBoxDetailAddr.Text = "";
+    }
 
-    //// 출발지 거래처등록
-    //private void Start_BtnRegComp_Click(object sender, RoutedEventArgs e)
-    //{
+    // 출발지 거래처등록
+    private void Start_BtnRegComp_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
-    //// 출도착지 전환
-    //private void StartDest_BtnSwap_Click(object sender, RoutedEventArgs e)
-    //{
-    //    // 보관 - 필요
-    //    long startCustCodeK = StartCustCodeK;
-    //    long startCustCodeE = StartCustCodeE;
+    // 출도착지 전환
+    private void StartDest_BtnSwap_Click(object sender, RoutedEventArgs e)
+    {
+        // 보관 - 필요
+        long startCustCodeK = StartCustCodeK;
+        long startCustCodeE = StartCustCodeE;
 
-    //    string startCustName = Start_TBoxCustName.Text;
-    //    string startChargeName = Start_TBoxChargeName.Text;
-    //    string startDeptName = Start_TBoxDeptName.Text;
-    //    string startDongBasic = Start_TBoxDongBasic.Text;
-    //    string startTelNo1 = Start_TBoxTelNo1.Text;
-    //    string startTelNo2 = Start_TBoxTelNo2.Text;
-    //    string startDongAddr = Start_TBoxDongAddr.Text;
-    //    string startDetailAddr = Start_TBoxDetailAddr.Text;
+        string startCustName = Start_TBoxCustName.Text;
+        string startChargeName = Start_TBoxChargeName.Text;
+        string startDeptName = Start_TBoxDeptName.Text;
+        string startDongBasic = Start_TBoxDongBasic.Text;
+        string startTelNo1 = Start_TBoxTelNo1.Text;
+        string startTelNo2 = Start_TBoxTelNo2.Text;
+        string startDongAddr = Start_TBoxDongAddr.Text;
+        string startDetailAddr = Start_TBoxDetailAddr.Text;
 
-    //    StartCustCodeK = DestCustCodeK;
-    //    StartCustCodeE = DestCustCodeE;
+        StartCustCodeK = DestCustCodeK;
+        StartCustCodeE = DestCustCodeE;
 
-    //    Start_TBoxCustName.Text = Dest_TBoxCustName.Text;
-    //    Start_TBoxChargeName.Text = Dest_TBoxChargeName.Text;
-    //    Start_TBoxDeptName.Text = Dest_TBoxDeptName.Text;
-    //    Start_TBoxDongBasic.Text = Dest_TBoxDongBasic.Text;
-    //    Start_TBoxTelNo1.Text = Dest_TBoxTelNo1.Text;
-    //    Start_TBoxTelNo2.Text = Dest_TBoxTelNo2.Text;
-    //    Start_TBoxDongAddr.Text = Dest_TBoxDongAddr.Text;
-    //    Start_TBoxDetailAddr.Text = Dest_TBoxDetailAddr.Text;
+        Start_TBoxCustName.Text = Dest_TBoxCustName.Text;
+        Start_TBoxChargeName.Text = Dest_TBoxChargeName.Text;
+        Start_TBoxDeptName.Text = Dest_TBoxDeptName.Text;
+        Start_TBoxDongBasic.Text = Dest_TBoxDongBasic.Text;
+        Start_TBoxTelNo1.Text = Dest_TBoxTelNo1.Text;
+        Start_TBoxTelNo2.Text = Dest_TBoxTelNo2.Text;
+        Start_TBoxDongAddr.Text = Dest_TBoxDongAddr.Text;
+        Start_TBoxDetailAddr.Text = Dest_TBoxDetailAddr.Text;
 
-    //    DestCustCodeK = startCustCodeK;
-    //    DestCustCodeE = startCustCodeE;
+        DestCustCodeK = startCustCodeK;
+        DestCustCodeE = startCustCodeE;
 
-    //    Dest_TBoxCustName.Text = startCustName;
-    //    Dest_TBoxChargeName.Text = startChargeName;
-    //    Dest_TBoxDeptName.Text = startDeptName;
-    //    Dest_TBoxDongBasic.Text = startDongBasic;
-    //    Dest_TBoxTelNo1.Text = startTelNo1;
-    //    Dest_TBoxTelNo2.Text = startTelNo2;
-    //    Dest_TBoxDongAddr.Text = startDongAddr;
-    //    Dest_TBoxDetailAddr.Text = startDetailAddr;
-    //}
+        Dest_TBoxCustName.Text = startCustName;
+        Dest_TBoxChargeName.Text = startChargeName;
+        Dest_TBoxDeptName.Text = startDeptName;
+        Dest_TBoxDongBasic.Text = startDongBasic;
+        Dest_TBoxTelNo1.Text = startTelNo1;
+        Dest_TBoxTelNo2.Text = startTelNo2;
+        Dest_TBoxDongAddr.Text = startDongAddr;
+        Dest_TBoxDetailAddr.Text = startDetailAddr;
+    }
 
-    //// 도착지지우기
-    //private void Dest_BtnErase_Click(object sender, RoutedEventArgs e)
-    //{
-    //    // Non UI
-    //    DestCustCodeK = 0;
-    //    DestCustCodeE = 0;
+    // 도착지지우기
+    private void Dest_BtnErase_Click(object sender, RoutedEventArgs e)
+    {
+        // Non UI
+        DestCustCodeK = 0;
+        DestCustCodeE = 0;
 
-    //    // UI
-    //    Dest_TBoxCustName.Text = "";
-    //    Dest_TBoxChargeName.Text = "";
-    //    Dest_TBoxDeptName.Text = "";
-    //    Dest_TBoxDongBasic.Text = "";
-    //    Dest_TBoxTelNo1.Text = "";
-    //    Dest_TBoxTelNo2.Text = "";
-    //    Dest_TBoxDongAddr.Text = "";
-    //    Dest_TBoxDetailAddr.Text = "";
-    //}
+        // UI
+        Dest_TBoxCustName.Text = "";
+        Dest_TBoxChargeName.Text = "";
+        Dest_TBoxDeptName.Text = "";
+        Dest_TBoxDongBasic.Text = "";
+        Dest_TBoxTelNo1.Text = "";
+        Dest_TBoxTelNo2.Text = "";
+        Dest_TBoxDongAddr.Text = "";
+        Dest_TBoxDetailAddr.Text = "";
+    }
 
-    //// 도착지 거래처등록
-    //private void Dest_BtnRegComp_Click(object sender, RoutedEventArgs e)
-    //{
+    // 도착지 거래처등록
+    private void Dest_BtnRegComp_Click(object sender, RoutedEventArgs e)
+    {
 
-    //}
+    }
 
-    //// 오더적요 지우기
-    //private void BtnErase_OrderRemarks_Click(object sender, RoutedEventArgs e)
-    //{
-    //     TBoxOrderRemarks.Text = string.Empty;
-    //}
+    // 오더적요 지우기
+    private void BtnErase_OrderRemarks_Click(object sender, RoutedEventArgs e)
+    {
+         //TBoxOrderRemarks.Text = string.Empty;
+    }
     #endregion
 
     #region Click - CheckBox 
-    //private void ChkBoxReserve_Click(object sender, RoutedEventArgs e)
-    //{
-    //    if ((bool)ChkBoxReserve.IsChecked)
-    //    {
-    //        DtPickerReserve.Value = DateTime.Now; // 예약일시를 현재로 설정
-    //    }
-    //    else
-    //    {
-    //        DtPickerReserve.Value = null; // 예약일시를 비움
-    //        TBoxReserveBreakMin.Text = "";        // 예약시간 텍스트박스 비움
-    //    }
-    //}
+    private void ChkBoxReserve_Click(object sender, RoutedEventArgs e)
+    {
+        if ((bool)ChkBoxReserve.IsChecked)
+        {
+            DtPickerReserve.Value = DateTime.Now; // 예약일시를 현재로 설정
+        }
+        else
+        {
+            DtPickerReserve.Value = null; // 예약일시를 비움
+            TBoxReserveBreakMin.Text = "";        // 예약시간 텍스트박스 비움
+        }
+    }
     #endregion
 
     #region KeyDown Events
-    //// DateTimePicker
+    // DateTimePicker
     //private void DtPickerReserve_PreviewKeyDown(object sender, KeyEventArgs e)
     //{
     //    if (e.Key == Key.Enter)
@@ -316,49 +319,129 @@ public partial class Order_ReceiptWnd : Window
     //    }
     //}
 
-    //#region KeyDown Events - Commented
-    ///*
-    //private async void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e)
-    //{
-    //    if (e.Key != Key.Enter) return;
-    //    if (string.IsNullOrEmpty(TBoxHeader_Search.Text)) return;
+    private async void TBoxHeader_Search_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter) return;
+        if (string.IsNullOrEmpty(TBoxHeader_Search.Text)) return;
 
-    //    // 고객 검색 및 로드
-    //    long lCallCustCode = await SearchAndLoadCustomerAsync(TBoxHeader_Search.Text, LocationType.Caller, null);
+        PostgResult_AllWithList result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_BySlash(TBoxHeader_Search.Text, null);
+        if (!string.IsNullOrEmpty(result.sErr))
+        {
+            ErrMsgBox(result.sErr, "의뢰자검색");
+            return;
+        }
 
-    //    if (lCallCustCode > 0)
-    //    {
-    //        의뢰자정보Mode(lCallCustCode);
-    //        Keyboard.Focus(Start_TBoxSearch);
-    //    }
-    //}
+        if (result.listTbAll.Count == 0) // 없음
+        {
+            CustMain_RegEditWnd wnd = new CustMain_RegEditWnd();
+            if (SafeShowDialog.WithMainWindowToOwner(wnd, this) == true)
+            {
+                TbAllTo의뢰자(wnd.tbAllWithNew);
+                의뢰자정보Mode(wnd.tbAllWithNew.custMain.KeyCode);
+                Keyboard.Focus(Start_TBoxSearch);
+            }
+        }
+        else if (result.listTbAll.Count == 1) // 1개
+        {
+            TbAllTo의뢰자(result.listTbAll[0]);
+            의뢰자정보Mode(result.listTbAll[0].custMain.KeyCode);
+            Keyboard.Focus(Start_TBoxSearch);
+        }
+        else // 여러개
+        {
+            CustMain_SearchedWnd wnd = new CustMain_SearchedWnd(result.listTbAll);
+            if (SafeShowDialog.WithMainWindowToOwner(wnd, this) == true)
+            {
+                TbAllTo의뢰자(wnd.SelectedVM.tbAllWith);
+                의뢰자정보Mode(wnd.SelectedVM.tbAllWith.custMain.KeyCode);
+                Keyboard.Focus(Start_TBoxSearch);
+            }
+        }
+    }
 
     //private async void Start_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
     //{
-    //     if (e.Key != Key.Enter) return;
-
-    //    // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
-    //     long lStartCustCode = await SearchAndLoadCustomerAsync(Start_TBoxSearch.Text, LocationType.Start, true);
-
-    //    if (lStartCustCode > 0)
+    //    if (e.Key != Key.Enter) return;
+    //    if (string.IsNullOrEmpty(Start_TBoxSearch.Text))
     //    {
+    //        의뢰자CopyTo출발지();
     //        Keyboard.Focus(Dest_TBoxSearch);
+    //        return;
+    //    }
+
+    //    PostgResult_AllWithList result = await s_SrGClient.SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash(Start_TBoxSearch.Text, true);
+    //    if (!string.IsNullOrEmpty(result.sErr))
+    //    {
+    //        ErrMsgBox(result.sErr, "출발지검색");
+    //        return;
+    //    }
+
+    //    if (result.listTbAll.Count == 0) // 없음
+    //    {
+    //        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd();
+    //        if (SafeShowDialog.WithMainWindowToOwner(wnd, this) == true)
+    //        {
+    //            TbAllTo출발지(wnd.tbAllWithNew);
+    //            Keyboard.Focus(Dest_TBoxSearch);
+    //        }
+    //    }
+    //    else if (result.listTbAll.Count == 1) // 1개
+    //    {
+    //        TbAllTo출발지(result.listTbAll[0]);
+    //        Keyboard.Focus(Dest_TBoxSearch);
+    //    }
+    //    else // 여러개
+    //    {
+    //        CustMain_SearchedWnd wnd = new CustMain_SearchedWnd(result.listTbAll);
+    //        if (SafeShowDialog.WithMainWindowToOwner(wnd, this) == true)
+    //        {
+    //            TbAllTo출발지(wnd.tbAllWithSelected);
+    //            Keyboard.Focus(Dest_TBoxSearch);
+    //        }
     //    }
     //}
 
     //private async void Dest_TBoxSearch_KeyDown(object sender, KeyEventArgs e)
     //{
-    //     if (e.Key != Key.Enter) return;
-
-    //    // 고객 검색 및 로드 (검색어 없으면 의뢰자 정보 복사)
-    //    long lDestCustCode = await SearchAndLoadCustomerAsync(Dest_TBoxSearch.Text, LocationType.Dest, true);
-
-    //    if (lDestCustCode > 0)
+    //    if (e.Key != Key.Enter) return;
+    //    if (string.IsNullOrEmpty(Dest_TBoxSearch.Text))
     //    {
+    //        의뢰자CopyTo도착지();
+    //        Keyboard.Focus(TBoxFee_Basic);
+    //        return;
+    //    }
+
+    //    PostgResult_AllWithList result = await s_SrGClient.SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash(Dest_TBoxSearch.Text, true);
+    //    if (!string.IsNullOrEmpty(result.sErr))
+    //    {
+    //        ErrMsgBox(result.sErr, "도착지검색");
+    //        return;
+    //    }
+
+    //    if (result.listTbAll.Count == 0) // 없음
+    //    {
+    //        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd();
+    //        if (SafeShowDialog.WithMainWindowToOwner(wnd, this) == true)
+    //        {
+    //            TbAllTo도착지(wnd.tbAllWithNew);
+    //            Keyboard.Focus(TBoxFee_Basic);
+    //        }
+    //    }
+    //    else if (result.listTbAll.Count == 1) // 1개
+    //    {
+    //        TbAllTo도착지(result.listTbAll[0]);
     //        Keyboard.Focus(TBoxFee_Basic);
     //    }
+    //    else // 여러개
+    //    {
+    //        CustMain_SearchedWnd wnd = new CustMain_SearchedWnd(result.listTbAll);
+    //        if (SafeShowDialog.WithMainWindowToOwner(wnd, this) == true)
+    //        {
+    //            TbAllTo도착지(wnd.tbAllWithSelected);
+    //            Keyboard.Focus(TBoxFee_Basic);
+    //        }
+    //    }
     //}
-    //*/
     //#endregion
 
     //// BasicFee
@@ -391,18 +474,18 @@ public partial class Order_ReceiptWnd : Window
     //    }
     //}
 
-    //// FeeConn
-    //private void Fee_TBoxConn_KeyDown(object sender, KeyEventArgs e)
-    //{
-    //    if (e.Key == Key.Enter)
-    //    {
-    //        // 신규 등록 모드
-    //        if (tbOrderOrg == null) Keyboard.Focus(BtnReg_SaveReceipt); // 접수저장 버튼으로 이동
-    //        else Keyboard.Focus(BtnMod_Save); // 저장 버튼으로 이동
+    // FeeConn
+    private void Fee_TBoxConn_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            // 신규 등록 모드
+            if (tbOrderOrg == null) Keyboard.Focus(BtnReg_SaveReceipt); // 접수저장 버튼으로 이동
+            else Keyboard.Focus(BtnMod_Save); // 저장 버튼으로 이동
 
-    //        e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
-    //    }
-    //}
+            e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
+        }
+    }
     #endregion
 
     #region Focus Events
@@ -612,12 +695,7 @@ public partial class Order_ReceiptWnd : Window
     //    return true;
     //}
 
-    ///// <summary>
-    ///// 주문 저장 공통 헬퍼
-    ///// </summary>
-    ///// <param name="orderState">주문 상태 ("접수", "대기" 등)</param>
-    ///// <param name="actionName">액션 이름 (에러 메시지용: "접수저장", "대기저장" 등)</param>
-    ///// <returns>성공 여부</returns>
+    // 주문 저장 공통 헬퍼 (접수/대기 저장 등)
     //private async Task<bool> SaveOrderAsync(string orderState, string actionName)
     //{
     //    // 1. 필수입력 체크
@@ -640,9 +718,7 @@ public partial class Order_ReceiptWnd : Window
     //    return true;
     //}
 
-    ///// <summary>
-    ///// 주문 수정 저장 헬퍼 메서드
-    ///// </summary>
+    // 주문 수정 저장 헬퍼 메서드
     //private async Task<bool> UpdateOrderAsync()
     //{
     //    // 1. 필수 입력 체크
@@ -681,18 +757,18 @@ public partial class Order_ReceiptWnd : Window
 
     //    return "";
     //}
-    //private void SetFeeType(string sFee)
-    //{
-    //    switch (sFee)
-    //    {
-    //        case "착불": RadioBtn_착불.IsChecked = true; break;
-    //        case "신용": RadioBtn_신용.IsChecked = true; break;
-    //        case "송금": RadioBtn_송금.IsChecked = true; break;
-    //        case "수금": RadioBtn_수금.IsChecked = true; break;
-    //        case "카드": RadioBtn_카드.IsChecked = true; break;
-    //        default: RadioBtn_선불.IsChecked = true; break;
-    //    }
-    //}
+    private void SetFeeTypeToUI(string sFee)
+    {
+        switch (sFee)
+        {
+            case "착불": RadioBtn_착불.IsChecked = true; break;
+            case "신용": RadioBtn_신용.IsChecked = true; break;
+            case "송금": RadioBtn_송금.IsChecked = true; break;
+            case "수금": RadioBtn_수금.IsChecked = true; break;
+            case "카드": RadioBtn_카드.IsChecked = true; break;
+            default: RadioBtn_선불.IsChecked = true; break;
+        }
+    }
 
     //// 차량타입
     //private string GetCarType()
@@ -744,9 +820,7 @@ public partial class Order_ReceiptWnd : Window
     //    }
     //}
 
-    ///// <summary>
-    ///// TbOrder → UI 데이터 로드 (수정 모드)
-    ///// </summary>
+    // TbOrder → UI 데이터 로드 (수정 모드)
     //private void TbOrderOrgToUiData()
     //{
     //    if (tbOrderOrg == null) return;
@@ -755,9 +829,9 @@ public partial class Order_ReceiptWnd : Window
     //    LoadHeaderInfo();
 
     //    // 2. 위치 정보 설정 (LocationData 헬퍼 사용)
-    //    LoadLocationDataToUi(LocationData.FromTbOrder_Caller(tbOrderOrg), LocationType.Caller);
-    //    LoadLocationDataToUi(LocationData.FromTbOrder_Start(tbOrderOrg), LocationType.Start);
-    //    LoadLocationDataToUi(LocationData.FromTbOrder_Dest(tbOrderOrg), LocationType.Dest);
+    //    LoadLocationDataToUi(LocationData.FromTbOrder_Caller(tbOrderOrg), CEnum_Kai_LocationType.Caller);
+    //    LoadLocationDataToUi(LocationData.FromTbOrder_Start(tbOrderOrg), CEnum_Kai_LocationType.Start);
+    //    LoadLocationDataToUi(LocationData.FromTbOrder_Dest(tbOrderOrg), CEnum_Kai_LocationType.Dest);
 
     //    // 3. 의뢰자 전용 필드
     //    Caller_TBoxRemarks.Text = tbOrderOrg.CallRemarks;
@@ -782,9 +856,7 @@ public partial class Order_ReceiptWnd : Window
     //    ChkBoxTaxBill.IsChecked = tbOrderOrg.TaxBill;
     //}
 
-    ///// <summary>
-    ///// Header 정보 로드
-    ///// </summary>
+    // Header 정보 로드
     //private void LoadHeaderInfo()
     //{
     //    TBlkOrderState.Text = tbOrderOrg.OrderState;
@@ -805,15 +877,15 @@ public partial class Order_ReceiptWnd : Window
     ///// <summary>
     ///// 예약 정보 로드
     ///// </summary>
-    //private void LoadReserveInfo()
-    //{
-    //    if (tbOrderOrg.DtReserve != null)
-    //    {
-    //        ChkBoxReserve.IsChecked = true;
-    //        DtPickerReserve.Value = tbOrderOrg.DtReserve;
-    //        TBoxReserveBreakMin.Text = tbOrderOrg.ReserveBreakMinute.ToString();
-    //    }
-    //}
+    private void LoadReserveInfo()
+    {
+        if (tbOrderOrg.DtReserve != null)
+        {
+            ChkBoxReserve.IsChecked = true;
+            DtPickerReserve.Value = tbOrderOrg.DtReserve;
+            TBoxReserveBreakMin.Text = tbOrderOrg.ReserveBreakMinute.ToString();
+        }
+    }
 
     ///// <summary>
     ///// 차량/배송 타입 정보 로드
@@ -1253,33 +1325,30 @@ public partial class Order_ReceiptWnd : Window
     //    return 0;
     //}
 
-    //// 고객정보
-    //private void TbAllTo의뢰자(TbAllWith tb)
-    //{
-    //    TbCustMain tbCustMain = tb.custMain;
-    //    TbCompany tbCompany = tb.company;
-    //    TbCallCenter tbCallCenter = tb.callCenter;
+    // 고객정보
+    private void TbAllTo의뢰자(TbAllWith tb)
+    {
+        TbCustMain tbCustMain = tb.custMain;
+        TbCompany tbCompany = tb.company;
+        TbCallCenter tbCallCenter = tb.callCenter;
 
-    //    // LocationData 헬퍼 사용
-    //    var locationData = LocationData.FromTbCustMain(tbCustMain);
-    //    LoadLocationDataToUi(locationData, LocationType.Caller);
+        SetLocationDataToUi(tbCustMain, "의뢰자");
 
-    //    // 의뢰자 전용 필드 설정
-    //    CallCustFrom = tbCustMain.BeforeBelong;
-    //    CallCompCode = tbCustMain.CompCode;
-    //    if (tbCompany == null)
-    //    {
-    //        CallCompName = "";
-    //    }
-    //    else
-    //    {
-    //        CallCompName = tbCompany.CompName;
-    //        SetFeeType(tbCompany.TradeType);
-    //    }
+        // 의뢰자 전용 필드 설정
+        CallCustFrom = tbCustMain.BeforeBelong;
+        CallCompCode = tbCustMain.CompCode;
+        if (tbCompany == null)
+        {
+            CallCompName = "";
+        }
+        else
+        {
+            CallCompName = tbCompany.CompName;
+            SetFeeTypeToUI(tbCompany.TradeType);
+        }
 
-    //    TBoxOrderRemarks.Text = Caller_TBoxRemarks.Text = tbCustMain.Remarks;
-    //    TBlkCallCustMemoExt.Text = tbCustMain.Memo;
-    //}
+        TBlkCallCustMemoExt.Text = tbCustMain.Memo;
+    }
 
     //private void TbAllTo출발지(TbAllWith tb)
     //{
@@ -1287,12 +1356,12 @@ public partial class Order_ReceiptWnd : Window
 
     //    // LocationData 헬퍼 사용
     //    var locationData = LocationData.FromTbCustMain(tbCustMain);
-    //    LoadLocationDataToUi(locationData, LocationType.Start);
+    //    LoadLocationDataToUi(locationData, CEnum_Kai_LocationType.Start);
     //}
     //private void 의뢰자CopyTo출발지()
     //{
     //    // LocationData 헬퍼 사용 - 의뢰자 → 출발지 복사
-    //    CopyLocationData(LocationType.Caller, LocationType.Start);
+    //    CopyLocationData(CEnum_Kai_LocationType.Caller, CEnum_Kai_LocationType.Start);
     //}
 
     //private void TbAllTo도착지(TbAllWith tb)
@@ -1301,93 +1370,54 @@ public partial class Order_ReceiptWnd : Window
 
     //    // LocationData 헬퍼 사용
     //    var locationData = LocationData.FromTbCustMain(tbCustMain);
-    //    LoadLocationDataToUi(locationData, LocationType.Dest);
+    //    LoadLocationDataToUi(locationData, CEnum_Kai_LocationType.Dest);
     //}
 
     //private void 의뢰자CopyTo도착지()
     //{
     //    // LocationData 헬퍼 사용 - 의뢰자 → 도착지 복사
-    //    CopyLocationData(LocationType.Caller, LocationType.Dest);
+    //    CopyLocationData(CEnum_Kai_LocationType.Caller, CEnum_Kai_LocationType.Dest);
     //}
 
-    //private void 의뢰자정보Mode(long lCustKey = 0)
-    //{
-    //    if (lCustKey == 0) // 없음
-    //    {
-    //        GridCustInfo.Visibility = Visibility.Collapsed;
-    //        BorderCustNew.Visibility = Visibility.Visible;
-    //    }
-    //    else // 있음
-    //    {
-    //        BtnReg_CustRegist.Visibility = Visibility.Collapsed;
-    //        BtnReg_CustUpdate.Visibility = Visibility.Visible;
+    private void 의뢰자정보Mode(long lCustKey = 0)
+    {
+        if (lCustKey == 0) // 없음
+        {
+            BorderCustNew.Visibility = Visibility.Visible;
+        }
+        else // 있음
+        {
+            BtnReg_CustRegist.Visibility = Visibility.Collapsed;
+            BtnReg_CustUpdate.Visibility = Visibility.Visible;
 
-    //        GridCustInfo.Visibility = Visibility.Visible;
-    //        BorderCustNew.Visibility = Visibility.Collapsed;
+            BorderCustNew.Visibility = Visibility.Collapsed;
 
-    //        // 고객정보 로드
-    //    }
-    //}
-    //private void 의뢰자정보Mode(TbCustMain tbCust = null)
-    //{
-    //    if (tbCust == null) // 없음
-    //    {
-    //        GridCustInfo.Visibility = Visibility.Collapsed;
-    //        BorderCustNew.Visibility = Visibility.Visible;
-    //    }
-    //    else // 있음
-    //    {
-    //        BtnReg_CustRegist.Visibility = Visibility.Collapsed;
-    //        BtnReg_CustUpdate.Visibility = Visibility.Visible;
+            // 고객정보 로드
+        }
+    }
+    private void 의뢰자정보Mode(TbCustMain tbCust = null)
+    {
+        if (tbCust == null) // 없음
+        {
+            BorderCustNew.Visibility = Visibility.Visible;
+        }
+        else // 있음
+        {
+            BtnReg_CustRegist.Visibility = Visibility.Collapsed;
+            BtnReg_CustUpdate.Visibility = Visibility.Visible;
 
-    //        GridCustInfo.Visibility = Visibility.Visible;
-    //        BorderCustNew.Visibility = Visibility.Collapsed;
+            BorderCustNew.Visibility = Visibility.Collapsed;
 
-    //        // 고객정보 로드
-    //    }
-    //}
-    //#endregion
+            // 고객정보 로드
+        }
+    }
+    #endregion
 
-    //#region LocationData Helper - 위치 정보 공통 처리
-    ///// <summary>
-    ///// 위치 정보 데이터 (의뢰자/출발지/도착지 공통)
-    ///// </summary>
-    //private struct LocationData
-    //{
-    //    public long CustCodeK;
-    //    public long CustCodeE;
-    //    public string CustName;
-    //    public string DongBasic;
-    //    public string TelNo1;
-    //    public string TelNo2;
-    //    public string DeptName;
-    //    public string ChargeName;
-    //    public string DongAddr;
-    //    public string DetailAddr;
+    #region LocationData Helper - 위치 정보 공통 처리
+    //// 위치 정보 데이터 (의뢰자/출발지/도착지 공통)
 
-    //    /// <summary>
-    //    /// TbCustMain → LocationData 변환
-    //    /// </summary>
-    //    public static LocationData FromTbCustMain(TbCustMain tbCust)
-    //    {
-    //        return new LocationData
-    //        {
-    //            CustCodeK = tbCust.KeyCode,
-    //            CustCodeE = StdConvert.NullableLongToLong(tbCust.BeforeCustKey),
-    //            CustName = tbCust.CustName,
-    //            DongBasic = tbCust.DongBasic,
-    //            TelNo1 = tbCust.TelNo1,
-    //            TelNo2 = tbCust.TelNo2,
-    //            DeptName = tbCust.DeptName,
-    //            ChargeName = tbCust.ChargeName,
-    //            DongAddr = tbCust.DongAddr,
-    //            DetailAddr = tbCust.DetailAddr
-    //        };
-    //    }
 
-    //    /// <summary>
-    //    /// TbOrder → LocationData 변환 (의뢰자)
-    //    /// </summary>
+    //// TbOrder → LocationData 변환 (의뢰자)
     //    public static LocationData FromTbOrder_Caller(TbOrder tb)
     //    {
     //        return new LocationData
@@ -1405,9 +1435,7 @@ public partial class Order_ReceiptWnd : Window
     //        };
     //    }
 
-    //    /// <summary>
-    //    /// TbOrder → LocationData 변환 (출발지)
-    //    /// </summary>
+    //// TbOrder → LocationData 변환 (출발지)
     //    public static LocationData FromTbOrder_Start(TbOrder tb)
     //    {
     //        return new LocationData
@@ -1425,9 +1453,7 @@ public partial class Order_ReceiptWnd : Window
     //        };
     //    }
 
-    //    /// <summary>
-    //    /// TbOrder → LocationData 변환 (도착지)
-    //    /// </summary>
+    //// TbOrder → LocationData 변환 (도착지)
     //    public static LocationData FromTbOrder_Dest(TbOrder tb)
     //    {
     //        return new LocationData
@@ -1446,62 +1472,60 @@ public partial class Order_ReceiptWnd : Window
     //    }
     //}
 
-    ///// <summary>
-    ///// LocationData → UI 로드 (공통 헬퍼)
-    ///// </summary>
-    //private void LoadLocationDataToUi(LocationData data, LocationType locType)
-    //{
-    //    switch (locType)
-    //    {
-    //        case LocationType.Caller:
-    //            CallCustCodeK = data.CustCodeK;
-    //            CallCustCodeE = data.CustCodeE;
-    //            Caller_TBoxCustName.Text = data.CustName;
-    //            Caller_TBoxDongBasic.Text = data.DongBasic;
-    //            Caller_TBoxTelNo1.Text = data.TelNo1;
-    //            Caller_TBoxTelNo2.Text = data.TelNo2;
-    //            Caller_TBoxDeptName.Text = data.DeptName;
-    //            Caller_TBoxChargeName.Text = data.ChargeName;
-    //            Caller_TBoxDongAddr.Text = data.DongAddr;
-    //            Caller_TBoxDetailAddr.Text = data.DetailAddr;
-    //            break;
+    // LocationData → UI 로드 (공통 헬퍼)
+    private void SetLocationDataToUi(TbCustMain tbCustMain, string sWhere)
+    {
+        // Define Action delegates to set the non-UI properties
+        Action<long> setCustCodeK;
+        Action<long> setCustCodeE;
 
-    //        case LocationType.Start:
-    //            StartCustCodeK = data.CustCodeK;
-    //            StartCustCodeE = data.CustCodeE;
-    //            Start_TBoxCustName.Text = data.CustName;
-    //            Start_TBoxDongBasic.Text = data.DongBasic;
-    //            Start_TBoxTelNo1.Text = data.TelNo1;
-    //            Start_TBoxTelNo2.Text = data.TelNo2;
-    //            Start_TBoxDeptName.Text = data.DeptName;
-    //            Start_TBoxChargeName.Text = data.ChargeName;
-    //            Start_TBoxDongAddr.Text = data.DongAddr;
-    //            Start_TBoxDetailAddr.Text = data.DetailAddr;
-    //            break;
+        // Use a tuple to hold the UI controls
+        (TextBox tboxCustName, TextBox tboxDongBasic, TextBox tboxTelNo1, TextBox tboxTelNo2,
+         TextBox tboxDeptName, TextBox tboxChargeName, TextBox tboxDongAddr) controls;
 
-    //        case LocationType.Dest:
-    //            DestCustCodeK = data.CustCodeK;
-    //            DestCustCodeE = data.CustCodeE;
-    //            Dest_TBoxCustName.Text = data.CustName;
-    //            Dest_TBoxDongBasic.Text = data.DongBasic;
-    //            Dest_TBoxTelNo1.Text = data.TelNo1;
-    //            Dest_TBoxTelNo2.Text = data.TelNo2;
-    //            Dest_TBoxDeptName.Text = data.DeptName;
-    //            Dest_TBoxChargeName.Text = data.ChargeName;
-    //            Dest_TBoxDongAddr.Text = data.DongAddr;
-    //            Dest_TBoxDetailAddr.Text = data.DetailAddr;
-    //            break;
-    //    }
-    //}
+        // Use a switch statement to assign the delegates and controls based on sWhere
+        switch (sWhere)
+        {
+            case "의뢰자":
+                setCustCodeK = (val) => CallCustCodeK = val;
+                setCustCodeE = (val) => CallCustCodeE = val;
+                controls = (Caller_TBoxCustName, Caller_TBoxDongBasic, Caller_TBoxTelNo1, Caller_TBoxTelNo2,
+                            Caller_TBoxDeptName, Caller_TBoxChargeName, Caller_TBoxDongAddr);
+                break;
+            case "출발지":
+                setCustCodeK = (val) => StartCustCodeK = val;
+                setCustCodeE = (val) => StartCustCodeE = val;
+                controls = (Start_TBoxCustName, Start_TBoxDongBasic, Start_TBoxTelNo1, Start_TBoxTelNo2,
+                            Start_TBoxDeptName, Start_TBoxChargeName, Start_TBoxDongAddr);
+                break;
+            case "도착지":
+                setCustCodeK = (val) => DestCustCodeK = val;
+                setCustCodeE = (val) => DestCustCodeE = val;
+                controls = (Dest_TBoxCustName, Dest_TBoxDongBasic, Dest_TBoxTelNo1, Dest_TBoxTelNo2,
+                            Dest_TBoxDeptName, Dest_TBoxChargeName, Dest_TBoxDongAddr);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(sWhere));
+        }
 
-    ///// <summary>
-    ///// UI → LocationData 읽기 (공통 헬퍼)
-    ///// </summary>
-    //private LocationData GetLocationDataFromUi(LocationType locType)
+        // Now, perform the assignments in one place, directly from tbCustMain
+        setCustCodeK(tbCustMain.KeyCode);
+        setCustCodeE(StdConvert.NullableLongToLong(tbCustMain.BeforeCustKey));
+        controls.tboxCustName.Text = tbCustMain.CustName;
+        controls.tboxDongBasic.Text = tbCustMain.DongBasic;
+        controls.tboxTelNo1.Text = tbCustMain.TelNo1;
+        controls.tboxTelNo2.Text = tbCustMain.TelNo2;
+        controls.tboxDeptName.Text = tbCustMain.DeptName;
+        controls.tboxChargeName.Text = tbCustMain.ChargeName;
+        controls.tboxDongAddr.Text = tbCustMain.DongAddr;
+    }
+
+    //// UI → LocationData 읽기 (공통 헬퍼)
+    //private LocationData GetLocationDataFromUi(CEnum_Kai_LocationType locType)
     //{
     //    return locType switch
     //    {
-    //        LocationType.Caller => new LocationData
+    //        CEnum_Kai_LocationType.Caller => new LocationData
     //        {
     //            CustCodeK = CallCustCodeK,
     //            CustCodeE = CallCustCodeE,
@@ -1514,7 +1538,7 @@ public partial class Order_ReceiptWnd : Window
     //            DongAddr = Caller_TBoxDongAddr.Text,
     //            DetailAddr = Caller_TBoxDetailAddr.Text
     //        },
-    //        LocationType.Start => new LocationData
+    //        CEnum_Kai_LocationType.Start => new LocationData
     //        {
     //            CustCodeK = StartCustCodeK,
     //            CustCodeE = StartCustCodeE,
@@ -1527,7 +1551,7 @@ public partial class Order_ReceiptWnd : Window
     //            DongAddr = Start_TBoxDongAddr.Text,
     //            DetailAddr = Start_TBoxDetailAddr.Text
     //        },
-    //        LocationType.Dest => new LocationData
+    //        CEnum_Kai_LocationType.Dest => new LocationData
     //        {
     //            CustCodeK = DestCustCodeK,
     //            CustCodeE = DestCustCodeE,
@@ -1540,151 +1564,15 @@ public partial class Order_ReceiptWnd : Window
     //            DongAddr = Dest_TBoxDongAddr.Text,
     //            DetailAddr = Dest_TBoxDetailAddr.Text
     //        },
-    //        _ => throw new ArgumentException($"Invalid LocationType: {locType}")
+    //        _ => throw new ArgumentException($"Invalid CEnum_Kai_LocationType: {locType}")
     //    };
     //}
 
-    ///// <summary>
-    ///// 위치 정보 복사 (UI → UI)
-    ///// </summary>
-    //private void CopyLocationData(LocationType from, LocationType to)
+    //// 위치 정보 복사 (UI → UI)
+    //private void CopyLocationData(CEnum_Kai_LocationType from, CEnum_Kai_LocationType to)
     //{
     //    var data = GetLocationDataFromUi(from);
     //    LoadLocationDataToUi(data, to);
-    //}
-
-    ///// <summary>
-    ///// 위치 타입 Enum
-    ///// </summary>
-    //private enum LocationType
-    //{
-    //    Caller,  // 의뢰자
-    //    Start,   // 출발지
-    //    Dest     // 도착지
-    //}
-    #endregion
-
-    #region Customer Search Helper - 고객 검색 공통 헬퍼
-    ///// <summary>
-    ///// 고객 검색 결과 처리 (공통 헬퍼)
-    ///// </summary>
-    ///// <param name="searchText">검색어</param>
-    ///// <param name="locType">위치 타입 (Caller/Start/Dest)</param>
-    ///// <param name="isLocationSearch">위치 검색인지 (true면 회사 검색 제외)</param>
-    ///// <returns>성공 시 고객 코드, 실패/취소 시 0</returns>
-    //private async Task<long> SearchAndLoadCustomerAsync(string searchText, LocationType locType, bool? isLocationSearch)
-    //{
-    //    // 검색어가 없으면 의뢰자 정보 복사 (출발지/도착지만)
-    //    if (string.IsNullOrEmpty(searchText))
-    //    {
-    //        if (locType == LocationType.Start)
-    //        {
-    //            의뢰자CopyTo출발지();
-    //            return CallCustCodeK;
-    //        }
-    //        else if (locType == LocationType.Dest)
-    //        {
-    //            의뢰자CopyTo도착지();
-    //            return CallCustCodeK;
-    //        }
-    //        return 0;
-    //    }
-
-    //    // 고객 정보 검색
-    //    //PostgResult_AllWithList result = await s_SrGClient.SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_BySlash(searchText, isLocationSearch);
-    //    PostgResult_AllWithList result = new PostgResult_AllWithList();
-
-    //    if (!string.IsNullOrEmpty(result.sErr))
-    //    {
-    //        string locName = locType switch
-    //        {
-    //            LocationType.Caller => "의뢰자",
-    //            LocationType.Start => "출발지",
-    //            LocationType.Dest => "도착지",
-    //            _ => ""
-    //        };
-    //        ErrMsgBox($"[{locName}] 검색 에러: {result.sErr}", $"Order_ReceiptWnd/SearchCustomer_{locType}");
-    //        return 0;
-    //    }
-
-    //    // 검색 결과 처리
-    //    TbAllWith selectedCustomer = null;
-
-    //    if (result.listTbAll == null || result.listTbAll.Count == 0)
-    //    {
-    //        // 검색 결과 없음 → 신규 고객 등록
-    //        selectedCustomer = await RegisterNewCustomerAsync();
-    //        if (selectedCustomer == null) return 0; // 취소됨
-    //    }
-    //    else if (result.listTbAll.Count == 1)
-    //    {
-    //        // 검색 결과 1건 → 바로 사용
-    //        selectedCustomer = result.listTbAll[0];
-    //    }
-    //    else
-    //    {
-    //        // 검색 결과 여러 건 → 선택 창 표시
-    //        selectedCustomer = await SelectFromMultipleCustomersAsync(result.listTbAll);
-    //        if (selectedCustomer == null) return 0; // 취소됨
-    //    }
-
-    //    // 선택된 고객 정보 로드
-    //    LoadCustomerToLocation(selectedCustomer, locType);
-
-    //    return selectedCustomer.custMain.KeyCode;
-    //}
-
-    ///// <summary>
-    ///// 신규 고객 등록
-    ///// </summary>
-    ///// <returns>등록된 고객 정보, 취소 시 null</returns>
-    //private async Task<TbAllWith> RegisterNewCustomerAsync()
-    //{
-    //    return await Application.Current.Dispatcher.InvokeAsync(() =>
-    //    {
-    //        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd();
-    //        bool? bResult = SafeShowDialog.WithMainWindowToOwner(wnd, this);
-
-    //        if (bResult != true) return null; // 취소됨
-
-    //        return wnd.tbAllWithNew;
-    //    });
-    //}
-
-    /////// <summary>
-    /////// 여러 고객 중 선택
-    /////// </summary>
-    /////// <returns>선택된 고객 정보, 취소 시 null</returns>
-    ////private async Task<TbAllWith> SelectFromMultipleCustomersAsync(List<TbAllWith> customers)
-    ////{
-    ////    return await Application.Current.Dispatcher.InvokeAsync(() =>
-    ////    {
-    ////        CustMain_SearchedWnd wnd = new CustMain_SearchedWnd(customers);
-    ////        bool? bResult = SafeShowDialog.WithMainWindowToOwner(wnd, this);
-
-    ////        if (bResult != true) return null; // 선택 안함
-
-    ////        return wnd.SelectedVM.tbAllWith;
-    ////    });
-    ////}
-
-    ///// <summary>
-    ///// 고객 정보를 위치에 로드
-    ///// </summary>
-    //private void LoadCustomerToLocation(TbAllWith customer, LocationType locType)
-    //{
-    //    switch (locType)
-    //    {
-    //        case LocationType.Caller:
-    //            TbAllTo의뢰자(customer);
-    //            break;
-    //        case LocationType.Start:
-    //            TbAllTo출발지(customer);
-    //            break;
-    //        case LocationType.Dest:
-    //            TbAllTo도착지(customer);
-    //            break;
-    //    }
     //}
     #endregion
 

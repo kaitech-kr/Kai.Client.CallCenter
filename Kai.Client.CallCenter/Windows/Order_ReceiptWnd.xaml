@@ -241,7 +241,7 @@
                              Width="274" FontSize="25" FontWeight="Bold"
                              Background="Black" Foreground="Yellow" BorderBrush="Black"
                              VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                              />
+                             KeyDown="TBoxHeader_Search_KeyDown" />
 
                     <!--수신제한 버튼-->
                     <Button x:Name="BtnNoRcvTel"
@@ -291,7 +291,7 @@
 
                     <!--현재시각-->
                     <Border Grid.Column="5" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
-                        <TextBlock Text="0000-00-00 00:00:00" Style="{StaticResource TextBlockStyle}"/>
+                        <TextBlock x:Name="TBlkDrNow" Text="0000-00-00 00:00:00" Style="{StaticResource TextBlockStyle}"/>
                     </Border>
 
                     <!--메모-->
