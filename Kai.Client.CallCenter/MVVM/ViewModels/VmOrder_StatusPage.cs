@@ -35,10 +35,10 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
         set => OnPropertyChanged(nameof(KeyCode));
     }
 
-    // 상태 (Enum -> string 변환)
+    // 상태
     public string OrderState
     {
-        get => ((OrderStateEnum)tbOrder.OrderStateCode).ToDesc();
+        get => tbOrder.OrderState;
         set => OnPropertyChanged(nameof(OrderState));
     }
 

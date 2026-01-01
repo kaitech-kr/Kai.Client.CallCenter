@@ -151,7 +151,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             HubConn.On<TbTelMainRing, int>(StdConst_FuncName.SrReport.TelMainRingAsync, (tb, count) => SrReport_TelMainRingAsync(tb, count));
 
             // Order
-            //HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_InsertedRowAsync_Today, (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
+            HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_InsertedRowAsync_Today, (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
             //HubConn.On<TbOrder, int, string>(StdConst_FuncName.SrReport.Order_UpdatedRowAsync_Today, (tb, seq, requestId) => SrReport_Order_UpdatedRowAsync_Today(tb, seq, requestId));
             #endregion
 
@@ -415,47 +415,47 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     }
 
     // 오늘 날짜 주문 삽입 시그널 처리
-    //public async Task SrReport_Order_InsertedRowAsync_Today(TbOrder tbOrder, int nSeq)
-    //{
-    //    if (tbOrder == null) return;
+    public async Task SrReport_Order_InsertedRowAsync_Today(TbOrder tbOrder, int nSeq)
+    {
+        if (tbOrder == null) return;
 
-    //    // 시퀀스가 맞지 않으면 전체 재조회
-    //    if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
-    //    {
-    //        if (s_Order_StatusPage != null)
-    //        {
-    //            await Application.Current.Dispatcher.InvokeAsync(() =>
-    //            {
-    //                s_Order_StatusPage.BtnOrderSearch_Click(null, null);
-    //            });
-    //        }
-    //    }
-    //    // 시퀀스가 정상이면 리스트에 추가
-    //    else
-    //    {
-    //        if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
+        // 시퀀스가 맞지 않으면 전체 재조회
+        if (nSeq != (VsOrder_StatusPage.s_nLastSeq + 1) && VsOrder_StatusPage.s_nLastSeq != 0)
+        {
+            if (s_Order_StatusPage != null)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    s_Order_StatusPage.BtnOrderSearch_Click(null, null);
+                });
+            }
+        }
+        // 시퀀스가 정상이면 리스트에 추가
+        else
+        {
+            if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
 
-    //        // 리스트 맨 앞에 추가
-    //        VsOrder_StatusPage.s_listTbOrderToday.Insert(0, tbOrder);
+            // 리스트 맨 앞에 추가
+            VsOrder_StatusPage.s_listTbOrderToday.Insert(0, tbOrder);
 
-    //        // 자동배차 시스템에 새 주문 등록
-    //        if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
-    //        {
-    //            s_MainWnd.m_MasterManager.ExternalAppController.AddNewOrder(tbOrder);
-    //        }
+            // 자동배차 시스템에 새 주문 등록
+            if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+            {
+                s_MainWnd.m_MasterManager.ExternalAppController.AddNewOrder(tbOrder);
+            }
 
-    //        if (s_Order_StatusPage == null) return;
+            if (s_Order_StatusPage == null) return;
 
-    //        // 오늘 날짜 선택 시에만 UI 업데이트
-    //        int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
-    //        if (index == 0)
-    //        {
-    //            await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
-    //        }
-    //    }
+            // 오늘 날짜 선택 시에만 UI 업데이트
+            int index = Order_StatusPage.GetComboBoxSelectedIndex(s_Order_StatusPage.CmbBoxDateSelect);
+            if (index == 0)
+            {
+                await VsOrder_StatusPage.Order_LoadDataAsync(s_Order_StatusPage, VsOrder_StatusPage.s_listTbOrderToday, Order_StatusPage.FilterBtnStatus);
+            }
+        }
 
-    //    VsOrder_StatusPage.s_nLastSeq = nSeq;
-    //}
+        VsOrder_StatusPage.s_nLastSeq = nSeq;
+    }
 
     // 오늘 날짜 주문 업데이트 시그널 처리
     //public async Task SrReport_Order_UpdatedRowAsync_Today(TbOrder tbNewOrder, int nSeq, string requestId)
@@ -960,8 +960,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     #endregion End SrResult - TbCustMainWith
 
     #region SrResult - Order
-    //// Insert
-    // 주문 정보 Insert (오늘 날짜 기준, 재접속 로직 포함)
+    //Insert
     public async Task<StdResult_Long> SrResult_Order_InsertRowAsync_Today(TbOrder tb)
     {
         const int MAX_RETRY_COUNT = 60; // 최대 60회 (30초)
@@ -974,9 +973,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                 try
                 {
                     // 주문 Insert 시도
-                    return await HubConn.InvokeCoreAsync<StdResult_Long>(
-                        StdConst_FuncName.SrResult.CallCenter.Order_InsertRowAsync_Today,
-                        new[] { tb });
+                    return await HubConn.InvokeCoreAsync<StdResult_Long>("SrResult_Order_InsertRowAsync_Today", new[] { tb });
                 }
                 catch (Exception ex)
                 {
@@ -1019,9 +1016,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
                         if (i >= MAX_RETRY_COUNT - 1)
                         {
                             // 재접속 실패 (타임아웃)
-                            return new StdResult_Long(0,
-                                "재접속 실패 (타임아웃)",
-                                "SrGlobalClient/SrResult_Order_InsertRowAsync_Today_Timeout");
+                            return new StdResult_Long(0, "재접속 실패 (타임아웃)", "SrGlobalClient/SrResult_Order_InsertRowAsync_Today_Timeout");
                         }
                     }
                 }

@@ -193,14 +193,3 @@ public enum LoadOpts : int
     [Description("크레인")] Crane = 1 << 5
 }
 
-// 오더 상태 (int 매핑용)
-public enum OrderStateEnum : int
-{
-    [Description("접수")] Receipt = 0,
-    [Description("대기")] Wait = 1,
-    [Description("배차")] Alloc = 2,
-    [Description("운행")] Run = 3,
-    [Description("완료")] Finish = 4,
-    [Description("취소")] Cancel = 9
-}
-

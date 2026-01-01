@@ -363,8 +363,10 @@
                             </Border>
 
                             <TextBox x:Name="Caller_TBoxTelNo1"
-                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"        
-                                     InputMethod.IsInputMethodEnabled="False" />
+                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False"
+                                     PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus" />
 
                             <Button Width="30" 
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
@@ -382,8 +384,10 @@
                             </Border>
 
                             <TextBox x:Name="Caller_TBoxTelNo2"
-                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"        
-                                     InputMethod.IsInputMethodEnabled="False" />
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False"
+                                     PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus" />
                         </StackPanel>
 
                         <!--부서, 담당-->
@@ -462,7 +466,7 @@
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_LTR}"
                                     />
 
-                            <TextBox x:Name="Start_TBoxSearch" TabIndex="10"
+                            <TextBox x:Name="Start_TBoxSearch" TabIndex="10" KeyDown="Start_TBoxSearch_KeyDown"
                                      Style="{StaticResource TextBoxStyle}" Width="269" BorderThickness="{StaticResource Thickness_TR}" />
 
                             <Button x:Name="Start_BtnStart" Width="34" 
@@ -545,8 +549,10 @@
                             </Border>
 
                             <TextBox x:Name="Start_TBoxTelNo1"
-                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"        
-                                     InputMethod.IsInputMethodEnabled="False" />
+                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False"
+                                     PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus" />
 
                             <Button Width="30" 
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
@@ -564,8 +570,10 @@
                             </Border>
 
                             <TextBox x:Name="Start_TBoxTelNo2"
-                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"        
-                                     InputMethod.IsInputMethodEnabled="False" />
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False"
+                                     PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus" />
                         </StackPanel>
 
                         <!--주소-->
@@ -626,7 +634,8 @@
                                     Style="{StaticResource ButtonStyle_02}" Background="{StaticResource BackgroundBrush_Left03}" BorderThickness="{StaticResource Thickness_LTR}"/>
 
                             <TextBox x:Name="Dest_TBoxSearch" TabIndex="10"
-                                     Style="{StaticResource TextBoxStyle}" Width="269" BorderThickness="{StaticResource Thickness_TR}" />
+                                     Style="{StaticResource TextBoxStyle}" Width="269" BorderThickness="{StaticResource Thickness_TR}"
+                                     KeyDown="Dest_TBoxSearch_KeyDown" />
 
                             <Button x:Name="Dest_BtnSearchEtc" Width="34" 
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TR}">
@@ -707,8 +716,10 @@
                             </Border>
 
                             <TextBox x:Name="Dest_TBoxTelNo1"
-                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"        
-                                     InputMethod.IsInputMethodEnabled="False" />
+                                     Style="{StaticResource TextBoxStyle}" Width="105" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False"
+                                     PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus" />
 
                             <Button Width="30" 
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_RB}">
@@ -726,8 +737,10 @@
                             </Border>
 
                             <TextBox x:Name="Dest_TBoxTelNo2"
-                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"        
-                                     InputMethod.IsInputMethodEnabled="False" />
+                                     Style="{StaticResource TextBoxStyle}" Width="166" BorderThickness="{StaticResource Thickness_RB}"
+                                     InputMethod.IsInputMethodEnabled="False"
+                                     PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                     GotFocus="Tel_TBoxAll_GotFocus" LostFocus="Tel_TBoxAll_LostFocus" />
                         </StackPanel>
 
                         <!--주소-->
@@ -876,10 +889,10 @@
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TR}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <CheckBox x:Name="ChkBox_독차" Content="독차" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox_혼적" Content="혼적" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox_왕복2" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox_경유2" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox화물_독차" Content="독차" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox화물_혼적" Content="혼적" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox화물_왕복" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox화물_경유" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -967,10 +980,10 @@
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TR}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <CheckBox x:Name="ChkBox_편도Q" Content="편도" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" IsChecked="True"/>
-                                    <CheckBox x:Name="ChkBox_왕복Q" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox_경유Q" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox_긴급Q" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox퀵_편도" Content="편도" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" IsChecked="True"/>
+                                    <CheckBox x:Name="ChkBox퀵_왕복" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox퀵_경유" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox퀵_긴급" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -1077,11 +1090,15 @@
                         <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
                             <TextBlock Text="기본요금" Style="{StaticResource TextBlockStyle}" FontWeight="SemiBold" Foreground="Blue"/>
                         </Border>
-                        <TextBox x:Name="TBox_FeeBasicQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <TextBox x:Name="TBox_FeeBasic" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"
+                                 PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                 KeyDown="Fee_TBoxBasic_KeyDown" GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxBasic_LostFocus"/>
                         <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
                             <TextBlock Text="추가금액" Style="{StaticResource TextBlockStyle}"/>
                         </Border>
-                        <TextBox x:Name="TBox_FeePlusQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <TextBox x:Name="TBox_FeePlus" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"
+                                 PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                 KeyDown="Fee_TBoxPlus_KeyDown" GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxPlus_LostFocus"/>
                     </StackPanel>
                     <!--#endregion R-4 기본요금, 추가금액-->
 
@@ -1090,11 +1107,15 @@
                         <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
                             <TextBlock Text="할인금액" Style="{StaticResource TextBlockStyle}"/>
                         </Border>
-                        <TextBox x:Name="TBox_FeeMinusQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <TextBox x:Name="TBox_FeeMinus" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"
+                                 PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                 KeyDown="Fee_TBoxMinus_KeyDown" GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxMinus_LostFocus"/>
                         <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
                             <TextBlock Text="탁송료" Style="{StaticResource TextBlockStyle}"/>
                         </Border>
-                        <TextBox x:Name="TBox_FeeConnQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <TextBox x:Name="TBox_FeeConn" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="150" BorderThickness="{StaticResource Thickness_RB}"
+                                 PreviewTextInput="TBoxOnlyNum_PreviewTextInput" DataObject.Pasting="TBoxOnlyNum_Pasting"
+                                 KeyDown="Fee_TBoxConn_KeyDown" GotFocus="Fee_TBoxAll_GotFocus" LostFocus="Fee_TBoxConn_LostFocus"/>
                     </StackPanel>
                     <!--#endregion R-5 할인금액, 탁송료-->
 
@@ -1103,7 +1124,7 @@
                         <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
                             <TextBlock Text="합계금액" Style="{StaticResource TextBlockStyle}" FontWeight="SemiBold" Foreground="Blue"/>
                         </Border>
-                        <TextBox x:Name="TBox_FeeTotQ" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <TextBox x:Name="TBox_FeeTot" Style="{StaticResource TextBoxStyle_Fee}" Text="0" Width="154" BorderThickness="{StaticResource Thickness_RB}"/>
                         <Border Style="{StaticResource BorderStyle_Black_NormalHeight}" Width="80" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_RB}">
                             <TextBlock Text="기사금액" Style="{StaticResource TextBlockStyle}"/>
                         </Border>
@@ -1127,7 +1148,7 @@
                         <Border BorderBrush="Black" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="22" Height="{StaticResource LineHeight_Table}">
                             <CheckBox x:Name="ChkBox_FeeDrvChargeQ" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Border>
-                        <TextBox x:Name="TBox_FeeDrvChargeQ" Style="{StaticResource TextBoxStyle_Fee}" Width="128" BorderThickness="{StaticResource Thickness_RB}"/>
+                        <TextBox x:Name="TBox_FeeDrvCharge" Style="{StaticResource TextBoxStyle_Fee}" Width="128" BorderThickness="{StaticResource Thickness_RB}"/>
                     </StackPanel>
                     <!--#endregion R-7 마일리지, 기사처리비-->
 
@@ -1299,7 +1320,7 @@
                     </Button>
 
                     <!--접수저장 버튼-->
-                    <Button x:Name="BtnReg_SaveReceipt"  
+                    <Button x:Name="BtnReg_SaveReceipt" Click="BtnReg_SaveReceipt_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="80" Background="#5AD2FF" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
@@ -1311,7 +1332,7 @@
                     </Button>
 
                     <!--대기저장 버튼-->
-                    <Button x:Name="BtnReg_SaveWait"  
+                    <Button x:Name="BtnReg_SaveWait" Click="BtnReg_SaveWait_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="80" Background="#5AD2FF" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
@@ -1452,7 +1473,7 @@
                     </Button>
 
                     <!--저장 버튼-->
-                    <Button x:Name="BtnMod_Save"  
+                    <Button x:Name="BtnMod_Save" Click="BtnMod_Save_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="80" Background="#5AD2FF" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />

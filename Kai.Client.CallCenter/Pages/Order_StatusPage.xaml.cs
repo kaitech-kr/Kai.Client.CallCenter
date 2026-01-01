@@ -1252,10 +1252,10 @@ public partial class Order_StatusPage : Page
 
     #region Helper Methods
     // ComboBox의 선택된 인덱스를 스레드 안전하게 가져옵니다
-    //public static int GetComboBoxSelectedIndex(ComboBox comboBox)
-    //{
-    //    return Wnd.Application.Current.Dispatcher.Invoke(() => comboBox.SelectedIndex);
-    //}
+    public static int GetComboBoxSelectedIndex(ComboBox comboBox)
+    {
+        return System.Windows.Application.Current.Dispatcher.Invoke(() => comboBox.SelectedIndex);
+    }
 
     //public static string GetCarWeightString(string sCarType, string sCarWeight)
     //{
