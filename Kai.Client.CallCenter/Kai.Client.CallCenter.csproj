@@ -226,6 +226,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Windows\Order_ReceiptWnd.Funcs.cs">
+      <DependentUpon>Windows\Order_ReceiptWnd.xaml.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

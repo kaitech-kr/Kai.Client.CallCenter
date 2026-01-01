@@ -261,122 +261,122 @@ public class VmOrder_StatusPage_Tel070 : INotifyPropertyChanged
     #endregion
 
     #region Properties - 공용
-    //// 수신시간
-    //public string RingDate
-    //{
-    //    get => _TbTelMainRing.RingDate?.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEAR);
-    //    set => OnPropertyChanged(nameof(RingDate));
-    //}
+    // 수신시간
+    public string RingDate
+    {
+        get => _TbTelMainRing.RingDate?.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEAR);
+        set => OnPropertyChanged(nameof(RingDate));
+    }
 
-    //// 상대전화
-    //public string YourTelNum
-    //{
-    //    get => StdConvert.ToPhoneNumberFormat(_TbTelMainRing.YourTelNum);
-    //    set
-    //    {
-    //        _TbTelMainRing.YourTelNum = value;
-    //        OnPropertyChanged(nameof(YourTelNum));
-    //    }
-    //}
+    // 상대전화
+    public string YourTelNum
+    {
+        get => StdConvert.ToPhoneNumberFormat(_TbTelMainRing.YourTelNum);
+        set
+        {
+            _TbTelMainRing.YourTelNum = value;
+            OnPropertyChanged(nameof(YourTelNum));
+        }
+    }
 
-    //// 고객명
-    //public string CustName
-    //{
-    //    get => _TbTelMainRing.CustName ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.CustName = value;
-    //        OnPropertyChanged(nameof(CustName));
-    //    }
-    //}
+    // 고객명
+    public string CustName
+    {
+        get => _TbTelMainRing.CustName ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.CustName = value;
+            OnPropertyChanged(nameof(CustName));
+        }
+    }
 
-    //// 담당자
-    //public string ChargeName
-    //{
-    //    get => _TbTelMainRing.ChargeName ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.ChargeName = value;
-    //        OnPropertyChanged(nameof(ChargeName));
-    //    }
-    //}
+    // 담당자
+    public string ChargeName
+    {
+        get => _TbTelMainRing.ChargeName ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.ChargeName = value;
+            OnPropertyChanged(nameof(ChargeName));
+        }
+    }
 
-    //// 부서명
-    //public string DeptName
-    //{
-    //    get => _TbTelMainRing.DeptName ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.DeptName = value;
-    //        OnPropertyChanged(nameof(DeptName));
-    //    }
-    //}
+    // 부서명
+    public string DeptName
+    {
+        get => _TbTelMainRing.DeptName ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.DeptName = value;
+            OnPropertyChanged(nameof(DeptName));
+        }
+    }
 
-    //// 거래처명
-    //public string CompanyName
-    //{
-    //    get => _TbTelMainRing.CompanyName ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.CompanyName = value;
-    //        OnPropertyChanged(nameof(CompanyName));
-    //    }
-    //}
+    // 거래처명
+    public string CompanyName
+    {
+        get => _TbTelMainRing.CompanyName ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.CompanyName = value;
+            OnPropertyChanged(nameof(CompanyName));
+        }
+    }
 
-    //// 콜센터명
-    //public string CenterName
-    //{
-    //    get => _TbTelMainRing.CenterName ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.CenterName = value;
-    //        OnPropertyChanged(nameof(CenterName));
-    //    }
-    //}
+    // 콜센터명
+    public string CenterName
+    {
+        get => _TbTelMainRing.CenterName ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.CenterName = value;
+            OnPropertyChanged(nameof(CenterName));
+        }
+    }
 
-    //// 내전화 별명
-    //public string Alias
-    //{
-    //    get => _TbTelMainRing.Alias ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.Alias = value;
-    //        OnPropertyChanged(nameof(Alias));
-    //    }
-    //}
+    // 내전화 별명
+    public string Alias
+    {
+        get => _TbTelMainRing.Alias ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.Alias = value;
+            OnPropertyChanged(nameof(Alias));
+        }
+    }
 
-    //// 내전화
-    //public string MyTelNum
-    //{
-    //    get => StdConvert.ToPhoneNumberFormat(_TbTelMainRing.MyTelNum);
-    //    set
-    //    {
-    //        _TbTelMainRing.MyTelNum = value;
-    //        OnPropertyChanged(nameof(MyTelNum));
-    //    }
-    //}
+    // 내전화
+    public string MyTelNum
+    {
+        get => StdConvert.ToPhoneNumberFormat(_TbTelMainRing.MyTelNum);
+        set
+        {
+            _TbTelMainRing.MyTelNum = value;
+            OnPropertyChanged(nameof(MyTelNum));
+        }
+    }
 
-    //// 기준동
-    //public string BasicDong
-    //{
-    //    get => _TbTelMainRing.BasicDong ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.BasicDong = value;
-    //        OnPropertyChanged(nameof(BasicDong));
-    //    }
-    //}
+    // 기준동
+    public string BasicDong
+    {
+        get => _TbTelMainRing.BasicDong ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.BasicDong = value;
+            OnPropertyChanged(nameof(BasicDong));
+        }
+    }
 
-    //// 메모
-    //public string Memo
-    //{
-    //    get => _TbTelMainRing.Memo ?? string.Empty;
-    //    set
-    //    {
-    //        _TbTelMainRing.Memo = value;
-    //        OnPropertyChanged(nameof(Memo));
-    //    }
-    //}
+    // 메모
+    public string Memo
+    {
+        get => _TbTelMainRing.Memo ?? string.Empty;
+        set
+        {
+            _TbTelMainRing.Memo = value;
+            OnPropertyChanged(nameof(Memo));
+        }
+    }
     #endregion
 }
 #nullable enable

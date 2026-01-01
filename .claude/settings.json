@@ -1,5 +1,15 @@
 {
   "hooks": {
-    "user-prompt-submit": "powershell Get-Content 기본.md"
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell Get-Content 기본.md"
+          }
+        ]
+      }
+    ]
   }
 }

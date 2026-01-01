@@ -44,162 +44,151 @@ public class VsOrder_StatusPage
     //    oc_VmOrdersWith.Clear();
     //}
 
-    ///// <summary>
-    ///// 주문 항목 처리 (상태별 카운트 및 금액 계산)
-    ///// </summary>
-    ///// <param name="order">주문 객체</param>
-    ///// <param name="statusFilter">상태 필터 (null이면 전체)</param>
-    ///// <param name="shouldAdd">ViewModel에 추가 여부 (out)</param>
-    //private static void ProcessOrderItem(TbOrder order, StdEnum_OrderStatus? statusFilter, out bool shouldAdd)
-    //{
-    //    shouldAdd = true;
+    // 주문 항목 처리 (상태별 카운트 및 금액 계산)
+    private static void ProcessOrderItem(TbOrder order, StdEnum_OrderStatus? statusFilter, out bool shouldAdd)
+    {
+        shouldAdd = true;
 
-    //    switch (order.OrderState)
-    //    {
-    //        case "접수":
-    //            if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.접수) != StdEnum_OrderStatus.접수)
-    //                shouldAdd = false;
-    //            else
-    //                s_nReceipt++;
-    //            break;
+        switch (order.OrderState)
+        {
+            case "접수":
+                if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.접수) != StdEnum_OrderStatus.접수)
+                    shouldAdd = false;
+                else
+                    s_nReceipt++;
+                break;
 
-    //        case "대기":
-    //            if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.대기) != StdEnum_OrderStatus.대기)
-    //                shouldAdd = false;
-    //            else
-    //                s_nWait++;
-    //            break;
+            case "대기":
+                if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.대기) != StdEnum_OrderStatus.대기)
+                    shouldAdd = false;
+                else
+                    s_nWait++;
+                break;
 
-    //        case "배차":
-    //            if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.배차) != StdEnum_OrderStatus.배차)
-    //                shouldAdd = false;
-    //            else
-    //                s_nAlloc++;
-    //            break;
+            case "배차":
+                if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.배차) != StdEnum_OrderStatus.배차)
+                    shouldAdd = false;
+                else
+                    s_nAlloc++;
+                break;
 
-    //        case "예약":
-    //            if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.예약) != StdEnum_OrderStatus.예약)
-    //                shouldAdd = false;
-    //            else
-    //                s_nReserve++;
-    //            break;
+            case "예약":
+                if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.예약) != StdEnum_OrderStatus.예약)
+                    shouldAdd = false;
+                else
+                    s_nReserve++;
+                break;
 
-    //        case "운행":
-    //            if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.운행) != StdEnum_OrderStatus.운행)
-    //                shouldAdd = false;
-    //            else
-    //            {
-    //                s_nRun++;
-    //                s_nTotAmount += order.FeeTotal;
-    //            }
-    //            break;
+            case "운행":
+                if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.운행) != StdEnum_OrderStatus.운행)
+                    shouldAdd = false;
+                else
+                {
+                    s_nRun++;
+                    s_nTotAmount += order.FeeTotal;
+                }
+                break;
 
-    //        case "완료":
-    //            if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.완료) != StdEnum_OrderStatus.완료)
-    //                shouldAdd = false;
-    //            else
-    //            {
-    //                s_nFinish++;
-    //                s_nTotAmount += order.FeeTotal;
-    //            }
-    //            break;
+            case "완료":
+                if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.완료) != StdEnum_OrderStatus.완료)
+                    shouldAdd = false;
+                else
+                {
+                    s_nFinish++;
+                    s_nTotAmount += order.FeeTotal;
+                }
+                break;
 
-    //        case "취소":
-    //            if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.취소) != StdEnum_OrderStatus.취소)
-    //                shouldAdd = false;
-    //            else
-    //                s_nCancel++;
-    //            break;
-    //    }
+            case "취소":
+                if (statusFilter.HasValue && (statusFilter.Value & StdEnum_OrderStatus.취소) != StdEnum_OrderStatus.취소)
+                    shouldAdd = false;
+                else
+                    s_nCancel++;
+                break;
+        }
 
-    //    s_nTotCount++;
-    //}
+        s_nTotCount++;
+    }
 
-    ///// <summary>
-    ///// 집계 라벨 업데이트
-    ///// </summary>
-    //private static void UpdateSummaryLabels(Order_StatusPage owner)
-    //{
-    //    owner.LblSumsReceipt.Content = $"{s_nReceipt}";
-    //    owner.LblSumsWait.Content = $"{s_nWait}";
-    //    owner.LblSumsAlloc.Content = $"{s_nAlloc}";
-    //    owner.LblSumsReserve.Content = $"{s_nReserve}";
-    //    owner.LblSumsRun.Content = $"{s_nRun}";
-    //    owner.LblSumsFinish.Content = $"{s_nFinish}";
-    //    owner.LblSumsCancel.Content = $"{s_nCancel}";
-    //    owner.LblSumsTot.Content = $"{s_nTotCount}";
-    //    owner.LblFeeTot.Content = $"{s_nTotAmount:#,0} 원";
-    //}
+    // 집계 라벨 업데이트
+    private static void UpdateSummaryLabels(Order_StatusPage owner)
+    {
+        owner.LblSumsReceipt.Content = $"{s_nReceipt}";
+        owner.LblSumsWait.Content = $"{s_nWait}";
+        owner.LblSumsAlloc.Content = $"{s_nAlloc}";
+        owner.LblSumsReserve.Content = $"{s_nReserve}";
+        owner.LblSumsRun.Content = $"{s_nRun}";
+        owner.LblSumsFinish.Content = $"{s_nFinish}";
+        owner.LblSumsCancel.Content = $"{s_nCancel}";
+        owner.LblSumsTot.Content = $"{s_nTotCount}";
+        owner.LblFeeTot.Content = $"{s_nTotAmount:#,0} 원";
+    }
 
-    ///// <summary>
-    ///// 주문 데이터 로드 (전체)
-    ///// </summary>
-    //public static async Task Order_LoadDataAsync(Order_StatusPage owner, List<TbOrder> list)
-    //{
-    //    try
-    //    {
-    //        if (list == null) return;
+    // 주문 데이터 로드 (전체)
+    public static async Task Order_LoadDataAsync(Order_StatusPage owner, List<TbOrder> list)
+    {
+        try
+        {
+            if (list == null) return;
 
-    //        await Application.Current.Dispatcher.InvokeAsync(() =>
-    //        {
-    //            // 초기화
-    //            oc_VmOrdersWith.Clear();
-    //            s_nReceipt = s_nWait = s_nAlloc = s_nReserve = s_nRun = s_nFinish = s_nCancel = s_nTotCount = s_nTotAmount = 0;
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                // 초기화
+                oc_VmOrdersWith.Clear();
+                s_nReceipt = s_nWait = s_nAlloc = s_nReserve = s_nRun = s_nFinish = s_nCancel = s_nTotCount = s_nTotAmount = 0;
 
-    //            // 주문 항목 처리
-    //            foreach (var order in list)
-    //            {
-    //                ProcessOrderItem(order, null, out bool shouldAdd);
-    //                if (shouldAdd)
-    //                {
-    //                    oc_VmOrdersWith.Add(new VmOrder_StatusPage_Order(order));
-    //                }
-    //            }
+                // 주문 항목 처리
+                foreach (var order in list)
+                {
+                    ProcessOrderItem(order, null, out bool shouldAdd);
+                    if (shouldAdd)
+                    {
+                        oc_VmOrdersWith.Add(new VmOrder_StatusPage_Order(order));
+                    }
+                }
 
-    //            // 집계 라벨 업데이트
-    //            UpdateSummaryLabels(owner);
-    //        });
-    //    }
-    //    finally
-    //    {
-    //        //NetLoadingWnd.HideLoading();
-    //    }
-    //}
+                // 집계 라벨 업데이트
+                UpdateSummaryLabels(owner);
+            });
+        }
+        finally
+        {
+            //NetLoadingWnd.HideLoading();
+        }
+    }
 
-    ///// <summary>
-    ///// 주문 데이터 로드 (상태 필터 적용)
-    ///// </summary>
-    //public static async Task Order_LoadDataAsync(Order_StatusPage owner, List<TbOrder> list, StdEnum_OrderStatus status)
-    //{
-    //    try
-    //    {
-    //        if (list == null) return;
+    // 주문 데이터 로드 (상태 필터 적용)
+    public static async Task Order_LoadDataAsync(Order_StatusPage owner, List<TbOrder> list, StdEnum_OrderStatus status)
+    {
+        try
+        {
+            if (list == null) return;
 
-    //        await Application.Current.Dispatcher.InvokeAsync(() =>
-    //        {
-    //            // 초기화
-    //            oc_VmOrdersWith.Clear();
-    //            s_nReceipt = s_nWait = s_nAlloc = s_nReserve = s_nRun = s_nFinish = s_nCancel = s_nTotCount = s_nTotAmount = 0;
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                // 초기화
+                oc_VmOrdersWith.Clear();
+                s_nReceipt = s_nWait = s_nAlloc = s_nReserve = s_nRun = s_nFinish = s_nCancel = s_nTotCount = s_nTotAmount = 0;
 
-    //            // 주문 항목 처리 (필터 적용)
-    //            foreach (var order in list)
-    //            {
-    //                ProcessOrderItem(order, status, out bool shouldAdd);
-    //                if (shouldAdd)
-    //                {
-    //                    oc_VmOrdersWith.Add(new VmOrder_StatusPage_Order(order));
-    //                }
-    //            }
+                // 주문 항목 처리 (필터 적용)
+                foreach (var order in list)
+                {
+                    ProcessOrderItem(order, status, out bool shouldAdd);
+                    if (shouldAdd)
+                    {
+                        oc_VmOrdersWith.Add(new VmOrder_StatusPage_Order(order));
+                    }
+                }
 
-    //            // 집계 라벨 업데이트
-    //            UpdateSummaryLabels(owner);
-    //        });
-    //    }
-    //    finally
-    //    {
-    //        //NetLoadingWnd.HideLoading();
-    //    }
-    //}
+                // 집계 라벨 업데이트
+                UpdateSummaryLabels(owner);
+            });
+        }
+        finally
+        {
+            //NetLoadingWnd.HideLoading();
+        }
+    }
 
     //public static async Task Order_LoadTodayDataAsync(Order_StatusPage owner, StdEnum_OrderStatus status)
     //{
@@ -344,15 +333,12 @@ public class VsOrder_StatusPage
         try
         {
             // 서버에서 전화 수신 데이터 조회
-            //PostgResult_TbTelMainRingList resultList = await s_SrGClient.SrResult_TelMainRing_SelectRowsAsync_CenterCode();
-            PostgResult_TbTelMainRingList resultList = new PostgResult_TbTelMainRingList();
+            PostgResult_TbTelMainRingList resultList = await s_SrGClient.SrResult_TelMainRing_SelectRowsAsync_CenterCode();
 
             // 에러 체크
             if (!string.IsNullOrEmpty(resultList.sErr))
             {
-                return new StdResult_Error(
-                    $"Tel070 데이터 로드 실패: {resultList.sErr}",
-                    "VsOrder_StatusPage/Tel070_LoadDataAsync_01");
+                return new StdResult_Error($"Tel070 데이터 로드 실패: {resultList.sErr}", "VsOrder_StatusPage/Tel070_LoadDataAsync_01");
             }
 
             // null 체크 및 초기화

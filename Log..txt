@@ -1,5 +1,5 @@
 
-[SYSTEM] 로그 기록 시작: 2025-12-30 22:56:04
+[SYSTEM] 로그 기록 시작: 2026-01-01 15:06:30
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
 [CommonFuncs] sUse 확인: 'True'
@@ -12,18 +12,20 @@ HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:0
 연결 시도 시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=EWA0fvfOdIgLt5EkiWLzYw *****
+***** SrReport_ConnectedAsync 시작: connectedID=3MJXjIwVbeQfssn8ejhiww *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
-***** 로그인 성공! (1번째) *****
+***** 로그인 성공! 재시도 횟수 초기화 *****
+boolEventArgs=Kai.Common.StdDll_Common.StdDelegate+BoolEventArgs
 [MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
-[MainWnd] 프로세스 실행 성공. SignalR 연결 시도...
 HubConnection 생성 중...
 연결 시도시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
 [MainWnd] SignalR ConnectAsync 호출 완료
+SrLocalClient/SrReport_Connected
+성공(인터넷전화 정보 가져오기): 1, 07052144970
 [MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
 [MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
 [MasterModeManager] ExternalAppController 초기화 시작
@@ -35,6 +37,8 @@ SignalR 연결 성공
 [MasterModeManager] ExternalAppController 초기화 완료
 [MainWnd] Master 모드 초기화 완료
 [MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
+[MakeExistedAutoAlloc] 로드할 기존 주문이 없습니다. ===============>
+[ExternalAppController] 자동배차 시작
 === Window_Closing 시작 (안전 모드 복구) ===
 SrGlobalClient 재접속 중지 플래그 설정
 SignalR OnClosedAsync called
@@ -45,204 +49,83 @@ SrLocalClient 재접속 중지 플래그 설정
 [ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
 [CancelTokenControl] Cancel 호출됨
 [ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] 자동배차 Task 정상 종료 확인
 [ExternalAppController] 모든 리소스 정리 완료
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
-wing error: Connection closed with an error. *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 2번째 *****
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=VUj1DcPK_HxRjXVe-cr3zg *****
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-SignalR OnClosedAsync called
-SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
-***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 3번째 *****
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-***** SrReport_ConnectedAsync 시작: connectedID=c85GQgIYC8pIvW9AHRaTWA *****
-SignalR 연결 성공
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-SignalR OnClosedAsync called
-SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
-***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 4번째 *****
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-***** SrReport_ConnectedAsync 시작: connectedID=SPUkxwOXqL4X_JwXlKm6IA *****
-SignalR 연결 성공
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-SignalR OnClosedAsync called
-SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
-***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 5번째 *****
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-***** SrReport_ConnectedAsync 시작: connectedID=Og0gZcTYHlkO1jGWwM_XuA *****
-SignalR 연결 성공
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-***** 로그인 요청 완료 *****
-***** 로그인 성공! (6번째) *****
-[MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
-[MainWnd] 프로세스 실행 성공. SignalR 연결 시도...
-HubConnection 생성 중...
-연결 시도시작...
-HubConn.StartAsync() 호출...
-SignalR 연결 성공
-[MainWnd] SignalR ConnectAsync 호출 완료
-[MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
-[MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
-[MasterModeManager] ExternalAppController 초기화 시작
-[ExternalAppController] 생성자 호출
-[ExternalAppController] InitializeAsync 시작
-[ExternalAppController] 생성된 앱 개수: 0
-[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
-[ExternalAppController] InitializeAsync 전체 완료
-[MasterModeManager] ExternalAppController 초기화 완료
-[MainWnd] Master 모드 초기화 완료
-[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-�그인 요청 시작: ID=동신MSI-S *****
-SignalR OnClosedAsync called
-SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
-***** 로그인 예외 발생: InvalidOperationException - The 'InvokeCoreAsync' method cannot be called if the connection is not active *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.ReconnectingConnectionState.WaitForActiveConnectionAsync(String methodName, CancellationToken token)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 7번째 *****
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-***** SrReport_ConnectedAsync 시작: connectedID=ycqAnwIE9o9dE_4Ai2H0Ng *****
-SignalR 연결 성공
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-SignalR OnClosedAsync called
-SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
-***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 8번째 *****
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-***** SrReport_ConnectedAsync 시작: connectedID=bPJbIdRgSK7Kh78IXoAcYQ *****
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-SignalR 연결 성공
-SignalR OnClosedAsync called
-SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
-***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 9번째 *****
-HubConnection 생성 중...
-HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
-연결 시도 시작...
-HubConn.StartAsync() 호출...
-***** SrReport_ConnectedAsync 시작: connectedID=QluCVZy1EmUTgZhCNpT2tA *****
-SignalR 연결 성공
-***** HubConn 연결 상태 확인 완료: Connected *****
-***** 로그인 요청 시작: ID=동신MSI-S *****
-SignalR OnClosedAsync called
-SignalR 연결 끊김: The server closed the connection with the following error: Connection closed with an error., 5초 후 재접속 시작...
-***** 로그인 예외 발생: HubException - The server closed the connection with the following error: Connection closed with an error. *****
-***** StackTrace:    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
-   at Microsoft.AspNetCore.SignalR.Client.HubConnectionExtensions.InvokeCoreAsync[TResult](HubConnection hubConnection, String methodName, Object[] args, CancellationToken cancellationToken)
-   at Kai.Client.CallCenter.Classes.SrGlobalClient.SrReport_ConnectedAsync(String connectedID) in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 325 *****
-***** 로그인 실패! 시도 횟수: 10번째 *****
-701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 2/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 3/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 4/5): 1701243 != 10017
-[DragAsync_Vertical_Smooth] 커서 모양 불일치 (시도 5/5): 1701243 != 10017
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] ESC 키에 의해 자동화 작업이 취소되었습니다.
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
-[INSUNG1] InitializeAsync 사용자 취소(ESC)
-[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: 사용자의 요청으로 종료합니다...
-sPos: INSUNG1/InitializeAsync_Cancel -> ExternalAppController/InitializeAsync
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
-=== Window_Closing 시작 (안전 모드 복구) ===
-SrGlobalClient 재접속 중지 플래그 설정
-SignalR OnClosedAsync called
-SrLocalClient 재접속 중지 플래그 설정
-재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
-[MasterModeManager] Shutdown 시작
-[MasterModeManager] ExternalAppController 정리 중
-[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
-[CancelTokenControl] Cancel 호출됨
-[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
-[ExternalAppController] 모든 리소스 정리 완료
-[MasterModeManager] Shutdown 완료
-=== 모든 정리 완료, 프로세스 종료 ===
-[MainWnd] 키보드 전역 후킹 해제
-le.dll)
+ore.Http.Connections.Client.HttpConnection.GetNegotiationResponseAsync(Uri uri, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.Connections.Client.HttpConnection.SelectAndStartTransport(TransferFormat transferFormat, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.Connections.Client.HttpConnection.StartAsyncCore(TransferFormat transferFormat, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.Connections.Client.HttpConnection.StartAsync(TransferFormat transferFormat, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.Connections.Client.HttpConnectionFactory.ConnectAsync(EndPoint endPoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Http.Connections.Client.HttpConnectionFactory.ConnectAsync(EndPoint endPoint, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.StartAsyncCore(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.StartAsyncInner(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.StartAsync(CancellationToken cancellationToken)
+   at Kai.Client.CallCenter.Classes.SrGlobalClient.ConnectAsync() in D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Classes\SrGlobalClient.cs:line 190
+===== 5초 후 재시도... (1번째) =====
+��정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.ThreadPool.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TraceSource.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Concurrent.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.IO.Packaging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.RegularExpressions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Uri.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Memory.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\DirectWriteForwarder.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Debug.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.CompilerServices.VisualC.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.Win32.Registry.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Specialized.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.Win32.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.NonGeneric.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Thread.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Configuration.ConfigurationManager.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Xml.ReaderWriter.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Xml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebClient.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encoding.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.TypeConverter.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Extensions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ObjectModel.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Controls.Ribbon.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\WindowsFormsIntegration.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Common.StdDll_Common.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\UIAutomationTypes.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Requests.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebHeaderCollection.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Process.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationFramework.Aero2.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationFramework.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\UIAutomationProvider.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationCore.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationFramework-SystemXml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'c:\program files\microsoft visual studio\2022\community\common7\ide\commonextensions\microsoft\xamldiagnostics\Core\x64\Microsoft.VisualStudio.DesignTools.WpfTap.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Tracing.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Tasks.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.DataContractSerialization.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Xml.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Resources.ResourceManager.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Emit.ILGeneration.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Emit.Lightweight.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Server.Main.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Common.FrmDll_WpfCtrl.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\mscorlib.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Kai.Common.NetDll_WpfCtrl.dll'을(를) 로드했습니다. 기호가 로드되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.SignalR.Client.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TextWriterTraceListener.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+예외 발생: 'System.IO.IOException'(System.Console.dll)
 
-[SYSTEM] 로그 기록 시작: 2025-12-26 16:36:44
+[SYSTEM] 로그 기록 시작: 2025-12-31 20:49:33
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 [CommonFuncs] LoadExternalAppsConfig 실행
 [CommonFuncs] AutoAlloc 설정 로드: True
@@ -256,7 +139,6 @@ le.dll)
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.SignalR.Client.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Drawing.Primitives.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 HubConnection 생성 중...
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Drawing.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Logging.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Protocols.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Logging.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -264,16 +146,17 @@ HubConnection 생성 중...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Connections.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Http.Connections.Common.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.AspNetCore.Http.Connections.Client.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Drawing.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.DependencyInjection.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encodings.Web.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Intrinsics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Numerics.Vectors.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Cryptography.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationUI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationUI.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Channels.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
 연결 시도 시작...
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationUI.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\ko\PresentationUI.resources.dll'을(를) 로드했습니다. 모듈이 기호 없이 빌드되었습니다.
 HubConn.StartAsync() 호출...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Features.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\System.IO.Pipelines.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -285,11 +168,12 @@ HubConn.StartAsync() 호출...
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Sockets.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NameResolution.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 SignalR 연결 성공
-***** SrReport_ConnectedAsync 시작: connectedID=SbTEdttDDAqYjrA2SRDy-w *****
+***** SrReport_ConnectedAsync 시작: connectedID=hJKOzmfcLpVX5xaZsfquyA *****
 ***** HubConn 연결 상태 확인 완료: Connected *****
 ***** 로그인 요청 시작: ID=동신MSI-S *****
 ***** 로그인 요청 완료 *****
-***** 로그인 성공! (1번째) *****
+***** 로그인 성공! 재시도 횟수 초기화 *****
+boolEventArgs=Kai.Common.StdDll_Common.StdDelegate+BoolEventArgs
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Python.Runtime.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.Expressions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.CSharp.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -325,7 +209,6 @@ SignalR 연결 성공
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.SignalR.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Microsoft.EntityFrameworkCore.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Formatters.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NetworkInformation.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Immutable.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Numerics.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
@@ -342,175 +225,45 @@ SignalR 연결 성공
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Web.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Forms.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.AspNetCore.Components.Authorization.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Serialization.Formatters.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'Anonymously Hosted DynamicMethods Assembly'을(를) 로드했습니다. 
 예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
 예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
 예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
 예외 발생: 'Microsoft.CSharp.RuntimeBinder.RuntimeBinderException'(Microsoft.CSharp.dll)
 [MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
-[MainWnd] 프로세스 실행 성공. SignalR 연결 시도...
-31684 스레드가 종료되었습니다(코드: 0 (0x0)).
+34248 스레드가 종료되었습니다(코드: 0 (0x0)).
 HubConnection 생성 중...
 연결 시도시작...
 HubConn.StartAsync() 호출...
 SignalR 연결 성공
 [MainWnd] SignalR ConnectAsync 호출 완료
-3588 스레드가 종료되었습니다(코드: 0 (0x0)).
-[MasterModeManager] 가상모니터가 이미 존재합니다.
+36140 스레드가 종료되었습니다(코드: 0 (0x0)).
+SrLocalClient/SrReport_Connected
+성공(인터넷전화 정보 가져오기): 1, 07052144970
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+[MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
 [MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
 [MasterModeManager] ExternalAppController 초기화 시작
 [ExternalAppController] 생성자 호출
 [ExternalAppController] InitializeAsync 시작
-[ExternalAppController] Insung01 인스턴스 생성 완료
-[ExternalAppController] 생성된 앱 개수: 1
-[ExternalAppController] INSUNG1 초기화 시퀀스 시작...
-[INSUNG1] InitializeAsync 시작: Id=동신MSI-S
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Newtonsoft.Json.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-[INSUNG1] FileInfo 파일 로드 완료: D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Data\Insung01_FileInfo.txt
-[INSUNG1] 확인된 앱 경로: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe
-[INSUNG1/UpdaterWork] 업데이터 실행 시도: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe
-[INSUNG1/UpdaterWork] 프로세스 종료 대기 시작...
-[INSUNG1/UpdaterWork] 업데이터 정상 종료 확인
-[INSUNG1/SplashWork] 시작 (ID: 동신MSI-S)
-[INSUNG1/SplashWork] 로그인 입력 완료, 백업본 팝업 처리 로직 시작
-[INSUNG1/MainWnd] 초기화 시작
-[INSUNG1/MainWnd] 초기화 성공
-[INSUNG1/RcptRegPage] 초기화 시작
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Caching.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Npgsql.EntityFrameworkCore.PostgreSQL.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Npgsql.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Configuration.Abstractions.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.22\Microsoft.Extensions.Caching.Memory.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.Queryable.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
-[INSUNG1/UI] 신규버튼 확인 완료: hWnd=411BA (시도=1/10)
-[INSUNG1/UI] 조회버튼 확인 완료: hWnd=411BC (시도=1/10)
-[INSUNG1/UI] 기사버튼 확인 완료: hWnd=411B6 (시도=1/10)
-[INSUNG1/RcptRegPage] CallCount 핸들 찾기 성공
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1/RcptRegPage] 검증 실패: 컬럼 갯수 불일치 (검출=26, 예상=21) → 즉시 초기화 진입
-[INSUNG1] BlockInput(true) & KeyboardHook - 데이터그리드 초기화 시작
-[INSUNG1] 데이터그리드 수동 초기화 강제 실행 (Step 1)
-[InitDG오더] Step 1: 접수화면초기화 시작
-[InitDG오더] Step 2: 컬럼 확보 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-'.NET TP Wait' (31200) 스레드가 종료되었습니다(코드: 0 (0x0)).
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-30004 스레드가 종료되었습니다(코드: 0 (0x0)).
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 3: 컬럼 순서 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 4: 규격 너비 조정 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
-'.NET TP Worker' (35148) 스레드가 종료되었습니다(코드: 0 (0x0)).
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
-[INSUNG1/RcptRegPage] Datagrid 재시도 2/50
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[INSUNG1/RcptRegPage] 검증 실패: 컬럼 너비 불일치 (인덱스=1, 실제=79, 예상=70) → 즉시 초기화 진입
-[INSUNG1] BlockInput(true) & KeyboardHook - 데이터그리드 초기화 시작
-[INSUNG1] 데이터그리드 수동 초기화 강제 실행 (Step 1)
-[InitDG오더] Step 1: 접수화면초기화 시작
-[InitDG오더] Step 2: 컬럼 확보 시작
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[WindowProc] ESC 감지 - 자동화 중단 및 후킹 해제
-[CancelTokenControl] Cancel 호출됨
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
-[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
-[InitDG오더] Step 3: 컬럼 순서 조정 시작
-예외 발생: 'System.OperationCanceledException'(Kai.Client.CallCenter.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-[InitDG오더] ESC 키에 의해 자동화 작업이 취소되었습니다.
-[INSUNG1] 데이터그리드 초기화 로직 종료 (입력제한 및 후킹 해제)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-[INSUNG1/RcptRegPage] SetDG오더RectsAsync - 사용자에 의해 작업이 취소되었습니다.
-예외 발생: 'System.OperationCanceledException'(Kai.Client.CallCenter.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.OperationCanceledException'(Kai.Client.CallCenter.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
-[INSUNG1] InitializeAsync 사용자 취소(ESC)
-[ExternalAppController] INSUNG1 초기화 최종 실패: sErr: 사용자의 요청으로 종료합니다...
-sPos: INSUNG1/InitializeAsync_Cancel -> ExternalAppController/InitializeAsync
-[MasterModeManager] ExternalAppController 초기화 실패: Kai.Common.StdDll_Common.StdResult_Status
+[ExternalAppController] 생성된 앱 개수: 0
+[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
+[ExternalAppController] InitializeAsync 전체 완료
+[MasterModeManager] ExternalAppController 초기화 완료
+[MainWnd] Master 모드 초기화 완료
+[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
+[MakeExistedAutoAlloc] 로드할 기존 주문이 없습니다. ===============>
+[ExternalAppController] 자동배차 시작
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Xceed.Wpf.Toolkit.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Core.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\PresentationFramework-SystemData.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+'.NET TP Wait' (21420) 스레드가 종료되었습니다(코드: 0 (0x0)).
+'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.StackTrace.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
+[Client Search] CenterCode: 1, Search Term: 테스
+[SrGlobalClient] Invoking: SrResult_CustMainWith_Cust_Center_Comp_SelectRowsAsync_CenterCode_LikeCustName_Using
+32336 스레드가 종료되었습니다(코드: 0 (0x0)).
 === Window_Closing 시작 (안전 모드 복구) ===
-17932 스레드가 종료되었습니다(코드: 0 (0x0)).
 SrGlobalClient 재접속 중지 플래그 설정
 예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
 예외 발생: 'System.IO.IOException'(System.Private.CoreLib.dll)
@@ -518,28 +271,15 @@ SrGlobalClient 재접속 중지 플래그 설정
 예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
 SignalR OnClosedAsync called
 SrLocalClient 재접속 중지 플래그 설정
-예외 발생: 'System.ObjectDisposedException'(System.Private.CoreLib.dll)
-예외 발생: 'System.ObjectDisposedException'(System.Private.CoreLib.dll)
-예외 발생: 'System.ObjectDisposedException'(System.Private.CoreLib.dll)
-예외 발생: 'System.ObjectDisposedException'(System.Private.CoreLib.dll)
-예외 발생: 'System.ObjectDisposedException'(System.Private.CoreLib.dll)
-예외 발생: 'System.OperationCanceledException'(System.Net.WebSockets.dll)
-예외 발생: 'System.OperationCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.IO.IOException'(System.Net.Sockets.dll)
 재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
 [MasterModeManager] Shutdown 시작
 [MasterModeManager] ExternalAppController 정리 중
 [ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
 [CancelTokenControl] Cancel 호출됨
 [ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
-[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
-[INSUNG1] Shutdown 시작
-[INSUNG1/Close] 종료 시퀀스 시작
-[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
-[INSUNG1/Close] 스플래시 윈도우 정리 전송
-[INSUNG1] Close 성공
-[INSUNG1] Shutdown 완료
+[ExternalAppController] 자동배차 Task 정상 종료 확인
 [ExternalAppController] 모든 리소스 정리 완료
-'Kai.Client.CallCenter.exe'(CoreCLR: clrhost): 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.dll'을(를) 로드했습니다. 포함/제외 설정으로 기호 로드가 비활성화되었습니다.
 [MasterModeManager] Shutdown 완료
 === 모든 정리 완료, 프로세스 종료 ===
 [MainWnd] 키보드 전역 후킹 해제
@@ -547,6 +287,4 @@ SrLocalClient 재접속 중지 플래그 설정
 예외 발생: 'System.TimeoutException'(WindowsBase.dll)
 예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
 예외 발생: 'System.TimeoutException'(WindowsBase.dll)
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
-예외 발생: 'System.Threading.Tasks.TaskCanceledException'(WindowsBase.dll)
-'[26884] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).
+'[23896] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).

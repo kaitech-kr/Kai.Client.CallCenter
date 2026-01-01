@@ -1,0 +1,11 @@
+Kai.Client.X86ComBroker 를 빌드하여
+"D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\x86"
+ 에 생성된 
+
+Kai.Client.X86ComBroker.exe 
+Kai.Client.X86ComBroker.dll
+
+를 작업폴더로 복사한디.
+
+AxInterop.LGUBASEOPENAPILib.dll,
+Interop.LGUBASEOPENAPILib.dll -> dlrjtemfeh dlTdjdi gksek
