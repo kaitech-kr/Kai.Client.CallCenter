@@ -10,40 +10,30 @@ using static Kai.Common.StdDll_Common.StdConst_FuncName;
 #nullable disable
 namespace Kai.Client.CallCenter.OfrWorks;
 
-/// <summary>
-/// TbText 테이블 조회 결과 + 이미지 분석 정보
-/// </summary>
+// TbText 테이블 조회 결과 + 이미지 분석 정보
 [Serializable]
 public class OfrResult_TbText : StdResult_Error
 {
     public TbText tbText { get; set; } = null;
     public OfrModel_BitmapAnalysis analyText { get; set; } = null;
 
-    /// <summary>
-    /// tbText에서 Text 값을 가져오는 편의 속성
-    /// </summary>
+    // tbText에서 Text 값을 가져오는 편의 속성
     public string _sResult => tbText?.Text ?? null;
 
     #region Constructor
-    /// <summary>
-    /// 기본 생성자
-    /// </summary>
+    // 기본 생성자
     public OfrResult_TbText() : base()
     {
     }
 
-    /// <summary>
-    /// 성공 생성자 - DB에서 찾았을 때
-    /// </summary>
+    // 성공 생성자 - DB에서 찾았을 때
     public OfrResult_TbText(TbText tb, OfrModel_BitmapAnalysis analy = null) : base()
     {
         tbText = tb;
         analyText = analy;
     }
 
-    /// <summary>
-    /// 실패 생성자 - DB에서 못 찾았거나 에러 발생시
-    /// </summary>
+    // 실패 생성자 - DB에서 못 찾았거나 에러 발생시
     public OfrResult_TbText(OfrModel_BitmapAnalysis analy, string err, string pos, string logPath = "")
         : base(err, pos, logPath)
     {
@@ -108,9 +98,7 @@ public class OfrResult_TbText : StdResult_Error
 //    }
 //}
 
-/// <summary>
-/// TbCharSet 리스트 조회 결과 - 복합 문자 인식용
-/// </summary>
+// TbCharSet 리스트 조회 결과 - 복합 문자 인식용
 [Serializable]
 public class OfrResult_TbCharInSet : StdResult_Error
 {
@@ -118,23 +106,17 @@ public class OfrResult_TbCharInSet : StdResult_Error
     public OfrModel_BitmapAnalysis analyChar { get; set; } = null;
 
     #region Constructor
-    /// <summary>
-    /// 기본 생성자
-    /// </summary>
+    // 기본 생성자
     public OfrResult_TbCharInSet() { }
 
-    /// <summary>
-    /// 성공 생성자
-    /// </summary>
+    // 성공 생성자
     public OfrResult_TbCharInSet(OfrModel_BitmapAnalysis analy, TbChar tb)
     {
         tbChar = tb;
         analyChar = analy;
     }
 
-    /// <summary>
-    /// 실패 생성자
-    /// </summary>
+    // 실패 생성자
     public OfrResult_TbCharInSet(string err, string pos, string logPath = "")
     : base(err, pos, logPath)
     {
@@ -208,9 +190,7 @@ public class OfrResult_TbCharInSet : StdResult_Error
 //    }
 //}
 
-/// <summary>
-/// TbCharSetList 조회 결과 - 복합 문자열 인식용
-/// </summary>
+// TbCharSetList 조회 결과 - 복합 문자열 인식용
 [Serializable]
 public class OfrResult_TbCharSetList : StdResult_Error
 {
@@ -219,26 +199,20 @@ public class OfrResult_TbCharSetList : StdResult_Error
     public List<OfrResult_TbCharInSet> listCharResult { get; set; } = null;
 
     #region Constructor
-    /// <summary>
-    /// 기본 생성자
-    /// </summary>
+    // 기본 생성자
     public OfrResult_TbCharSetList() : base()
     {
         listCharResult = new List<OfrResult_TbCharInSet>();
     }
 
-    /// <summary>
-    /// Bitmap만 받는 생성자
-    /// </summary>
+    // Bitmap만 받는 생성자
     public OfrResult_TbCharSetList(Draw.Bitmap bmpCapture)
     {
         this.bmpCapture = bmpCapture;
         listCharResult = new List<OfrResult_TbCharInSet>();
     }
 
-    /// <summary>
-    /// 에러 생성자
-    /// </summary>
+    // 에러 생성자
     public OfrResult_TbCharSetList(Draw.Bitmap bmpCapture, string err, string pos, string logDirPath = "")
         : base(err, pos, logDirPath)
     {

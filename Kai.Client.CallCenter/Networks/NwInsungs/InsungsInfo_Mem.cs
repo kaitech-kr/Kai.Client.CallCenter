@@ -308,9 +308,7 @@ public class InsungsInfo_Mem
     //        base.SetWndHandles(TopWnd_hWnd, fInfo);
     //    }
     //}
-    /// <summary>
-    /// 접수등록 수정 팝업 윈도우 (주문 업데이트용)
-    /// </summary>
+    // 접수등록 수정 팝업 윈도우 (주문 업데이트용)
     //public class RcptWnd_Edit : RcptWnd_Common
     //{
     //    // TopWnd
@@ -351,9 +349,7 @@ public class InsungsInfo_Mem
     //    }
     //}
     //
-    /// <summary>
-    /// 접수등록 완료 상태 팝업 (완료 상태일 때 버튼 레이아웃)
-    /// </summary>
+    // 접수등록 완료 상태 팝업 (완료 상태일 때 버튼 레이아웃)
     //public class RcptWnd_Completed
     //{
     //    public IntPtr TopWnd_hWnd;

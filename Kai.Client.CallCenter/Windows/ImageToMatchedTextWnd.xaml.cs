@@ -25,9 +25,7 @@ public partial class ImageToMatchedTextWnd : Window
     #endregion
 
     #region Basic
-    /// <summary>
-    /// OfrResult_TbText를 받는 생성자
-    /// </summary>
+    // OfrResult_TbText를 받는 생성자
     public ImageToMatchedTextWnd(string sPos, OfrResult_TbText result)
     {
         InitializeComponent();
@@ -43,9 +41,7 @@ public partial class ImageToMatchedTextWnd : Window
         }
     }
 
-    /// <summary>
-    /// OfrModel_BitmapAnalysis를 받는 생성자
-    /// </summary>
+    // OfrModel_BitmapAnalysis를 받는 생성자
     public ImageToMatchedTextWnd(string sPos, OfrModel_BitmapAnalysis analyText, string sWantedStr = null)
     {
         InitializeComponent();

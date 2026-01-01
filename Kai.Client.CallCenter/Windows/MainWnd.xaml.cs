@@ -198,7 +198,8 @@ public partial class MainWnd : Window
             Application.Current.Shutdown();
             goto ERR_EXIT;
         }
-        Debug.WriteLine($"[MainWnd] 프로세스 실행 성공. SignalR 연결 시도...");
+
+        // s_SrLClient 접속
         await s_SrLClient.ConnectAsync();
         Debug.WriteLine($"[MainWnd] SignalR ConnectAsync 호출 완료");
 
@@ -418,33 +419,7 @@ public partial class MainWnd : Window
 
     public async void Menu_TmpTest_Click(object sender, RoutedEventArgs e)
     {
-        s_GlobalCancelToken.Reset(); 
-
-        Debug.WriteLine("[MainWnd] 마우스 후킹 테스트 시작 (20초간 잠금)");
-        StdWin32.BlockInput(true);
-
-        CommonFuncs.SetKeyboardHook();
-
-
-        try
-        {
-            await Task.Delay(20000, s_GlobalCancelToken.Token);
-        }
-        catch (OperationCanceledException)
-        {
-            Debug.WriteLine("[MainWnd] ESC에 의해 테스트가 중단되었습니다.");
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"[MainWnd] 테스트 중 예외: {ex.Message}");
-        }
-        finally
-        {
-            StdWin32.BlockInput(false);
-            CommonFuncs.ReleaseKeyboardHook();
-
-            Debug.WriteLine("[MainWnd] 마우스 후킹 테스트 종료 및 해제 완료");
-        }
+        //s_SrGClient.Test();
     }
     #endregion
 
@@ -509,13 +484,13 @@ public partial class MainWnd : Window
     public async void OnSrLocalClient_Connected() // Local SignalRServer에 연결되면...
     {
         #region Tel070 - DB에서 Local 인터넷전화 정보 가져와서 s_sX86ProcName에 정보설정.
-        //PostgResult_TbTel070InfoList result = await s_SrGClient.SrResult_Tel070Info_SelectRowsAsync_Charge_NotMainTel();
-        PostgResult_TbTel070InfoList result = new PostgResult_TbTel070InfoList();
+        PostgResult_TbTel070InfoList result = await s_SrGClient.SrResult_Tel070Info_SelectRowsAsync_Charge_NotMainTel();
+
         if (string.IsNullOrEmpty(result.sErr)) // 로컬 070전화 등록
         {
             s_ListTel070Info = result.listTb;
-            //MsgBox($"No Err: {s_ListTel070Info.Count}, {s_ListTel070Info[0].TelNum}"); // Test
-            //await s_SrLClient.SrReport_Tel070Info_SetLocalsAsync(s_ListTel070Info);
+            Debug.WriteLine($"성공(인터넷전화 정보 가져오기): {s_ListTel070Info.Count}, {s_ListTel070Info[0].TelNum}"); // Test
+            await s_SrLClient.SrReport_Tel070Info_SetLocalsAsync(s_ListTel070Info);
         }
         else
         {

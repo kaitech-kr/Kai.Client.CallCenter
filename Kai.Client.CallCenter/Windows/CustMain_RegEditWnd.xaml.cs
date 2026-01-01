@@ -56,9 +56,7 @@ public partial class CustMain_RegEditWnd : Window
     }
 
 
-    /// <summary>
-    /// 윈도우 로드 시 초기화 및 데이터 로드
-    /// </summary>
+    // 윈도우 로드 시 초기화 및 데이터 로드
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
         await Task.CompletedTask;
@@ -85,9 +83,7 @@ public partial class CustMain_RegEditWnd : Window
         // }
     }
 
-    /// <summary>
-    /// 수정모드로 고객정보 로드 (DB 조회)
-    /// </summary>
+    // 수정모드로 고객정보 로드 (DB 조회)
 //     private async Task<bool> LoadCustomerForEditModeAsync()
 //     {
 //         // DB에서 고객정보 조회
@@ -116,9 +112,7 @@ public partial class CustMain_RegEditWnd : Window
         // this.Close();
     }
 
-    /// <summary>
-    /// 저장 버튼 클릭 - 신규 등록 또는 수정
-    /// </summary>
+    // 저장 버튼 클릭 - 신규 등록 또는 수정
     private async void BtnSave_Click(object sender, RoutedEventArgs e)
     {
         await Task.CompletedTask;
@@ -152,9 +146,7 @@ public partial class CustMain_RegEditWnd : Window
     #endregion
 
     #region TextBox Events
-    /// <summary>
-    /// 숫자만 입력 가능하도록 제한 (전화번호 입력용)
-    /// </summary>
+    // 숫자만 입력 가능하도록 제한 (전화번호 입력용)
     private void TBoxOnlyNum_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
         // 정규식: 숫자가 아닌 문자가 있으면 true 반환 → 입력 차단
@@ -265,9 +257,7 @@ public partial class CustMain_RegEditWnd : Window
 //             return false;
 //         }
 //     }
-    /// <summary>
-    /// 필수 입력 검증
-    /// </summary>
+    // 필수 입력 검증
 //     private bool ValidateRequiredInputs()
 //     {
 //         if (string.IsNullOrWhiteSpace(TBoxCustName.Text))
@@ -291,9 +281,7 @@ public partial class CustMain_RegEditWnd : Window
 //         return true;
 //     }
 
-    /// <summary>
-    /// 신규 고객 저장
-    /// </summary>
+    // 신규 고객 저장
 //     private async Task<bool> SaveNewCustomerAsync()
 //     {
 //         CreateEmptyNewTable();
@@ -311,9 +299,7 @@ public partial class CustMain_RegEditWnd : Window
 //         return true;
 //     }
 
-    /// <summary>
-    /// 기존 고객 수정
-    /// </summary>
+    // 기존 고객 수정
 //     private async Task<bool> UpdateExistingCustomerAsync()
 //     {
 //         // 원본에서 복사
@@ -341,9 +327,7 @@ public partial class CustMain_RegEditWnd : Window
 //         return true;
 //     }
 
-    /// <summary>
-    /// 빈 새 테이블 생성 (신규 등록용)
-    /// </summary>
+    // 빈 새 테이블 생성 (신규 등록용)
 //     private void CreateEmptyNewTable()
 //     {
 //         tbAllWithNew = new TbAllWith();
@@ -360,9 +344,7 @@ public partial class CustMain_RegEditWnd : Window
 //         tbCustMainNew.BeforeCompName = "";
 //         tbCustMainNew.Using = true;
 //     }
-    /// <summary>
-    /// 원본 테이블 데이터를 UI에 반영
-    /// </summary>
+    // 원본 테이블 데이터를 UI에 반영
 //     private void OrgTableToUiData()
 //     {
 //         if (tbAllWithOrg == null) return;
@@ -395,9 +377,7 @@ public partial class CustMain_RegEditWnd : Window
 //         CmbBoxUseType.SelectedIndex = tbCustMainBK.Using ? 0 : 1;
 //     }
 
-    /// <summary>
-    /// UI 데이터를 테이블로 반영
-    /// </summary>
+    // UI 데이터를 테이블로 반영
 //     private void UpdateNewTableByUi()
 //     {
 //         TbCustMain tbCustMainNew = tbAllWithNew.custMain;
@@ -424,9 +404,7 @@ public partial class CustMain_RegEditWnd : Window
 //         tbCustMainNew.HappyCall = CmbBoxHappyCall.SelectedIndex == 1;
 //         tbCustMainNew.Using = CmbBoxUseType.SelectedIndex == 0;
 //     }
-    /// <summary>
-    /// 변경사항 확인 (수정 모드용)
-    /// </summary>
+    // 변경사항 확인 (수정 모드용)
 //     private bool HasChanges()
 //     {
 //         TbCustMain orgCust = tbAllWithOrg.custMain;

@@ -5,9 +5,7 @@ namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 
 #nullable disable
 
-/// <summary>
-/// 화물24시 테스트용 클래스 - UpdaterWorkAsync 테스트
-/// </summary>
+// 화물24시 테스트용 클래스 - UpdaterWorkAsync 테스트
 public class Cargo24Test
 {
     ///// <summary>

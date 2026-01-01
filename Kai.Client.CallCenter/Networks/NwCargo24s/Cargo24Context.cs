@@ -4,9 +4,6 @@ using Kai.Client.CallCenter.Classes;
 namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 
 #nullable disable
-/// <summary>
-/// 화물24시 앱의 모든 공용 데이터를 담는 Context
-/// </summary>
 // 화물24시 앱의 모든 공용 데이터를 담는 Context
 public class Cargo24Context
 {

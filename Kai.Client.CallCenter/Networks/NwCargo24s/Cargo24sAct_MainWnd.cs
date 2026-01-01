@@ -10,10 +10,7 @@ using static Kai.Client.CallCenter.Classes.CommonVars;
 namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 #nullable disable
 
-/// <summary>
-/// 화물24시 앱 메인 윈도우 초기화 및 제어 담당 클래스
-/// Context 패턴 사용: Cargo24Context를 통해 모든 정보에 접근
-/// </summary>
+// 화물24시 앱 메인 윈도우 초기화 및 제어 담당 클래스
 public class Cargo24sAct_MainWnd
 {
     // Context 참조

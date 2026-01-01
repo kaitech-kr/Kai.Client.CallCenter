@@ -15,9 +15,7 @@ namespace Kai.Client.CallCenter.OfrWorks;
 public class OfrWork_Insungs : OfrWork_Common
 {
     #region OFR - 이미지 매칭 및 정보 얻기
-    /// <summary>
-    /// Window Handle에서 캡처한 이미지가 원하는 텍스트와 일치하는지 확인 (개선된 버전 - 중복 다이얼로그 제거)
-    /// </summary>
+    // Window Handle에서 캡처한 이미지가 원하는 텍스트와 일치하는지 확인
     public static async Task<StdResult_NulBool> OfrIsMatchedImage_DrawRelRectAsync(IntPtr hWnd, int offset, string sWantedStr, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
     {
         Draw.Bitmap bmpOrg = null;

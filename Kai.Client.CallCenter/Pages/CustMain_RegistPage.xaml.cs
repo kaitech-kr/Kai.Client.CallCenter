@@ -214,9 +214,7 @@ public partial class CustMain_RegistPage : Page
     #endregion
 
     #region Datagrid Events
-    /// <summary>
-    /// DataGrid 더블클릭 - 선택된 고객 정보 수정 창 열기
-    /// </summary>
+    // DataGrid 더블클릭 - 선택된 고객 정보 수정 창 열기
     private void DGridCustMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
         //if (DGridCustMain.SelectedItem is not VmCustMain_RegistPage selectedItem)
@@ -282,9 +280,7 @@ public partial class CustMain_RegistPage : Page
         //}
     }
 
-    /// <summary>
-    /// 신규 고객 등록 버튼 - 고객 등록 창을 열고 저장 후 목록을 갱신하여 선택
-    /// </summary>
+    // 신규 고객 등록 버튼 - 고객 등록 창을 열고 저장 후 목록을 갱신하여 선택
     private async void BtnNewCust_Click(object sender, RoutedEventArgs e)
     {
         //// 고객 등록 창 열기
@@ -325,9 +321,7 @@ public partial class CustMain_RegistPage : Page
         //}
     }
 
-    /// <summary>
-    /// 조회 버튼 클릭 - 입력된 검색 조건으로 고객 정보 조회
-    /// </summary>
+    // 조회 버튼 클릭 - 입력된 검색 조건으로 고객 정보 조회
     private async void BtnSearch_Click(object sender, RoutedEventArgs e)
     {
         //Debug.WriteLine("[CustMain_RegistPage] 조회 버튼 클릭");
@@ -340,9 +334,7 @@ public partial class CustMain_RegistPage : Page
 
     }
 
-    /// <summary>
-    /// 닫기 버튼 클릭 - 고객 조회 탭 닫기
-    /// </summary>
+    // 닫기 버튼 클릭 - 고객 조회 탭 닫기
     private void BtnClose_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("[CustMain_RegistPage] 닫기 버튼 클릭");
@@ -351,9 +343,7 @@ public partial class CustMain_RegistPage : Page
     #endregion
 
     #region Click - Etc Buttons
-    /// <summary>
-    /// 검색내 조회 버튼 클릭 - 이미 조회된 결과에서 추가 필터링
-    /// </summary>
+    // 검색내 조회 버튼 클릭 - 이미 조회된 결과에서 추가 필터링
     private void BtnSearchInFind_Click(object sender, RoutedEventArgs e)
     {
         ////조회 결과 확인
@@ -466,9 +456,7 @@ public partial class CustMain_RegistPage : Page
     //    LblSum.Content = $"합계: {VsCustMain_RegistPage.oc_VmCustMainForPage.Count:##,###}개";
     //}
 
-    /// <summary>
-    /// 고객 정보 검색 - 전체 검색 또는 조건별 검색 수행
-    /// </summary>
+    // 고객 정보 검색 - 전체 검색 또는 조건별 검색 수행
     //private async Task SearchAsync()
     //{
     //    try

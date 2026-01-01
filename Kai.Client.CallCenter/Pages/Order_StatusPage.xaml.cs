@@ -46,8 +46,8 @@ public partial class Order_StatusPage : Page
         MinuteTimer.Tick += MinuteTimer_Tick;
         MinuteTimer.Start();
 
-        //// SignalR - Local Client
-        ////SrLocalClient.SrLocalClient_Tel070_AnswerEvent += SrLocalClient_Tel070_AnswerEvent;
+        // SignalR - Local Client
+        SrLocalClient.SrLocalClient_Tel070_AnswerEvent += SrLocalClient_Tel070_AnswerEvent;
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -59,12 +59,12 @@ public partial class Order_StatusPage : Page
             ////첫윈도 생성시 늦으므로 미리 만든다 - 보류
             //Order_ReceiptWnd wnd = new Order_ReceiptWnd();
 
-            ////Load TelRings
-            //StdResult_Error resultErr = await VsOrder_StatusPage.Tel070_LoadDataAsync();
-            //if (resultErr != null)
-            //{
-            //    ErrMsgBox(resultErr.sErr, resultErr.sErrNPos);
-            //}
+            //Load TelRings
+            StdResult_Error resultErr = await VsOrder_StatusPage.Tel070_LoadDataAsync();
+            if (resultErr != null)
+            {
+                ErrMsgBox(resultErr.sErr, resultErr.sErrNPos);
+            }
 
             //전체버튼 클릭
             await Dispatcher.InvokeAsync(() => // Dispatcher를 사용해 UI가 완전히 그려진 이후 실행
@@ -91,23 +91,22 @@ public partial class Order_StatusPage : Page
     // 1분마다 서버 SendingSeq와 로컬 LastSeq 동기화 체크
     private async void MinuteTimer_Tick(object sender, EventArgs e)
     {
-        ////StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
-        //StdResult_Int result = new StdResult_Int(1);
+        StdResult_Int result = await s_SrGClient.SrResult_Order_SelectSendingSeqOnlyAsync_CenterCode();
 
-        //if (result.nResult < 0) // Error
-        //{
-        //    ErrMsgBox(result.sErr);
-        //    return;
-        //}
+        if (result.nResult < 0) // Error
+        {
+            ErrMsgBox(result.sErr);
+            return;
+        }
 
-        //TBlkMsgSmall.Text = $"[{DateTime.Now}] SendingSeq: This={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}";
+        TBlkMsgSmall.Text = $"[{DateTime.Now}] SendingSeq: This={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}";
 
-        //if (VsOrder_StatusPage.s_nLastSeq != result.nResult)
-        //{
-        //    VsOrder_StatusPage.s_nLastSeq = result.nResult;
-        //    Debug.WriteLine($"[Order_StatusPage] SendingSeq 불일치 감지 - Local={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}");
-        //    //TODO: 필요시 데이터 재조회 로직 추가
-        // }
+        if (VsOrder_StatusPage.s_nLastSeq != result.nResult)
+        {
+            VsOrder_StatusPage.s_nLastSeq = result.nResult;
+            Debug.WriteLine($"[Order_StatusPage] SendingSeq 불일치 감지 - Local={VsOrder_StatusPage.s_nLastSeq}, DB={result.nResult}");
+            //TODO: 필요시 데이터 재조회 로직 추가
+        }
     }
     #endregion
 
@@ -136,46 +135,47 @@ public partial class Order_StatusPage : Page
         }
     }
 
-    // 조회버튼
     // 주문 검색 버튼 클릭
     public async void BtnOrderSearch_Click(object sender, RoutedEventArgs e)
     {
-        //// 1. 날짜 유효성 체크
-        //if (DatePickerStart.SelectedDate == null || DatePickerEnd.SelectedDate == null)
-        //{
-        //    ErrMsgBox("검색할 날짜가 없습니다.");
-        //    return;
-        //}
+        //MsgBox("BtnOrderSearch_Click"); // Test
 
-        //DateTime dtStart = (DateTime)DatePickerStart.SelectedDate;
-        //DateTime dtEnd = (DateTime)DatePickerEnd.SelectedDate;
+        // 1. 날짜 유효성 체크
+        if (DatePickerStart.SelectedDate == null || DatePickerEnd.SelectedDate == null)
+        {
+            ErrMsgBox("검색할 날짜가 없습니다.");
+            return;
+        }
 
-        //// 2. 오늘 주문 검색
-        //if (dtStart.Date == DateTime.Today && dtEnd.Date == DateTime.Today)
-        //{
-        //    //2 - 1.중복 검색 확인(이미 검색했으면)
-        //    bool isFirstSearch = BtnOrderSearch.Opacity == (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
-        //    if (!isFirstSearch)
-        //    {
-        //        MessageBoxResult resultMsg = Wnd.MessageBox.Show(
-        //            "조회할 필요가 없는데도 조회 하시겠습니까?", "조회확인", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        //        if (resultMsg != MessageBoxResult.Yes) return;
-        //    }
+        DateTime dtStart = (DateTime)DatePickerStart.SelectedDate;
+        DateTime dtEnd = (DateTime)DatePickerEnd.SelectedDate;
 
-        //    // 2-2. 오늘 주문 검색
-        //    bool success = await SearchTodayOrdersAsync();
-        //    if (!success) return;
+        // 2. 오늘 주문 검색
+        if (dtStart.Date == DateTime.Today && dtEnd.Date == DateTime.Today)
+        {
+            //2 - 1.중복 검색 확인(이미 검색했으면)
+            bool isFirstSearch = BtnOrderSearch.Opacity == (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
+            if (!isFirstSearch)
+            {
+                MessageBoxResult resultMsg = Wnd.MessageBox.Show(
+                    "조회할 필요가 없는데도 조회 하시겠습니까?", "조회확인", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (resultMsg != MessageBoxResult.Yes) return;
+            }
 
-        //    // 2-3. 첫 검색이면 초기화 작업 (자동배차 시작 등)
-        //    if (isFirstSearch)
-        //    {
-        //        InitializeAfterFirstSearch();
-        //    }
-        //}       
-        //else //3.범위 주문 검색
-        //{
-        //    await SearchRangeOrdersAsync(dtStart, dtEnd);
-        //}
+            // 2-2. 오늘 주문 검색
+            bool success = await SearchTodayOrdersAsync();
+            if (!success) return;
+
+            // 2-3. 첫 검색이면 초기화 작업 (자동배차 시작 등)
+            if (isFirstSearch)
+            {
+                InitializeAfterFirstSearch();
+            }
+        }
+        else //3.범위 주문 검색
+        {
+            await SearchRangeOrdersAsync(dtStart, dtEnd);
+        }
     }
     #endregion
 
@@ -183,196 +183,196 @@ public partial class Order_StatusPage : Page
     // 접수 버튼
     private async void TogBtnReceipt_Checked(object sender, RoutedEventArgs e)
     {
-        //FilterBtnStatus |= StdEnum_OrderStatus.접수;
+        FilterBtnStatus |= StdEnum_OrderStatus.접수;
 
-        ////전체 버튼
-        //CheckedTotBtnIfAllBtnChecked();
+        //전체 버튼
+        CheckedTotBtnIfAllBtnChecked();
 
-        ////오늘 오더만 버튼에 즉각반응
-        //if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        //오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     private async void TogBtnReceipt_Unchecked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus &= ~StdEnum_OrderStatus.접수;
+         FilterBtnStatus &= ~StdEnum_OrderStatus.접수;
 
-        //// 전체 버튼
-        // UncheckedTotBtnIfChecked();
+        // 전체 버튼
+        UncheckedTotBtnIfChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        //if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     // 대기 버튼
     private async void TogBtnWait_Checked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus |= StdEnum_OrderStatus.대기;
+         FilterBtnStatus |= StdEnum_OrderStatus.대기;
 
-        //// 전체 버튼
-        // CheckedTotBtnIfAllBtnChecked();
+        // 전체 버튼
+        CheckedTotBtnIfAllBtnChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        //if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     private async void TogBtnWait_Unchecked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus &= ~StdEnum_OrderStatus.대기;
+         FilterBtnStatus &= ~StdEnum_OrderStatus.대기;
 
-        //// 전체 버튼
-        // UncheckedTotBtnIfChecked();
+        // 전체 버튼
+        UncheckedTotBtnIfChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        //if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     // 배차 버튼
     private async void TogBtnAllocate_Checked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus |= StdEnum_OrderStatus.배차;
+         FilterBtnStatus |= StdEnum_OrderStatus.배차;
 
-        //// 전체 버튼
-        // CheckedTotBtnIfAllBtnChecked();
+        // 전체 버튼
+        CheckedTotBtnIfAllBtnChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        //if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     private async void TogBtnAllocate_Unchecked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus &= ~StdEnum_OrderStatus.배차;
+         FilterBtnStatus &= ~StdEnum_OrderStatus.배차;
 
-        //// 전체 버튼
-        // UncheckedTotBtnIfChecked();
+        // 전체 버튼
+        UncheckedTotBtnIfChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        //if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     // 예약 버튼
     private async void TogBtnReserve_Checked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus |= StdEnum_OrderStatus.예약;
+        FilterBtnStatus |= StdEnum_OrderStatus.예약;
 
-        //// 전체 버튼
-        // CheckedTotBtnIfAllBtnChecked();
+        // 전체 버튼
+        CheckedTotBtnIfAllBtnChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     private async void TogBtnReserve_Unchecked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus &= ~StdEnum_OrderStatus.예약;
+        FilterBtnStatus &= ~StdEnum_OrderStatus.예약;
 
-        //// 전체 버튼
-        // UncheckedTotBtnIfChecked();
+        // 전체 버튼
+        UncheckedTotBtnIfChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     // 운행 버튼
     private async void TogBtnRun_Checked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus |= StdEnum_OrderStatus.운행;
+         FilterBtnStatus |= StdEnum_OrderStatus.운행;
 
-        //// 전체 버튼
-        // CheckedTotBtnIfAllBtnChecked();
+        // 전체 버튼
+        CheckedTotBtnIfAllBtnChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     private async void TogBtnRun_Unchecked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus &= ~StdEnum_OrderStatus.운행;
+         FilterBtnStatus &= ~StdEnum_OrderStatus.운행;
 
-        //// 전체 버튼
-        // UncheckedTotBtnIfChecked();
+        // 전체 버튼
+        UncheckedTotBtnIfChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     // 완료 버튼
     private async void TogBtnFinish_Checked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus |= StdEnum_OrderStatus.완료;
+         FilterBtnStatus |= StdEnum_OrderStatus.완료;
 
-        //// 전체 버튼
-        // CheckedTotBtnIfAllBtnChecked();
+        // 전체 버튼
+        CheckedTotBtnIfAllBtnChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     private async void TogBtnFinish_Unchecked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus &= ~StdEnum_OrderStatus.완료;
+         FilterBtnStatus &= ~StdEnum_OrderStatus.완료;
 
-        //// 전체 버튼
-        // UncheckedTotBtnIfChecked();
+        // 전체 버튼
+        UncheckedTotBtnIfChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     // 취소 버튼
     private async void TogBtnCancel_Checked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus |= StdEnum_OrderStatus.취소;
+        FilterBtnStatus |= StdEnum_OrderStatus.취소;
 
-        //// 전체 버튼
-        // CheckedTotBtnIfAllBtnChecked();
+        // 전체 버튼
+        CheckedTotBtnIfAllBtnChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     private async void TogBtnCancel_Unchecked(object sender, RoutedEventArgs e)
     {
-        // FilterBtnStatus &= ~StdEnum_OrderStatus.취소;
+        FilterBtnStatus &= ~StdEnum_OrderStatus.취소;
 
-        //// 전체 버튼
-        // UncheckedTotBtnIfChecked();
+        // 전체 버튼
+        UncheckedTotBtnIfChecked();
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
 
     // 전체 버튼
     private async void TogBtnTotal_Checked(object sender, RoutedEventArgs e)
     {
-        // if (bInhibitTotBtnEvent) return; // 외부에서 실행은 무시.  
+        if (bInhibitTotBtnEvent) return; // 외부에서 실행은 무시.  
 
-        //FilterBtnStatus |= StdEnum_OrderStatus.전체;
-        //TogBtnReceipt.IsChecked = TogBtnWait.IsChecked = TogBtnAllocate.IsChecked = TogBtnReserve.IsChecked =
-        //TogBtnRun.IsChecked = TogBtnFinish.IsChecked = TogBtnCancel.IsChecked = true;
+        FilterBtnStatus |= StdEnum_OrderStatus.전체;
+        TogBtnReceipt.IsChecked = TogBtnWait.IsChecked = TogBtnAllocate.IsChecked = TogBtnReserve.IsChecked =
+        TogBtnRun.IsChecked = TogBtnFinish.IsChecked = TogBtnCancel.IsChecked = true;
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     private async void TogBtnTotal_Unchecked(object sender, RoutedEventArgs e)
     {
-        // if (bInhibitTotBtnEvent) return; // 외부에서 실행은 무시.        
+        if (bInhibitTotBtnEvent) return; // 외부에서 실행은 무시.        
 
-        //FilterBtnStatus &= ~StdEnum_OrderStatus.전체;
-        //TogBtnReceipt.IsChecked = TogBtnWait.IsChecked = TogBtnAllocate.IsChecked = TogBtnReserve.IsChecked =
-        //TogBtnRun.IsChecked = TogBtnFinish.IsChecked = TogBtnCancel.IsChecked = false;
+        FilterBtnStatus &= ~StdEnum_OrderStatus.전체;
+        TogBtnReceipt.IsChecked = TogBtnWait.IsChecked = TogBtnAllocate.IsChecked = TogBtnReserve.IsChecked =
+        TogBtnRun.IsChecked = TogBtnFinish.IsChecked = TogBtnCancel.IsChecked = false;
 
-        //// 오늘 오더만 버튼에 즉각반응
-        // if (IsTodaySearchStatus())
-        //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
+        // 오늘 오더만 버튼에 즉각반응
+        if (IsTodaySearchStatus())
+            await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘오더만 연결한다.
     }
     #endregion End Checked, Unchecked - 상태버튼    
 
@@ -759,13 +759,14 @@ public partial class Order_StatusPage : Page
 
     #region 자작 이벤트
     // 070 전화 응답 이벤트 핸들러 - 전화번호로 새 주문 접수 창 자동 열기
-    //public async void SrLocalClient_Tel070_AnswerEvent(string telNo)
-    //{
-    //    if (string.IsNullOrWhiteSpace(telNo)) return;
+    public async void SrLocalClient_Tel070_AnswerEvent(string telNo)
+    {
+        if (string.IsNullOrWhiteSpace(telNo)) return;
 
-    //    string phoneNumber = StdConvert.MakePhoneNumberToDigit(telNo);
-    //    await OpenNewOrderWindowAsync(phoneNumber);
-    //}
+        string phoneNumber = StdConvert.MakePhoneNumberToDigit(telNo);
+        //await OpenNewOrderWindowAsync(phoneNumber);
+        MsgBox($"Not Coded: {telNo}");
+    }
     #endregion
 
     #region From Insungs
@@ -1145,25 +1146,24 @@ public partial class Order_StatusPage : Page
     }
 
     // 기존 주문을 자동배차 대상으로 등록
-    //private static void MakeExistedAutoAlloc()
-    //{
-    //    if (VsOrder_StatusPage.s_listTbOrderToday == null || VsOrder_StatusPage.s_listTbOrderToday.Count == 0)
-    //    {
-    //        Debug.WriteLine("[MakeExistedAutoAlloc] 로드할 기존 주문이 없습니다.");
-    //        return;
-    //    }
+    private static void MakeExistedAutoAlloc()
+    {
+        if (VsOrder_StatusPage.s_listTbOrderToday == null || VsOrder_StatusPage.s_listTbOrderToday.Count == 0)
+        {
+            Debug.WriteLine("[MakeExistedAutoAlloc] 로드할 기존 주문이 없습니다. ===============>");
+            return;
+        }
 
-    //    // ExternalAppController에 기존 주문 목록 전달
-    //    if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
-    //    {
-    //        s_MainWnd.m_MasterManager.ExternalAppController.LoadExistingOrders(VsOrder_StatusPage.s_listTbOrderToday);
-    //    }
-    //    else
-    //    {
-    //        Debug.WriteLine("[MakeExistedAutoAlloc] ExternalAppController가 초기화되지 않았습니다.");
-    //    }
-    //}
-    //     }
+        // ExternalAppController에 기존 주문 목록 전달
+        if (s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+        {
+            s_MainWnd.m_MasterManager.ExternalAppController.LoadExistingOrders(VsOrder_StatusPage.s_listTbOrderToday);
+        }
+        else
+        {
+            Debug.WriteLine("[MakeExistedAutoAlloc] ExternalAppController가 초기화되지 않았습니다.");
+        }
+    }
 
     // 새 주문 접수 창 열기 (전화번호 지정, 자동배차 일시정지 처리 포함)
     //private async Task OpenNewOrderWindowAsync(string phoneNumber)
@@ -1198,58 +1198,56 @@ public partial class Order_StatusPage : Page
 
     #region 2차 Funcs
     // 오늘 주문 검색 및 로드
-    //private async Task<bool> SearchTodayOrdersAsync()
-    //{
-    //    //PostgResult_TbOrderList result = await s_SrGClient.SrResult_Order_SelectRowsAsync_Today_CenterCode();
-    //    PostgResult_TbOrderList result = new PostgResult_TbOrderList();
-    //    if (!string.IsNullOrEmpty(result.sErr))
-    //    {
-    //        ErrMsgBox($"오늘 주문 조회 실패: {result.sErr}", "Order_StatusPage/SearchTodayOrdersAsync");
-    //        return false;
-    //    }
+    private async Task<bool> SearchTodayOrdersAsync()
+    {
+        PostgResult_TbOrderList result = await s_SrGClient.SrResult_Order_SelectRowsAsync_Today_CenterCode();
+        if (!string.IsNullOrEmpty(result.sErr))
+        {
+            ErrMsgBox($"오늘 주문 조회 실패: {result.sErr}", "Order_StatusPage/SearchTodayOrdersAsync");
+            return false;
+        }
 
-    //    if (result.listTb == null) return false;
+        if (result.listTb == null) return false;
 
-    //    VsOrder_StatusPage.s_listTbOrderToday = result.listTb;
-    //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);
+        VsOrder_StatusPage.s_listTbOrderToday = result.listTb;
+        await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);
 
-    //    return true;
-    //}
+        return true;
+    }
 
     // 범위 주문 검색 및 로드
-    //private async Task<bool> SearchRangeOrdersAsync(DateTime dtStart, DateTime dtEnd)
-    //{
-    //    //PostgResult_TbOrderList result =
-    //    //    await s_SrGClient.SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(dtStart.Date, dtEnd.Date, FilterBtnStatus);
-    //    PostgResult_TbOrderList result = new PostgResult_TbOrderList();
+    private async Task<bool> SearchRangeOrdersAsync(DateTime dtStart, DateTime dtEnd)
+    {
+        PostgResult_TbOrderList result =
+            await s_SrGClient.SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(dtStart.Date, dtEnd.Date, FilterBtnStatus);
 
-    //    if (!string.IsNullOrEmpty(result.sErr))
-    //    {
-    //        ErrMsgBox($"범위 주문 조회 실패: {result.sErr}", "Order_StatusPage/SearchRangeOrdersAsync");
-    //        return false;
-    //    }
+        if (!string.IsNullOrEmpty(result.sErr))
+        {
+            ErrMsgBox($"범위 주문 조회 실패: {result.sErr}", "Order_StatusPage/SearchRangeOrdersAsync");
+            return false;
+        }
 
-    //    VsOrder_StatusPage.s_listTbOrderMixed = result.listTb;
-    //    await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderMixed);
+        VsOrder_StatusPage.s_listTbOrderMixed = result.listTb;
+        await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderMixed);
 
-    //    return true;
-    //}
+        return true;
+    }
 
     // 첫 검색 후 초기화 작업 (자동배차 시작 등)
-    //private void InitializeAfterFirstSearch()
-    //{
-    //    // 버튼 비활성화 (중복 검색 방지)
-    //    BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Disabled");
+    private void InitializeAfterFirstSearch()
+    {
+        // 버튼 비활성화 (중복 검색 방지)
+        BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Disabled");
 
-    //    // 기존 주문 자동배차 리스트 생성
-    //    MakeExistedAutoAlloc();
+        // 기존 주문 자동배차 리스트 생성
+        MakeExistedAutoAlloc();
 
-    //    // 자동배차 시작 (Master 모드이고 설정이 켜져 있으면)
-    //    if (s_bAutoAlloc && s_MainWnd?.m_MasterManager?.ExternalAppController != null)
-    //    {
-    //        s_MainWnd.m_MasterManager.ExternalAppController.StartAutoAlloc();
-    //    }
-    //}
+        // 자동배차 시작 (Master 모드이고 설정이 켜져 있으면)
+        if (s_bAutoAlloc && s_MainWnd?.m_MasterManager?.ExternalAppController != null)
+        {
+            s_MainWnd.m_MasterManager.ExternalAppController.StartAutoAlloc();
+        }
+    }
     #endregion
 
     #region Helper Methods

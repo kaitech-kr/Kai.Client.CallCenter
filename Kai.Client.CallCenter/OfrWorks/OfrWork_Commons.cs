@@ -1554,18 +1554,7 @@ public class OfrWork_Common
     //    return await OfrStr_SeqCharCore(bmpOrg, rcSpare, bUseTbTextStage1: true, bEdit, bWrite, bMsgBox);
     //}
 
-    /// <summary>
-    /// 가변 단음소 문자열 인식 함수 (예: 전화번호, 주문번호 등)
-    /// - Stage 1 스킵 (TbText 캐싱 사용 안 함)
-    /// - 전경/배경 방식으로 문자 분리 + TbChar 검색
-    /// - 성공 시 TbText에 저장 (다음번에 동일 값이면 Stage 1에서 찾음)
-    /// </summary>
-    /// <param name="bmpOrg">원본 비트맵</param>
-    /// <param name="rcSpare">인식 영역 (여유 있게)</param>
-    /// <param name="bEdit">실패 시 수동 입력 다이얼로그 표시 여부</param>
-    /// <param name="bWrite">실패 시 로그 작성 여부</param>
-    /// <param name="bMsgBox">실패 시 메시지박스 표시 여부</param>
-    /// <returns>인식 결과</returns>
+    // 가변 단음소 문자열 인식 함수 (예: 전화번호, 주문번호 등) - Stage 1 스킵
     //public static async Task<OfrResult_TbCharSetList> OfrStr_SeqCharAsync(
     //    Draw.Bitmap bmpOrg,
     //    Draw.Rectangle rcSpare,

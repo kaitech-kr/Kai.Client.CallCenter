@@ -248,7 +248,7 @@ namespace Kai.Client.CallCenter.Classes
                 {
                     s_MainWnd.TblockConnLocal.Text = m_sConnSignalR;
                 }));
-                //MsgBox("SrReport_Connected"); // Test
+                Debug.WriteLine("SrLocalClient/SrReport_Connected"); // Test
 
                 // 로그인 이벤트 발생시킴. - MainWnd에서 받음
                 SrLocalClient_ConnectedEvent?.Invoke();

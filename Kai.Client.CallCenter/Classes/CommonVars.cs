@@ -38,7 +38,7 @@ public class CommonVars
     public static LongEventDelegate s_OrderRegistedEventHandler = null; // OrderRegisted
 
     // Enum
-    public static CEnum_KaiAppMode s_AppMode = CEnum_KaiAppMode.Sub; // 기본은 Sub
+    public static CEnum_Kai_AppMode s_AppMode = CEnum_Kai_AppMode.Sub; // 기본은 Sub
 
     // ReadOnly
     public static readonly string s_sX86ProcName = "Kai.Client.X86ComBroker";
@@ -91,8 +91,8 @@ public class CommonVars
     public static NetWndSimple s_WndMsgSimple = null;
 
     // Properties
-    public static bool IsMasterMode => s_AppMode == CEnum_KaiAppMode.Master;
-    public static bool IsSubMode => s_AppMode == CEnum_KaiAppMode.Sub;
+    public static bool IsMasterMode => s_AppMode == CEnum_Kai_AppMode.Master;
+    public static bool IsSubMode => s_AppMode == CEnum_Kai_AppMode.Sub;
     #endregion
 }
 #nullable restore

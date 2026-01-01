@@ -7,9 +7,7 @@ using static Kai.Client.CallCenter.Classes.CommonVars;
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable
 
-/// <summary>
-/// 외부 네트워크 앱 공통 유틸리티 클래스
-/// </summary>
+// 외부 네트워크 앱 공통 유틸리티 클래스
 public class NwCommon
 {
     // 앱 실행 경로 찾기 (예측 폴더 우선 확인 및 결과 반환)

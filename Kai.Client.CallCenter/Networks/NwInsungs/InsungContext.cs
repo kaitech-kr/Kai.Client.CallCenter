@@ -4,9 +4,7 @@ using Kai.Client.CallCenter.Classes;
 namespace Kai.Client.CallCenter.Networks.NwInsungs;
 
 #nullable disable
-/// <summary>
-/// 인성 앱의 모든 공용 데이터를 담는 Context
-/// </summary>
+// 인성 앱의 모든 공용 데이터를 담는 Context
 public class InsungContext
 {
     #region 기본 정보

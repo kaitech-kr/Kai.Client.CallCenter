@@ -10,10 +10,7 @@ using static Kai.Client.CallCenter.Classes.CommonVars;
 namespace Kai.Client.CallCenter.Networks.NwCargo24s;
 #nullable disable
 
-/// <summary>
-/// 화물24시 앱 실행 및 스플래시 처리 담당 클래스
-/// Context 패턴 사용: Cargo24Context를 통해 모든 정보에 접근
-/// </summary>
+// 화물24시 앱 실행 및 스플래시 처리 담당 클래스
 public class Cargo24sAct_App
 {
     #region 2. Context Reference - 컨텍스트 참조
@@ -206,11 +203,7 @@ public class Cargo24sAct_App
     }
 
     #region Close
-    /// <summary>
-    /// 화물24시 앱 종료
-    /// - MainWindow 닫기 시도
-    /// - 예외시 프로세스 강제 종료
-    /// </summary>
+    // 화물24시 앱 종료 - MainWindow 닫기 시도, 예외시 프로세스 강제 종료
     public StdResult_Status Close(int nDelayMiliSec = 50)
     {
         Cargo24sInfo_Mem.MainWnd mMain = m_MemInfo.Main;

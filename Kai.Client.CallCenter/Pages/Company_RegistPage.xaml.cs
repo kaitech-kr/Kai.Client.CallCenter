@@ -38,18 +38,14 @@ public partial class Company_RegistPage : Page
     #endregion
 
     #region Click - BigButtons
-    /// <summary>
-    /// 닫기 버튼 클릭 - 거래처 조회 탭 닫기
-    /// </summary>
+    // 닫기 버튼 클릭 - 거래처 조회 탭 닫기
     private void BtnClose_Click(object sender, RoutedEventArgs e)
     {
         Debug.WriteLine("[Company_RegistPage] 닫기 버튼 클릭");
         s_MainWnd?.RemoveTab(s_MainWnd.Company_CompRegistTab);
     }
 
-    /// <summary>
-    /// 저장 버튼 클릭 - 거래처 정보 등록/수정
-    /// </summary>
+    // 저장 버튼 클릭 - 거래처 정보 등록/수정
     private async void BtnSave_Click(object sender, RoutedEventArgs e)
     {
         //// 필수 입력 항목 검증
@@ -168,9 +164,7 @@ public partial class Company_RegistPage : Page
         //}
     }
 
-    /// <summary>
-    /// 삭제 버튼 클릭 - 선택된 거래처 삭제
-    /// </summary>
+    // 삭제 버튼 클릭 - 선택된 거래처 삭제
     private async void BtnDelete_Click(object sender, RoutedEventArgs e)
     {
         //// 버튼 활성화 여부 확인
@@ -236,9 +230,7 @@ public partial class Company_RegistPage : Page
         //SetButtonOpacity(BtnSave, true);
     }
 
-    /// <summary>
-    /// 검색 버튼 클릭 - 거래처 검색 (조건별)
-    /// </summary>
+    // 검색 버튼 클릭 - 거래처 검색 (조건별)
     private async void BtnSearch_Click(object sender, RoutedEventArgs e)
     {
         //try
@@ -321,9 +313,7 @@ public partial class Company_RegistPage : Page
     {
          e.Row.Header = (e.Row.GetIndex() + 1).ToString(); // 행 번호 설정
     }
-    /// <summary>
-    /// DataGrid 선택 변경 - 선택된 거래처 정보를 UI에 표시하고 해당 고객 목록 조회
-    /// </summary>
+    // DataGrid 선택 변경 - 선택된 거래처 정보를 UI에 표시하고 해당 고객 목록 조회
     private async void DGridCompany_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         //if (DGridCompany.SelectedIndex < 0) // 선택 항목 없음 - UI 초기화
@@ -402,9 +392,7 @@ public partial class Company_RegistPage : Page
 
     }
 
-    /// <summary>
-    /// 전화번호 입력 제한 - 숫자만 입력 가능
-    /// </summary>
+    // 전화번호 입력 제한 - 숫자만 입력 가능
     private void TelNo_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
     {
         // 숫자만 허용
@@ -436,9 +424,7 @@ public partial class Company_RegistPage : Page
     //    DGridCompany.Focus();
     //}
 
-    /// <summary>
-    /// UI 입력값을 TbCompany 객체에 복사하는 헬퍼 메서드
-    /// </summary>
+    // UI 입력값을 TbCompany 객체에 복사하는 헬퍼 메서드
     private void PopulateTbCompanyFromUI(TbCompany tb)
     {
         tb.CompName = TBoxWrite_CompName.Text;
@@ -457,9 +443,7 @@ public partial class Company_RegistPage : Page
         tb.Memo = TBoxWrite_Memo.Text;
     }
 
-    /// <summary>
-    /// 사용 여부 라디오버튼 선택값 가져오기
-    /// </summary>
+    // 사용 여부 라디오버튼 선택값 가져오기
     private bool? GetUsingType()
     {
         if (StdConvert.NullableBoolToBool(RdoBtnSearch_UseOnly.IsChecked)) return true;
@@ -468,9 +452,7 @@ public partial class Company_RegistPage : Page
         return null;
     }
 
-    /// <summary>
-    /// 거래 유형 ComboBox 선택값 가져오기
-    /// </summary>
+    // 거래 유형 ComboBox 선택값 가져오기
     private string GetTradeType()
     {
         string result = "전체"; //GetSelectedComboBoxContent(CmbBoxSearch_TradeType);

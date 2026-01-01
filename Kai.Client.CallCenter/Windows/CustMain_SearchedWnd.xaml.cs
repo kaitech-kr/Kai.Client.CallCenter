@@ -34,20 +34,20 @@ public partial class CustMain_SearchedWnd : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        //WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        //VsCustMain_SearchedWnd.LoadData(this, m_ListTbAllWith, (bool)ChkBoxWithNoUsing.IsChecked, TBlkCount);
+        WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        VsCustMain_SearchedWnd.LoadData(this, m_ListTbAllWith, (bool)ChkBoxWithNoUsing.IsChecked, TBlkCount);
 
-        //// 0번 Row에 포커스 주기
-        //if (DGridCust.Items.Count > 0)
-        //{
-        //    DGridCust.SelectedIndex = 0; // 첫 행 선택
-        //    DGridCust.UpdateLayout(); // (중요) 시각적 요소 갱신
+        // 0번 Row에 포커스 주기
+        if (DGridCust.Items.Count > 0)
+        {
+            DGridCust.SelectedIndex = 0; // 첫 행 선택
+            DGridCust.UpdateLayout(); // (중요) 시각적 요소 갱신
 
-        //    var row = (DataGridRow)DGridCust.ItemContainerGenerator.ContainerFromIndex(0);
-        //    if (row != null)
-        //        row.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-        //    //또는 row.Focus();
-        //}
+            var row = (DataGridRow)DGridCust.ItemContainerGenerator.ContainerFromIndex(0);
+            if (row != null)
+                row.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            //또는 row.Focus();
+        }
     }
 
     private void Window_Unloaded(object sender, RoutedEventArgs e)
@@ -63,7 +63,7 @@ public partial class CustMain_SearchedWnd : Window
 
     private void ChkBoxWithNoUsing_Click(object sender, RoutedEventArgs e)
     {
-         //VsCustMain_SearchedWnd.LoadData(this, m_ListTbAllWith, (bool)ChkBoxWithNoUsing.IsChecked, TBlkCount);
+         VsCustMain_SearchedWnd.LoadData(this, m_ListTbAllWith, (bool)ChkBoxWithNoUsing.IsChecked, TBlkCount);
     }
     private void DGridCust_PreviewKeyDown(object sender, KeyEventArgs e)
     {
@@ -96,9 +96,7 @@ public partial class CustMain_SearchedWnd : Window
         }
     }
 
-    /// <summary>
     /// DataGrid 우클릭 - 컨텍스트 메뉴 표시 (삭제 기능)
-    /// </summary>
     private void DGridCustMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         //// 클릭한 Row 찾기

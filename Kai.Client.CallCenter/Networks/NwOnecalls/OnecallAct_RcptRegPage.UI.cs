@@ -406,9 +406,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 3. Input Helpers - 입력 공용함수
-    /// <summary>
-    /// 상세주소 입력 공용함수 (상차지/하차지)
-    /// </summary>
+    // 상세주소 입력 공용함수 (상차지/하차지)
     //private async Task<StdResult_Status> Set상세주소Async(IntPtr hWnd주소, Draw.Rectangle rc권역, string detailAddr, CancelTokenControl ctrl)
     //{
     //    Draw.Bitmap bmpCheck = null;
@@ -482,14 +480,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
 
-    /// <summary>
-    /// 콤보박스 항목 선택 공용함수 (OFR 검증 포함)
-    /// </summary>
-    /// <param name="hWndComboBox">콤보박스 핸들</param>
-    /// <param name="model">선택할 항목 정보 (ptPos, sYourName)</param>
-    /// <param name="hWndTop">검증용 캡처 기준 핸들</param>
-    /// <param name="rcVerifyRelS">검증용 캡처 영역 (hWndTop 기준 상대좌표)</param>
-    /// <returns>성공/실패</returns>
+    // 콤보박스 항목 선택 공용함수 (OFR 검증 포함)
     private async Task<StdResult_Status> SelectComboBoxItemAsync(IntPtr hWndComboBox, CModel_ComboBox model, IntPtr hWndTop, Draw.Rectangle rcVerifyRelS)
     {
         Debug.WriteLine($"[{AppName}] SelectComboBoxItemAsync 시작: target={model.sYourName}, hWnd={hWndComboBox:X}");
@@ -562,13 +553,7 @@ public partial class OnecallAct_RcptRegPage
         return new StdResult_Status(StdResult.Fail, $"콤보박스 선택 실패: {model.sYourName}");
     }
 
-    /// <summary>
-    /// 체크박스 상태 설정 (OFR 기반)
-    /// </summary>
-    /// <param name="hWndCheckBox">체크박스 핸들 (클릭용)</param>
-    /// <param name="rcOfrRelS">OFR 영역 (접수섹션Top 기준)</param>
-    /// <param name="bWantChecked">원하는 상태 (true=Checked)</param>
-    /// <param name="name">체크박스 이름 (로그용)</param>
+    // 체크박스 상태 설정 (OFR 기반)
     //private async Task<StdResult_Status> SetCheckBoxAsync(IntPtr hWndCheckBox, Draw.Rectangle rcOfrRelS, bool bWantChecked, string name)
     //{
     //    for (int i = 1; i <= c_nRepeatShort; i++)
@@ -686,11 +671,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 5. OFR - 오더번호/상태 읽기
-    /// <summary>
-    /// 지정된 로우의 오더번호 OFR
-    /// - 셀 캡처 후 단음소 OFR
-    /// - 원콜은 RGB 반전 불필요
-    /// </summary>
+    // 지정된 로우의 오더번호 OFR - 셀 캡처 후 단음소 OFR
     //private async Task<StdResult_String> Get오더번호Async(int rowIndex, CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
     //{
     //    try
@@ -748,9 +729,7 @@ public partial class OnecallAct_RcptRegPage
     #endregion
 
     #region 6. Refresh & Query - 새로고침/조회
-    /// <summary>
-    /// 새로고침 버튼 클릭 (포커스 탈출 → 클릭 → 클릭 확인 → 딜레이)
-    /// </summary>
+    // 새로고침 버튼 클릭 (포커스 탈출 → 클릭 → 클릭 확인 → 딜레이)
     //public async Task<StdResult_Status> Click새로고침버튼Async(CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
     //{
     //    try
@@ -801,9 +780,7 @@ public partial class OnecallAct_RcptRegPage
     //    }
     //}
     //
-    /// <summary>
-    /// 총계 OFR (DG오더_hWndTop 기준, 확장상태에 따라 Small/Large 영역 선택)
-    /// </summary>
+    // 총계 OFR (확장상태에 따라 Small/Large 영역 선택)
     public async Task<StdResult_Int> Get총계Async(CancelTokenControl ctrl, int retryCount = c_nRepeatShort)
     {
         try

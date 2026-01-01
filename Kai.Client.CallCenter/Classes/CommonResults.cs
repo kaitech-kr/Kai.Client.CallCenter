@@ -11,44 +11,33 @@ using Kai.Client.CallCenter.Classes.Class_Master;
 namespace Kai.Client.CallCenter.Classes;
 #nullable disable
 
-/// <summary>
-/// 자동배차 처리 결과
-/// - ResultType: 처리 결과 타입 (성공/실패 × 재적재/비적재)
-/// </summary>
+// 자동배차 처리 결과 - ResultType: 처리 결과 타입 (성공/실패 × 재적재/비적재)
 [Serializable]
 public class CommonResult_AutoAllocProcess : StdResult_Error
 {
     #region Properties
 
-    /// <summary>
-    /// 처리 결과 타입
-    /// </summary>
+    // 처리 결과 타입
     public CEnum_AutoAllocProcessResult ResultType { get; set; }
 
     #endregion
 
     #region Constructors
 
-    /// <summary>
-    /// 기본 생성자 (역직렬화용)
-    /// </summary>
+    // 기본 생성자 (역직렬화용)
     public CommonResult_AutoAllocProcess() : base()
     {
         ResultType = CEnum_AutoAllocProcessResult.FailureAndDiscard;
     }
 
-    /// <summary>
-    /// 성공용 생성자 (private)
-    /// </summary>
+    // 성공용 생성자 (private)
     private CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult resultType)
         : base("", "", "")
     {
         ResultType = resultType;
     }
 
-    /// <summary>
-    /// 실패용 생성자 (private)
-    /// </summary>
+    // 실패용 생성자 (private)
     private CommonResult_AutoAllocProcess(CEnum_AutoAllocProcessResult resultType, string errorMessage, string errorPosition, string logDirPath)
         : base(errorMessage, errorPosition, logDirPath)
     {
@@ -109,9 +98,7 @@ public class CommonResult_AutoAllocProcess : StdResult_Error
 
     #region Override
 
-    /// <summary>
-    /// 디버그용 문자열
-    /// </summary>
+    // 디버그용 문자열
     public override string ToString()
     {
         return $"[AutoAllocProcess] Type={ResultType}, Err={sErr}, Pos={sPos}";
@@ -120,9 +107,7 @@ public class CommonResult_AutoAllocProcess : StdResult_Error
     #endregion
 }
 
-/// <summary>
-/// Datagrid 검색 결과 타입
-/// </summary>
+// Datagrid 검색 결과 타입
 [Serializable]
 public class CommonResult_AutoAllocDatagrid : StdResult_Error
 {
@@ -149,9 +134,7 @@ public class CommonResult_AutoAllocDatagrid : StdResult_Error
     }
 }
 
-/// <summary>
-/// 고객 검색 타입 결과
-/// </summary>
+// 고객 검색 타입 결과
 public class CommonResult_SearchType
 {
     public CEnum_CustSearchCount resultType { get; }

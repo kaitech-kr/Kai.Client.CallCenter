@@ -74,13 +74,7 @@ public class QueueController
         };
     }
     
-    /// <summary>
-    /// 페이지별 첫 번호 배열 반환
-    /// 인성 Datagrid 특성: 마지막 페이지도 항상 로우가 꽉 차 있음 (중복 표시)
-    /// </summary>
-    /// <param name="totItemCount">전체 데이터 개수</param>
-    /// <param name="countPerPage">페이지당 로우 개수</param>
-    /// <returns>페이지별 첫 번호 배열</returns>
+    // 페이지별 첫 번호 배열 반환 (마지막 페이지도 항상 로우가 꽉 차 있음)
     public static int[] GetPageFirstNumArray(int totItemCount, int countPerPage)
     {
         if (totItemCount == 0) return null;
@@ -215,14 +209,7 @@ public class QueueController
         return removedCount;
     }
 
-    /// <summary>
-    /// 모든 큐에서 주문 업데이트 또는 제거 (인스턴스 재사용)
-    /// - 분류 규칙에 맞으면: 기존 인스턴스의 NewOrder, StateFlag만 업데이트
-    /// - 분류 규칙에 안 맞으면: 큐에서 제거
-    /// </summary>
-    /// <param name="keyCode">업데이트할 주문의 KeyCode</param>
-    /// <param name="newOrder">새로운 주문 정보</param>
-    /// <param name="newStateFlag">새로운 StateFlag</param>
+    // 모든 큐에서 주문 업데이트 또는 제거 (분류 규칙에 맞으면 업데이트, 안 맞으면 제거)
     public void UpdateOrRemoveInQueues(long keyCode, TbOrder newOrder, PostgService_Common_OrderState newStateFlag)
     {
         UpdateOrRemoveInQueue(_ordersInsung1, StdConst_Network.INSUNG1, keyCode, newOrder, newStateFlag);

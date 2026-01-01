@@ -3,12 +3,7 @@
 namespace Kai.Client.CallCenter.Classes;
 
 #nullable disable
-/// <summary>
-/// 취소/일시정지 제어를 위한 토큰 컨트롤러
-/// - UI 의존성 제거: 상위 레이어에서 UI 처리
-/// - 단순화: 핵심 기능만 제공 (Pause/Resume/Cancel/Wait)
-/// - 명확한 책임: 토큰 상태 관리만 담당
-/// </summary>
+// 취소/일시정지 제어를 위한 토큰 컨트롤러
 public class CancelTokenControl
 {
     private readonly ManualResetEventSlim _pauseEvent = new(true);
@@ -19,9 +14,7 @@ public class CancelTokenControl
 
     public bool IsPaused => _isPaused;
 
-    /// <summary>
-    /// 일시정지 (동기)
-    /// </summary>
+    // 일시정지 (동기)
     public void Pause()
     {
         if (_isPaused) return;
@@ -31,9 +24,7 @@ public class CancelTokenControl
         _pauseEvent.Reset();
     }
 
-    /// <summary>
-    /// 재개 (동기)
-    /// </summary>
+    // 재개 (동기)
     public void Resume()
     {
         if (!_isPaused) return;
@@ -44,11 +35,7 @@ public class CancelTokenControl
         _pauseEvent.Set();   // 대기 중인 루프 깨움
     }
 
-    /// <summary>
-    /// 일시정지/취소 상태 대기 (async)
-    /// - Pause 상태면 Resume 될 때까지 대기
-    /// - Cancel 상태면 OperationCanceledException 발생
-    /// </summary>
+    // 일시정지/취소 상태 대기 (async) - Pause면 Resume까지 대기, Cancel이면 예외 발생
     public async Task WaitIfPausedOrCancelledAsync()
     {
         while (_isPaused)
@@ -60,9 +47,7 @@ public class CancelTokenControl
         Token.ThrowIfCancellationRequested();
     }
 
-    /// <summary>
-    /// 취소 요청
-    /// </summary>
+    // 취소 요청
     public void Cancel()
     {
         if (!TokenSource.IsCancellationRequested)
@@ -72,9 +57,7 @@ public class CancelTokenControl
         }
     }
 
-    /// <summary>
-    /// 상태 초기화 (재시작용)
-    /// </summary>
+    // 상태 초기화 (재시작용)
     public void Reset()
     {
         Debug.WriteLine("[CancelTokenControl] Reset 호출됨 (토큰 재생성)");

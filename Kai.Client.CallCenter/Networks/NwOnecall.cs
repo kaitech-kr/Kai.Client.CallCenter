@@ -17,9 +17,7 @@ using static Kai.Client.CallCenter.Classes.CommonVars;
 namespace Kai.Client.CallCenter.Networks;
 #nullable disable
 
-/// <summary>
-/// 원콜 앱 (IExternalApp 구현)
-/// </summary>
+// 원콜 앱 (IExternalApp 구현)
 public class NwOnecall : IExternalApp
 {
     #region Static Configuration (appsettings.json에서 로드)
@@ -34,7 +32,6 @@ public class NwOnecall : IExternalApp
     private int m_nDatagridFailCount = 0;
     private const int MAX_DATAGRID_FAIL_COUNT = 3;
 
-    /// <summary>
     // Onecall SeqNo 가져오기
     private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
     #endregion
