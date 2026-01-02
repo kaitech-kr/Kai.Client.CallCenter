@@ -346,10 +346,10 @@ public class ExternalAppController : IDisposable
     {
         var queues = new List<string>();
 
-        // 차량 타입 판단 (Enum 기반으로 변경)
-        bool isMotorcycle = order.CarWeightCode == (int)CarWts.Motorcycle;
-        bool isFlex = order.CarTypeCode == (int)CarTypes.Flex;
-        bool isLargeTruck = order.CarWeightCode > (int)CarWts.W1_4;
+        // 차량 타입 판단 (Flag 문자열 기반)
+        bool isMotorcycle = order.CarWeightFlag.Contains("오토바이");
+        bool isFlex = order.CarTypeFlag.Contains("플렉");
+        bool isLargeTruck = order.CarWeightFlag.Contains("1.4톤") || order.CarWeightFlag.Contains("2.5톤") || order.CarWeightFlag.Contains("5톤");
 
         bool isForInsung = !isLargeTruck;
         bool isForCargo24Onecall = !isMotorcycle && !isFlex;

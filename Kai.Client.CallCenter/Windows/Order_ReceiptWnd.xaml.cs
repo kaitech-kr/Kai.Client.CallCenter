@@ -649,21 +649,7 @@ public partial class Order_ReceiptWnd : Window
 
     #region Funcs
 
-    private void Set화물DeliverTypeToUI(string sDeliver)
-    {
-        ChkBox화물_독차.IsChecked = false;
-        ChkBox화물_혼적.IsChecked = false;
-        ChkBox화물_왕복.IsChecked = false;
-        ChkBox화물_경유.IsChecked = false;
 
-        switch (sDeliver)
-        {
-            case "독차": ChkBox화물_독차.IsChecked = true; break;
-            case "혼적": ChkBox화물_혼적.IsChecked = true; break;
-            case "왕복": ChkBox화물_왕복.IsChecked = true; break;
-            case "경유": ChkBox화물_경유.IsChecked = true; break;
-        }
-    }
 
 
 
@@ -695,38 +681,36 @@ public partial class Order_ReceiptWnd : Window
         if (tbOrderOrg == null) return;
 
         // 1. Header, 공용
-        LoadHeaderInfo();
+        SetHeaderInfoToUI();
 
-        //// 2. 위치 정보 설정 (LocationData 헬퍼 사용)
-        //LoadLocationDataToUi(LocationData.FromTbOrder_Caller(tbOrderOrg), CEnum_Kai_LocationType.Caller);
-        //LoadLocationDataToUi(LocationData.FromTbOrder_Start(tbOrderOrg), CEnum_Kai_LocationType.Start);
-        //LoadLocationDataToUi(LocationData.FromTbOrder_Dest(tbOrderOrg), CEnum_Kai_LocationType.Dest);
+        // 2. 위치 정보 설정
+        SetLocationDataToUi(tbOrderOrg, "의뢰자");
+        SetLocationDataToUi(tbOrderOrg, "출발지");
+        SetLocationDataToUi(tbOrderOrg, "도착지");
 
-        //// 3. 의뢰자 전용 필드
-        //Caller_TBoxRemarks.Text = tbOrderOrg.CallRemarks;
-        //TBoxOrderRemarks.Text = tbOrderOrg.OrderRemarks;
-        //TBoxOrderMemo.Text = tbOrderOrg.OrderMemo; // 오더메모 로드 추가
-        //TBlkCallCustMemoExt.Text = tbOrderOrg.OrderMemoExt;
-        //CallCustFrom = tbOrderOrg.CallCustFrom;
-        //CallCompCode = tbOrderOrg.CallCompCode;
-        //CallCompName = tbOrderOrg.CallCompName;
+        // 3. 의뢰자 전용 필드
+        Caller_TBoxRemarks.Text = tbOrderOrg.CallRemarks;
+        TBlkCallCustMemoExt.Text = tbOrderOrg.OrderMemoExt;
+        CallCustFrom = tbOrderOrg.CallCustFrom;
+        CallCompCode = tbOrderOrg.CallCompCode;
+        CallCompName = tbOrderOrg.CallCompName;
 
-        //// 4. 예약 정보
-        //LoadReserveInfo();
+        // 4. 예약 정보
+        SetReserveInfoToUI();
 
-        //// 5. 차량/배송 타입
-        //LoadVehicleInfo();
+        // 5. 차량/배송 타입
+        SetVehicleInfoToUI();
 
-        //// 6. 요금 정보
-        //LoadFeeInfo();
+        // 6. 요금 정보
+        SetFeeInfoToUI();
 
-        //// 7. 공유/세금계산서
+        // 7. 공유/세금계산서 - UI 만들어야 함.
         //ChkBoxShareOrder.IsChecked = tbOrderOrg.Share;
         //ChkBoxTaxBill.IsChecked = tbOrderOrg.TaxBill;
     }
 
     // Header 정보 로드
-    private void LoadHeaderInfo()
+    private void SetHeaderInfoToUI()
     {
         TBlkOrderState.Text = tbOrderOrg.OrderState;
         GridHeaderInfo.Background = tbOrderOrg.OrderState switch
@@ -744,7 +728,7 @@ public partial class Order_ReceiptWnd : Window
     }
 
     // 예약 정보 로드
-    private void LoadReserveInfo()
+    private void SetReserveInfoToUI()
     {
         if (tbOrderOrg.DtReserve != null)
         {
@@ -755,25 +739,42 @@ public partial class Order_ReceiptWnd : Window
     }
 
     // 차량/배송 타입 정보 로드
-    //private void LoadVehicleInfo()
-    //{
-    //    SetFeeType(tbOrderOrg.FeeType);
-    //    SetCarType(tbOrderOrg.CarType);
-    //    //SetComboBoxItemByContent(CmbBoxCarWeight, tbOrderOrg.CarWeight);
-    //    //SetComboBoxItemByContent(CmbBoxTruckDetail, tbOrderOrg.TruckDetail);
-    //    SetDeliverType(tbOrderOrg.DeliverType);
-    //}
+    private void SetVehicleInfoToUI()
+    {
+        SetFeeTypeToUI(tbOrderOrg.FeeType);
+        SetCarTypeToUI(tbOrderOrg.CarTypeFlag);
+
+        switch (tbOrderOrg.CarTypeFlag)
+        {
+            case "오토":
+            case "밴":
+            case "플렉":
+            case "플렉스":
+                Set퀵DeliverTypeToUI();
+                break;
+
+            case "다마":
+            case "다마스":
+            case "라보":
+            case "트럭":
+                //SetComboBoxItemByContent(CmbBoxCarWeight, tbOrderOrg.CarWeightFlag);
+                //SetComboBoxItemByContent(CmbBoxTruckDetail, tbOrderOrg.TruckDetailFlag);
+                Set화물DeliverTypeToUI(tbOrderOrg.CarDeliverType);
+                break;
+        }
+    }
 
     // 요금 정보 로드
-    //private void LoadFeeInfo()
-    //{
-    //    TBox_FeeBasic.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeBasic);
-    //    TBox_FeePlus.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeePlus);
-    //    TBox_FeeMinus.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeMinus);
-    //    TBox_FeeConn.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeConn);
-    //    TBox_FeeDrvCharge.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeCommi);
-    //    TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeTotal);
-    //}
+    private void SetFeeInfoToUI()
+    {
+        TBox_FeeBasic.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeBasic);
+        TBox_FeePlus.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeePlus);
+        TBox_FeeMinus.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeMinus);
+        TBox_FeeConn.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeConn);
+        TBox_FeeCharge.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeCommi);
+        TBox_FeeDriver.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeDriver);
+        TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeTotal);
+    }
 
 
 
@@ -1053,14 +1054,11 @@ public partial class Order_ReceiptWnd : Window
     {
         if (lCustKey == 0) // 없음
         {
-            BorderCustNew.Visibility = Visibility.Visible;
         }
         else // 있음
         {
             BtnReg_CustRegist.Visibility = Visibility.Collapsed;
             BtnReg_CustUpdate.Visibility = Visibility.Visible;
-
-            BorderCustNew.Visibility = Visibility.Collapsed;
 
             // 고객정보 로드
         }
@@ -1069,14 +1067,11 @@ public partial class Order_ReceiptWnd : Window
     {
         if (tbCust == null) // 없음
         {
-            BorderCustNew.Visibility = Visibility.Visible;
         }
         else // 있음
         {
             BtnReg_CustRegist.Visibility = Visibility.Collapsed;
             BtnReg_CustUpdate.Visibility = Visibility.Visible;
-
-            BorderCustNew.Visibility = Visibility.Collapsed;
 
             // 고객정보 로드
         }
@@ -1188,6 +1183,79 @@ public partial class Order_ReceiptWnd : Window
         controls.tboxDeptName.Text = tbCustMain.DeptName;
         controls.tboxChargeName.Text = tbCustMain.ChargeName;
         controls.tboxDongAddr.Text = tbCustMain.DongAddr;
+    }
+
+    // TbOrder → UI 로드 (오버로드)
+    private void SetLocationDataToUi(TbOrder tb, string sWhere)
+    {
+        Action<long> setCustCodeK;
+        Action<long> setCustCodeE;
+        (TextBox tboxCustName, TextBox tboxDongBasic, TextBox tboxTelNo1, TextBox tboxTelNo2,
+         TextBox tboxDeptName, TextBox tboxChargeName, TextBox tboxDongAddr) controls;
+
+        long custCodeK, custCodeE;
+        string custName, dongBasic, telNo1, telNo2, deptName, chargeName, dongAddr;
+
+        switch (sWhere)
+        {
+            case "의뢰자":
+                setCustCodeK = (val) => CallCustCodeK = val;
+                setCustCodeE = (val) => CallCustCodeE = val;
+                controls = (Caller_TBoxCustName, Caller_TBoxDongBasic, Caller_TBoxTelNo1, Caller_TBoxTelNo2,
+                            Caller_TBoxDeptName, Caller_TBoxChargeName, Caller_TBoxDongAddr);
+                custCodeK = StdConvert.NullableLongToLong(tb.CallCustCodeK);
+                custCodeE = StdConvert.NullableLongToLong(tb.CallCustCodeE);
+                custName = tb.CallCustName;
+                dongBasic = tb.CallDongBasic;
+                telNo1 = StdConvert.ToPhoneNumberFormat(tb.CallTelNo);
+                telNo2 = StdConvert.ToPhoneNumberFormat(tb.CallTelNo2);
+                deptName = tb.CallDeptName;
+                chargeName = tb.CallChargeName;
+                dongAddr = tb.CallAddress;
+                break;
+            case "출발지":
+                setCustCodeK = (val) => StartCustCodeK = val;
+                setCustCodeE = (val) => StartCustCodeE = val;
+                controls = (Start_TBoxCustName, Start_TBoxDongBasic, Start_TBoxTelNo1, Start_TBoxTelNo2,
+                            Start_TBoxDeptName, Start_TBoxChargeName, Start_TBoxDongAddr);
+                custCodeK = StdConvert.NullableLongToLong(tb.StartCustCodeK);
+                custCodeE = StdConvert.NullableLongToLong(tb.StartCustCodeE);
+                custName = tb.StartCustName;
+                dongBasic = tb.StartDongBasic;
+                telNo1 = StdConvert.ToPhoneNumberFormat(tb.StartTelNo);
+                telNo2 = StdConvert.ToPhoneNumberFormat(tb.StartTelNo2);
+                deptName = tb.StartDeptName;
+                chargeName = tb.StartChargeName;
+                dongAddr = tb.StartAddress;
+                break;
+            case "도착지":
+                setCustCodeK = (val) => DestCustCodeK = val;
+                setCustCodeE = (val) => DestCustCodeE = val;
+                controls = (Dest_TBoxCustName, Dest_TBoxDongBasic, Dest_TBoxTelNo1, Dest_TBoxTelNo2,
+                            Dest_TBoxDeptName, Dest_TBoxChargeName, Dest_TBoxDongAddr);
+                custCodeK = StdConvert.NullableLongToLong(tb.DestCustCodeK);
+                custCodeE = StdConvert.NullableLongToLong(tb.DestCustCodeE);
+                custName = tb.DestCustName;
+                dongBasic = tb.DestDongBasic;
+                telNo1 = StdConvert.ToPhoneNumberFormat(tb.DestTelNo);
+                telNo2 = StdConvert.ToPhoneNumberFormat(tb.DestTelNo2);
+                deptName = tb.DestDeptName;
+                chargeName = tb.DestChargeName;
+                dongAddr = tb.DestAddress;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(sWhere));
+        }
+
+        setCustCodeK(custCodeK);
+        setCustCodeE(custCodeE);
+        controls.tboxCustName.Text = custName;
+        controls.tboxDongBasic.Text = dongBasic;
+        controls.tboxTelNo1.Text = telNo1;
+        controls.tboxTelNo2.Text = telNo2;
+        controls.tboxDeptName.Text = deptName;
+        controls.tboxChargeName.Text = chargeName;
+        controls.tboxDongAddr.Text = dongAddr;
     }
 
     //// UI → LocationData 읽기 (공통 헬퍼)

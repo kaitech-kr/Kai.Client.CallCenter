@@ -204,11 +204,12 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.FeePlus = StdConvert.StringWonFormatToInt(TBox_FeePlus.Text); // UiData
         tbOrderNew.FeeMinus = StdConvert.StringWonFormatToInt(TBox_FeeMinus.Text); // UiData
         tbOrderNew.FeeConn = StdConvert.StringWonFormatToInt(TBox_FeeConn.Text); // UiData
-        tbOrderNew.FeeCommi = StdConvert.StringWonFormatToInt(TBox_FeeDrvCharge.Text); // UiData
+        tbOrderNew.FeeCommi = StdConvert.StringWonFormatToInt(TBox_FeeCharge.Text); // UiData
+        tbOrderNew.FeeDriver = StdConvert.StringWonFormatToInt(TBox_FeeDriver.Text); // UiData
         tbOrderNew.FeeTotal = StdConvert.StringWonFormatToInt(TBox_FeeTot.Text); // UiData
         tbOrderNew.FeeType = Get퀵DeliverTypeFromUI(); // UiData
-        tbOrderNew.CarType = GetCarTypeFromUI(); // UiData
-        tbOrderNew.DeliverType = Get화물DeliverTypeFromUI(); // UiData
+        tbOrderNew.CarTypeFlag = GetCarTypeFromUI(); // UiData
+        tbOrderNew.CarDeliverType = Get화물DeliverTypeFromUI(); // UiData
         //tbOrderNew.DriverCode = ; // UiData - 연구과제
         //tbOrderNew.DriverId = ; // UiData - 연구과제
         //tbOrderNew.DriverName = ; // UiData - 연구과제
@@ -301,10 +302,10 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.FeeCommi = 0; // UiData
         tbOrderNew.FeeTotal = 0; // UiData
         tbOrderNew.FeeType = ""; // UiData
-        tbOrderNew.CarType = ""; // UiData
-        tbOrderNew.CarWeight = ""; // UiData
-        tbOrderNew.TruckDetail = ""; // UiData
-        tbOrderNew.DeliverType = ""; // UiData
+        tbOrderNew.CarTypeFlag = ""; // UiData
+        tbOrderNew.CarWeightFlag = ""; // UiData
+        tbOrderNew.TruckDetailFlag = ""; // UiData
+        tbOrderNew.CarDeliverType = ""; // UiData
         tbOrderNew.DriverCode = 0; // UiData
         tbOrderNew.DriverId = ""; // UiData
         tbOrderNew.DriverName = ""; // UiData
@@ -392,16 +393,31 @@ public partial class Order_ReceiptWnd : Window
         if (ChkBox화물_경유.IsChecked == true) return "경유";
         return "";
     }
-    private void Set화물DeliverTypeToUI()
-    {
-        if (tbOrderOrg == null) return;
+    //private void Set화물DeliverTypeToUI()
+    //{
+    //    if (tbOrderOrg == null) return;
 
+    //    ChkBox화물_독차.IsChecked = false;
+    //    ChkBox화물_혼적.IsChecked = false;
+    //    ChkBox화물_왕복.IsChecked = false;
+    //    ChkBox화물_경유.IsChecked = false;
+
+    //    switch (tbOrderOrg.DeliverType)
+    //    {
+    //        case "독차": ChkBox화물_독차.IsChecked = true; break;
+    //        case "혼적": ChkBox화물_혼적.IsChecked = true; break;
+    //        case "왕복": ChkBox화물_왕복.IsChecked = true; break;
+    //        case "경유": ChkBox화물_경유.IsChecked = true; break;
+    //    }
+    //}
+    private void Set화물DeliverTypeToUI(string sDeliver)
+    {
         ChkBox화물_독차.IsChecked = false;
         ChkBox화물_혼적.IsChecked = false;
         ChkBox화물_왕복.IsChecked = false;
         ChkBox화물_경유.IsChecked = false;
 
-        switch (tbOrderOrg.DeliverType)
+        switch (sDeliver)
         {
             case "독차": ChkBox화물_독차.IsChecked = true; break;
             case "혼적": ChkBox화물_혼적.IsChecked = true; break;

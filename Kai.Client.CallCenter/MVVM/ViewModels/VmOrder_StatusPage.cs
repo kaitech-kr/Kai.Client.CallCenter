@@ -153,17 +153,17 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
         set => OnPropertyChanged(nameof(FeeNet));
     }
 
-    // 차량종류(CarType) - Enum 변환
+    // 차량종류(CarType) - Flag 문자열
     public string CarType
     {
-        get => ((CarTypes)tbOrder.CarTypeCode).ToDesc();
+        get => tbOrder.CarTypeFlag;
         set => OnPropertyChanged(nameof(CarType));
     }
-    
-    // 차량톤수(CarWeight) - Enum 변환
+
+    // 차량톤수(CarWeight) - Flag 문자열
     public string CarWeight
     {
-        get => ((CarWts)tbOrder.CarWeightCode).ToDesc();
+        get => tbOrder.CarWeightFlag;
         set => OnPropertyChanged(nameof(CarWeight));
     }
 
@@ -177,7 +177,7 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
     // 배송타입(DeliverType)
     public string DeliverType
     {
-        get => tbOrder.DeliverType;
+        get => tbOrder.CarDeliverType;
         set => OnPropertyChanged(nameof(DeliverType));
     }
 
