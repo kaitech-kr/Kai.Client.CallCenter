@@ -229,6 +229,9 @@
     <Compile Update="Windows\Order_ReceiptWnd.Funcs.cs">
       <DependentUpon>Order_ReceiptWnd.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Pages\Order_StatusPage.Funcs.cs">
+      <DependentUpon>Order_StatusPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

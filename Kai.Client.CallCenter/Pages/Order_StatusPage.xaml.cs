@@ -376,15 +376,15 @@ public partial class Order_StatusPage : Page
     }
     #endregion End Checked, Unchecked - 상태버튼    
 
-    #region ComboBox(DatePicker) Events 
+    #region ComboBox(DatePicker) Events
     private void DatePicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        //if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
+        if (VsOrder_StatusPage.s_listTbOrderToday == null) return;
 
-        //if (DatePickerStart.SelectedDate.Value.Date == DateTime.Today && DatePickerEnd.SelectedDate.Value.Date == DateTime.Today)
-        //    BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Disabled");
-        //else
-        //    BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
+        if (DatePickerStart.SelectedDate.Value.Date == DateTime.Today && DatePickerEnd.SelectedDate.Value.Date == DateTime.Today)
+            BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Disabled");
+        else
+            BtnOrderSearch.Opacity = (double)Wnd.Application.Current.FindResource("AppOpacity_Enabled");
 
         //Debug.WriteLine($"VsOrder_StatusPage.s_listTbOrderToday: {VsOrder_StatusPage.s_listTbOrderToday.Count}, {BtnOrderSearch.Opacity}, {DatePickerStart.SelectedDate}, {DatePickerEnd.SelectedDate}"); // Test
     }
@@ -393,7 +393,7 @@ public partial class Order_StatusPage : Page
     {
         if (DatePickerStart.SelectedDate.HasValue && DatePickerStart.SelectedDate.Value.Date != DateTime.Today)
         {
-            //CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+            CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
         }
     }
 
@@ -402,81 +402,81 @@ public partial class Order_StatusPage : Page
     {
         if (DatePickerEnd.SelectedDate.HasValue && DatePickerEnd.SelectedDate.Value.Date != DateTime.Today)
         {
-            //CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
+            CommonFuncs.SetComboBoxItemByContent(CmbBoxDateSelect, "직접입력");
         }
     }
 
     private async void CmbBoxDateSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        //var selectedItem = (ComboBoxItem)CmbBoxDateSelect.SelectedItem as ComboBoxItem;
-        //DateTime now = DateTime.Now;
+        var selectedItem = (ComboBoxItem)CmbBoxDateSelect.SelectedItem as ComboBoxItem;
+        DateTime now = DateTime.Now;
 
-        //CultureInfo culture = CultureInfo.CurrentCulture;
-        //DayOfWeek firstDayOfWeek = culture.DateTimeFormat.FirstDayOfWeek;
-        //int diff = 0, diffStart = 0, diffEnd = 0;
+        CultureInfo culture = CultureInfo.CurrentCulture;
+        DayOfWeek firstDayOfWeek = culture.DateTimeFormat.FirstDayOfWeek;
+        int diff = 0, diffStart = 0, diffEnd = 0;
 
-        //switch (selectedItem.Content)
-        //{
-        //    case "오늘만":
-        //        DatePickerStart.SelectedDate = DatePickerEnd.SelectedDate = now;
-        //        await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘전용 리스트에서 상태에 따라 로드한다
-        //        break;
+        switch (selectedItem.Content)
+        {
+            case "오늘만":
+                DatePickerStart.SelectedDate = DatePickerEnd.SelectedDate = now;
+                await VsOrder_StatusPage.Order_LoadDataAsync(this, VsOrder_StatusPage.s_listTbOrderToday, FilterBtnStatus);  // 오늘전용 리스트에서 상태에 따라 로드한다
+                break;
 
-        //    case "어제만":
-        //        DatePickerStart.SelectedDate = DatePickerEnd.SelectedDate = now.AddDays(-1);
-        //        break;
+            case "어제만":
+                DatePickerStart.SelectedDate = DatePickerEnd.SelectedDate = now.AddDays(-1);
+                break;
 
-        //    case "어제까지":
-        //        DatePickerStart.SelectedDate = now.AddDays(-1);
-        //        DatePickerEnd.SelectedDate = now;
-        //        break;
+            case "어제까지":
+                DatePickerStart.SelectedDate = now.AddDays(-1);
+                DatePickerEnd.SelectedDate = now;
+                break;
 
-        //    case "그제만":
-        //        DatePickerStart.SelectedDate = DatePickerEnd.SelectedDate = now.AddDays(-2);
-        //        break;
+            case "그제만":
+                DatePickerStart.SelectedDate = DatePickerEnd.SelectedDate = now.AddDays(-2);
+                break;
 
-        //    case "그제까지":
-        //        DatePickerStart.SelectedDate = now.AddDays(-2);
-        //        DatePickerEnd.SelectedDate = now;
-        //        break;
+            case "그제까지":
+                DatePickerStart.SelectedDate = now.AddDays(-2);
+                DatePickerEnd.SelectedDate = now;
+                break;
 
-        //    case "금주만":
-        //        diff = (7 + (now.DayOfWeek - DayOfWeek.Sunday)) % 7;
-        //        DatePickerStart.SelectedDate = now.AddDays(-diff);
-        //        DatePickerEnd.SelectedDate = now;
-        //        break;
+            case "금주만":
+                diff = (7 + (now.DayOfWeek - DayOfWeek.Sunday)) % 7;
+                DatePickerStart.SelectedDate = now.AddDays(-diff);
+                DatePickerEnd.SelectedDate = now;
+                break;
 
-        //    case "전주만":
-        //        diffStart = ((7 + (now.DayOfWeek - DayOfWeek.Sunday)) % 7) + 7;
-        //        DatePickerStart.SelectedDate = now.AddDays(-diffStart);
-        //        diffEnd = diffStart - 6;
-        //        DatePickerEnd.SelectedDate = now.AddDays(-diffEnd);
-        //        break;
+            case "전주만":
+                diffStart = ((7 + (now.DayOfWeek - DayOfWeek.Sunday)) % 7) + 7;
+                DatePickerStart.SelectedDate = now.AddDays(-diffStart);
+                diffEnd = diffStart - 6;
+                DatePickerEnd.SelectedDate = now.AddDays(-diffEnd);
+                break;
 
-        //    case "전주까지":
-        //        diffStart = ((7 + (now.DayOfWeek - DayOfWeek.Sunday)) % 7) + 7;
-        //        DatePickerStart.SelectedDate = now.AddDays(-diffStart);
-        //        DatePickerEnd.SelectedDate = now;
-        //        break;
+            case "전주까지":
+                diffStart = ((7 + (now.DayOfWeek - DayOfWeek.Sunday)) % 7) + 7;
+                DatePickerStart.SelectedDate = now.AddDays(-diffStart);
+                DatePickerEnd.SelectedDate = now;
+                break;
 
-        //    case "금월만":
-        //        DatePickerStart.SelectedDate = new DateTime(now.Year, now.Month, 1);
-        //        DatePickerEnd.SelectedDate = now;
-        //        break;
+            case "금월만":
+                DatePickerStart.SelectedDate = new DateTime(now.Year, now.Month, 1);
+                DatePickerEnd.SelectedDate = now;
+                break;
 
-        //    case "전월만":
-        //        DatePickerStart.SelectedDate = new DateTime(now.Year, now.Month, 1).AddMonths(-1);
-        //        DatePickerEnd.SelectedDate = new DateTime(now.Year, now.Month, 1).AddDays(-1);
-        //        break;
+            case "전월만":
+                DatePickerStart.SelectedDate = new DateTime(now.Year, now.Month, 1).AddMonths(-1);
+                DatePickerEnd.SelectedDate = new DateTime(now.Year, now.Month, 1).AddDays(-1);
+                break;
 
-        //    case "전월까지":
-        //        DatePickerStart.SelectedDate = new DateTime(now.Year, now.Month, 1).AddMonths(-1);
-        //        DatePickerEnd.SelectedDate = now;
-        //        break;
+            case "전월까지":
+                DatePickerStart.SelectedDate = new DateTime(now.Year, now.Month, 1).AddMonths(-1);
+                DatePickerEnd.SelectedDate = now;
+                break;
 
-        //    case "직접입력":
-        //        break;
-        //}
+            case "직접입력":
+                break;
+        }
     }
     #endregion
 

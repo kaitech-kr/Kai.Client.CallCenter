@@ -213,49 +213,49 @@ public class CommonFuncs : CommonVars
     //}
 
     // ComboBox에서 특정 텍스트를 가진 항목의 인덱스 찾기
-    //public static int GetComboBoxItemIndex(ComboBox comboBox, string targetValue)
-    //{
-    //    return Application.Current.Dispatcher.Invoke(() =>
-    //    {
-    //        if (comboBox == null || targetValue == null)
-    //            return -1;
+    public static int GetComboBoxItemIndex(ComboBox comboBox, string targetValue)
+    {
+        return Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (comboBox == null || targetValue == null)
+                return -1;
 
-    //        for (int i = 0; i < comboBox.Items.Count; i++)
-    //        {
-    //            object item = comboBox.Items[i];
+            for (int i = 0; i < comboBox.Items.Count; i++)
+            {
+                object item = comboBox.Items[i];
 
-    //            string value = item switch
-    //            {
-    //                ComboBoxItem cbi => cbi.Content?.ToString(),
-    //                string str => str,
-    //                _ => item?.ToString()
-    //            };
+                string value = item switch
+                {
+                    ComboBoxItem cbi => cbi.Content?.ToString(),
+                    string str => str,
+                    _ => item?.ToString()
+                };
 
-    //            if (value == targetValue)
-    //                return i;
-    //        }
+                if (value == targetValue)
+                    return i;
+            }
 
-    //        return -1;
-    //    });
-    //}
+            return -1;
+        });
+    }
 
     // ComboBox에서 특정 텍스트를 가진 항목을 선택 (설정된 인덱스 반환, 실패 시 -1)
-    //public static int SetComboBoxItemByContent(ComboBox comboBox, string content)
-    //{
-    //    return Application.Current.Dispatcher.Invoke(() =>
-    //    {
-    //        if (comboBox == null || content == null)
-    //            return -1;
+    public static int SetComboBoxItemByContent(ComboBox comboBox, string content)
+    {
+        return Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (comboBox == null || content == null)
+                return -1;
 
-    //        int index = GetComboBoxItemIndex(comboBox, content);
-    //        if (index >= 0)
-    //        {
-    //            comboBox.SelectedIndex = index;
-    //        }
+            int index = GetComboBoxItemIndex(comboBox, content);
+            if (index >= 0)
+            {
+                comboBox.SelectedIndex = index;
+            }
 
-    //        return index;
-    //    });
-    //}
+            return index;
+        });
+    }
 
     // Button의 Opacity를 설정하여 활성화/비활성화 표시
     //public static void SetButtonOpacity(Button btn, bool bEnable)
