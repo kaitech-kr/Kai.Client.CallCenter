@@ -495,77 +495,77 @@ public partial class Order_StatusPage : Page
     // 070 전화 목록 클릭 시 - 해당 전화번호로 새 주문 접수
     private async void DGridTelMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        //// 선택된 항목 확인
-        //if (DGridTel.SelectedItem == null) return;
+        // 선택된 항목 확인
+        if (DGridTel.SelectedItem == null) return;
 
-        //var selectedRow = (DataGridRow)DGridTel.ItemContainerGenerator.ContainerFromItem(DGridTel.SelectedItem);
-        //if (selectedRow == null) return;
+        var selectedRow = (DataGridRow)DGridTel.ItemContainerGenerator.ContainerFromItem(DGridTel.SelectedItem);
+        if (selectedRow == null) return;
 
-        //// 클릭이 Row 영역 내에서 발생했는지 확인
-        //Point mousePos = e.GetPosition(selectedRow);
-        //Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
+        // 클릭이 Row 영역 내에서 발생했는지 확인
+        Point mousePos = e.GetPosition(selectedRow);
+        Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
 
-        //if (!bounds.Contains(mousePos)) return;
+        if (!bounds.Contains(mousePos)) return;
 
-        //// 선택된 전화 수신 정보 가져오기
-        // if (DGridTel.SelectedItem is not VmOrder_StatusPage_Tel070 selectedTelRing) return;
+        // 선택된 전화 수신 정보 가져오기
+        if (DGridTel.SelectedItem is not VmOrder_StatusPage_Tel070 selectedTelRing) return;
 
-        //// 전화번호로 새 주문 접수 창 열기
-        //string phoneNumber = StdConvert.MakePhoneNumberToDigit(selectedTelRing.YourTelNum);
-        //await OpenNewOrderWindowAsync(phoneNumber);
+        // 전화번호로 새 주문 접수 창 열기
+        string phoneNumber = StdConvert.MakePhoneNumberToDigit(selectedTelRing.YourTelNum);
+        await OpenNewOrderWindowAsync(phoneNumber);
     }
 
     // DoubleClick
     // 주문 목록 더블클릭 시 - 주문 상세 창 열기
     private async void DGridOrderMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        //// 선택된 항목 확인
-        // if (DGridOrder.SelectedItem == null) return;
+        // 선택된 항목 확인
+        if (DGridOrder.SelectedItem == null) return;
 
-        //var selectedRow = (DataGridRow)DGridOrder.ItemContainerGenerator.ContainerFromItem(DGridOrder.SelectedItem);
-        //if (selectedRow == null) return;
+        var selectedRow = (DataGridRow)DGridOrder.ItemContainerGenerator.ContainerFromItem(DGridOrder.SelectedItem);
+        if (selectedRow == null) return;
 
-        //// 더블클릭이 Row 영역 내에서 발생했는지 확인
-        // Point mousePos = e.GetPosition(selectedRow);
-        //Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
+        // 더블클릭이 Row 영역 내에서 발생했는지 확인
+        Point mousePos = e.GetPosition(selectedRow);
+        Rect bounds = new Rect(0, 0, selectedRow.ActualWidth, selectedRow.ActualHeight);
 
-        // if (!bounds.Contains(mousePos)) return;
+        if (!bounds.Contains(mousePos)) return;
 
-        //// 선택된 주문 가져오기
-        // if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
+        // 선택된 주문 가져오기
+        if (DGridOrder.SelectedItem is not VmOrder_StatusPage_Order selectedOrder) return;
 
-        //// 주문 상세 창 열기
-        // await OpenOrderDetailWindowAsync(selectedOrder.tbOrder);
+        // 주문 상세 창 열기
+        await OpenOrderDetailWindowAsync(selectedOrder.tbOrder);
     }
 
     // 주문 상세 창 열기 (자동배차 일시정지 처리 포함)
-    //private async Task OpenOrderDetailWindowAsync(TbOrder order)
-    //{
-    //    var externalAppController = s_MainWnd?.m_MasterManager?.ExternalAppController;
-    //    bool shouldPauseAutoAlloc = externalAppController != null && externalAppController.IsAutoAllocRunning;
+    private async Task OpenOrderDetailWindowAsync(TbOrder order)
+    {
+        var externalAppController = s_MainWnd?.m_MasterManager?.ExternalAppController;
+        bool shouldPauseAutoAlloc = externalAppController != null && externalAppController.IsAutoAllocRunning;
 
-    //    try
-    //    {
-    //        // 자동배차 실행 중이면 일시정지
-    //        if (shouldPauseAutoAlloc)
-    //        {
-    //            externalAppController.PauseAutoAlloc();
-    //            await Task.Delay(100); // 일시정지 처리 대기
-    //        }
+        try
+        {
+            // 자동배차 실행 중이면 일시정지
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.PauseAutoAlloc();
+                await Task.Delay(100); // 일시정지 처리 대기
+            }
 
-    //        // 주문 상세 창 열기
-    //        Order_ReceiptWnd wnd = new Order_ReceiptWnd(order);
-    //        SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
-    //    }
-    //    finally
-    //    {
-    //        // 자동배차 재개
-    //        if (shouldPauseAutoAlloc)
-    //        {
-    //            externalAppController.ResumeAutoAlloc();
-    //        }
-    //    }
-    //}
+            // 주문 상세 창 열기
+            Order_ReceiptWnd wnd = new Order_ReceiptWnd(order);
+            SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        }
+        finally
+        {
+            // 자동배차 재개
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.ResumeAutoAlloc();
+            }
+        }
+    }
 
     // RightButtonDown
     private void DGridOrder_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -764,8 +764,7 @@ public partial class Order_StatusPage : Page
         if (string.IsNullOrWhiteSpace(telNo)) return;
 
         string phoneNumber = StdConvert.MakePhoneNumberToDigit(telNo);
-        //await OpenNewOrderWindowAsync(phoneNumber);
-        MsgBox($"Not Coded: {telNo}");
+        await OpenNewOrderWindowAsync(phoneNumber);
     }
     #endregion
 
@@ -1166,33 +1165,33 @@ public partial class Order_StatusPage : Page
     }
 
     // 새 주문 접수 창 열기 (전화번호 지정, 자동배차 일시정지 처리 포함)
-    //private async Task OpenNewOrderWindowAsync(string phoneNumber)
-    //{
-    //    var externalAppController = s_MainWnd?.m_MasterManager?.ExternalAppController;
-    //    bool shouldPauseAutoAlloc = externalAppController != null && externalAppController.IsAutoAllocRunning;
+    private async Task OpenNewOrderWindowAsync(string phoneNumber)
+    {
+        var externalAppController = s_MainWnd?.m_MasterManager?.ExternalAppController;
+        bool shouldPauseAutoAlloc = externalAppController != null && externalAppController.IsAutoAllocRunning;
 
-    //    try
-    //    {
-    //        // 자동배차 실행 중이면 일시정지
-    //        if (shouldPauseAutoAlloc)
-    //        {
-    //            externalAppController.PauseAutoAlloc();
-    //            await Task.Delay(100); // 일시정지 처리 대기
-    //        }
+        try
+        {
+            // 자동배차 실행 중이면 일시정지
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.PauseAutoAlloc();
+                await Task.Delay(100); // 일시정지 처리 대기
+            }
 
-    //        // 전화번호로 새 주문 접수 창 열기
-    //        Order_ReceiptWnd wnd = new Order_ReceiptWnd(phoneNumber);
-    //        SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
-    //    }
-    //    finally
-    //    {
-    //        // 자동배차 재개
-    //        if (shouldPauseAutoAlloc)
-    //        {
-    //            externalAppController.ResumeAutoAlloc();
-    //        }
-    //    }
-    //}
+            // 전화번호로 새 주문 접수 창 열기
+            Order_ReceiptWnd wnd = new Order_ReceiptWnd(phoneNumber);
+            SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        }
+        finally
+        {
+            // 자동배차 재개
+            if (shouldPauseAutoAlloc)
+            {
+                externalAppController.ResumeAutoAlloc();
+            }
+        }
+    }
 
     #endregion
 

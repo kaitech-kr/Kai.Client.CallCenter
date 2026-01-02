@@ -151,7 +151,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             HubConn.On<TbTelMainRing, int>(StdConst_FuncName.SrReport.TelMainRingAsync, (tb, count) => SrReport_TelMainRingAsync(tb, count));
 
             // Order
-            HubConn.On<TbOrder, int>(StdConst_FuncName.SrReport.Order_InsertedRowAsync_Today, (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
+            HubConn.On<TbOrder, int>("SrReport_Order_InsertedRowAsync_Today", (tb, seq) => SrReport_Order_InsertedRowAsync_Today(tb, seq));
             //HubConn.On<TbOrder, int, string>(StdConst_FuncName.SrReport.Order_UpdatedRowAsync_Today, (tb, seq, requestId) => SrReport_Order_UpdatedRowAsync_Today(tb, seq, requestId));
             #endregion
 
@@ -1044,18 +1044,18 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             return new PostgResult_TbOrderList(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_SelectRows_All_999");
         }
     }
-    ////public async Task<PostgResult_TbOrder> SrResult_Order_SelectRow_TodayByExternOrder(long lExternOrderKey, string sNetwork)
-    ////{
-    ////    try
-    ////    {
-    ////        return await HubConn.InvokeCoreAsync<PostgResult_TbOrder>(StdConst_FuncName.SrResult.
-    ////            Order_SelectRow_TodayByExternOrder, new[] { (object)s_CenterCharge.CenterCode, (object)lExternOrderKey, sNetwork });
-    ////    }
-    ////    catch (Exception ex)
-    ////    {
-    ////        return new PostgResult_TbOrder(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_SelectRow_ByExternOrder_999");
-    ////    }
-    ////}
+    //public async Task<PostgResult_TbOrder> SrResult_Order_SelectRow_TodayByExternOrder(long lExternOrderKey, string sNetwork)
+    //{
+    //    try
+    //    {
+    //        return await HubConn.InvokeCoreAsync<PostgResult_TbOrder>(StdConst_FuncName.SrResult.
+    //            Order_SelectRow_TodayByExternOrder, new[] { (object)s_CenterCharge.CenterCode, (object)lExternOrderKey, sNetwork });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return new PostgResult_TbOrder(StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_OrderToday_SelectRow_ByExternOrder_999");
+    //    }
+    //}
     public async Task<PostgResult_TbOrderList> SrResult_Order_SelectRowsAsync_CenterCode_Range_OrderStatus(
         DateTime dtStart, DateTime dtEnd, StdEnum_OrderStatus enumStatus)
     {

@@ -86,7 +86,7 @@ public partial class Order_ReceiptWnd : Window
 
         if (tbOrderOrg != null) // 업데이트 모드면 오더정보 로드
         {
-            // TODO: TbOrderOrgToUiData() 활성화 필요
+            TbOrderOrgToUiData();
             의뢰자정보Mode(tbOrderOrg.CallCustCodeK);
         }
         else // 신규 등록 모드
@@ -690,58 +690,58 @@ public partial class Order_ReceiptWnd : Window
     //}
 
     // TbOrder → UI 데이터 로드 (수정 모드)
-    //private void TbOrderOrgToUiData()
-    //{
-    //    if (tbOrderOrg == null) return;
+    private void TbOrderOrgToUiData()
+    {
+        if (tbOrderOrg == null) return;
 
-    //    // 1. Header, 공용
-    //    LoadHeaderInfo();
+        // 1. Header, 공용
+        LoadHeaderInfo();
 
-    //    // 2. 위치 정보 설정 (LocationData 헬퍼 사용)
-    //    LoadLocationDataToUi(LocationData.FromTbOrder_Caller(tbOrderOrg), CEnum_Kai_LocationType.Caller);
-    //    LoadLocationDataToUi(LocationData.FromTbOrder_Start(tbOrderOrg), CEnum_Kai_LocationType.Start);
-    //    LoadLocationDataToUi(LocationData.FromTbOrder_Dest(tbOrderOrg), CEnum_Kai_LocationType.Dest);
+        //// 2. 위치 정보 설정 (LocationData 헬퍼 사용)
+        //LoadLocationDataToUi(LocationData.FromTbOrder_Caller(tbOrderOrg), CEnum_Kai_LocationType.Caller);
+        //LoadLocationDataToUi(LocationData.FromTbOrder_Start(tbOrderOrg), CEnum_Kai_LocationType.Start);
+        //LoadLocationDataToUi(LocationData.FromTbOrder_Dest(tbOrderOrg), CEnum_Kai_LocationType.Dest);
 
-    //    // 3. 의뢰자 전용 필드
-    //    Caller_TBoxRemarks.Text = tbOrderOrg.CallRemarks;
-    //    TBoxOrderRemarks.Text = tbOrderOrg.OrderRemarks;
-    //    TBoxOrderMemo.Text = tbOrderOrg.OrderMemo; // 오더메모 로드 추가
-    //    TBlkCallCustMemoExt.Text = tbOrderOrg.OrderMemoExt;
-    //    CallCustFrom = tbOrderOrg.CallCustFrom;
-    //    CallCompCode = tbOrderOrg.CallCompCode;
-    //    CallCompName = tbOrderOrg.CallCompName;
+        //// 3. 의뢰자 전용 필드
+        //Caller_TBoxRemarks.Text = tbOrderOrg.CallRemarks;
+        //TBoxOrderRemarks.Text = tbOrderOrg.OrderRemarks;
+        //TBoxOrderMemo.Text = tbOrderOrg.OrderMemo; // 오더메모 로드 추가
+        //TBlkCallCustMemoExt.Text = tbOrderOrg.OrderMemoExt;
+        //CallCustFrom = tbOrderOrg.CallCustFrom;
+        //CallCompCode = tbOrderOrg.CallCompCode;
+        //CallCompName = tbOrderOrg.CallCompName;
 
-    //    // 4. 예약 정보
-    //    LoadReserveInfo();
+        //// 4. 예약 정보
+        //LoadReserveInfo();
 
-    //    // 5. 차량/배송 타입
-    //    LoadVehicleInfo();
+        //// 5. 차량/배송 타입
+        //LoadVehicleInfo();
 
-    //    // 6. 요금 정보
-    //    LoadFeeInfo();
+        //// 6. 요금 정보
+        //LoadFeeInfo();
 
-    //    // 7. 공유/세금계산서
-    //    ChkBoxShareOrder.IsChecked = tbOrderOrg.Share;
-    //    ChkBoxTaxBill.IsChecked = tbOrderOrg.TaxBill;
-    //}
+        //// 7. 공유/세금계산서
+        //ChkBoxShareOrder.IsChecked = tbOrderOrg.Share;
+        //ChkBoxTaxBill.IsChecked = tbOrderOrg.TaxBill;
+    }
 
     // Header 정보 로드
-    //private void LoadHeaderInfo()
-    //{
-    //    TBlkOrderState.Text = tbOrderOrg.OrderState;
-    //    GridOrderState.Background = tbOrderOrg.OrderState switch
-    //    {
-    //        "접수" => (Brush)Application.Current.Resources["AppBrushLightReceipt"],
-    //        "대기" => (Brush)Application.Current.Resources["AppBrushLightWait"],
-    //        "배차" => (Brush)Application.Current.Resources["AppBrushLightAlloc"],
-    //        "예약" => (Brush)Application.Current.Resources["AppBrushLightReserve"],
-    //        "운행" => (Brush)Application.Current.Resources["AppBrushLightRun"],
-    //        "완료" => (Brush)Application.Current.Resources["AppBrushLightFinish"],
-    //        "취소" => (Brush)Application.Current.Resources["AppBrushLightCancel"],
-    //        _ => (Brush)Application.Current.Resources["AppBrushLightTotal"], // 전체
-    //    };
-    //    TBlkSeqNo.Text = tbOrderOrg.KeyCode.ToString();
-    //}
+    private void LoadHeaderInfo()
+    {
+        TBlkOrderState.Text = tbOrderOrg.OrderState;
+        GridHeaderInfo.Background = tbOrderOrg.OrderState switch
+        {
+            "접수" => (Brush)Application.Current.Resources["AppBrushLightReceipt"],
+            "대기" => (Brush)Application.Current.Resources["AppBrushLightWait"],
+            "배차" => (Brush)Application.Current.Resources["AppBrushLightAlloc"],
+            "예약" => (Brush)Application.Current.Resources["AppBrushLightReserve"],
+            "운행" => (Brush)Application.Current.Resources["AppBrushLightRun"],
+            "완료" => (Brush)Application.Current.Resources["AppBrushLightFinish"],
+            "취소" => (Brush)Application.Current.Resources["AppBrushLightCancel"],
+            _ => (Brush)Application.Current.Resources["AppBrushLightTotal"], // 전체
+        };
+        TBlkSeqNo.Text = tbOrderOrg.KeyCode.ToString();
+    }
 
     // 예약 정보 로드
     private void LoadReserveInfo()

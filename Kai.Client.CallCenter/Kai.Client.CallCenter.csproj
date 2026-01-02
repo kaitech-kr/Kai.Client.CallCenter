@@ -227,7 +227,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Update="Windows\Order_ReceiptWnd.Funcs.cs">
-      <DependentUpon>Windows\Order_ReceiptWnd.xaml.cs</DependentUpon>
+      <DependentUpon>Order_ReceiptWnd.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

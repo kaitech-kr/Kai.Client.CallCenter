@@ -7,8 +7,8 @@
         xmlns:local="clr-namespace:Kai.Client.CallCenter.Windows"
         mc:Ignorable="d"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="오더접수" Height="745" Width="1013" ResizeMode="CanMinimize"
-        Background="LightGray" >
+        Title="오더접수" Height="745" Width="1013" ResizeMode="CanMinimize" Background="LightGray"
+        Loaded="Window_Loaded" Unloaded="Window_Unloaded">
     <Window.Resources>
         <!--Height-->
         <sys:Double x:Key="LineHeight_Table">22</sys:Double>
@@ -231,28 +231,21 @@
             <!--C0-R0 검색명-->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="265"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="0,0,0,0">
-                    <!--검색-->
-                    <TextBox x:Name="TBoxHeader_Search" TabIndex="1" 
-                             Width="274" FontSize="25" FontWeight="Bold"
-                             Background="Black" Foreground="Yellow" BorderBrush="Black"
-                             VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                             KeyDown="TBoxHeader_Search_KeyDown" />
-
-                    <!--수신제한 버튼-->
-                    <Button x:Name="BtnNoRcvTel"
-                            Width="25" Background="{StaticResource AppBrush_PinkBackground}" BorderBrush="Blue" BorderThickness="1,1,0,1" Margin="1,0,0,0">
-                        <Image Source="\Resources\Images\Tel006.png" Width="{StaticResource AppItemHeight_Normal}"/>
-                    </Button>
-                </StackPanel>
+                <!--검색-->
+                <TextBox x:Name="TBoxHeader_Search" Grid.Column="0" TabIndex="1"
+                         Width="265" FontSize="25" FontWeight="Bold"
+                         Background="Black" Foreground="Yellow" BorderBrush="Black"
+                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                         KeyDown="TBoxHeader_Search_KeyDown" />
 
                 <!--오더상태/오더번호/메모/접수자/현재시각 영역-->
-                <Grid Grid.Column="1" x:Name="GridHeaderInfo" Margin="0,0,3,0" UseLayoutRounding="True" Background="{StaticResource AppBrushLightReceipt}">
+                <Grid Grid.Column="1" x:Name="GridHeaderInfo" Margin="2,0,3,0" UseLayoutRounding="True" Background="{StaticResource AppBrushLightReceipt}">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="32"/>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="100"/>
@@ -265,40 +258,46 @@
                         <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
 
+                    <!--수신제한 버튼-->
+                    <Button x:Name="BtnNoRcvTel" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                            Width="30" Background="{StaticResource AppBrush_PinkBackground}" BorderBrush="Blue" BorderThickness="1">
+                        <Image Source="\Resources\Images\Tel006.png" Width="{StaticResource AppItemHeight_Normal}"/>
+                    </Button>
+
                     <!--오더상태-->
-                    <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource BorderStyle_Blue}">
+                    <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource BorderStyle_Blue}">
                         <TextBlock x:Name="TBlkOrderState"
                                    Text="접수" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Border>
 
                     <!--오더번호-->
-                    <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
+                    <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
                         <TextBlock Text="오더번호" Style="{StaticResource TextBlockStyle}"/>
                     </Border>
-                    <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
+                    <Border Grid.Column="3" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
                         <TextBlock x:Name="TBlkSeqNo" Style="{StaticResource TextBlockStyle}"
                                    Text="0" FontWeight="DemiBold" Foreground="Blue"/>
                     </Border>
 
                     <!--접수자-->
-                    <Border Grid.Column="3" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
+                    <Border Grid.Column="4" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
                         <TextBlock Text="접수자" Style="{StaticResource TextBlockStyle}" />
                     </Border>
-                    <Border Grid.Column="4" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
+                    <Border Grid.Column="5" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
                         <TextBlock x:Name="TBlkRegister"
                                    Text="" Style="{StaticResource TextBlockStyle}" Foreground="Blue"/>
                     </Border>
 
                     <!--현재시각-->
-                    <Border Grid.Column="5" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
+                    <Border Grid.Column="6" Grid.Row="0" Style="{StaticResource BorderStyle_Blue_TR}">
                         <TextBlock x:Name="TBlkDrNow" Text="0000-00-00 00:00:00" Style="{StaticResource TextBlockStyle}"/>
                     </Border>
 
                     <!--메모-->
-                    <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <Border Grid.Column="2" Grid.Row="1" Style="{StaticResource BorderStyle_Blue_TRB}">
                         <TextBlock Text="메모" Style="{StaticResource TextBlockStyle}"/>
                     </Border>
-                    <Border Grid.Column="2" Grid.ColumnSpan="4" Grid.Row="1" Style="{StaticResource BorderStyle_Blue_TRB}">
+                    <Border Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="1" Style="{StaticResource BorderStyle_Blue_TRB}">
                         <TextBlock x:Name="TBlkCallCustMemoExt" Style="{StaticResource TextBlockStyle}"
                                    FontWeight="DemiBold" Foreground="Red"/>
                     </Border>
