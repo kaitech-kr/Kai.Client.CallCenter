@@ -260,7 +260,7 @@
                     </Grid.RowDefinitions>
 
                     <!--수신제한 버튼-->
-                    <Button x:Name="BtnNoRcvTel" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                    <Button x:Name="BtnNoRcvTel" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Click="BtnNoRcvTel_Click"
                             Width="30" Background="{Binding Background, ElementName=GridHeaderInfo}" BorderBrush="Blue" BorderThickness="1">
                         <Image Source="\Resources\Images\Tel006.png" Width="{StaticResource AppItemHeight_Normal}"/>
                     </Button>
@@ -473,17 +473,17 @@
                         <StackPanel Grid.Row="1" Orientation="Horizontal">
 
                             <!--출발지지우기-->
-                            <Button x:Name="Start_BtnErase" Content="출발지지우기" Width="144" 
+                            <Button x:Name="Start_BtnErase" Content="출발지지우기" Width="144" Click="Start_BtnErase_Click"
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="1"
                                     />
 
                             <!--주거래처등록-->
-                            <Button x:Name="Start_BtnRegComp" Content="주거래처등록" Width="144" 
+                            <Button x:Name="Start_BtnRegComp" Content="주거래처등록" Width="144" Click="Start_BtnRegComp_Click"
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
                                     />
 
                             <!--출도착전환-->
-                            <Button x:Name="Start_BtnSwap"  Width="143" 
+                            <Button x:Name="Start_BtnSwap"  Width="143" Click="StartDest_BtnSwap_Click"
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
                                     >
                                 <StackPanel Orientation="Horizontal">
@@ -640,17 +640,17 @@
                         <StackPanel Grid.Row="1" Orientation="Horizontal">
 
                             <!--도착지지우기-->
-                            <Button x:Name="Dest_BtnErase" Content="도착지지우기" Width="144" 
+                            <Button x:Name="Dest_BtnErase" Content="도착지지우기" Width="144" Click="Dest_BtnErase_Click"
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="1"
                                     />
 
                             <!--주거래처등록-->
-                            <Button x:Name="Dest_BtnRegComp" Content="주거래처등록" Width="144" 
+                            <Button x:Name="Dest_BtnRegComp" Content="주거래처등록" Width="144" Click="Dest_BtnRegComp_Click"
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
                                     />
 
                             <!--출도착전환-->
-                            <Button x:Name="Dest_BtnSwap"  Width="143" 
+                            <Button x:Name="Dest_BtnSwap"  Width="143" Click="StartDest_BtnSwap_Click"
                                     Style="{StaticResource ButtonStyle_02}" BorderThickness="{StaticResource Thickness_TRB}"
                                     >
                                 <StackPanel Orientation="Horizontal">
@@ -800,7 +800,7 @@
                             </Border>
                             <Border BorderBrush="Black" BorderThickness="{StaticResource Thickness_TR}" Background="White"
                                     Width="22" Height="{StaticResource LineHeight_Table}">
-                                <CheckBox x:Name="ChkBoxReserve" TabIndex="27" 
+                                <CheckBox x:Name="ChkBoxReserve" TabIndex="27" Click="ChkBoxReserve_Click"
                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
 
@@ -1254,7 +1254,7 @@
                     </Button>
 
                     <!--고객수정 버튼-->
-                    <Button x:Name="BtnReg_CustUpdate"  
+                    <Button x:Name="BtnReg_CustUpdate" Click="BtnCommon_CustUpdate_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="53" Background="#E6B36D"  Visibility="Collapsed" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\NewPaper001.png" Style="{StaticResource ImageSizeMid}"/>
@@ -1266,7 +1266,7 @@
                     </Button>
 
                     <!--요금저장 버튼-->
-                    <Button x:Name="BtnSaveFee" 
+                    <Button x:Name="BtnSaveFee" Click="BtnCommon_SaveFee_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Save005.png" Style="{StaticResource ImageSizeMid}" />
@@ -1275,7 +1275,7 @@
                     </Button>
 
                     <!--거래처요금 버튼-->
-                    <Button x:Name="BtnReg_CompFee" 
+                    <Button x:Name="BtnReg_CompFee" Click="BtnCommon_CompFee_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
@@ -1284,7 +1284,7 @@
                     </Button>
 
                     <!--오더복사 버튼-->
-                    <Button x:Name="BtnReg_CopyOrder"  
+                    <Button x:Name="BtnReg_CopyOrder" Click="BtnCommon_CopyOrder_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="50" Background="#5AD2FF" > 
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Copy001.png" Style="{StaticResource ImageSizeMid}" />
@@ -1296,7 +1296,7 @@
                     </Button>
 
                     <!--마일리지 버튼-->
-                    <Button x:Name="BtnReg_Mileage" 
+                    <Button x:Name="BtnReg_Mileage" Click="BtnCommon_Mileage_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Pencil001.png" Style="{StaticResource ImageSizeMid}" />
@@ -1305,7 +1305,7 @@
                     </Button>
 
                     <!--변경이력 버튼-->
-                    <Button x:Name="BtnReg_ChangeHistory"
+                    <Button x:Name="BtnReg_ChangeHistory" Click="BtnCommon_ChangeHistory_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >       
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Pencil002.png" Style="{StaticResource ImageSizeMid}" />
@@ -1362,7 +1362,7 @@
             <Border x:Name="ColumnModify" BorderThickness="0" Visibility="Collapsed">
                 <StackPanel>
                     <!--고객수정 버튼-->
-                    <Button x:Name="BtnMod_CustUpdate"  
+                    <Button x:Name="BtnMod_CustUpdate" Click="BtnCommon_CustUpdate_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="53" Background="#E6B36D" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\NewPaper001.png" Style="{StaticResource ImageSizeMid}"/>
@@ -1374,7 +1374,7 @@
                     </Button>
 
                     <!--요금저장 버튼-->
-                    <Button x:Name="BtnMod_SaveFee" 
+                    <Button x:Name="BtnMod_SaveFee" Click="BtnCommon_SaveFee_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Save005.png" Style="{StaticResource ImageSizeMid}" />
@@ -1383,7 +1383,7 @@
                     </Button>
 
                     <!--거래처요금 버튼-->
-                    <Button x:Name="BtnMod_CompFee" 
+                    <Button x:Name="BtnMod_CompFee" Click="BtnCommon_CompFee_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Save006.png" Style="{StaticResource ImageSizeMid}" />
@@ -1392,7 +1392,7 @@
                     </Button>
 
                     <!--오더복사 버튼-->
-                    <Button x:Name="BtnMod_CopyOrder"  
+                    <Button x:Name="BtnMod_CopyOrder" Click="BtnCommon_CopyOrder_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="50" Background="#5AD2FF" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Copy001.png" Style="{StaticResource ImageSizeMid}" />
@@ -1404,7 +1404,7 @@
                     </Button>
 
                     <!--마일리지 버튼-->
-                    <Button x:Name="BtnMod_Mileage" 
+                    <Button x:Name="BtnMod_Mileage" Click="BtnCommon_Mileage_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Pencil001.png" Style="{StaticResource ImageSizeMid}" />
@@ -1413,7 +1413,7 @@
                     </Button>
 
                     <!--변경이력 버튼-->
-                    <Button x:Name="BtnMod_ChangeHistory"
+                    <Button x:Name="BtnMod_ChangeHistory" Click="BtnCommon_ChangeHistory_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Pencil002.png" Style="{StaticResource ImageSizeMid}" />

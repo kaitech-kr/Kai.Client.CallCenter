@@ -19,7 +19,7 @@ using Kai.Client.CallCenter.Classes;
 
 
 namespace Kai.Client.CallCenter.Windows;
-#nullable enable
+#nullable disable
 public partial class Order_ReceiptWnd : Window
 {
     #region 저장, 수정, 생성

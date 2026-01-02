@@ -313,11 +313,6 @@ public partial class Order_ReceiptWnd : Window
 
     }
 
-    // 오더적요 지우기
-    private void BtnErase_OrderRemarks_Click(object sender, RoutedEventArgs e)
-    {
-         //TBoxOrderRemarks.Text = string.Empty;
-    }
     #endregion
 
     #region Click - CheckBox 
@@ -634,7 +629,7 @@ public partial class Order_ReceiptWnd : Window
     {
         if (e.DataObject.GetDataPresent(DataFormats.Text))
         {
-            string? text = e.DataObject.GetData(DataFormats.Text) as string;
+            string text = e.DataObject.GetData(DataFormats.Text) as string;
             if (string.IsNullOrEmpty(text) || s_RegexOnlyNum.IsMatch(text)) // 숫자 아니면 차단
             {
                 e.CancelCommand();
