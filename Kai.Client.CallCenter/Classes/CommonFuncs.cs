@@ -258,22 +258,22 @@ public class CommonFuncs : CommonVars
     }
 
     // Button의 Opacity를 설정하여 활성화/비활성화 표시
-    //public static void SetButtonOpacity(Button btn, bool bEnable)
-    //{
-    //    Application.Current.Dispatcher.Invoke(() =>
-    //    {
-    //        if (btn == null)
-    //        {
-    //            Debug.WriteLine("[CommonFuncs] SetButtonOpacity: btn이 null입니다");
-    //            return;
-    //        }
+    public static void SetButtonOpacity(Button btn, bool bEnable)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (btn == null)
+            {
+                Debug.WriteLine("[CommonFuncs] SetButtonOpacity: btn이 null입니다");
+                return;
+            }
 
-    //        if (bEnable)
-    //            btn.Opacity = (double)Application.Current.FindResource("AppOpacity_Enabled");
-    //        else
-    //            btn.Opacity = (double)Application.Current.FindResource("AppOpacity_Disabled");
-    //    });
-    //}
+            if (bEnable)
+                btn.Opacity = (double)Application.Current.FindResource("AppOpacity_Enabled");
+            else
+                btn.Opacity = (double)Application.Current.FindResource("AppOpacity_Disabled");
+        });
+    }
     #endregion
 
     #region NetMsgWnd

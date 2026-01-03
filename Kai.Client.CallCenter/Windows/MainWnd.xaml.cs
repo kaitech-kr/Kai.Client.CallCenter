@@ -661,7 +661,19 @@ public partial class MainWnd : Window
     }
     public void RemoveTab(TabItem tabItem)
     {
-        if (tabItem != null) MainTabCtrl.Items.Remove(tabItem);
+        if (tabItem != null)
+        {
+            // 캐시 및 LRU 리스트에서 제거
+            var pageName = tabItem.Tag?.ToString();
+            if (pageName != null)
+            {
+                _pageCache.Remove(pageName);
+                _pageLruList.Remove(pageName);
+                Debug.WriteLine($"[MainWnd] RemoveTab 캐시 제거: {pageName} (캐시 크기: {_pageCache.Count}/{MaxCachedTabs})");
+            }
+
+            MainTabCtrl.Items.Remove(tabItem);
+        }
     }
     #endregion
 

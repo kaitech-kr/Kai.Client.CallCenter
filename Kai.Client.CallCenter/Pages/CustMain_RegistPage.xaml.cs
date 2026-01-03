@@ -215,41 +215,46 @@ public partial class CustMain_RegistPage : Page
 
     #region Datagrid Events
     // DataGrid 더블클릭 - 선택된 고객 정보 수정 창 열기
-    private void DGridCustMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private async void DGridCustMouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        //if (DGridCustMain.SelectedItem is not VmCustMain_RegistPage selectedItem)
-        //{
-        //    Debug.WriteLine("[CustMain_RegistPage] DataGrid 더블클릭: 선택된 항목 없음");
-        //    return;
-        //}
+        if (DGridCustMain.SelectedItem is not VmCustMain_RegistPage selectedItem)
+        {
+            Debug.WriteLine("[CustMain_RegistPage] DataGrid 더블클릭: 선택된 항목 없음");
+            return;
+        }
 
-        //Debug.WriteLine($"[CustMain_RegistPage] 고객 수정 창 열기: KeyCode={selectedItem.tbAllWith.custMain.KeyCode}");
+        long keyCode = selectedItem.tbAllWith.custMain.KeyCode;
+        Debug.WriteLine($"[CustMain_RegistPage] 고객 수정 창 열기: KeyCode={keyCode}");
 
-        ////고객 수정 창 열기
-        //CustMain_RegEditWnd custMain_EditWnd = new CustMain_RegEditWnd(selectedItem.tbAllWith);
-        //bool? dialogResult = SafeShowDialog.WithMainWindowToOwner(custMain_EditWnd, s_MainWnd);
+        //고객 수정 창 열기
+        CustMain_RegEditWnd custMain_EditWnd = new CustMain_RegEditWnd(selectedItem.tbAllWith);
+        bool? dialogResult = SafeShowDialog.WithMainWindowToOwner(custMain_EditWnd, s_MainWnd);
 
-        ////취소 또는 실패 시 종료
-        //if (dialogResult != true)
-        //{
-        //    Debug.WriteLine("[CustMain_RegistPage] 고객 수정 취소됨");
-        //    return;
-        //}
+        //취소 또는 실패 시 종료
+        if (dialogResult != true)
+        {
+            Debug.WriteLine("[CustMain_RegistPage] 고객 수정 취소됨");
+            return;
+        }
 
-        ////수정된 데이터를 원본에 복사
-        // selectedItem.tbAllWith.custMain = NetUtil.DeepCopyFrom(custMain_EditWnd.tbAllWithNew.custMain);
+        Debug.WriteLine($"[CustMain_RegistPage] 고객 수정 완료: KeyCode={keyCode}");
 
-        ////DataGrid 갱신(ViewModel 재생성)
-        //int index = DGridCustMain.SelectedIndex;
-        //if (index >= 0)
-        //{
-        //    VsCustMain_RegistPage.oc_VmCustMainForPage[index] = new VmCustMain_RegistPage(selectedItem.tbAllWith);
-        //    Debug.WriteLine($"[CustMain_RegistPage] 고객 정보 수정 완료: Index={index}, KeyCode={selectedItem.tbAllWith.custMain.KeyCode}");
-        //}
-        //else
-        //{
-        //    Debug.WriteLine("[CustMain_RegistPage] DataGrid 갱신 실패: Index가 유효하지 않음");
-        //}
+        // 검색 조건이 없으면 수정한 고객명으로 검색
+        if (!CanSearch())
+        {
+            TBoxCustName.Text = custMain_EditWnd.tbAllWithNew?.custMain?.CustName ?? "";
+        }
+
+        // 목록 갱신
+        await SearchAsync();
+
+        // 수정된 고객을 DataGrid에서 찾아 선택
+        int index = VsCustMain_RegistPage.GetIndexByKeyCode(keyCode);
+        if (index >= 0)
+        {
+            DGridCustMain.SelectedIndex = index;
+            Debug.WriteLine($"[CustMain_RegistPage] 수정된 고객 선택 완료: Index={index}");
+        }
     }
     private void DGridCust_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -267,65 +272,70 @@ public partial class CustMain_RegistPage : Page
     // 고객 삭제
     private void BtnDelete_Click(object sender, RoutedEventArgs e)
     {
-        //if (!BtnDelete.IsEnabled || DGridCustMain.SelectedIndex < 0) return;
+        if (!BtnDelete.IsEnabled || DGridCustMain.SelectedIndex < 0) return;
 
-        //if (MessageBox.Show("삭제하시겠습니까?", "삭제", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-        //{
-        //    int index = DGridCustMain.SelectedIndex;
-        //    long keyCode = VsCustMain_RegistPage.oc_VmCustMainForPage[index].tbCustMain.KeyCode;
+        if (MessageBox.Show("삭제하시겠습니까?", "삭제", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+        {
+            int index = DGridCustMain.SelectedIndex;
+            long keyCode = VsCustMain_RegistPage.oc_VmCustMainForPage[index].tbCustMain.KeyCode;
 
-        //    //삭제
-        //    VsCustMain_RegistPage.oc_VmCustMainForPage.RemoveAt(index);
-        //    this.UpdateDatagridCount();
-        //}
+            //삭제
+            VsCustMain_RegistPage.oc_VmCustMainForPage.RemoveAt(index);
+            this.UpdateDatagridCount();
+        }
     }
 
     // 신규 고객 등록 버튼 - 고객 등록 창을 열고 저장 후 목록을 갱신하여 선택
     private async void BtnNewCust_Click(object sender, RoutedEventArgs e)
     {
-        //// 고객 등록 창 열기
-        //CustMain_RegEditWnd wnd = new CustMain_RegEditWnd();
-        //bool? dialogResult = SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
+        // 고객 등록 창 열기
+        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd();
+        bool? dialogResult = SafeShowDialog.WithMainWindowToOwner(wnd, s_MainWnd);
 
-        ////취소 또는 실패 시 종료
-        //if (dialogResult != true)
-        //{
-        //    Debug.WriteLine("[CustMain_RegistPage] 신규 고객 등록 취소됨");
-        //    return;
-        //}
+        //취소 또는 실패 시 종료
+        if (dialogResult != true)
+        {
+            Debug.WriteLine("[CustMain_RegistPage] 신규 고객 등록 취소됨");
+            return;
+        }
 
-        //// 저장 성공 - 새로 등록된 고객의 KeyCode 확인
-        //long newKeyCode = wnd.tbAllWithNew?.custMain?.KeyCode ?? 0;
-        //if (newKeyCode <= 0)
-        //{
-        //    Debug.WriteLine("[CustMain_RegistPage] 신규 고객 등록 완료되었으나 KeyCode가 유효하지 않습니다.");
-        //    return;
-        //}
+        // 저장 성공 - 새로 등록된 고객의 KeyCode 확인
+        long newKeyCode = wnd.tbAllWithNew?.custMain?.KeyCode ?? 0;
+        if (newKeyCode <= 0)
+        {
+            Debug.WriteLine("[CustMain_RegistPage] 신규 고객 등록 완료되었으나 KeyCode가 유효하지 않습니다.");
+            return;
+        }
 
-        // Debug.WriteLine($"[CustMain_RegistPage] 신규 고객 등록 완료: KeyCode={newKeyCode}");
+        Debug.WriteLine($"[CustMain_RegistPage] 신규 고객 등록 완료: KeyCode={newKeyCode}");
 
-        //// TODO: SearchAsync 활성화 필요 (현재 Line 432-494에 주석 처리됨)
-        //// 목록 갱신 후 신규 등록된 고객을 선택하려면 SearchAsync 호출 필요
-        // await SearchAsync();
+        // 검색 조건이 없으면 등록한 고객명으로 검색
+        if (!CanSearch())
+        {
+            TBoxCustName.Text = wnd.tbAllWithNew?.custMain?.CustName ?? "";
+        }
 
-        //// 신규 등록된 고객을 DataGrid에서 찾아 선택
-        //int index = VsCustMain_RegistPage.GetIndexByKeyCode(newKeyCode);
-        //if (index >= 0)
-        //{
-        //    DGridCustMain.SelectedIndex = index;
-        //    Debug.WriteLine($"[CustMain_RegistPage] 신규 고객 선택 완료: Index={index}");
-        //}
-        //else
-        //{
-        //    Debug.WriteLine($"[CustMain_RegistPage] 신규 고객을 목록에서 찾을 수 없습니다: KeyCode={newKeyCode} (SearchAsync 호출 필요)");
-        //}
+        // 목록 갱신 후 신규 등록된 고객을 선택하려면 SearchAsync 호출 필요
+        await SearchAsync();
+
+        // 신규 등록된 고객을 DataGrid에서 찾아 선택
+        int index = VsCustMain_RegistPage.GetIndexByKeyCode(newKeyCode);
+        if (index >= 0)
+        {
+            DGridCustMain.SelectedIndex = index;
+            Debug.WriteLine($"[CustMain_RegistPage] 신규 고객 선택 완료: Index={index}");
+        }
+        else
+        {
+            Debug.WriteLine($"[CustMain_RegistPage] 신규 고객을 목록에서 찾을 수 없습니다: KeyCode={newKeyCode} (SearchAsync 호출 필요)");
+        }
     }
 
     // 조회 버튼 클릭 - 입력된 검색 조건으로 고객 정보 조회
     private async void BtnSearch_Click(object sender, RoutedEventArgs e)
     {
-        //Debug.WriteLine("[CustMain_RegistPage] 조회 버튼 클릭");
-        //await SearchAsync();
+        Debug.WriteLine("[CustMain_RegistPage] 조회 버튼 클릭");
+        await SearchAsync();
     }
 
     // 엑셀
@@ -346,35 +356,35 @@ public partial class CustMain_RegistPage : Page
     // 검색내 조회 버튼 클릭 - 이미 조회된 결과에서 추가 필터링
     private void BtnSearchInFind_Click(object sender, RoutedEventArgs e)
     {
-        ////조회 결과 확인
-        //if (listTbAllWith == null || listTbAllWith.Count == 0)
-        //{
-        //    Debug.WriteLine("[CustMain_RegistPage] 검색내 조회: 조회 결과 없음");
-        //    return;
-        //}
+        //조회 결과 확인
+        if (listTbAllWith == null || listTbAllWith.Count == 0)
+        {
+            Debug.WriteLine("[CustMain_RegistPage] 검색내 조회: 조회 결과 없음");
+            return;
+        }
 
-        //Debug.WriteLine($"[CustMain_RegistPage] 검색내 조회 시작: 전체 {listTbAllWith.Count}건");
+        Debug.WriteLine($"[CustMain_RegistPage] 검색내 조회 시작: 전체 {listTbAllWith.Count}건");
 
-        //try
-        //{
-        //    NetLoadingWnd.ShowLoading(s_MainWnd, "검색내에서 필터링 중입니다...");
+        try
+        {
+            NetLoadingWnd.ShowLoading(s_MainWnd, "검색내에서 필터링 중입니다...");
 
-        //    bool? use = GetUsingType();
-        //    VsCustMain_RegistPage.LoadData(s_MainWnd, listTbAllWith,
-        //    use, TBoxCustName.Text, TBoxDeptName.Text, TBoxChargeName.Text, TBoxTelNo.Text, TBoxDongDetail.Text, TBoxInternetID.Text, TBoxCompName.Text);
-        //    this.UpdateDatagridCount();
+            bool? use = GetUsingType();
+            VsCustMain_RegistPage.LoadData(s_MainWnd, listTbAllWith,
+            use, TBoxCustName.Text, TBoxDeptName.Text, TBoxChargeName.Text, TBoxTelNo.Text, TBoxDongDetail.Text, TBoxInternetID.Text, TBoxCompName.Text);
+            this.UpdateDatagridCount();
 
-        //    Debug.WriteLine($"[CustMain_RegistPage] 검색내 조회 완료: 필터링 결과 {VsCustMain_RegistPage.oc_VmCustMainForPage.Count}건");
-        //}
-        //catch (Exception ex)
-        //{
-        //    ErrMsgBox($"검색내 조회 오류\n{StdUtil.GetExceptionMessage(ex)}", "BtnSearchInFind_Click");
-        //    Debug.WriteLine($"[CustMain_RegistPage] 검색내 조회 예외: {ex.Message}");
-        //}
-        //finally
-        //{
-        //    NetLoadingWnd.HideLoading();
-        //}
+            Debug.WriteLine($"[CustMain_RegistPage] 검색내 조회 완료: 필터링 결과 {VsCustMain_RegistPage.oc_VmCustMainForPage.Count}건");
+        }
+        catch (Exception ex)
+        {
+            ErrMsgBox($"검색내 조회 오류\n{StdUtil.GetExceptionMessage(ex)}", "BtnSearchInFind_Click");
+            Debug.WriteLine($"[CustMain_RegistPage] 검색내 조회 예외: {ex.Message}");
+        }
+        finally
+        {
+            NetLoadingWnd.HideLoading();
+        }
     }
 
     // 화면지우기
@@ -451,116 +461,114 @@ public partial class CustMain_RegistPage : Page
             return objects;
         });
     }
-    //public void UpdateDatagridCount()
-    //{
-    //    LblSum.Content = $"합계: {VsCustMain_RegistPage.oc_VmCustMainForPage.Count:##,###}개";
-    //}
+    public void UpdateDatagridCount()
+    {
+        LblSum.Content = $"합계: {VsCustMain_RegistPage.oc_VmCustMainForPage.Count:##,###}개";
+    }
 
     // 고객 정보 검색 - 전체 검색 또는 조건별 검색 수행
-    //private async Task SearchAsync()
-    //{
-    //    try
-    //    {
-    //        bool? use = GetUsingType();
-    //        PostgResult_AllWithList result;
+    private async Task SearchAsync()
+    {
+        try
+        {
+            bool? use = GetUsingType();
+            PostgResult_AllWithList result;
 
-    //        // 전체 검색
-    //        if (ChBoxTotal.IsChecked == true)
-    //        {
-    //            Debug.WriteLine("[CustMain_RegistPage] 전체 고객 검색 시작");
-    //            NetLoadingWnd.ShowLoading(s_MainWnd, "고객정보를 로딩중입니다...");
-    //            //result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using(use);
-    //            result = new PostgResult_AllWithList();
-    //        }
-    //        // 조건 검색
-    //        else
-    //        {
-    //            // 검색 조건 확인
-    //            if (!CanSearch())
-    //            {
-    //                MessageBox.Show("검색 조건을 입력해주세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
-    //                Debug.WriteLine("[CustMain_RegistPage] 검색 조건 없음");
-    //                return;
-    //            }
+            // 전체 검색
+            if (ChBoxTotal.IsChecked == true)
+            {
+                Debug.WriteLine("[CustMain_RegistPage] 전체 고객 검색 시작");
+                NetLoadingWnd.ShowLoading(s_MainWnd, "고객정보를 로딩중입니다...");
+                result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using(use);
+            }
+            // 조건 검색
+            else
+            {
+                // 검색 조건 확인
+                if (!CanSearch())
+                {
+                    MessageBox.Show("검색 조건을 입력해주세요.", "안내", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Debug.WriteLine("[CustMain_RegistPage] 검색 조건 없음");
+                    return;
+                }
 
-    //            Debug.WriteLine($"[CustMain_RegistPage] 조건별 고객 검색 시작: 고객명={TBoxCustName.Text}, 전화번호={TBoxTelNo.Text}");
-    //            NetLoadingWnd.ShowLoading(s_MainWnd, "고객정보를 로딩중입니다...");
+                Debug.WriteLine($"[CustMain_RegistPage] 조건별 고객 검색 시작: 고객명={TBoxCustName.Text}, 전화번호={TBoxTelNo.Text}");
+                NetLoadingWnd.ShowLoading(s_MainWnd, "고객정보를 로딩중입니다...");
 
-    //            //result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11(
-    //            //    use,
-    //            //    TBoxCustName.Text,
-    //            //    TBoxDeptName.Text,
-    //            //    TBoxChargeName.Text,
-    //            //    TBoxTelNo.Text,
-    //            //    TBoxDongDetail.Text,
-    //            //    TBoxInternetID.Text,
-    //            //    TBoxCompName.Text);
-    //            result = new PostgResult_AllWithList();
+                result = await s_SrGClient.SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11(
+                    use,
+                    TBoxCustName.Text,
+                    TBoxDeptName.Text,
+                    TBoxChargeName.Text,
+                    TBoxTelNo.Text,
+                    TBoxDongDetail.Text,
+                    TBoxInternetID.Text,
+                    TBoxCompName.Text);
 
-    //            // TODO: TBoxCompName을 CompCode(Key)로 변경 필요
-    //        }
+                // TODO: TBoxCompName을 CompCode(Key)로 변경 필요
+            }
 
-    //        // 결과 검증
-    //        if (result == null)
-    //        {
-    //            ErrMsgBox("검색 결과가 없습니다.", "SearchAsync");
-    //            Debug.WriteLine("[CustMain_RegistPage] 검색 결과 null");
-    //            return;
-    //        }
+            // 결과 검증
+            if (result == null)
+            {
+                ErrMsgBox("검색 결과가 없습니다.", "SearchAsync");
+                Debug.WriteLine("[CustMain_RegistPage] 검색 결과 null");
+                return;
+            }
 
-    //        // 에러 메시지 확인 (공백 문자 포함 체크)
-    //        Debug.WriteLine($"[CustMain_RegistPage] sErrNPos 값 확인: '{result.sErrNPos}', Length={result.sErrNPos?.Length ?? 0}, IsNullOrWhiteSpace={string.IsNullOrWhiteSpace(result.sErrNPos)}");
+            // 에러 메시지 확인 (공백 문자 포함 체크)
+            Debug.WriteLine($"[CustMain_RegistPage] sErrNPos 값 확인: '{result.sErrNPos}', Length={result.sErrNPos?.Length ?? 0}, IsNullOrWhiteSpace={string.IsNullOrWhiteSpace(result.sErrNPos)}");
 
-    //        // sErrNPos 형식: "sErr: {에러메시지}\nsPos: {위치}" 형태인 경우 실제 에러 내용 확인
-    //        // "sErr: \nsPos: " 같은 빈 형식은 에러가 아님
-    //        if (!string.IsNullOrWhiteSpace(result.sErrNPos))
-    //        {
-    //            string cleanedError = result.sErrNPos
-    //                .Replace("sErr:", "")
-    //                .Replace("sPos:", "")
-    //                .Replace("\n", "")
-    //                .Replace("\r", "")
-    //                .Trim();
+            // sErrNPos 형식: "sErr: {에러메시지}\nsPos: {위치}" 형태인 경우 실제 에러 내용 확인
+            // "sErr: \nsPos: " 같은 빈 형식은 에러가 아님
+            if (!string.IsNullOrWhiteSpace(result.sErrNPos))
+            {
+                string cleanedError = result.sErrNPos
+                    .Replace("sErr:", "")
+                    .Replace("sPos:", "")
+                    .Replace("\n", "")
+                    .Replace("\r", "")
+                    .Trim();
 
-    //            if (!string.IsNullOrEmpty(cleanedError))
-    //            {
-    //                ErrMsgBox($"고객 검색 실패\n{result.sErrNPos}", "SearchAsync");
-    //                Debug.WriteLine($"[CustMain_RegistPage] 검색 실패: sErrNPos='{result.sErrNPos}'");
-    //                return;
-    //            }
-    //            else
-    //            {
-    //                Debug.WriteLine("[CustMain_RegistPage] sErrNPos에 형식 문자열만 있고 실제 에러 없음 (정상)");
-    //            }
-    //        }
+                if (!string.IsNullOrEmpty(cleanedError))
+                {
+                    ErrMsgBox($"고객 검색 실패\n{result.sErrNPos}", "SearchAsync");
+                    Debug.WriteLine($"[CustMain_RegistPage] 검색 실패: sErrNPos='{result.sErrNPos}'");
+                    return;
+                }
+                else
+                {
+                    Debug.WriteLine("[CustMain_RegistPage] sErrNPos에 형식 문자열만 있고 실제 에러 없음 (정상)");
+                }
+            }
 
-    //        // 결과 데이터 확인 및 바인딩
-    //        if (result.listTbAll == null || result.listTbAll.Count == 0)
-    //        {
-    //            Debug.WriteLine("[CustMain_RegistPage] 검색 결과 0건");
-    //            listTbAllWith = new List<TbAllWith>();
-    //            VsCustMain_RegistPage.LoadData(s_MainWnd, listTbAllWith);
-    //            this.UpdateDatagridCount();
-    //            return;
-    //        }
+            // 결과 데이터 확인 및 바인딩
+            if (result.listTbAll == null || result.listTbAll.Count == 0)
+            {
+                Debug.WriteLine("[CustMain_RegistPage] 검색 결과 0건");
+                listTbAllWith = new List<TbAllWith>();
+                VsCustMain_RegistPage.LoadData(s_MainWnd, listTbAllWith);
+                this.UpdateDatagridCount();
+                return;
+            }
 
-    //        // DataGrid 바인딩 소스 갱신
-    //        listTbAllWith = result.listTbAll;
-    //        VsCustMain_RegistPage.LoadData(s_MainWnd, listTbAllWith);
-    //        this.UpdateDatagridCount();
+            // DataGrid 바인딩 소스 갱신
+            listTbAllWith = result.listTbAll;
+            VsCustMain_RegistPage.LoadData(s_MainWnd, listTbAllWith);
+            this.UpdateDatagridCount();
 
-    //        Debug.WriteLine($"[CustMain_RegistPage] 검색 완료: {result.listTbAll.Count}건");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        ErrMsgBox($"고객 검색 오류\n{StdUtil.GetExceptionMessage(ex)}", "SearchAsync");
-    //        Debug.WriteLine($"[CustMain_RegistPage] 검색 예외: {ex.Message}");
-    //    }
-    //    finally
-    //    {
-    //        NetLoadingWnd.HideLoading();
-    //    }
-    //}
+            Debug.WriteLine($"[CustMain_RegistPage] 검색 완료: {result.listTbAll.Count}건");
+        }
+        catch (Exception ex)
+        {
+            ErrMsgBox($"고객 검색 오류\n{StdUtil.GetExceptionMessage(ex)}", "SearchAsync");
+            Debug.WriteLine($"[CustMain_RegistPage] 검색 예외: {ex.Message}");
+        }
+        finally
+        {
+            NetLoadingWnd.HideLoading();
+        }
+    }
     #endregion
 }
 #nullable restore

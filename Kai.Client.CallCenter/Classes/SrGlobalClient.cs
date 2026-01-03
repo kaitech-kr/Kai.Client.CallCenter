@@ -634,7 +634,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         try
         {
             return await HubConn.InvokeCoreAsync<PostgResult_TbCompanyList>(
-                StdConst_FuncName.SrResult.CallCenter.Company_SelectRowsAsync_CenterCode_CompName_TradType_Using,
+                "SrResult_Company_SelectRowsAsync_CenterCode_CompName_TradType_Using",
                 new[] { (object)s_CenterCharge.CenterCode, sCompName, sTradeType, (object)bUsing });
         }
         catch (Exception ex)
@@ -686,17 +686,17 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_InsertRowAsync");
         }
     }
-    //public async Task<StdResult_Long> SrResult_CustMain_InsertRowAsync_ByCopy(TbCustMain tb)
-    //{
-    //    try
-    //    {
-    //        return await HubConn.InvokeCoreAsync<StdResult_Long>(StdConst_FuncName.SrResult.CallCenter.CustMain_InsertRowAsync_ByCopy, new[] { tb });
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_InsertByCopy_999");
-    //    }
-    //}
+    public async Task<StdResult_Long> SrResult_CustMain_InsertRowAsync_ByCopy(TbCustMain tb)
+    {
+        try
+        {
+            return await HubConn.InvokeCoreAsync<StdResult_Long>("SrResult_CustMain_InsertRowAsync_ByCopy", new[] { tb });
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Long(0, StdUtil.GetExceptionMessage(ex), "SrGlobalClient/SrResult_CustMain_InsertByCopy_999");
+        }
+    }
 
     //// Select
     //public async Task<PostgResult_TbCustMain> SrResult_CustMain_SelectRowAsync_CenterCode_KeyCode(long lKeyCode)
@@ -778,7 +778,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         try
         {
             return await HubConn.InvokeCoreAsync<PostgResult_TbCustMainList>(
-                StdConst_FuncName.SrResult.CallCenter.CustMain_SelectRowsAsync_CenterCode_CompCode,
+                "SrResult_CustMain_SelectRowsAsync_CenterCode_CompCode",
                 new[] { (object)s_CenterCharge.CenterCode, (object)lCompCode });
         }
         catch (Exception ex)
@@ -878,8 +878,8 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     {
         try
         {
-            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(StdConst_FuncName.SrResult.CallCenter.
-                CustMainWith_SelectRowsAsync_CenterCode_Using, new[] { (object)s_CenterCharge.CenterCode, (object)bUsing });
+            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                "SrResult_CustMainWith_SelectRowsAsync_CenterCode_Using", new[] { (object)s_CenterCharge.CenterCode, (object)bUsing });
         }
         catch (Exception ex)
         {
@@ -894,7 +894,8 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     {
         try
         {
-            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(StdConst_FuncName.SrResult.CallCenter.CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11, 
+            return await HubConn.InvokeCoreAsync<PostgResult_AllWithList>(
+                "SrResult_CustMainWith_SelectRowsAsync_CenterCode_CustNameWith11",
                 new[] { (object)s_CenterCharge.CenterCode, (object)bUsing, sCustName, sDeptName, sChargeName, sTelNo, sDongDetail, sInetID, sCompName });
         }
         catch (Exception ex)
