@@ -287,79 +287,71 @@ public partial class InsungsAct_RcptRegPage
     #endregion
 
     #region 2. Window Control - 창/팝업 제어
-    //     /// <summary>
-    //     /// 로딩 패널 대기 (조회 시 데이터 로딩 확인)
-    //     /// - Phase 1: 로딩 패널 출현 대기 (최대 250ms)
-    //     /// - Phase 2: 로딩 패널 사라짐 대기 (최대 timeoutSec초)
-    //     /// </summary>
-    //     /// <param name="hWndDG">Datagrid 핸들</param>
-    //     /// <param name="ctrl">취소 토큰</param>
-    //     /// <param name="timeoutSec">Phase 2 타임아웃 (초)</param>
-    //     /// <returns>Success: 로딩 완료, Skip: 이미 완료, Fail: 타임아웃</returns>
-    //     private async Task<StdResult_Status> WaitPanLoadedAsync(IntPtr hWndDG, CancelTokenControl ctrl, int timeoutSec = 50)
-    //     {
-    //         try
-    //         {
-    //             IntPtr hWndFind = IntPtr.Zero;
-    //             Draw.Point ptCheckPan = m_FileInfo.접수등록Page_DG오더_ptChkRelPanL;
-    // 
-    //             // Phase 1: 로딩 패널 출현 대기 (최대 250ms)
-    //             //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 대기 시작");
-    // 
-    //             for (int i = 0; i < CommonVars.c_nWaitLong; i++) // 250ms
-    //             {
-    //                 await ctrl.WaitIfPausedOrCancelledAsync();
-    // 
-    //                 hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, ptCheckPan);
-    //                 if (hWndFind != hWndDG)
-    //                 {
-    //                     //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 확인 ({i}ms)");
-    //                     break;
-    //                 }
-    //                 await Task.Delay(1, ctrl.Token);
-    //             }
-    // 
-    //             if (hWndFind == hWndDG)
-    //             {
-    //                 //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 미출현 → Skip (이미 로딩 완료)");
-    //                 return new StdResult_Status(StdResult.Skip);
-    //             }
-    // 
-    //             // Phase 2: 로딩 패널 사라짐 대기 (최대 timeoutSec초)
-    //             //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 사라짐 대기 시작 (최대 {timeoutSec}초)");
-    // 
-    //             int iterations = timeoutSec * 10; // 100ms 단위
-    //             for (int i = 0; i < iterations; i++)
-    //             {
-    //                 await ctrl.WaitIfPausedOrCancelledAsync();
-    // 
-    //                 hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, ptCheckPan);
-    //                 if (hWndFind == hWndDG)
-    //                 {
-    //                     int elapsedMs = i * 100;
-    //                     //Debug.WriteLine($"[{m_Context.AppName}] 로딩 완료 ({elapsedMs}ms)");
-    //                     return new StdResult_Status(StdResult.Success);
-    //                 }
-    // 
-    //                 // 5초마다 진행 상황 로그
-    //                 if (i > 0 && i % 50 == 0)
-    //                 {
-    //                     int elapsedSec = i / 10;
-    //                     Debug.WriteLine($"[{m_Context.AppName}] 로딩 대기 중... ({elapsedSec}초 경과)");
-    //                 }
-    // 
-    //                 await Task.Delay(100, ctrl.Token);
-    //             }
-    // 
-    //             // 타임아웃
-    //             Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 타임아웃 ({timeoutSec}초)");
-    //             return new StdResult_Status(StdResult.Fail, $"로딩 대기 시간 초과 ({timeoutSec}초)", "InsungsAct_RcptRegPage/WaitPanLoadedAsync_01");
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "InsungsAct_RcptRegPage/WaitPanLoadedAsync_999");
-    //         }
-    //     }
+    // 로딩 패널 대기 - Phase1: 출현대기(250ms), Phase2: 사라짐대기(timeoutSec초) → Success/Skip/Fail
+    private async Task<StdResult_Status> WaitPanLoadedAsync(IntPtr hWndDG, CancelTokenControl ctrl, int timeoutSec = 50)
+    {
+        try
+        {
+            IntPtr hWndFind = IntPtr.Zero;
+            Draw.Point ptCheckPan = m_FileInfo.접수등록Page_DG오더_ptChkRelPanL;
+
+            // Phase 1: 로딩 패널 출현 대기 (최대 250ms)
+            //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 대기 시작");
+
+            for (int i = 0; i < CommonVars.c_nWaitLong; i++) // 250ms
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, ptCheckPan);
+                if (hWndFind != hWndDG)
+                {
+                    //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 출현 확인 ({i}ms)");
+                    break;
+                }
+                await Task.Delay(1, ctrl.Token);
+            }
+
+            if (hWndFind == hWndDG)
+            {
+                //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 미출현 → Skip (이미 로딩 완료)");
+                return new StdResult_Status(StdResult.Skip);
+            }
+
+            // Phase 2: 로딩 패널 사라짐 대기 (최대 timeoutSec초)
+            //Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 사라짐 대기 시작 (최대 {timeoutSec}초)");
+
+            int iterations = timeoutSec * 10; // 100ms 단위
+            for (int i = 0; i < iterations; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                hWndFind = Std32Window.GetWndHandle_FromRelDrawPt(hWndDG, ptCheckPan);
+                if (hWndFind == hWndDG)
+                {
+                    int elapsedMs = i * 100;
+                    //Debug.WriteLine($"[{m_Context.AppName}] 로딩 완료 ({elapsedMs}ms)");
+                    return new StdResult_Status(StdResult.Success);
+                }
+
+                // 5초마다 진행 상황 로그
+                if (i > 0 && i % 50 == 0)
+                {
+                    int elapsedSec = i / 10;
+                    Debug.WriteLine($"[{m_Context.AppName}] 로딩 대기 중... ({elapsedSec}초 경과)");
+                }
+
+                await Task.Delay(100, ctrl.Token);
+            }
+
+            // 타임아웃
+            Debug.WriteLine($"[{m_Context.AppName}] 로딩 패널 타임아웃 ({timeoutSec}초)");
+            return new StdResult_Status(StdResult.Fail, $"로딩 대기 시간 초과 ({timeoutSec}초)", "InsungsAct_RcptRegPage/WaitPanLoadedAsync_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "InsungsAct_RcptRegPage/WaitPanLoadedAsync_999");
+        }
+    }
     // 
     //     // 버튼 클릭 후 윈도우가 닫힐 때까지 대기
     //     private async Task<bool> ClickNWaitWindowChangedAsync(IntPtr hWndClick, IntPtr hWndOrg, CancelTokenControl ctrl)
@@ -395,11 +387,7 @@ public partial class InsungsAct_RcptRegPage
     //         return false;
     //     }
     // 
-    //     // 확인창의 예 버튼 클릭 (등록창 확인창과 동일)
-    //     /// <remarks>
-    //     /// [2025-12-04] Cargo24 작업 중 실수로 추가됨. 아직 호출되는 곳 없음.
-    //     /// 나중에 인성 작업 시 사용 예정.
-    //     /// </remarks>
+    //     // 확인창의 예 버튼 클릭 (등록창 확인창과 동일) - [2025-12-04] Cargo24 작업 중 추가, 미사용
     //     private async Task<bool> ClickConfirmYesButtonAsync(CancelTokenControl ctrl, string sClassName = "#32770", string sCaption = "확인")
     //     {
     //         await ctrl.WaitIfPausedOrCancelledAsync();
@@ -519,41 +507,41 @@ public partial class InsungsAct_RcptRegPage
     #endregion
 
     #region 3. Buttons - 버튼 함수
-    //     // 조회 버튼 클릭 및 데이터 로딩 대기
-    //     public async Task<StdResult_Status> Click조회버튼Async(CancelTokenControl ctrl, int retryCount = 3)
-    //     {
-    //         try
-    //         {
-    //             for (int i = 1; i <= retryCount; i++)
-    //             {
-    //                 await ctrl.WaitIfPausedOrCancelledAsync();
-    // 
-    //                 //Debug.WriteLine($"[{m_Context.AppName}] 조회 버튼 클릭 시도 {i}/{retryCount}");
-    // 
-    //                 // 조회 버튼 클릭
-    //                 await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
-    // 
-    //                 // 로딩 패널 대기 - 이것만으로 성공 여부 판단
-    //                 StdResult_Status resultSts = await WaitPanLoadedAsync(m_RcptPage.DG오더_hWnd, ctrl);
-    // 
-    //                 if (resultSts.Result == StdResult.Success || resultSts.Result == StdResult.Skip)
-    //                 {
-    //                     //Debug.WriteLine($"[{m_Context.AppName}] 조회 완료 (시도 {i}회, 결과: {resultSts.Result})");
-    //                     return new StdResult_Status(StdResult.Success, "조회 완료");
-    //                 }
-    // 
-    //                 // Fail = 타임아웃 → 재시도
-    //                 Debug.WriteLine($"[{m_Context.AppName}] 조회 실패 (시도 {i}회): 타임아웃");
-    //                 await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
-    //             }
-    // 
-    //             return new StdResult_Status(StdResult.Fail, $"조회 버튼 클릭 {retryCount}회 모두 실패", "InsungsAct_RcptRegPage/Click조회버튼Async_01");
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "InsungsAct_RcptRegPage/Click조회버튼Async_999");
-    //         }
-    //     }
+    // 조회 버튼 클릭 및 데이터 로딩 대기
+    public async Task<StdResult_Status> Click조회버튼Async(CancelTokenControl ctrl, int retryCount = 3)
+    {
+        try
+        {
+            for (int i = 1; i <= retryCount; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
+
+                //Debug.WriteLine($"[{m_Context.AppName}] 조회 버튼 클릭 시도 {i}/{retryCount}");
+
+                // 조회 버튼 클릭
+                await Std32Mouse_Post.MousePostAsync_ClickLeft(m_RcptPage.CmdBtn_hWnd조회);
+
+                // 로딩 패널 대기 - 이것만으로 성공 여부 판단
+                StdResult_Status resultSts = await WaitPanLoadedAsync(m_RcptPage.DG오더_hWnd, ctrl);
+
+                if (resultSts.Result == StdResult.Success || resultSts.Result == StdResult.Skip)
+                {
+                    //Debug.WriteLine($"[{m_Context.AppName}] 조회 완료 (시도 {i}회, 결과: {resultSts.Result})");
+                    return new StdResult_Status(StdResult.Success, "조회 완료");
+                }
+
+                // Fail = 타임아웃 → 재시도
+                Debug.WriteLine($"[{m_Context.AppName}] 조회 실패 (시도 {i}회): 타임아웃");
+                await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
+            }
+
+            return new StdResult_Status(StdResult.Fail, $"조회 버튼 클릭 {retryCount}회 모두 실패", "InsungsAct_RcptRegPage/Click조회버튼Async_01");
+        }
+        catch (Exception ex)
+        {
+            return new StdResult_Status(StdResult.Fail, StdUtil.GetExceptionMessage(ex), "InsungsAct_RcptRegPage/Click조회버튼Async_999");
+        }
+    }
     // 
     //     // 상태 버튼 찾기 (텍스트 검증 포함)
     //     private async Task<(IntPtr hWnd, StdResult_Error error)> FindStatusButtonAsync(
@@ -604,7 +592,7 @@ public partial class InsungsAct_RcptRegPage
             if (hWnd != IntPtr.Zero)
             {
                 // 2. OFR 이미지 매칭으로 검증
-                StdResult_NulBool resultOfr = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnd, 0, ofrImageKey, bEdit, bWrite, false);
+                StdResult_NulBool resultOfr = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnd, 0, ofrImageKey, bEdit);
 
                 if (StdConvert.NullableBoolToBool(resultOfr.bResult))
                 {
@@ -748,11 +736,7 @@ public partial class InsungsAct_RcptRegPage
     #endregion
 
     #region 5. Receipt Window - 접수창 관련
-    //     // 새로 등록
-    //     /// <summary>
-    //     /// 신규 버튼 클릭 후 접수등록 팝업창 열기
-    //     /// </summary>
-    //
+    //     // 신규 버튼 클릭 후 접수등록 팝업창 열기
     //    public async Task<StdResult_Status> OpenNewOrderPopupAsync(AutoAllocModel item, CancelTokenControl ctrl)
     //    {
     //        IntPtr hWndPopup = IntPtr.Zero;
@@ -1593,9 +1577,7 @@ public partial class InsungsAct_RcptRegPage
     //         return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
     //     }
     // 
-    //     /// <summary>
-    //     /// 팝업 내 주문 상태만 업데이트 (필드는 건드리지 않음)
-    //     /// </summary>
+    //     // 팝업 내 주문 상태만 업데이트 (필드는 건드리지 않음)
     //     private async Task<CommonResult_AutoAllocProcess> UpdateOrderStateOnlyAsync(
     //         string wantState, AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, bool useRepeat, CancelTokenControl ctrl)
     //     {
@@ -2725,11 +2707,7 @@ public partial class InsungsAct_RcptRegPage
     // 
     //     #region 6. Datagrid - 데이터그리드 관련
     // 
-    // Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인)
-    /// <param name="columnTexts">OFR로 읽어온 컬럼 헤더 텍스트 배열</param>
-    /// <param name="listLW">컬럼 Left/Width 리스트</param>
-    /// <returns>검증 이슈 플래그 (None이면 정상)</returns>
-    //
+    // Datagrid 상태 검증 (컬럼 개수, 순서, 너비 확인) → 검증 이슈 플래그 반환 (None이면 정상)
     private CEnum_DgValidationIssue ValidateDatagridState(string[] columnTexts, List<OfrModel_LeftWidth> listLW)
     {
         CEnum_DgValidationIssue issues = CEnum_DgValidationIssue.None;

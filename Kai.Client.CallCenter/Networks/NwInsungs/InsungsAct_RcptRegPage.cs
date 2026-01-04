@@ -161,7 +161,7 @@ public partial class InsungsAct_RcptRegPage
             for (int i = 0; i < btnNames.Length; i++)
             {
                 await s_GlobalCancelToken.WaitIfPausedOrCancelledAsync(); // ESC 중단 체크
-                resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Up", true, true, true);
+                resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Up", true);
                 if (!StdConvert.NullableBoolToBool(resultNulBool.bResult))
                     return new StdResult_Error(
                         $"[{m_Context.AppName}/RcptRegPage] {btnNames[i]}버튼 Up 이미지 매칭 실패", $"InsungsAct_RcptRegPage/InitializeAsync_UpMatch_{i}");
@@ -175,7 +175,7 @@ public partial class InsungsAct_RcptRegPage
                 bool bEdit = i == c_nRepeatVeryShort;
                 await Task.Delay(c_nWaitShort);
                 resultNulBool = await OfrWork_Insungs.
-                    OfrIsMatchedImage_DrawRelRectAsync(m_RcptPage.StatusBtn_hWnd접수, HEADER_GAB, "Img_접수버튼_Down", bEdit, bEdit, bEdit);
+                    OfrIsMatchedImage_DrawRelRectAsync(m_RcptPage.StatusBtn_hWnd접수, HEADER_GAB, "Img_접수버튼_Down", bEdit);
 
                 if (StdConvert.NullableBoolToBool(resultNulBool.bResult)) { bStateChanged = true; break; }
             }
@@ -186,7 +186,7 @@ public partial class InsungsAct_RcptRegPage
             // 나머지 버튼 Down 상태 확인 (비교 루프)
             for (int i = 1; i < btnNames.Length; i++) // 0(접수)은 위에서 확인됨
             {
-                resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Down", true, true, true);
+                resultNulBool = await OfrWork_Insungs.OfrIsMatchedImage_DrawRelRectAsync(hWnds[i], HEADER_GAB, $"Img_{btnNames[i]}버튼_Down", true);
                 if (!StdConvert.NullableBoolToBool(resultNulBool.bResult))
                     return new StdResult_Error(
                         $"[{m_Context.AppName}/RcptRegPage] {btnNames[i]}버튼 Down 이미지 매칭 실패", $"InsungsAct_RcptRegPage/InitializeAsync_DownMatch_{i}");

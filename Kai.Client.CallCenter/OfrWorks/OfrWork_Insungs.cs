@@ -16,7 +16,7 @@ public class OfrWork_Insungs : OfrWork_Common
 {
     #region OFR - 이미지 매칭 및 정보 얻기
     // Window Handle에서 캡처한 이미지가 원하는 텍스트와 일치하는지 확인
-    public static async Task<StdResult_NulBool> OfrIsMatchedImage_DrawRelRectAsync(IntPtr hWnd, int offset, string sWantedStr, bool bEdit = true, bool bWrite = true, bool bMsgBox = true)
+    public static async Task<StdResult_NulBool> OfrIsMatchedImage_DrawRelRectAsync(IntPtr hWnd, int offset, string sWantedStr, bool bEdit = true)
     {
         Draw.Bitmap bmpOrg = null;
         OfrResult_TbText result = null;
@@ -27,22 +27,18 @@ public class OfrWork_Insungs : OfrWork_Common
             bool bLastAttempt = (i == c_nRepeatVeryShort); // 마지막 시도 여부
 
             bmpOrg = OfrService.CaptureScreenRect_InWndHandle(hWnd, offset);
-            // 마지막 시도에만 대화상자 표시 가능성 (s_bDebugMode 상태에 따름)
-            result = await OfrWork_Common.OfrImage_ExactDrawRelRectAsync(bmpOrg, sWantedStr);
+
+            // 마지막 시도 + bEdit=true일 때만 대화상자 표시
+            result = await OfrWork_Common.OfrImage_ExactDrawRelRectAsync(bmpOrg, bLastAttempt && bEdit, sWantedStr);
 
             if (result?._sResult != null && result._sResult == sWantedStr)
-            {
-                //if (bWrite) Debug.WriteLine($"[OfrWork_Insungs] OFR 매칭 성공: Wanted='{sWantedStr}' (시도={i}/{c_nRepeatVeryShort}, hWnd={hWnd})");
                 return new StdResult_NulBool(true);
-            }
 
-            if (!bLastAttempt)
-                await Task.Delay(c_nWaitNormal);
+            if (!bLastAttempt) await Task.Delay(c_nWaitNormal);
         }
 
-        // 모든 시도 실패 - bWrite가 true일 때만 로그 출력
-        if (bWrite)
-            Debug.WriteLine($"[OfrWork_Insungs] OFR 매칭 실패: Wanted='{sWantedStr}', Actual='{result?._sResult}', Err='{result?.sErr}', hWnd={hWnd}");
+        // 모든 시도 실패
+        Debug.WriteLine($"[OfrWork_Insungs] OFR 매칭 실패: Wanted='{sWantedStr}', Actual='{result?._sResult}', Err='{result?.sErr}', hWnd={hWnd}");
 
         return new StdResult_NulBool(result?.sErr ?? "알 수 없는 오류", result?.sPos ?? "OfrWork_Insungs/OfrIsMatchedImage_DrawRelRectAsync");
     }

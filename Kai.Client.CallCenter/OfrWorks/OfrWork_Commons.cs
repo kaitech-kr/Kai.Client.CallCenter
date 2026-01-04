@@ -224,7 +224,7 @@ public class OfrWork_Common
     //}
 
     // Exact Bitmap에서 TbText를 찾는 함수 (반복하지 않음, 호출 측에서 반복 수행 필요)
-    public static async Task<OfrResult_TbText> OfrImage_ExactDrawRelRectAsync(Draw.Bitmap bmpExact, string sWantedStr = null)
+    public static async Task<OfrResult_TbText> OfrImage_ExactDrawRelRectAsync(Draw.Bitmap bmpExact, bool bEdit, string sWantedStr = null)
     {
         // Get Basic Hex Info (한 번만 분석)
         byte byteAvgBrightness = OfrService.GetAverageBrightness_FromColorBitmapFast(bmpExact);
@@ -252,8 +252,8 @@ public class OfrWork_Common
             return new OfrResult_TbText(resultText.tbText, analyText);
         }
 
-        // Debug 모드에서 수동 입력 다이얼로그 표시
-        if (s_bDebugMode)
+        // Debug 모드 + bEdit=true일 때만 수동 입력 다이얼로그 표시
+        if (s_bDebugMode && bEdit)
         {
             await Wnd.Application.Current.Dispatcher.InvokeAsync(async () =>
             {

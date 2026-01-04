@@ -69,12 +69,12 @@ public abstract class InsungAutoAllocBase : IExternalApp
 
     #region 5. Helper Methods - 헬퍼 함수
     // AutoAllocModel에서 인성 주문번호 가져오기 (AppName에 따라 Insung1 또는 Insung2)
-    //protected string GetInsungSeqno(AutoAllocModel item)
-    //{
-    //    return m_Context.AppName == StdConst_Network.INSUNG1
-    //        ? item.NewOrder.Insung1
-    //        : item.NewOrder.Insung2;
-    //}
+    protected string GetInsungSeqno(AutoAllocModel item)
+    {
+        return m_Context.AppName == StdConst_Network.INSUNG1
+            ? item.NewOrder.Insung1
+            : item.NewOrder.Insung2;
+    }
 
     // AutoAllocModel에 인성 주문번호 설정하기 (AppName에 따라 Insung1 또는 Insung2)
     //protected void SetInsungSeqno(AutoAllocModel item, string seqno)
@@ -85,11 +85,6 @@ public abstract class InsungAutoAllocBase : IExternalApp
     //        item.NewOrder.Insung2 = seqno;
     //}
 
-    // 큐 이름 가져오기 (AppName 기반)
-    //protected string GetQueueName()
-    //{
-    //    return m_Context.AppName;
-    //}
     #endregion
 
     #region 6. IExternalApp Implementation - 인터페이스 구현
@@ -221,90 +216,90 @@ public abstract class InsungAutoAllocBase : IExternalApp
 
         try
         {
-            //        Debug.WriteLine($"\n-----------------[{AppName}] AutoAllocAsync 시작 - Count={lAllocCount}--------------------------");
+            Debug.WriteLine($"\n-----------------[{AppName}] AutoAllocAsync 시작 - Count={lAllocCount}--------------------------");
 
-            //        // Cancel/Pause 체크 - Region 2 진입 전
-            //        await ctrl.WaitIfPausedOrCancelledAsync();
+            // Cancel/Pause 체크 - Region 2 진입 전
+            await ctrl.WaitIfPausedOrCancelledAsync();
 
-            //        #region 1. 사전작업
-            //        // TopMost 설정 - 인성 메인 창을 최상위로
-            //        await Std32Window.SetWindowTopMostAndReleaseAsync(m_Context.MemInfo.Main.TopWnd_hWnd, c_nWaitShort);
-            //        Debug.WriteLine($"[{AppName}] TopMost 설정 완료");
-            //        #endregion
+            #region 1. 사전작업
+            // TopMost 설정 - 인성 메인 창을 최상위로
+            await Std32Window.SetWindowTopMostAndReleaseAsync(m_Context.MemInfo.Main.TopWnd_hWnd, c_nWaitShort);
+            Debug.WriteLine($"[{AppName}] TopMost 설정 완료");
+            #endregion
 
-            //        #region 2. Local Variables 초기화
-            //        // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)
-            //        string queueName = GetQueueName();
-            //        List<AutoAllocModel> listFromController = ExternalAppController.QueueManager.DequeueAllToList(queueName);
-            //        Debug.WriteLine($"[{AppName}] 큐에서 가져온 주문 개수: {listFromController.Count}");
+            #region 2. Local Variables 초기화
+            // 컨트롤러 큐에서 주문 리스트 가져오기 (DequeueAllToList로 큐 비우기)
+            string queueName = m_Context.AppName;
+            List<AutoAllocModel> listFromController = ExternalAppController.QueueManager.DequeueAllToList(queueName);
+            Debug.WriteLine($"[{AppName}] 큐에서 가져온 주문 개수: {listFromController.Count}");
 
-            //        // 작업잔량 파악 리스트 (원본 복사)
-            //        var listInsung = new List<AutoAllocModel>(listFromController);
+            // 작업잔량 파악 리스트 (원본 복사)
+            var listInsung = new List<AutoAllocModel>(listFromController);
 
-            //        // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
-            //        var listCreated = listInsung
-            //            .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
-            //                           item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno))
-            //            .OrderByDescending(item => GetInsungSeqno(item)) // 인성 KeyCode 역순 정렬 (큰 값 우선)
-            //            .Select(item => item.Clone())
-            //            .ToList();
+            // 처리 완료된 항목을 담을 리스트 (Region 4, 5에서 사용)
+            var listCreated = listInsung
+                .Where(item => item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
+                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno))
+                .OrderByDescending(item => GetInsungSeqno(item)) // 인성 KeyCode 역순 정렬 (큰 값 우선)
+                .Select(item => item.Clone())
+                .ToList();
 
-            //        var listEtcGroup = listInsung
-            //            .Where(item => !(item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
-            //                           item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno)))
-            //            .OrderByDescending(item => GetInsungSeqno(item)) // 인성 KeyCode 역순 정렬 (큰 값 우선)
-            //            .Select(item => item.Clone())
-            //            .ToList();
+            var listEtcGroup = listInsung
+                .Where(item => !(item.StateFlag.HasFlag(PostgService_Common_OrderState.Created) ||
+                               item.StateFlag.HasFlag(PostgService_Common_OrderState.Existed_NonSeqno)))
+                .OrderByDescending(item => GetInsungSeqno(item)) // 인성 KeyCode 역순 정렬 (큰 값 우선)
+                .Select(item => item.Clone())
+                .ToList();
 
-            //        // ===== 상세 로깅: listCreated 내용 출력 =====
-            //        Debug.WriteLine($"[{AppName}] ===== listCreated (신규접수용) 상세 정보 =====");
-            //        Debug.WriteLine($"[{AppName}] listCreated 개수: {listCreated.Count}");
-            //        for (int i = 0; i < listCreated.Count; i++)
-            //        {
-            //            var item = listCreated[i];
-            //            Debug.WriteLine($"[{AppName}]   [{i}] KeyCode={item.KeyCode}, " +
-            //                          $"StateFlag={item.StateFlag}, " +
-            //                          $"SeqNo={GetInsungSeqno(item) ?? "(없음)"}, " +
-            //                          $"CarType={item.NewOrder.CarType}, " +
-            //                          $"CallCustFrom={item.NewOrder.CallCustFrom}, " +
-            //                          $"출발={item.NewOrder.StartDongBasic}");
-            //        }
-            //        Debug.WriteLine($"[{AppName}] ==========================================");
+            // ===== 상세 로깅: listCreated 내용 출력 =====
+            Debug.WriteLine($"[{AppName}] ===== listCreated (신규접수용) 상세 정보 =====");
+            Debug.WriteLine($"[{AppName}] listCreated 개수: {listCreated.Count}");
+            for (int i = 0; i < listCreated.Count; i++)
+            {
+                var item = listCreated[i];
+                Debug.WriteLine($"[{AppName}]   [{i}] KeyCode={item.KeyCode}, " +
+                              $"StateFlag={item.StateFlag}, " +
+                              $"SeqNo={GetInsungSeqno(item) ?? "(없음)"}, " +
+                              $"CarType={item.NewOrder.CarTypeFlag}, " +
+                              $"CallCustFrom={item.NewOrder.CallCustFrom}, " +
+                              $"출발={item.NewOrder.StartDongBasic}");
+            }
+            Debug.WriteLine($"[{AppName}] ==========================================");
 
-            //        // ===== 상세 로깅: listEtcGroup 내용 출력 =====
-            //        Debug.WriteLine($"[{AppName}] ===== listEtcGroup (기존주문관리용) 상세 정보 =====");
-            //        Debug.WriteLine($"[{AppName}] listEtcGroup 개수: {listEtcGroup.Count}");
-            //        for (int i = 0; i < listEtcGroup.Count; i++)
-            //        {
-            //            var item = listEtcGroup[i];
-            //            Debug.WriteLine($"[{AppName}]   [{i}] KeyCode={item.KeyCode}, " +
-            //                          $"StateFlag={item.StateFlag}, " +
-            //                          $"SeqNo={GetInsungSeqno(item) ?? "(없음)"}, " +
-            //                          $"CarType={item.NewOrder.CarType}");
-            //        }
-            //        Debug.WriteLine($"[{AppName}] ==========================================");
+            // ===== 상세 로깅: listEtcGroup 내용 출력 =====
+            Debug.WriteLine($"[{AppName}] ===== listEtcGroup (기존주문관리용) 상세 정보 =====");
+            Debug.WriteLine($"[{AppName}] listEtcGroup 개수: {listEtcGroup.Count}");
+            for (int i = 0; i < listEtcGroup.Count; i++)
+            {
+                var item = listEtcGroup[i];
+                Debug.WriteLine($"[{AppName}]   [{i}] KeyCode={item.KeyCode}, " +
+                              $"StateFlag={item.StateFlag}, " +
+                              $"SeqNo={GetInsungSeqno(item) ?? "(없음)"}, " +
+                              $"CarType={item.NewOrder.CarTypeFlag}");
+            }
+            Debug.WriteLine($"[{AppName}] ==========================================");
 
-            //        // 할일 갯수 체크
-            //        int tot = listCreated.Count + listEtcGroup.Count;
+            // 할일 갯수 체크
+            int tot = listCreated.Count + listEtcGroup.Count;
 
-            //        if (tot == 0)
-            //        {
-            //            m_lRestCount += 1;
-            //            if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
-            //            {
-            //                await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
-            //                await Task.Delay(c_nWaitLong, ctrl.Token);
-            //            }
+            if (tot == 0)
+            {
+                m_lRestCount += 1;
+                if (m_lRestCount % 60 == 0) // 5 ~ 10분 정도
+                {
+                    await m_Context.RcptRegPageAct.Click조회버튼Async(ctrl);
+                    await Task.Delay(c_nWaitLong, ctrl.Token);
+                }
 
-            //            Debug.WriteLine($"[{AppName}] 자동배차 할일 없음: lAllocCount={lAllocCount}");
-            //            return new StdResult_Status(StdResult.Success); // 할일 없으면 돌아간다
-            //        }
-            //        else
-            //        {
-            //            m_lRestCount = 0;
-            //            Debug.WriteLine($"[{AppName}] 자동배차 할일 있음: lAllocCount={lAllocCount}, tot={tot}, listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
-            //        }
-            //        #endregion
+                Debug.WriteLine($"[{AppName}] 자동배차 할일 없음: lAllocCount={lAllocCount}");
+                return new StdResult_Status(StdResult.Success); // 할일 없으면 돌아간다
+            }
+            else
+            {
+                m_lRestCount = 0;
+                Debug.WriteLine($"[{AppName}] 자동배차 할일 있음: lAllocCount={lAllocCount}, tot={tot}, listCreated={listCreated.Count}, listEtcGroup={listEtcGroup.Count}");
+            }
+            #endregion
 
             //        #region 3. Check Datagrid
             //        // Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
@@ -813,28 +808,5 @@ public abstract class InsungAutoAllocBase : IExternalApp
     //}
     #endregion
 
-    #region 8. Constructor - 생성자
-    ///// <summary>
-    ///// 베이스 생성자: Context 및 Act 객체 초기화
-    ///// </summary>
-    //protected InsungAutoAllocBase()
-    //{
-    //    Debug.WriteLine($"[{AppName}] 생성자 호출: Id={GetStaticId()}, Use={GetStaticUse()} --------------------------------------------------------");
-
-    //    // Context 생성
-    //    m_Context = new InsungContext(AppName, GetStaticId(), GetStaticPw());
-
-    //    // AppAct 생성
-    //    m_Context.AppAct = new InsungsAct_App(m_Context);
-
-    //    // MainWndAct 생성
-    //    m_Context.MainWndAct = new InsungsAct_MainWnd(m_Context);
-
-    //    // RcptRegPageAct 생성
-    //    m_Context.RcptRegPageAct = new InsungsAct_RcptRegPage(m_Context);
-
-    //    Debug.WriteLine($"[{AppName}] Context 생성 완료: AppName={m_Context.AppName}");
-    //}
-    #endregion
 }
 #nullable restore
