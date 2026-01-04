@@ -336,10 +336,10 @@ public partial class MainWnd : Window
             // 4) Python 리소스 종료
             try { Py309Common.Destroy(); } catch { }
 
-            // 5) Master Mode 정리
+            // 5) Master Mode 정리 (ThreadPool에서 실행하여 UI 데드락 방지)
             if (m_MasterManager != null)
             {
-                m_MasterManager.ShutdownAsync().Wait(2000);
+                Task.Run(async () => await m_MasterManager.ShutdownAsync()).GetAwaiter().GetResult();
                 m_MasterManager.Dispose();
                 m_MasterManager = null;
             }

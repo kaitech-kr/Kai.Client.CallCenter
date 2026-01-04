@@ -278,8 +278,8 @@ public class InsungsAct_App
         {
             Debug.WriteLine($"[{m_Context.AppName}/Close] 종료 시퀀스 시작");
 
-            // 1. 메인 윈도우 종료 시도
-            if (m_Context.MemInfo.Main.TopWnd_hWnd != IntPtr.Zero && StdWin32.IsWindowVisible(m_Context.MemInfo.Main.TopWnd_hWnd))
+            // 1. 메인 윈도우 종료 시도 (IsWindow로 핸들 유효성만 확인 - 최소화/숨김 상태에서도 종료)
+            if (m_Context.MemInfo.Main.TopWnd_hWnd != IntPtr.Zero && StdWin32.IsWindow(m_Context.MemInfo.Main.TopWnd_hWnd))
             {
                 Debug.WriteLine($"[{m_Context.AppName}/Close] 메인 윈도우 종료 메시지 전송");
                 StdWin32.PostMessage(m_Context.MemInfo.Main.TopWnd_hWnd, StdCommon32.WM_SYSCOMMAND, Std32Window.SC_CLOSE, 0);
