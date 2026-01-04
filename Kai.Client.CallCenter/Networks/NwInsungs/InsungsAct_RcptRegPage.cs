@@ -127,7 +127,7 @@ public partial class InsungsAct_RcptRegPage
             {
                 await Task.Delay(c_nWaitNormal);
 
-                m_RcptPage.StatusBtn_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_접수_ptChkRelTT);
+                m_RcptPage.StatusBtn_hWnd접수 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_접수_ptChkRelT);
                 string sText = Std32Window.GetWindowText(m_RcptPage.StatusBtn_hWnd접수);
 
                 if (sText == "접수")
@@ -143,11 +143,11 @@ public partial class InsungsAct_RcptRegPage
             }
 
             // 나머지 상태 버튼 핸들 확정
-            m_RcptPage.StatusBtn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_ptChkRel배차T);
-            m_RcptPage.StatusBtn_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_운행_ptChkRelTT);
-            m_RcptPage.StatusBtn_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_완료_ptChkRelTT);
-            m_RcptPage.StatusBtn_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_취소_ptChkRelTM);
-            m_RcptPage.StatusBtn_hWnd전체 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_전체_ptChkRelTT);
+            m_RcptPage.StatusBtn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_배차_ptChkRelT);
+            m_RcptPage.StatusBtn_hWnd운행 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_운행_ptChkRelT);
+            m_RcptPage.StatusBtn_hWnd완료 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_완료_ptChkRelT);
+            m_RcptPage.StatusBtn_hWnd취소 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_취소_ptChkRelT);
+            m_RcptPage.StatusBtn_hWnd전체 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_StatusBtn_전체_ptChkRelT);
 
             // 4. 상태 버튼 Up 이미지 매칭 (접수, 배차, 운행, 완료, 취소, 전체)
             await Task.Delay(c_nWaitNormal);
@@ -204,13 +204,13 @@ public partial class InsungsAct_RcptRegPage
             m_RcptPage.CmdBtn_hWnd조회 = hWnd조회;
 
             var (hWnd기사, error기사) = await FindCommandButtonWithOfrAsync(
-                "기사", m_FileInfo.접수등록Page_CmdBtn_ptChkRel기사T, "Img_기사버튼", "InsungsAct_RcptRegPage/InitializeAsync_10", true, true, true);
+                "기사", m_FileInfo.접수등록Page_CmdBtn_기사_ptChkRelT, "Img_기사버튼", "InsungsAct_RcptRegPage/InitializeAsync_10", true, true, true);
             if (error기사 != null) return error기사;
             m_RcptPage.CmdBtn_hWnd기사 = hWnd기사;
 
             // 7. CallCount 핸들 찾기
             string[] countNames = { "접수", "운행", "취소", "완료", "총계" };
-            Draw.Point[] countPts = { m_FileInfo.접수등록Page_CallCount_ptChkRel접수T, m_FileInfo.접수등록Page_CallCount_ptChkRel운행T, m_FileInfo.접수등록Page_CallCount_ptChkRel취소T, m_FileInfo.접수등록Page_CallCount_ptChkRel완료T, m_FileInfo.접수등록Page_CallCount_ptChkRel총계T };
+            Draw.Point[] countPts = { m_FileInfo.접수등록Page_CallCount_접수_ptChkRelT, m_FileInfo.접수등록Page_CallCount_운행_ptChkRelT, m_FileInfo.접수등록Page_CallCount_취소_ptChkRelT, m_FileInfo.접수등록Page_CallCount_완료_ptChkRelT, m_FileInfo.접수등록Page_CallCount_총계_ptChkRelT };
             IntPtr[] countHWnds = new IntPtr[5];
 
             for (int i = 0; i < countNames.Length; i++)
@@ -234,7 +234,7 @@ public partial class InsungsAct_RcptRegPage
             if (m_RcptPage.DG오더_AbsRect.Width != m_FileInfo.접수등록Page_DG오더_rcRelT.Width || m_RcptPage.DG오더_AbsRect.Height != m_FileInfo.접수등록Page_DG오더_rcRelT.Height)
                 return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 크기 불일치", "InsungsAct_RcptRegPage/InitializeAsync_17");
 
-             m_RcptPage.DG오더_hWnd수직스크롤 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤T);
+             m_RcptPage.DG오더_hWnd수직스크롤 = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_DG오더_l수직스크롤_ptChkReT);
 
             // 9. Datagrid 상세 정보 설정
             StdResult_Error resultDG = await SetDG오더RectsAsync();
@@ -708,65 +708,65 @@ public partial class InsungsAct_RcptRegPage
     }
     #endregion
 
-    // #region 5. AutoAlloc NewOrder - Kai신규 자동배차
+    #region 5. AutoAlloc NewOrder - Kai신규 자동배차
     // 신규 주문 등록 확인 (Kai 전용)
-    // public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAllocModel item, CancelTokenControl ctrl)
-    // {
-    //     // Cancel/Pause 체크 - 긴 작업 전
-    //     await ctrl.WaitIfPausedOrCancelledAsync();
-    // 
-    //     string kaiState = item.NewOrder.OrderState;
-    // 
-    //     switch (kaiState)
-    //     {
-    //         case "접수":
-    //         case "취소":
-    //         case "대기":
-    //             // 신규 주문 팝업창 열기 → 입력 → 닫기 → 성공 확인
-    //             StdResult_Status result = await OpenNewOrderPopupAsync(item, ctrl);
-    // 
-    //             if (result.Result == StdResult.Success)
-    //             {
-    //                 // 성공: NotChanged로 재적재 (다음 사이클에서 관리 대상으로 분류됨)
-    //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //             }
-    //             else
-    //             {
-    //                 // 실패: 치명적 에러 (신규 등록 실패)
-    //                 return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
-    //             }
-    // 
-    //         case "배차":
-    //         case "운행":
-    //         case "완료":
-    //         case "예약":
-    //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_TODO");
-    // 
-    //         default:
-    //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"알 수 없는 Kai 주문 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_800");
-    //     }
-    // }
-    // #endregion
-// 
+    public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiNewOrder(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        // Cancel/Pause 체크 - 긴 작업 전
+        await ctrl.WaitIfPausedOrCancelledAsync();
+
+        string kaiState = item.NewOrder.OrderState;
+
+        switch (kaiState)
+        {
+            case "접수":
+            case "취소":
+            case "대기":
+                // 신규 주문 팝업창 열기 → 입력 → 닫기 → 성공 확인
+                StdResult_Status result = await OpenNewOrderPopupAsync(item, ctrl);
+
+                if (result.Result == StdResult.Success)
+                {
+                    // 성공: NotChanged로 재적재 (다음 사이클에서 관리 대상으로 분류됨)
+                    return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+                }
+                else
+                {
+                    // 실패: 치명적 에러 (신규 등록 실패)
+                    return CommonResult_AutoAllocProcess.FailureAndDiscard(result.sErr, result.sPos);
+                }
+
+            case "배차":
+            case "운행":
+            case "완료":
+            case "예약":
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_TODO");
+
+            default:
+                return CommonResult_AutoAllocProcess.FailureAndDiscard($"알 수 없는 Kai 주문 상태: {kaiState}", "CheckIsOrderAsync_AssumeKaiNewOrder_800");
+        }
+    }
+    #endregion
+
     // #region 6. AutoAlloc UpdateOrder - Kai변경 자동배차
-    // Kai DB에서 업데이트된 주문을 인성 앱에 반영
+    // // Kai DB에서 업데이트된 주문을 인성 앱에 반영
     // public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_AssumeKaiUpdated(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
     //     await ctrl.WaitIfPausedOrCancelledAsync();
-    // 
+
     //     string kaiState = item.NewOrder.OrderState;
     //     string isState = dgInfo.sStatus;
-    // 
+
     //     // 상태가 같은 경우: 필드만 업데이트
     //     if (kaiState == isState) return await UpdateOrderSameStateAsync(item, dgInfo, ctrl);
     //     // 상태가 다른 경우: 필드 업데이트 + 상태 전환
     //     else return await UpdateOrderDiffStateAsync(item, dgInfo, kaiState, isState, ctrl);
     // }
-    // 같은 상태: 필드만 선별 업데이트
+    // // 같은 상태: 필드만 선별 업데이트
     // private async Task<CommonResult_AutoAllocProcess> UpdateOrderSameStateAsync(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
     //     string isState = dgInfo.sStatus;
-    // 
+
     //     // 인성 앱 특성: 상태가 변경되면 저장 안 됨 → 같은 상태 버튼 클릭 필요
     //     // 대기/취소: 외부에서 상태 변경 불가 → 반복 불필요
     //     // 접수/배차: 외부에서 상태 변경 가능 → 타이밍 이슈 대비 반복 필요
@@ -774,26 +774,26 @@ public partial class InsungsAct_RcptRegPage
     //     {
     //         case "대기":  // 외부 변경 없음 → 1번만
     //             return await UpdateOrderWidelyAsync("", item, dgInfo, false, ctrl);
-    // 
+
     //         case "접수": // 외부 변경 가능 → 10번 재시도
     //         case "배차":
     //             return await UpdateOrderWidelyAsync("", item, dgInfo, true, ctrl);
-    // 
+
     //         case "취소":
     //         case "완료":
     //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    // 
+
     //         default:
     //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(SameState): Kai={isState}, IS={isState}", "UpdateOrderSameStateAsync_999");
     //     }
     // }
-    // 
-    // 다른 상태: 필드 업데이트 + 상태 전환
+
+    // // 다른 상태: 필드 업데이트 + 상태 전환
     // private async Task<CommonResult_AutoAllocProcess> UpdateOrderDiffStateAsync(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, string kaiState, string isState, CancelTokenControl ctrl)
     // {
     //     string wantState = kaiState; // Kai DB의 목표 상태로 전환
     //     bool useRepeat;
-    // 
+
     //     // 상태 전환 규칙에 따라 반복 횟수 결정
     //     switch (kaiState)
     //     {
@@ -804,16 +804,16 @@ public partial class InsungsAct_RcptRegPage
     //                 case "대기": // 대기 → 접수
     //                     useRepeat = true; // 10번 재시도
     //                     break;
-    // 
+
     //                 case "운행": // 운행 → 접수
     //                     Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
     //                     return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    // 
+
     //                 default:
     //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=접수, IS={isState}", "InsungsAct_RcptRegPage/pdateOrderDiffStateAsync_01");
     //             }
     //             break;
-    // 
+
     //         case "대기":
     //             switch (isState)
     //             {
@@ -828,7 +828,7 @@ public partial class InsungsAct_RcptRegPage
     //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=대기, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_02");
     //             }
     //             break;
-    // 
+
     //         case "취소":
     //             switch (isState)
     //             {
@@ -836,47 +836,47 @@ public partial class InsungsAct_RcptRegPage
     //                 case "배차": // 배차 → 취소
     //                 case "운행": // 운행 → 취소
     //                     return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, true, ctrl); // 10번 재시도
-    // 
+
     //                 case "예약": // 예약 → 취소
     //                 case "완료": // 완료 → 취소
     //                 case "대기": // 대기 → 취소
     //                     return await UpdateOrderStateOnlyAsync(wantState, item, dgInfo, false, ctrl); // 1번만
-    // 
+
     //                 default:
     //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_03");
     //             }
-    // 
+
     //         case "운행":
     //             switch (isState)
     //             {
     //                 case "완료": // 운행 → 완료
     //                     return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
-    // 
+
     //                 default:
     //                     return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 전환: Kai=취소, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_03");
     //             }
-    // 
+
     //         default:
     //             return CommonResult_AutoAllocProcess.FailureAndDiscard($"미구현 상태(DiffState): Kai={kaiState}, IS={isState}", "InsungsAct_RcptRegPage/UpdateOrderDiffStateAsync_04");
     //     }
-    // 
+
     //     // 팝업 열기 → 필드 업데이트 → 상태 전환 → 저장/닫기
     //     return await UpdateOrderWidelyAsync(wantState, item, dgInfo, useRepeat, ctrl);
     // }
     // #endregion
 
     // #region 7. Status Management - Insung상태 관리
-    // Insung 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
+    // // Insung 주문 상태 관리 및 모니터링 (NotChanged 상황 처리)
     // public async Task<CommonResult_AutoAllocProcess> CheckIsOrderAsync_InsungOrderManage(AutoAllocModel item, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
     //     // Cancel/Pause 체크
     //     await ctrl.WaitIfPausedOrCancelledAsync();
-    // 
+
     //     string kaiState = item.NewOrder.OrderState;
     //     string isState = dgInfo.sStatus;
-    // 
+
     //     Debug.WriteLine($"[CheckIsOrderAsync_InsungOrderManage] KeyCode={item.KeyCode}, Kai={kaiState}, Insung={isState}");
-    // 
+
     //     // Insung 상태별로 handler 함수 호출 (2중 switch 방지)
     //     switch (isState)
     //     {
@@ -891,39 +891,38 @@ public partial class InsungsAct_RcptRegPage
     //             return await InsungOrderManage_대기Async(item, kaiState, dgInfo, ctrl);
     //         case "취소":
     //             return await InsungOrderManage_취소Async(item, kaiState, dgInfo, ctrl);
-    // 
+
     //         default:
     //             Debug.WriteLine($"  → 미정의 Insung 상태: {isState}");
     //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
     //     }
     // }
 
-    // Insung "접수" 또는 "배차" 상태 처리 - Kai 상태별 로깅
+    // // Insung "접수" 또는 "배차" 상태 처리 - Kai 상태별 로깅
     // #pragma warning disable CS1998 // async method lacks await
     // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_접수Or배차Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
     //     string insungState = dgInfo.sStatus;
-    // 
+
     //     switch (kaiState)
     //     {
     //         case "접수":
     //         case "배차":
     //             Debug.WriteLine($"  → StateFlag를 NotChanged로 변경 후 재적재 요청");
     //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    // 
+
     //         default:
     //             Debug.WriteLine($"  → [{insungState}/?] 미정의 Kai 상태: {kaiState}");
     //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung={insungState}", "InsungOrderManage_접수Or배차Async_999");
     //     }
     // }
     // #pragma warning restore CS1998
-// 
-    // Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
-    // Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
+
+    // // Insung "운행" 상태 처리 - 40초 타이머 + Kai 상태별 로깅
     // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_운행Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
     //     Debug.WriteLine($"  → [InsungOrderManage_운행Async] 진입 - KeyCode={item.KeyCode}, RunStartTime={item.RunStartTime?.ToString("HH:mm:ss") ?? "null"}, DriverPhone={item.DriverPhone ?? "null"}");
-    // 
+
     //     switch (kaiState)
     //     {
     //         case "접수":
@@ -932,51 +931,51 @@ public partial class InsungsAct_RcptRegPage
     //             {
     //                 item.RunStartTime = DateTime.Now;
     //                 Debug.WriteLine($"  → [운행/접수] 운행 진입 - 타이머 시작 ({item.RunStartTime:HH:mm:ss}) - 경과: 0.0초 / 40초");
-    // 
+
     //                 // 기사전번 읽기 (캡처된 페이지 이미지 재사용)
     //                 if (dgInfo.BmpPage == null)
     //                 {
     //                     Debug.WriteLine($"  → [운행/접수] 심각한 오류: BmpPage가 null - 자동배차 루프에서 페이지 캡처 실패");
     //                     return CommonResult_AutoAllocProcess.FailureAndRetry("BmpPage가 null - 페이지 캡처 실패", "InsungOrderManage_운행Async_BmpPageNull");
     //                 }
-    // 
+
     //                 int yIndex = dgInfo.nIndex + 2;  // 헤더 2줄 추가
     //                 Draw.Rectangle rectDriverPhNo = m_RcptPage.DG오더_RelChildRects[c_nCol기사전번, yIndex];
     //                 StdResult_String resultDriverPhNo = await GetRowDriverPhNoAsync(dgInfo.BmpPage, rectDriverPhNo, dgInfo.bInvertRgb, ctrl);
-    // 
+
     //                 if (string.IsNullOrEmpty(resultDriverPhNo.strResult))
     //                 {
     //                     Debug.WriteLine($"  → [운행/접수] 심각한 오류: 기사전번 획득 실패 - 운행 상태인데 기사 정보 없음: {resultDriverPhNo.sErr}");
     //                     return CommonResult_AutoAllocProcess.FailureAndRetry($"기사전번 OFR 실패: {resultDriverPhNo.sErr}", "InsungOrderManage_운행Async_DriverPhNoFail");
     //                 }
-    // 
+
     //                 item.DriverPhone = resultDriverPhNo.strResult;
     //                 Debug.WriteLine($"  → [운행/접수] 기사전번 획득: {item.DriverPhone}");
-    // 
+
     //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 업데이트하며 재적재
     //             }
-    // 
+
     //             // 타이머 체크
     //             TimeSpan elapsed = DateTime.Now - item.RunStartTime.Value;
     //             Debug.WriteLine($"  → [운행/접수] 운행 중 - 경과 시간: {elapsed.TotalSeconds:F1}초");
-    // 
+
     //             // 기사전번 다시 OFR (기사 변경 감지용)
     //             if (dgInfo.BmpPage == null)
     //             {
     //                 Debug.WriteLine($"  → [운행/접수] 심각한 오류: BmpPage가 null - 자동배차 루프에서 페이지 캡처 실패");
     //                 return CommonResult_AutoAllocProcess.FailureAndRetry("BmpPage가 null - 페이지 캡처 실패", "InsungOrderManage_운행Async_BmpPageNull2");
     //             }
-    // 
+
     //             int yIndexCheck = dgInfo.nIndex + 2;  // 헤더 2줄 추가
     //             Draw.Rectangle rectDriverPhNoCheck = m_RcptPage.DG오더_RelChildRects[c_nCol기사전번, yIndexCheck];
     //             StdResult_String resultDriverPhNoCheck = await GetRowDriverPhNoAsync(dgInfo.BmpPage, rectDriverPhNoCheck, dgInfo.bInvertRgb, ctrl);
-    // 
+
     //             if (string.IsNullOrEmpty(resultDriverPhNoCheck.strResult))
     //             {
     //                 Debug.WriteLine($"  → [운행/접수] 심각한 오류: 기사전번 획득 실패 - 운행 상태인데 기사 정보 없음: {resultDriverPhNoCheck.sErr}");
     //                 return CommonResult_AutoAllocProcess.FailureAndRetry($"기사전번 OFR 실패: {resultDriverPhNoCheck.sErr}", "InsungOrderManage_운행Async_DriverPhNoFail2");
     //             }
-    // 
+
     //             // 기사 변경 체크
     //             if (resultDriverPhNoCheck.strResult != item.DriverPhone)
     //             {
@@ -986,7 +985,7 @@ public partial class InsungsAct_RcptRegPage
     //                 Debug.WriteLine($"  → [운행/접수] 타이머 리셋 - 새로운 40초 대기 시작 ({item.RunStartTime:HH:mm:ss})");
     //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 업데이트하며 재적재
     //             }
-    // 
+
     //             // 40초 경과 체크 (기사 변경 없음)
     //             if (elapsed.TotalSeconds < 40)
     //             {
@@ -994,13 +993,13 @@ public partial class InsungsAct_RcptRegPage
     //                 Debug.WriteLine($"  → [운행/접수] 40초 대기 중 - 경과: {elapsed.TotalSeconds:F1}초 / 40초");
     //                 return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item);  // item 유지하며 재적재
     //             }
-    // 
+
     //             // 40초 이상 경과 - 기사 확정
     //             Debug.WriteLine($"  → [운행/접수] 40초 경과! 기사 확정 상태 (기사전번: {item.DriverPhone})");
-    // 
+
     //             // 타이머 파괴
     //             item.RunStartTime = null;
-    // 
+
     //             // 1. 기사 정보 읽기용 팝업 열기 (DG 더블클릭 → 3초 대기 → 닫기)
     //             Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기용 팝업 열기 시작");
     //             StdResult_Status resultPopup = await OpenReadPopupAsync(dgInfo.nIndex, item, ctrl);
@@ -1010,37 +1009,34 @@ public partial class InsungsAct_RcptRegPage
     //                 return CommonResult_AutoAllocProcess.FailureAndRetry(resultPopup.sErr, resultPopup.sPos);
     //             }
     //             Debug.WriteLine($"  → [운행/접수] 기사 정보 읽기 성공");
-    // 
+
     //             // 2. Order_StatusPage에서 처리 (DB 업데이트, 다른 앱 취소)
     //             return await CommonVars.s_Order_StatusPage.Insung01배차To운행Async(item, ctrl);
-    // 
-    //         case "운행": // 같은상태 
+
+    //         case "운행": // 같은상태
     //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue();
-    // 
+
     //         default:
     //             Debug.WriteLine($"  → [운행/{kaiState}] 미정의 Kai 상태: {kaiState}");
     //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=운행", "InsungOrderManage_운행Async_999");
     //     }
     // }
-// 
-    // Insung "완료" 상태 처리 - Kai 상태별 로깅
-    // Insung "완료" 상태 처리 - Kai 상태별 로깅
+
+    // // Insung "완료" 상태 처리 - Kai 상태별 로깅
     // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_완료Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
     //     switch (kaiState)
     //     {
     //         case "운행":
     //             return await CommonVars.s_Order_StatusPage.Insung01운행To완료Async(item, ctrl);
-    // 
+
     //         default:
     //             Debug.WriteLine($"  → [완료/{kaiState}] 미정의 Kai 상태: {kaiState}");
     //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=완료", "InsungOrderManage_완료Async_999");
     //     }
     // }
-// 
-    // Insung "대기" 상태 처리 - Kai 상태별 로깅
-//#pragma warning disable CS1998 // async method lacks await
-    // Insung "대기" 상태 처리 - Kai 상태별 로깅
+
+    // // Insung "대기" 상태 처리 - Kai 상태별 로깅
     // #pragma warning disable CS1998 // async method lacks await
     // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_대기Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
@@ -1048,32 +1044,30 @@ public partial class InsungsAct_RcptRegPage
     //     {
     //         case "대기":
     //             return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    // 
+
     //         default:
     //             Debug.WriteLine($"  → [대기/{kaiState}] 미정의 Kai 상태: {kaiState}");
     //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=대기", "InsungOrderManage_대기Async_999");
     //     }
     // }
     // #pragma warning restore CS1998
-// 
-    // Insung "취소" 상태 처리 - Kai 상태별 로깅
-    // #pragma warning disable CS1998 // async method lacks await
+
+    // // Insung "취소" 상태 처리 - Kai 상태별 로깅
     // private async Task<CommonResult_AutoAllocProcess> InsungOrderManage_취소Async(AutoAllocModel item, string kaiState, CommonResult_AutoAllocDatagrid dgInfo, CancelTokenControl ctrl)
     // {
     //     switch (kaiState)
     //     {
     //         case "취소":
     //             return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
-    // 
+
     //         case "대기": // 취소 -> 대기
     //             return await UpdateOrderStateOnlyAsync("대기", item, dgInfo, false, ctrl); // 1번만
-    // 
+
     //         default:
     //             Debug.WriteLine($"  → [취소/{kaiState}] 미정의 Kai 상태: {kaiState}");
     //             return CommonResult_AutoAllocProcess.FailureAndRetry($"미정의 Kai 상태: {kaiState}, Insung=취소", "InsungOrderManage_취소Async_999");
     //     }
     // }
-    // #pragma warning restore CS1998
     // #endregion
 }
 #nullable enable

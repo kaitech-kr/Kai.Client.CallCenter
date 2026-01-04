@@ -42,19 +42,19 @@ public class NwCommon
         return new StdResult_String(sAppPath);
     }
 
-    ///// <summary>
-    ///// 인성 앱용 고객명 검색 텍스트 생성
-    ///// - "고객명/담당자명" 형식으로 반환
-    ///// </summary>
-    //public static string GetInsungTextForSearch(string custName, string etcName)
-    //{
-    //    if (string.IsNullOrEmpty(custName)) return custName;
+    /// <summary>
+    /// 인성 앱용 고객명 검색 텍스트 생성
+    /// - "고객명/담당자명" 형식으로 반환
+    /// </summary>
+    public static string GetInsungTextForSearch(string custName, string etcName)
+    {
+        if (string.IsNullOrEmpty(custName)) return custName;
 
-    //    int index = custName.IndexOf('/');
-    //    if (index >= 0) custName = custName.Substring(0, index);
+        int index = custName.IndexOf('/');
+        if (index >= 0) custName = custName.Substring(0, index);
 
-    //    return custName + "/" + etcName;
-    //}
+        return custName + "/" + etcName;
+    }
 
     ///// <summary>
     ///// 스플래시 윈도우 닫기

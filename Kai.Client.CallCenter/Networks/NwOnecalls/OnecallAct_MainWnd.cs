@@ -42,7 +42,7 @@ public class OnecallAct_MainWnd
             {
                 if (s_GlobalCancelToken.Token.IsCancellationRequested) return new StdResult_Status(StdResult.Skip, "사용자 요청 취소", "OnecallAct_MainWnd/Init_Cancel");
                 mMain.TopWnd_hWnd = Std32Window.FindMainWindow_Reduct(mSplash.TopWnd_uProcessId, null, "(주)원콜");
-                
+
                 if (mMain.TopWnd_hWnd != IntPtr.Zero) break;
                 await Task.Delay(c_nWaitShort);
             }
@@ -50,20 +50,31 @@ public class OnecallAct_MainWnd
             if (mMain.TopWnd_hWnd == IntPtr.Zero)
                 return new StdResult_Status(StdResult.Fail, $"[{AppName}] 메인윈도 찾기 실패", "OnecallAct_MainWnd/InitAsync_01");
 
-            // 2. 안정적인 이동 및 최대화 실행
-            var moveResult = await MoveAndMaximizeMainWindowAsync();
-            if (moveResult.Result != StdResult.Success) return moveResult;
+            // 2. 초기화 과정 중 TopMost 유지
+            Std32Window.SetWindowTopMost(mMain.TopWnd_hWnd, true);
 
-            // 3. 자식 윈도우 찾기
-            mMain.FirstLayer_ChildWnds = Std32Window.GetChildWindows_FirstLayer(mMain.TopWnd_hWnd);
-            if (mMain.FirstLayer_ChildWnds == null || mMain.FirstLayer_ChildWnds.Count == 0)
-                return new StdResult_Status(StdResult.Fail, $"[{AppName}] 자식윈도 못찾음", "OnecallAct_MainWnd/InitAsync_03");
+            try
+            {
+                // 3. 안정적인 이동 및 최대화 실행
+                var moveResult = await MoveAndMaximizeMainWindowAsync();
+                if (moveResult.Result != StdResult.Success) return moveResult;
 
-            mMain.WndInfo_MdiClient = mMain.FirstLayer_ChildWnds.FirstOrDefault(x => x.className.ToUpper().Contains("MDICLIENT"));
-            if (mMain.WndInfo_MdiClient == null)
-                return new StdResult_Status(StdResult.Fail, $"[{AppName}] MdiClient 못찾음", "OnecallAct_MainWnd/InitAsync_04");
+                // 4. 자식 윈도우 찾기
+                mMain.FirstLayer_ChildWnds = Std32Window.GetChildWindows_FirstLayer(mMain.TopWnd_hWnd);
+                if (mMain.FirstLayer_ChildWnds == null || mMain.FirstLayer_ChildWnds.Count == 0)
+                    return new StdResult_Status(StdResult.Fail, $"[{AppName}] 자식윈도 못찾음", "OnecallAct_MainWnd/InitAsync_03");
 
-            return new StdResult_Status(StdResult.Success);
+                mMain.WndInfo_MdiClient = mMain.FirstLayer_ChildWnds.FirstOrDefault(x => x.className.ToUpper().Contains("MDICLIENT"));
+                if (mMain.WndInfo_MdiClient == null)
+                    return new StdResult_Status(StdResult.Fail, $"[{AppName}] MdiClient 못찾음", "OnecallAct_MainWnd/InitAsync_04");
+
+                return new StdResult_Status(StdResult.Success);
+            }
+            finally
+            {
+                // 초기화 완료 후 TopMost 해제
+                Std32Window.SetWindowTopMost(mMain.TopWnd_hWnd, false);
+            }
         }
         catch (Exception ex)
         {

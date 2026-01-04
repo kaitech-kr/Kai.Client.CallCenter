@@ -522,6 +522,10 @@ public class NwCargo24 : IExternalApp
             Debug.WriteLine($"[{AppName}] AutoAllocAsync 예외 발생: {ex.Message}");
             return new StdResult_Status(StdResult.Fail, $"예외 발생: {ex.Message}", $"{AppName}/AutoAllocAsync_999");
         }
+        finally
+        {
+            bmpPage?.Dispose();
+        }
     }
 
     public void Shutdown()

@@ -1,0 +1,30 @@
+[분류] KeyCode=3, CarTypeFlag=오토, CarWeightFlag=, 대상큐=INSUNG1,CARGO24,ONECALL
+[AutoAllocQueue] Enqueue: INSUNG1, KeyCode=3, StateFlag=Existed_NonSeqno, 큐크기=1
+  → INSUNG1 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] Enqueue: CARGO24, KeyCode=3, StateFlag=Existed_NonSeqno, 큐크기=1
+  → CARGO24 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] Enqueue: ONECALL, KeyCode=3, StateFlag=Existed_NonSeqno, 큐크기=1
+  → ONECALL 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] 큐 상태:
+  인성1: 1개
+  인성2: 0개
+  화물24시: 1개
+  원콜: 1개
+  전체: 3개
+[ExternalAppController] 자동배차 시작
+[ExternalAppController] AutoAllocLoopAsync 시작
+
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=1--------------------------
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=3, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 1
+[INSUNG1]   [0] KeyCode=3, StateFlag=Existed_NonSeqno, SeqNo=, CarType=오토, CallCustFrom=INSUNG1, 출발=현북면
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=1, tot=1, listCreated=1, listEtcGroup=0
+-----------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=127ms, Delay=4873ms

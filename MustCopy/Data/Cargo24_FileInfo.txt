@@ -85,7 +85,7 @@
   ],
   "접수등록Page_DG오더_ptClkRel스크롤PageDown": "1905, 600",
   "접수등록Page_DG오더_ptClkRel스크롤StepDown": "1905, 610",
-  "접수등록Page_DG오더_ptClkRel페이지UpL": "1905, 16",
+  "접수등록Page_DG오더_페이지Up_ptClkRelL": "1905, 16",
   "접수등록Page_리스트항목_ptChkRel순서저장": "90, 216",
   "접수등록Page_리스트항목_sWndName순서저장": "리스트항목 순서 저장",
   "접수등록Page_리스트항목_ptChkRel원래대로": "260, 216",

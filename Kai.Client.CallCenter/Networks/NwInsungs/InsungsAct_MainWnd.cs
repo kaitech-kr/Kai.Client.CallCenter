@@ -168,8 +168,8 @@ public class InsungsAct_MainWnd
         }
 
         // BarMenu의 상대 좌표로 마우스 클릭
-        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Main.WndInfo_BarMenu.hWnd, m_FileInfo.Main_BarMenu_pt접수등록L);
-        //Debug.WriteLine($"[InsungsAct_MainWnd] 접수등록 바메뉴 클릭: {m_FileInfo.Main_BarMenu_pt접수등록L}");
+        await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(m_Main.WndInfo_BarMenu.hWnd, m_FileInfo.Main_BarMenu_접수등록_ptRelL);
+        //Debug.WriteLine($"[InsungsAct_MainWnd] 접수등록 바메뉴 클릭: {m_FileInfo.Main_BarMenu_접수등록_ptRelL}");
     }
 
     //메인 윈도우가 초기화되었는지 확인

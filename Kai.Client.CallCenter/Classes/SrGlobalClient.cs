@@ -1032,7 +1032,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         }
     }
 
-    //// Select
+    // Select
     public async Task<PostgResult_TbOrderList> SrResult_Order_SelectRowsAsync_Today_CenterCode()
     {
         try
@@ -1102,7 +1102,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
         }
     }
 
-    //// Update 
+    // Update 
     // 오늘 날짜 주문 업데이트
     public async Task<StdResult_Int> SrResult_Order_UpdateRowAsync_Today(TbOrder tb)
     {
@@ -1115,8 +1115,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             {
                 try
                 {
-                    return await HubConn.InvokeCoreAsync<StdResult_Int>(
-                        StdConst_FuncName.SrResult.CallCenter.Order_UpdateRowAsync_Today, new object[] { tb, null });
+                    return await HubConn.InvokeCoreAsync<StdResult_Int>("SrResult_Order_UpdateRowAsync_Today", new object[] { tb, null });
                 }
                 catch (Exception ex)
                 {
@@ -1201,7 +1200,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
             {
                 try
                 {
-                    return await HubConn.InvokeCoreAsync<StdResult_Int>(StdConst_FuncName.SrResult.CallCenter.Order_UpdateRowAsync_Today, new object[] { tb, requestId });
+                    return await HubConn.InvokeCoreAsync<StdResult_Int>("SrResult_Order_UpdateRowAsync_Today", new object[] { tb, requestId });
                 }
                 catch (Exception ex)
                 {

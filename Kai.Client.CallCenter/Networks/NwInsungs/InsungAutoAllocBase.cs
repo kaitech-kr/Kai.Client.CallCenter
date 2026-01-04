@@ -301,101 +301,102 @@ public abstract class InsungAutoAllocBase : IExternalApp
             }
             #endregion
 
-            //        #region 3. Check Datagrid
-            //        // Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
-            //        bool bDatagridExists = false;
-            //        for (int i = 0; i < c_nRepeatShort; i++)
-            //        {
-            //            await ctrl.WaitIfPausedOrCancelledAsync();
+            #region 3. Check Datagrid
+            // Datagrid 윈도우 존재 확인 (최대 c_nRepeatShort회 재시도)
+            bool bDatagridExists = false;
+            for (int i = 0; i < c_nRepeatShort; i++)
+            {
+                await ctrl.WaitIfPausedOrCancelledAsync();
 
-            //            // Datagrid 핸들이 유효하고 윈도우가 존재하는지 확인
-            //            if (m_Context.MemInfo.RcptPage.DG오더_hWnd != IntPtr.Zero &&
-            //                Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
-            //            {
-            //                bDatagridExists = true;
-            //                //Debug.WriteLine($"[{AppName}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
-            //                break;
-            //            }
+                // Datagrid 핸들이 유효하고 윈도우가 존재하는지 확인
+                if (m_Context.MemInfo.RcptPage.DG오더_hWnd != IntPtr.Zero &&
+                    Std32Window.IsWindow(m_Context.MemInfo.RcptPage.DG오더_hWnd))
+                {
+                    bDatagridExists = true;
+                    //Debug.WriteLine($"[{AppName}] Datagrid 윈도우 확인 완료 (시도 {i + 1}회)");
+                    break;
+                }
 
-            //            // 마지막 시도가 아닐 때만 대기 (불필요한 지연 방지)
-            //            if (i < c_nRepeatUltraShort- 1)
-            //            {
-            //                await Task.Delay(c_nWaitNormal, ctrl.Token);
-            //            }
-            //        }
+                // 마지막 시도가 아닐 때만 대기 (불필요한 지연 방지)
+                if (i < c_nRepeatUltraShort - 1)
+                {
+                    await Task.Delay(c_nWaitNormal, ctrl.Token);
+                }
+            }
 
-            //        if (!bDatagridExists)
-            //        {
-            //            m_nDatagridFailCount++;
-            //            Debug.WriteLine($"[{AppName}] Datagrid 윈도우를 찾을 수 없음 (연속 실패: {m_nDatagridFailCount}/{MAX_DATAGRID_FAIL_COUNT})");
+            if (!bDatagridExists)
+            {
+                m_nDatagridFailCount++;
+                Debug.WriteLine($"[{AppName}] Datagrid 윈도우를 찾을 수 없음 (연속 실패: {m_nDatagridFailCount}/{MAX_DATAGRID_FAIL_COUNT})");
 
-            //            // 큐 비우기
-            //            ExternalAppController.QueueManager.ClearQueue(queueName);
-            //            Debug.WriteLine($"[{AppName}] 큐 비움");
+                // 큐 비우기
+                ExternalAppController.QueueManager.ClearQueue(queueName);
+                Debug.WriteLine($"[{AppName}] 큐 비움");
 
-            //            // N회 연속 실패 시 앱 비활성화
-            //            if (m_nDatagridFailCount >= MAX_DATAGRID_FAIL_COUNT)
-            //            {
-            //                Debug.WriteLine($"[{AppName}] {MAX_DATAGRID_FAIL_COUNT}회 연속 실패 → 앱 비활성화");
-            //                m_Context.IsUse = false;
-            //                return new StdResult_Status(StdResult.Fail, $"Datagrid {MAX_DATAGRID_FAIL_COUNT}회 연속 실패로 앱 비활성화", $"{AppName}/AutoAllocAsync_03_Disabled");
-            //            }
+                // N회 연속 실패 시 앱 비활성화
+                if (m_nDatagridFailCount >= MAX_DATAGRID_FAIL_COUNT)
+                {
+                    Debug.WriteLine($"[{AppName}] {MAX_DATAGRID_FAIL_COUNT}회 연속 실패 → 앱 비활성화");
+                    m_Context.IsUse = false;
+                    return new StdResult_Status(StdResult.Fail, $"Datagrid {MAX_DATAGRID_FAIL_COUNT}회 연속 실패로 앱 비활성화", $"{AppName}/AutoAllocAsync_03_Disabled");
+                }
 
-            //            return new StdResult_Status(StdResult.Skip, "Datagrid 윈도우를 찾을 수 없습니다.", $"{AppName}/AutoAllocAsync_03");
-            //        }
+                return new StdResult_Status(StdResult.Skip, "Datagrid 윈도우를 찾을 수 없습니다.", $"{AppName}/AutoAllocAsync_03");
+            }
 
-            //        // Datagrid 찾았으면 실패 카운터 리셋
-            //        m_nDatagridFailCount = 0;
-            //        #endregion
+            // Datagrid 찾았으면 실패 카운터 리셋
+            m_nDatagridFailCount = 0;
+            //Debug.WriteLine($"[{AppName}] Datagrid 윈도우를 찾았읍니다.");
+            #endregion
 
-            //        #region 4. Created Order 처리 (신규)
-            //        if (listCreated.Count > 0)
-            //        {
-            //            Debug.WriteLine($"[{AppName}] Region 4: 신규 주문 처리 시작 (총 {listCreated.Count}건)");
+            #region 4. Created Order 처리 (신규)
+            if (listCreated.Count > 0)
+            {
+                Debug.WriteLine($"[{AppName}] Region 4: 신규 주문 처리 시작 (총 {listCreated.Count}건)");
 
-            //            // 역순으로 처리 (삭제를 위해)
-            //            for (int i = listCreated.Count; i > 0; i--)
-            //            {
-            //                await ctrl.WaitIfPausedOrCancelledAsync();
+                // 역순으로 처리 (삭제를 위해)
+                for (int i = listCreated.Count; i > 0; i--)
+                {
+                    await ctrl.WaitIfPausedOrCancelledAsync();
 
-            //                int index = i - 1;
-            //                if (index < 0) break;
+                    int index = i - 1;
+                    if (index < 0) break;
 
-            //                AutoAllocModel item = listCreated[index];
-            //                Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 처리: " +
-            //                              $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
+                    AutoAllocModel item = listCreated[index];
+                    Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 처리: " +
+                                  $"KeyCode={item.KeyCode}, 상태={item.NewOrder.OrderState}");
 
-            //                // 신규 주문 등록 시도
-            //                CommonResult_AutoAllocProcess resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
+                    // 신규 주문 등록 시도
+                    CommonResult_AutoAllocProcess resultAuto = await m_Context.RcptRegPageAct.CheckIsOrderAsync_AssumeKaiNewOrder(item, ctrl);
 
-            //                switch (resultAuto.ResultType)
-            //                {
-            //                    case CEnum_AutoAllocProcessResult.SuccessAndReEnqueue:
-            //                        // 성공: 함수 내부에서 이미 StateFlag가 NotChanged로 설정됨
-            //                        Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
-            //                        ExternalAppController.QueueManager.ReEnqueue(item, queueName, item.StateFlag);
-            //                        break;
+                    switch (resultAuto.ResultType)
+                    {
+                        case CEnum_AutoAllocProcessResult.SuccessAndReEnqueue:
+                            // 성공: 함수 내부에서 이미 StateFlag가 NotChanged로 설정됨
+                            Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 등록 성공: {item.KeyCode}");
+                            ExternalAppController.QueueManager.ReEnqueue(item, queueName, item.StateFlag);
+                            break;
 
-            //                    case CEnum_AutoAllocProcessResult.FailureAndDiscard:
-            //                        // 신규 등록 실패는 치명적 에러 → 앱 종료
-            //                        Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 등록 실패 (치명적): {item.KeyCode} - {resultAuto.sErr}");
-            //                        // ErrMsgBox는 이미 생성자에서 호출됨 (디버그 모드)
-            //                        Environment.Exit(1);
-            //                        break;
+                        case CEnum_AutoAllocProcessResult.FailureAndDiscard:
+                            // 신규 등록 실패는 치명적 에러 → 앱 종료
+                            Debug.WriteLine($"[{AppName}]   [{i}] 신규 주문 등록 실패 (치명적): {item.KeyCode} - {resultAuto.sErr}");
+                            // ErrMsgBox는 이미 생성자에서 호출됨 (디버그 모드)
+                            Environment.Exit(1);
+                            break;
 
-            //                    default:
-            //                        // 예상 못한 결과 → 앱 종료
-            //                        Debug.WriteLine($"[{AppName}]   [{i}] 예상 못한 결과: {resultAuto.ResultType}");
-            //                        Environment.Exit(1);
-            //                        break;
-            //                }
-            //            }
+                        default:
+                            // 예상 못한 결과 → 앱 종료
+                            Debug.WriteLine($"[{AppName}]   [{i}] 예상 못한 결과: {resultAuto.ResultType}");
+                            Environment.Exit(1);
+                            break;
+                    }
+                }
 
-            //            // Region 4 완료: listCreated 일괄 정리
-            //            Debug.WriteLine($"[{AppName}] Region 4 완료");
-            //            listCreated.Clear();
-            //        }
-            //        #endregion
+                // Region 4 완료: listCreated 일괄 정리
+                Debug.WriteLine($"[{AppName}] Region 4 완료");
+                listCreated.Clear();
+            }
+            #endregion
 
             //        #region 5. 기존주문 처리 (listEtcGroup)
             //        if (listEtcGroup.Count > 0)
@@ -451,7 +452,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
             //            // 여러 페이지면 스크롤 핸들 다시 얻어야함
             //            if (nTotPage > 1)
             //                m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤 =
-            //                    Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_ptChkRel수직스크롤T);
+            //                    Std32Window.GetWndHandle_FromRelDrawPt(m_Context.MemInfo.Main.TopWnd_hWnd, m_Context.FileInfo.접수등록Page_DG오더_l수직스크롤_ptChkReT);
             //            #endregion
 
             //            #region 5-3. 페이지별 리스트 검사 및 처리
@@ -676,10 +677,10 @@ public abstract class InsungAutoAllocBase : IExternalApp
             //                {
             //                    // 다음 페이지로 이동
             //                    await Std32Mouse_Post.MousePostAsync_ClickLeft_ptRel(
-            //                        m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_ptClkRel페이지DownL);
+            //                        m_Context.MemInfo.RcptPage.DG오더_hWnd수직스크롤, m_Context.FileInfo.접수등록Page_DG오더_페이지Down_ptClkRelL);
             //                    await Task.Delay(c_nWaitNormal, ctrl.Token);
             //                    Debug.WriteLine($"[{AppName}] 페이지 {pageIdx + 1} -> {pageIdx + 2} 이동");
-            //                } 
+            //                }
             //                #endregion
             //            }
             //            #endregion

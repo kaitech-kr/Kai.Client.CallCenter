@@ -239,141 +239,141 @@ public class OfrWork_Insungs : OfrWork_Common
 ////    //}
     #endregion
 
-    //public static async Task<StdResult_NulBool> OfrImgReChkValue_RectInHWndAsync(IntPtr hWndTop, Draw.Rectangle rcRelChkBox, bool bEdit = true)
-    //{
-    //    try
-    //    {
-    //        Draw.Bitmap bmpChkBox = null;
-    //        OfrResult_TbText resultOfr = null;
+    public static async Task<StdResult_NulBool> OfrImgReChkValue_RectInHWndAsync(IntPtr hWndTop, Draw.Rectangle rcRelChkBox, bool bEdit = true)
+    {
+        try
+        {
+            Draw.Bitmap bmpChkBox = null;
+            OfrResult_TbText resultOfr = null;
 
-    //        for (int i = 0; i < 50; i++)
-    //        {
-    //            bmpChkBox = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcRelChkBox);//, "Test001.png");
-    //            resultOfr = await OfrWork_Common.OfrImage_InSparedBitmapt_ByDualBrightnessAsync(bmpChkBox);
+            for (int i = 0; i < 50; i++)
+            {
+                bmpChkBox = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcRelChkBox);//, "Test001.png");
+                resultOfr = await OfrWork_Common.OfrImage_InSparedBitmapt_ByDualBrightnessAsync(bmpChkBox);
 
-    //            //Debug.WriteLine($"OfrImgReChkValue_RectInHWndAsync [{i}]: {resultOfr._sResult}");
+                //Debug.WriteLine($"OfrImgReChkValue_RectInHWndAsync [{i}]: {resultOfr._sResult}");
 
-    //            if (resultOfr != null && resultOfr.tbText != null) break;
+                if (resultOfr != null && resultOfr.tbText != null) break;
 
-    //            await Task.Delay(c_nWaitNormal);
-    //        }
+                await Task.Delay(c_nWaitNormal);
+            }
 
-    //        // DB에 있으면
-    //        if (!string.IsNullOrEmpty(resultOfr._sResult)) return new StdResult_NulBool(resultOfr._sResult == "Checked");
+            // DB에 있으면
+            if (!string.IsNullOrEmpty(resultOfr._sResult)) return new StdResult_NulBool(resultOfr._sResult == "Checked");
 
-    //        // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
-    //        if (s_bDebugMode && bEdit)
-    //        {
-    //            bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
-    //            {
-    //                ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgReChkValue_RectInHWndAsync", resultOfr);
-    //                wnd.ShowDialog();
+            // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
+            if (s_bDebugMode && bEdit)
+            {
+                bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgReChkValue_RectInHWndAsync", resultOfr);
+                    wnd.ShowDialog();
 
-    //                // 대화상자에서 저장했으면 결과 반환
-    //                if (resultOfr.tbText != null)
-    //                    return resultOfr.tbText.Text == "Checked";
+                    // 대화상자에서 저장했으면 결과 반환
+                    if (resultOfr.tbText != null)
+                        return resultOfr.tbText.Text == "Checked";
 
-    //                return (bool?)null;
-    //            });
+                    return (bool?)null;
+                });
 
-    //            if (bDialogResult != null)
-    //                return new StdResult_NulBool(bDialogResult.Value);
-    //        }
+                if (bDialogResult != null)
+                    return new StdResult_NulBool(bDialogResult.Value);
+            }
 
-    //        return ErrMsgResult_NulBool($"CheckBox 인식 실패 - DB에 없음", "OfrWork_Insungs/OfrImgReChkValue_RectInHWndAsync_03");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return ErrMsgResult_NulBool(StdUtil.GetExceptionMessage(ex), "OfrWork_Insungs/OfrImgChkValue_RectInHWndAsync_999");
-    //    }
-    //}
+            return ErrMsgResult_NulBool($"CheckBox 인식 실패 - DB에 없음", "OfrWork_Insungs/OfrImgReChkValue_RectInHWndAsync_03");
+        }
+        catch (Exception ex)
+        {
+            return ErrMsgResult_NulBool(StdUtil.GetExceptionMessage(ex), "OfrWork_Insungs/OfrImgChkValue_RectInHWndAsync_999");
+        }
+    }
 
-    //public static async Task<StdResult_NulBool> OfrImgUntilChkValue_RectInHWndAsync(IntPtr hWndTop, bool bWantedValue, Draw.Rectangle rcRelChkBox) // 되도록 한번만 찍는 용도로
-    //{
-    //    string sWanted = "Checked";
-    //    if (!bWantedValue) sWanted = "Unchecked";
+    public static async Task<StdResult_NulBool> OfrImgUntilChkValue_RectInHWndAsync(IntPtr hWndTop, bool bWantedValue, Draw.Rectangle rcRelChkBox) // 되도록 한번만 찍는 용도로
+    {
+        string sWanted = "Checked";
+        if (!bWantedValue) sWanted = "Unchecked";
 
-    //    try
-    //    {
-    //        Draw.Bitmap bmpChkBox = null;
-    //        OfrResult_TbText resultOfr = null;
+        try
+        {
+            Draw.Bitmap bmpChkBox = null;
+            OfrResult_TbText resultOfr = null;
 
-    //        for (int i = 0; i < 20; i++)
-    //        {
-    //            await Task.Delay(c_nWaitNormal);
+            for (int i = 0; i < 20; i++)
+            {
+                await Task.Delay(c_nWaitNormal);
 
-    //            bmpChkBox = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcRelChkBox);//, "Test001.png");
-    //            resultOfr = await OfrWork_Common.OfrImage_InSparedBitmapt_ByDualBrightnessAsync(bmpChkBox);
-    //            //Debug.WriteLine($"OfrImgUntilChkValue_RectInHWndAsync [{i}]: {resultOfr._sResult}, {hWndTop}"); // Test
+                bmpChkBox = OfrService.CaptureScreenRect_InWndHandle(hWndTop, rcRelChkBox);//, "Test001.png");
+                resultOfr = await OfrWork_Common.OfrImage_InSparedBitmapt_ByDualBrightnessAsync(bmpChkBox);
+                //Debug.WriteLine($"OfrImgUntilChkValue_RectInHWndAsync [{i}]: {resultOfr._sResult}, {hWndTop}"); // Test
 
-    //            if (resultOfr == null || resultOfr.tbText == null) continue;
-    //            if (!string.IsNullOrEmpty(resultOfr._sResult) && resultOfr._sResult == sWanted) return new StdResult_NulBool(true);
-    //        }
+                if (resultOfr == null || resultOfr.tbText == null) continue;
+                if (!string.IsNullOrEmpty(resultOfr._sResult) && resultOfr._sResult == sWanted) return new StdResult_NulBool(true);
+            }
 
-    //        // DB에 있으면
-    //        if (!string.IsNullOrEmpty(resultOfr._sResult)) return new StdResult_NulBool(resultOfr._sResult == sWanted);
+            // DB에 있으면
+            if (!string.IsNullOrEmpty(resultOfr._sResult)) return new StdResult_NulBool(resultOfr._sResult == sWanted);
 
-    //        // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
-    //        if (s_bDebugMode)
-    //        {
-    //            bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
-    //            {
-    //                ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgUntilChkValue_RectInHWndAsync", resultOfr);
-    //                wnd.ShowDialog();
+            // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
+            if (s_bDebugMode)
+            {
+                bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgUntilChkValue_RectInHWndAsync", resultOfr);
+                    wnd.ShowDialog();
 
-    //                // 대화상자에서 저장했으면 결과 반환
-    //                if (resultOfr.tbText != null)
-    //                    return resultOfr.tbText.Text == sWanted;
+                    // 대화상자에서 저장했으면 결과 반환
+                    if (resultOfr.tbText != null)
+                        return resultOfr.tbText.Text == sWanted;
 
-    //                return (bool?)null;
-    //            });
+                    return (bool?)null;
+                });
 
-    //            if (bDialogResult != null)
-    //                return new StdResult_NulBool(bDialogResult.Value);
-    //        }
+                if (bDialogResult != null)
+                    return new StdResult_NulBool(bDialogResult.Value);
+            }
 
-    //        return ErrMsgResult_NulBool($"CheckBox 상태 변경 확인 실패 - DB에 없음", "OfrWork_Insungs/OfrImgUntilChkValue_RectInHWndAsync_03");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return ErrMsgResult_NulBool(StdUtil.GetExceptionMessage(ex), "OfrWork_Insungs/OfrImgChkValue_RectInHWndAsync_999");
-    //    }
-    //}
+            return ErrMsgResult_NulBool($"CheckBox 상태 변경 확인 실패 - DB에 없음", "OfrWork_Insungs/OfrImgUntilChkValue_RectInHWndAsync_03");
+        }
+        catch (Exception ex)
+        {
+            return ErrMsgResult_NulBool(StdUtil.GetExceptionMessage(ex), "OfrWork_Insungs/OfrImgChkValue_RectInHWndAsync_999");
+        }
+    }
 
 
-    //public static async Task<StdResult_NulBool> OfrImgChkValue_RectInBitmapAsync(Draw.Bitmap bmpOrg, Draw.Rectangle rcRelChkBox, bool bEdit = true)
-    //{
-    //    try
-    //    {
-    //        OfrResult_TbText resultImg = await OfrWork_Common.OfrImage_DrawRelSpareRect_ByDualBrightnessAsync(bmpOrg, rcRelChkBox);
-    //        if (!string.IsNullOrEmpty(resultImg._sResult)) return new StdResult_NulBool(resultImg._sResult == "Checked");
+    public static async Task<StdResult_NulBool> OfrImgChkValue_RectInBitmapAsync(Draw.Bitmap bmpOrg, Draw.Rectangle rcRelChkBox, bool bEdit = true)
+    {
+        try
+        {
+            OfrResult_TbText resultImg = await OfrWork_Common.OfrImage_DrawRelSpareRect_ByDualBrightnessAsync(bmpOrg, rcRelChkBox);
+            if (!string.IsNullOrEmpty(resultImg._sResult)) return new StdResult_NulBool(resultImg._sResult == "Checked");
 
-    //        // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
-    //        if (s_bDebugMode && bEdit)
-    //        {
-    //            bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
-    //            {
-    //                ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgChkValue_RectInBitmapAsync", resultImg);
-    //                wnd.ShowDialog();
+            // DB에 없으면 - 디버그 모드에서 ImageToCheckState 대화상자 표시
+            if (s_bDebugMode && bEdit)
+            {
+                bool? bDialogResult = Wnd.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ImageToCheckState wnd = new ImageToCheckState("OfrWork_Insungs/OfrImgChkValue_RectInBitmapAsync", resultImg);
+                    wnd.ShowDialog();
 
-    //                // 대화상자에서 저장했으면 결과 반환
-    //                if (resultImg.tbText != null)
-    //                    return resultImg.tbText.Text == "Checked";
+                    // 대화상자에서 저장했으면 결과 반환
+                    if (resultImg.tbText != null)
+                        return resultImg.tbText.Text == "Checked";
 
-    //                return (bool?)null;
-    //            });
+                    return (bool?)null;
+                });
 
-    //            if (bDialogResult != null)
-    //                return new StdResult_NulBool(bDialogResult.Value);
-    //        }
+                if (bDialogResult != null)
+                    return new StdResult_NulBool(bDialogResult.Value);
+            }
 
-    //        return ErrMsgResult_NulBool($"CheckBox 인식 실패 - DB에 없음", "OfrWork_Insungs/OfrImgChkValue_RectInBitmapAsync_03");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        return ErrMsgResult_NulBool(StdUtil.GetExceptionMessage(ex), "OfrWork_Insungs/OfrImgChkValue_RectInBitmapAsync_999");
-    //    }
-    //}
+            return ErrMsgResult_NulBool($"CheckBox 인식 실패 - DB에 없음", "OfrWork_Insungs/OfrImgChkValue_RectInBitmapAsync_03");
+        }
+        catch (Exception ex)
+        {
+            return ErrMsgResult_NulBool(StdUtil.GetExceptionMessage(ex), "OfrWork_Insungs/OfrImgChkValue_RectInBitmapAsync_999");
+        }
+    }
 
 //    //public static async Task<StdResult_String> OfrImgChkName_DrawRelRectAsync(IntPtr hWndTop, Draw.Rectangle rcRelChkBox, bool bMsgBox = true)
 //    //{
