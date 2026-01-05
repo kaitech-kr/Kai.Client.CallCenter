@@ -385,43 +385,13 @@ public partial class Order_ReceiptWnd : Window
     #region 배송타입
     private string Get화물DeliverTypeFromUI()
     {
-        if (ChkBox화물_독차.IsChecked == true) return "독차";
-        if (ChkBox화물_혼적.IsChecked == true) return "혼적";
-        if (ChkBox화물_왕복.IsChecked == true) return "왕복";
-        if (ChkBox화물_경유.IsChecked == true) return "경유";
+        // 화물 배송타입 체크박스 삭제됨
         return "";
     }
-    //private void Set화물DeliverTypeToUI()
-    //{
-    //    if (tbOrderOrg == null) return;
 
-    //    ChkBox화물_독차.IsChecked = false;
-    //    ChkBox화물_혼적.IsChecked = false;
-    //    ChkBox화물_왕복.IsChecked = false;
-    //    ChkBox화물_경유.IsChecked = false;
-
-    //    switch (tbOrderOrg.DeliverType)
-    //    {
-    //        case "독차": ChkBox화물_독차.IsChecked = true; break;
-    //        case "혼적": ChkBox화물_혼적.IsChecked = true; break;
-    //        case "왕복": ChkBox화물_왕복.IsChecked = true; break;
-    //        case "경유": ChkBox화물_경유.IsChecked = true; break;
-    //    }
-    //}
     private void Set화물DeliverTypeToUI(string sDeliver)
     {
-        ChkBox화물_독차.IsChecked = false;
-        ChkBox화물_혼적.IsChecked = false;
-        ChkBox화물_왕복.IsChecked = false;
-        ChkBox화물_경유.IsChecked = false;
-
-        switch (sDeliver)
-        {
-            case "독차": ChkBox화물_독차.IsChecked = true; break;
-            case "혼적": ChkBox화물_혼적.IsChecked = true; break;
-            case "왕복": ChkBox화물_왕복.IsChecked = true; break;
-            case "경유": ChkBox화물_경유.IsChecked = true; break;
-        }
+        // 화물 배송타입 체크박스 삭제됨
     }
 
     private string Get퀵DeliverTypeFromUI()

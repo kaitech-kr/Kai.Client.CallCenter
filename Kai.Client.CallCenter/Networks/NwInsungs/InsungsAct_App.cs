@@ -189,9 +189,7 @@ public class InsungsAct_App
                 if (bBlocked) StdWin32.BlockInput(false);
             }
 
-            Debug.WriteLine($"[{m_Context.AppName}/SplashWork] 로그인 입력 완료, 백업본 팝업 처리 로직 시작");
-
-            // 6. 팝업 다이얼로그 처리 (백업본의 복잡한 로직 전체 포함)
+            // 6. 팝업 다이얼로그 처리
             _ = Task.Run(async () =>
             {
                 uint uProcId = m_Context.MemInfo.Splash.TopWnd_uProcessId;
