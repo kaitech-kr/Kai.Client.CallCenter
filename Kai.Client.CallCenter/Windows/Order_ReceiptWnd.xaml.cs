@@ -685,7 +685,8 @@ public partial class Order_ReceiptWnd : Window
 
         // 3. 의뢰자 전용 필드
         Caller_TBoxRemarks.Text = tbOrderOrg.CallRemarks;
-        TBlkCallCustMemoExt.Text = tbOrderOrg.OrderMemoExt;
+        // OrderMemoExt 삭제됨 - 필요시 CallMemo 사용
+        TBlkCallCustMemoExt.Text = "";
         CallCustFrom = tbOrderOrg.CallCustFrom;
         CallCompCode = tbOrderOrg.CallCompCode;
         CallCompName = tbOrderOrg.CallCompName;
@@ -737,9 +738,9 @@ public partial class Order_ReceiptWnd : Window
     private void SetVehicleInfoToUI()
     {
         SetFeeTypeToUI(tbOrderOrg.FeeType);
-        SetCarTypeToUI(tbOrderOrg.CarTypeFlag);
+        SetCarTypeToUI(tbOrderOrg.MovilityFlag);
 
-        switch (tbOrderOrg.CarTypeFlag)
+        switch (tbOrderOrg.MovilityFlag)
         {
             case "오토":
             case "밴":
@@ -754,7 +755,7 @@ public partial class Order_ReceiptWnd : Window
             case "트럭":
                 //SetComboBoxItemByContent(CmbBoxCarWeight, tbOrderOrg.CarWeightFlag);
                 //SetComboBoxItemByContent(CmbBoxTruckDetail, tbOrderOrg.TruckDetailFlag);
-                Set화물DeliverTypeToUI(tbOrderOrg.CarDeliverType);
+                Set화물DeliverTypeToUI(tbOrderOrg.DeliverFlag);
                 break;
         }
     }

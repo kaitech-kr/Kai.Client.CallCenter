@@ -387,7 +387,7 @@ public class ExternalAppController : IDisposable
 
         // 차량 타입 판단 (Flag 문자열 기반)
         bool isMotorcycle = order.CarWeightFlag.Contains("오토바이");
-        bool isFlex = order.CarTypeFlag.Contains("플렉");
+        bool isFlex = order.MovilityFlag.Contains("플렉");
         bool isLargeTruck = order.CarWeightFlag.Contains("1.4톤") || order.CarWeightFlag.Contains("2.5톤") || order.CarWeightFlag.Contains("5톤");
 
         bool isForInsung = !isLargeTruck;
@@ -450,7 +450,7 @@ public class ExternalAppController : IDisposable
     {
         List<string> targetQueues = GetTargetQueues(order);
 
-        Debug.WriteLine($"[분류] KeyCode={order.KeyCode}, CarTypeFlag={order.CarTypeFlag}, " +
+        Debug.WriteLine($"[분류] KeyCode={order.KeyCode}, MovilityFlag={order.MovilityFlag}, " +
                         $"CarWeightFlag={order.CarWeightFlag}, 대상큐={string.Join(",", targetQueues)}");
 
         foreach (string queueName in targetQueues)

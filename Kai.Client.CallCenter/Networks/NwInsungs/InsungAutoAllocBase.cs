@@ -72,17 +72,17 @@ public abstract class InsungAutoAllocBase : IExternalApp
     protected string GetInsungSeqno(AutoAllocModel item)
     {
         return m_Context.AppName == StdConst_Network.INSUNG1
-            ? item.NewOrder.Insung1
-            : item.NewOrder.Insung2;
+            ? item.NewOrder.Insung1SeqNo
+            : item.NewOrder.Insung2SeqNo;
     }
 
     // AutoAllocModel에 인성 주문번호 설정하기 (AppName에 따라 Insung1 또는 Insung2)
     //protected void SetInsungSeqno(AutoAllocModel item, string seqno)
     //{
     //    if (m_Context.AppName == StdConst_Network.INSUNG1)
-    //        item.NewOrder.Insung1 = seqno;
+    //        item.NewOrder.Insung1SeqNo = seqno;
     //    else
-    //        item.NewOrder.Insung2 = seqno;
+    //        item.NewOrder.Insung2SeqNo = seqno;
     //}
 
     #endregion
@@ -260,7 +260,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
                 Debug.WriteLine($"[{AppName}]   [{i}] KeyCode={item.KeyCode}, " +
                               $"StateFlag={item.StateFlag}, " +
                               $"SeqNo={GetInsungSeqno(item) ?? "(없음)"}, " +
-                              $"CarType={item.NewOrder.CarTypeFlag}, " +
+                              $"CarType={item.NewOrder.MovilityFlag}, " +
                               $"CallCustFrom={item.NewOrder.CallCustFrom}, " +
                               $"출발={item.NewOrder.StartDongBasic}");
             }
@@ -275,7 +275,7 @@ public abstract class InsungAutoAllocBase : IExternalApp
                 Debug.WriteLine($"[{AppName}]   [{i}] KeyCode={item.KeyCode}, " +
                               $"StateFlag={item.StateFlag}, " +
                               $"SeqNo={GetInsungSeqno(item) ?? "(없음)"}, " +
-                              $"CarType={item.NewOrder.CarTypeFlag}");
+                              $"CarType={item.NewOrder.MovilityFlag}");
             }
             Debug.WriteLine($"[{AppName}] ==========================================");
 

@@ -924,7 +924,7 @@ public partial class InsungsAct_RcptRegPage
 
             #region ===== 3. 우측상단 섹션 입력 =====
             // 4-1. 적요 (OrderRemarks)
-            result = await WriteAndVerifyEditBoxAsync(wndRcpt.우측상단_hWnd적요, tbOrder.OrderRemarks ?? "", "적요", ctrl);
+            result = await WriteAndVerifyEditBoxAsync(wndRcpt.우측상단_hWnd적요, tbOrder.DeliverMemo ?? "", "적요", ctrl);
             if (result.Result != StdResult.Success) goto EXIT;
 
             // 4-2. 공유 (Share) - CheckBox (OFR 이미지 처리)
@@ -1004,7 +1004,7 @@ public partial class InsungsAct_RcptRegPage
             await ctrl.WaitIfPausedOrCancelledAsync();
 
             // 트럭인 경우: RadioButton 클릭 + ComboBox 처리 (신규이므로 항상 디폴트인 오토에서 시작)
-            if (tbOrder.CarTypeFlag == "트럭")
+            if (tbOrder.MovilityFlag == "트럭")
             {
                 for (int i = 0; i < CommonVars.c_nRepeatShort; i++)  // 3회
                 {
@@ -1021,14 +1021,14 @@ public partial class InsungsAct_RcptRegPage
                     await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
                 }
 
-                Debug.WriteLine($"[{m_Context.AppName}]   차량종류: {tbOrder.CarTypeFlag}");
+                Debug.WriteLine($"[{m_Context.AppName}]   차량종류: {tbOrder.MovilityFlag}");
                 Debug.WriteLine($"[{m_Context.AppName}]   차량무게: {tbOrder.CarWeightFlag}");
                 Debug.WriteLine($"[{m_Context.AppName}]   트럭상세: {tbOrder.TruckDetailFlag}");
             }
             else
             {
                 // 일반 차량: 요금종류와 동일한 패턴
-                StdResult_NulBool resultCarType = await IsChecked차량종류Async(bmpWnd, wndRcpt.우측상단_btns차량종류, tbOrder.CarTypeFlag);
+                StdResult_NulBool resultCarType = await IsChecked차량종류Async(bmpWnd, wndRcpt.우측상단_btns차량종류, tbOrder.MovilityFlag);
 
                 if (resultCarType.bResult == null)
                 {
@@ -1043,27 +1043,27 @@ public partial class InsungsAct_RcptRegPage
                     {
                         await ctrl.WaitIfPausedOrCancelledAsync();
 
-                        int index = GetCarTypeIndex(tbOrder.CarTypeFlag);
+                        int index = GetCarTypeIndex(tbOrder.MovilityFlag);
                         result = await SetCheckRadioBtn_InGroupAsync(bmpWnd, wndRcpt.우측상단_btns차량종류, index, ctrl);
                         if (result.Result == StdResult.Success) break;
 
                         if (i == CommonVars.c_nRepeatUltraShort- 1)
                         {
-                            result = new StdResult_Status(StdResult.Fail, $"차량종류 설정 실패: {tbOrder.CarTypeFlag}", "RegistOrderToPopupAsync_53");
+                            result = new StdResult_Status(StdResult.Fail, $"차량종류 설정 실패: {tbOrder.MovilityFlag}", "RegistOrderToPopupAsync_53");
                             goto EXIT;
                         }
                         await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);
                     }
                 }
 
-                Debug.WriteLine($"[{m_Context.AppName}]   차량종류: {tbOrder.CarTypeFlag}");
+                Debug.WriteLine($"[{m_Context.AppName}]   차량종류: {tbOrder.MovilityFlag}");
             }
 
             // 4-5. 배송타입 (DeliverType) - RadioButton OFR (bmpWnd 재사용)
             Debug.WriteLine($"[{m_Context.AppName}] 4-5. 배송타입 RadioButton 처리...");
             await ctrl.WaitIfPausedOrCancelledAsync();
 
-            StdResult_NulBool resultDeliverType = await IsChecked배송타입Async(bmpWnd, wndRcpt.우측상단_btns배송종류, tbOrder.CarDeliverType);
+            StdResult_NulBool resultDeliverType = await IsChecked배송타입Async(bmpWnd, wndRcpt.우측상단_btns배송종류, tbOrder.DeliverFlag);
 
             if (resultDeliverType.bResult == null)
             {
@@ -1078,19 +1078,19 @@ public partial class InsungsAct_RcptRegPage
                 {
                     await ctrl.WaitIfPausedOrCancelledAsync();
 
-                    result = await SetGroupDeliverTypeAsync(bmpWnd, wndRcpt.우측상단_btns배송종류, tbOrder.CarDeliverType, ctrl);
+                    result = await SetGroupDeliverTypeAsync(bmpWnd, wndRcpt.우측상단_btns배송종류, tbOrder.DeliverFlag, ctrl);
                     if (result.Result == StdResult.Success) break;
 
                     if (i == CommonVars.c_nRepeatUltraShort- 1)  // 마지막 시도
                     {
-                        result = new StdResult_Status(StdResult.Fail, $"배송타입 설정 실패: {tbOrder.CarDeliverType}", "RegistOrderToPopupAsync_61");
+                        result = new StdResult_Status(StdResult.Fail, $"배송타입 설정 실패: {tbOrder.DeliverFlag}", "RegistOrderToPopupAsync_61");
                         goto EXIT;
                     }
                     await Task.Delay(CommonVars.c_nWaitNormal, ctrl.Token);  // 100ms
                 }
             }
 
-            Debug.WriteLine($"[{m_Context.AppName}]   배송타입: {tbOrder.CarDeliverType}");
+            Debug.WriteLine($"[{m_Context.AppName}]   배송타입: {tbOrder.DeliverFlag}");
 
             // 4-6. 계산서 (TaxBill) - CheckBox OFR (bmpWnd 재사용)
             Debug.WriteLine($"[{m_Context.AppName}] 4-6. 계산서 CheckBox 처리...");
@@ -1154,8 +1154,8 @@ public partial class InsungsAct_RcptRegPage
             Debug.WriteLine($"[{m_Context.AppName}] 4-8. 오더메모 입력...");
             await ctrl.WaitIfPausedOrCancelledAsync();
 
-            // 오더메모 (KeyCode/OrderMemo 형식)
-            string orderMemo = $"{tbOrder.KeyCode}/{tbOrder.OrderMemo}";
+            // 오더메모 (KeyCode/CallMemo 형식)
+            string orderMemo = $"{tbOrder.KeyCode}/{tbOrder.CallMemo}";
             result = await WriteAndVerifyEditBoxAsync(wndRcpt.우측하단_hWnd오더메모, orderMemo, "오더메모", ctrl);
             if (result.Result != StdResult.Success) goto EXIT;
             #endregion
@@ -1245,10 +1245,10 @@ public partial class InsungsAct_RcptRegPage
                         return new StdResult_Status(StdResult.Fail, "Kai DB에 없는 주문입니다");
                     }
 
-                    // AppName에 따라 Insung1 또는 Insung2 체크
+                    // AppName에 따라 Insung1SeqNo 또는 Insung2SeqNo 체크
                     string existingSeqno = m_Context.AppName == StdConst_Network.INSUNG1
-                        ? item.NewOrder.Insung1
-                        : item.NewOrder.Insung2;
+                        ? item.NewOrder.Insung1SeqNo
+                        : item.NewOrder.Insung2SeqNo;
 
                     if (!string.IsNullOrEmpty(existingSeqno))
                     {
@@ -1264,9 +1264,9 @@ public partial class InsungsAct_RcptRegPage
 
                     // 4-2. 업데이트 실행 (Request ID 사용) - AppName에 따라 분기
                     if (m_Context.AppName == StdConst_Network.INSUNG1)
-                        item.NewOrder.Insung1 = resultSeqno.strResult;
+                        item.NewOrder.Insung1SeqNo = resultSeqno.strResult;
                     else
-                        item.NewOrder.Insung2 = resultSeqno.strResult;
+                        item.NewOrder.Insung2SeqNo = resultSeqno.strResult;
 
                     //StdResult_Int resultUpdate = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
                     StdResult_Int resultUpdate = new StdResult_Int(1);

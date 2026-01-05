@@ -119,9 +119,8 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew = NetUtil.DeepCopyFrom(tbOrderOrg);
         UpdateNewTbOrderByUiData(sStatus_OrderSave);
 
-        // 3. Updater 정보 설정
-        tbOrderNew.Updater = s_CenterCharge.Id;
-        tbOrderNew.UpdateDate = DateTime.Now.ToString(StdConst_Var.DTFORMAT_EXCEPT_SEC);
+        // 3. DtUpdateLast 정보 설정
+        tbOrderNew.DtUpdateLast = DateTime.Now;
 
         // 4. 서버로 업데이트 전송
         StdResult_Int result = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(tbOrderNew);
@@ -144,7 +143,7 @@ public partial class Order_ReceiptWnd : Window
         //tbOrderNew.DtRegDate = ; // DB에서 자동입력
         if (!string.IsNullOrEmpty(orderState)) tbOrderNew.OrderState = orderState;  // MakeEmptyBasicNewTable에서 미리 작성
                                                                                     //tbOrderNew.OrderStateOld = ""; // MakeEmptyBasicNewTable에서 미리 작성
-        tbOrderNew.OrderMemoExt = TBlkCallCustMemoExt.Text; // UiData - 지금은 넘어감.
+        // OrderMemoExt 삭제됨 - 필요시 CallMemo 사용
         //tbOrderNew.UserCode = ; // 필요 없을것 같음.
         //tbOrderNew.UserName = ; // 필요 없을것 같음.
         //tbOrderNew.Updater = s_CenterCharge.Id; // MakeEmptyBasicNewTable에서 미리 작성
@@ -208,8 +207,8 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.FeeDriver = StdConvert.StringWonFormatToInt(TBox_FeeDriver.Text); // UiData
         tbOrderNew.FeeTotal = StdConvert.StringWonFormatToInt(TBox_FeeTot.Text); // UiData
         tbOrderNew.FeeType = Get퀵DeliverTypeFromUI(); // UiData
-        tbOrderNew.CarTypeFlag = GetCarTypeFromUI(); // UiData
-        tbOrderNew.CarDeliverType = Get화물DeliverTypeFromUI(); // UiData
+        tbOrderNew.MovilityFlag = GetCarTypeFromUI(); // UiData
+        tbOrderNew.DeliverFlag = Get화물DeliverTypeFromUI(); // UiData
         //tbOrderNew.DriverCode = ; // UiData - 연구과제
         //tbOrderNew.DriverId = ; // UiData - 연구과제
         //tbOrderNew.DriverName = ; // UiData - 연구과제
@@ -237,12 +236,11 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.ReceiptTime = TimeOnly.FromDateTime(DateTime.Now);
         tbOrderNew.OrderState = sOrderState;
         tbOrderNew.OrderStateOld = "";
-        tbOrderNew.OrderRemarks = ""; // UiData
-        tbOrderNew.OrderMemo = ""; // UiData
-        tbOrderNew.OrderMemoExt = ""; // UiData
+        tbOrderNew.DeliverMemo = ""; // UiData
+        tbOrderNew.CallMemo = ""; // UiData
         tbOrderNew.UserCode = 0; // 필요 없을것 같음.
         tbOrderNew.UserName = ""; // 필요 없을것 같음.
-        tbOrderNew.Updater = s_CenterCharge.Id;
+        // DtUpdateLast - 신규등록시엔 기본값 사용
         //tbOrderNew.UpdateDate = null;
         tbOrderNew.CallCompCode = 0;
         tbOrderNew.CallCompName = "";
@@ -302,10 +300,10 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.FeeCommi = 0; // UiData
         tbOrderNew.FeeTotal = 0; // UiData
         tbOrderNew.FeeType = ""; // UiData
-        tbOrderNew.CarTypeFlag = ""; // UiData
+        tbOrderNew.MovilityFlag = ""; // UiData
         tbOrderNew.CarWeightFlag = ""; // UiData
         tbOrderNew.TruckDetailFlag = ""; // UiData
-        tbOrderNew.CarDeliverType = ""; // UiData
+        tbOrderNew.DeliverFlag = ""; // UiData
         tbOrderNew.DriverCode = 0; // UiData
         tbOrderNew.DriverId = ""; // UiData
         tbOrderNew.DriverName = ""; // UiData
@@ -314,10 +312,10 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.DriverCenterId = ""; // UiData
         tbOrderNew.DriverCenterName = ""; // UiData
         tbOrderNew.DriverBusinessNo = ""; // UiData
-        tbOrderNew.Insung1 = "";
-        tbOrderNew.Insung2 = "";
-        tbOrderNew.Cargo24 = "";
-        tbOrderNew.Onecall = "";
+        tbOrderNew.Insung1SeqNo = "";
+        tbOrderNew.Insung2SeqNo = "";
+        tbOrderNew.Cargo24SeqNo = "";
+        tbOrderNew.OnecallSeqNo = "";
         tbOrderNew.Share = false;
         tbOrderNew.TaxBill = false;
         //tbOrderNew.ReceiptTime = null;

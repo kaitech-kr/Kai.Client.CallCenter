@@ -59,28 +59,28 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
     // 인성1
     public string Insung1
     {
-        get => tbOrder.Insung1;
+        get => tbOrder.Insung1SeqNo;
         set => OnPropertyChanged(nameof(Insung1));
     }
 
     // 인성2
     public string Insung2
     {
-        get => tbOrder.Insung2;
+        get => tbOrder.Insung2SeqNo;
         set => OnPropertyChanged(nameof(Insung2));
     }
 
     // 화물24시
     public string Cargo24
     {
-        get => tbOrder.Cargo24;
+        get => tbOrder.Cargo24SeqNo;
         set => OnPropertyChanged(nameof(Cargo24));
     }
 
     // 원콜
     public string Onecall
     {
-        get => tbOrder.Onecall;
+        get => tbOrder.OnecallSeqNo;
         set => OnPropertyChanged(nameof(Onecall));
     }
 
@@ -156,7 +156,7 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
     // 차량종류(CarType) - Flag 문자열
     public string CarType
     {
-        get => tbOrder.CarTypeFlag;
+        get => tbOrder.MovilityFlag;
         set => OnPropertyChanged(nameof(CarType));
     }
 
@@ -177,21 +177,21 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
     // 배송타입(DeliverType)
     public string DeliverType
     {
-        get => tbOrder.CarDeliverType;
+        get => tbOrder.DeliverFlag;
         set => OnPropertyChanged(nameof(DeliverType));
     }
 
     // 적요
     public string Remarks
     {
-        get => tbOrder.OrderRemarks;
+        get => tbOrder.DeliverMemo;
         set => OnPropertyChanged(nameof(Remarks));
     }
 
     // 오더메모
     public string OrderMemo
     {
-        get => tbOrder.OrderMemo;
+        get => tbOrder.CallMemo;
         set => OnPropertyChanged(nameof(OrderMemo));
     }
 

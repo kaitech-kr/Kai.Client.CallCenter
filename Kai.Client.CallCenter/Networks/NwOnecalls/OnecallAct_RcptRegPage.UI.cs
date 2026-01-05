@@ -20,7 +20,7 @@ public partial class OnecallAct_RcptRegPage
 {
     #region 1. Helpers - 공용 헬퍼
     // Onecall SeqNo 가져오기
-    private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
+    private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.OnecallSeqNo;
 
     // 포커스 탈출 (빈 영역 클릭)
     private async Task EscapeFocusAsync(CancellationToken ct = default, int nDelay = c_nWaitVeryShort)

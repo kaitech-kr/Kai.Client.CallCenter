@@ -66,10 +66,10 @@ public class QueueController
     {
         return networkName switch
         {
-            StdConst_Network.INSUNG1 => order.Insung1,
-            StdConst_Network.INSUNG2 => order.Insung2,
-            StdConst_Network.CARGO24 => order.Cargo24,
-            StdConst_Network.ONECALL => order.Onecall,
+            StdConst_Network.INSUNG1 => order.Insung1SeqNo,
+            StdConst_Network.INSUNG2 => order.Insung2SeqNo,
+            StdConst_Network.CARGO24 => order.Cargo24SeqNo,
+            StdConst_Network.ONECALL => order.OnecallSeqNo,
             _ => null
         };
     }
@@ -278,10 +278,10 @@ public class QueueController
         // 해당 네트워크의 접수번호(SeqNo)가 있는 경우에만 큐에 포함
         return networkName switch
         {
-            StdConst_Network.INSUNG1 => !string.IsNullOrEmpty(order.Insung1),
-            StdConst_Network.INSUNG2 => !string.IsNullOrEmpty(order.Insung2),
-            StdConst_Network.CARGO24 => !string.IsNullOrEmpty(order.Cargo24),
-            StdConst_Network.ONECALL => !string.IsNullOrEmpty(order.Onecall),
+            StdConst_Network.INSUNG1 => !string.IsNullOrEmpty(order.Insung1SeqNo),
+            StdConst_Network.INSUNG2 => !string.IsNullOrEmpty(order.Insung2SeqNo),
+            StdConst_Network.CARGO24 => !string.IsNullOrEmpty(order.Cargo24SeqNo),
+            StdConst_Network.ONECALL => !string.IsNullOrEmpty(order.OnecallSeqNo),
             _ => false
         };
     }

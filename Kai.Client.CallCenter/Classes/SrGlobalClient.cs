@@ -1246,8 +1246,7 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     {
         TbOrder tbNew = NetUtil.DeepCopyFrom(tbOld);
         tbNew.OrderState = orderState;
-        tbNew.Updater = s_CenterCharge.Id;
-        tbNew.UpdateDate = DateTime.Now.ToString(StdConst_Var.DTFORMAT_EXCEPT_SEC);
+        tbNew.DtUpdateLast = DateTime.Now;
 
         return await SrResult_Order_UpdateRowAsync_Today(tbNew);
     }

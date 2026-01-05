@@ -33,7 +33,7 @@ public class NwOnecall : IExternalApp
     private const int MAX_DATAGRID_FAIL_COUNT = 3;
 
     // Onecall SeqNo 가져오기
-    private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.Onecall;
+    private string GetOnecallSeqno(AutoAllocModel item) => item.NewOrder.OnecallSeqNo;
     #endregion
 
     #region 생성자

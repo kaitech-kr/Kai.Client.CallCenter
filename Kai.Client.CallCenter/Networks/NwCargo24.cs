@@ -35,7 +35,7 @@ public class NwCargo24 : IExternalApp
     private const double c_dOfrWeight = 0.7;
 
     // Cargo24 SeqNo 가져오기
-    private string GetCargo24Seqno(AutoAllocModel item) => item.NewOrder.Cargo24;
+    private string GetCargo24Seqno(AutoAllocModel item) => item.NewOrder.Cargo24SeqNo;
     #endregion
 
     #region 3. Constructor - 생성자
