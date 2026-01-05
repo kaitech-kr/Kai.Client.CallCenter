@@ -995,11 +995,11 @@
 
                 <DataGridTextColumn Header="이전소속" Binding="{Binding CallCustFrom}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
 
-                <DataGridTextColumn Header="인성1" Binding="{Binding Insung1}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
-                <DataGridTextColumn Header="인성2" Binding="{Binding Insung2}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
-                <DataGridTextColumn Header="화물24시" Binding="{Binding Cargo24}" Width="90" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
-                <DataGridTextColumn Header="원콜" Binding="{Binding Onecall}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
-                <DataGridTextColumn Header="차량" Binding="{Binding CarType}" Width="50" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="인성1" Binding="{Binding Insung1SeqNo}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="인성2" Binding="{Binding Insung2SeqNo}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="화물24시" Binding="{Binding Cargo24SeqNo}" Width="90" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="원콜" Binding="{Binding OnecallSeqNo}" Width="80" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="차량" Binding="{Binding MovilityFlag}" Width="50" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
                 <DataGridTextColumn Header="고객명" Binding="{Binding CallCustName}" Width="180" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
                 <DataGridTextColumn Header="부서명" Binding="{Binding CallDeptName}" Width="70"/>
                 <DataGridTextColumn Header="담당자" Binding="{Binding CallChargeName}" Width="70"/>
@@ -1014,15 +1014,15 @@
                 <DataGridTextColumn Header="기사" Binding="{Binding FeeDriver}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
                 <DataGridTextColumn Header="처리비" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
                 <DataGridTextColumn Header="지급" Binding="{Binding FeeType}" Width="50"/>
-                <DataGridTextColumn Header="형태" Binding="{Binding DeliverType}" Width="50"/>
+                <DataGridTextColumn Header="형태" Binding="{Binding DeliverFlag}" Width="50"/>
                 <DataGridTextColumn Header="왕복" Width="50"/>
                 <DataGridTextColumn Header="공유" Width="50"/>
                 <DataGridTextColumn Header="기사"/>
                 <DataGridTextColumn Header="픽업" Binding="{Binding RunTime}" Width="50"/>
                 <DataGridTextColumn Header="완료" Binding="{Binding FinishTime}" Width="50"/>
                 <DataGridTextColumn Header="배차" Binding="{Binding AllocTime}" Width="50"/>
-                <DataGridTextColumn Header="적요" Binding="{Binding Remarks}" Width="200"/>
-                <DataGridTextColumn Header="오더메모" Binding="{Binding OrderMemo}" Width="150"/>
+                <DataGridTextColumn Header="적요" Binding="{Binding DeliverMemo}" Width="200"/>
+                <DataGridTextColumn Header="오더메모" Binding="{Binding CallMemo}" Width="150"/>
                 <DataGridCheckBoxColumn Header="출" />
                 <DataGridCheckBoxColumn Header="착" />
                 <DataGridTextColumn Header="출발지" Width="100"/>

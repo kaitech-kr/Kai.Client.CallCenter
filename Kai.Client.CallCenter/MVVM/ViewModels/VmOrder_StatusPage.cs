@@ -57,31 +57,31 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
     }
 
     // 인성1
-    public string Insung1
+    public string Insung1SeqNo
     {
         get => tbOrder.Insung1SeqNo;
-        set => OnPropertyChanged(nameof(Insung1));
+        set => OnPropertyChanged(nameof(Insung1SeqNo));
     }
 
     // 인성2
-    public string Insung2
+    public string Insung2SeqNo
     {
         get => tbOrder.Insung2SeqNo;
-        set => OnPropertyChanged(nameof(Insung2));
+        set => OnPropertyChanged(nameof(Insung2SeqNo));
     }
 
     // 화물24시
-    public string Cargo24
+    public string Cargo24SeqNo
     {
         get => tbOrder.Cargo24SeqNo;
-        set => OnPropertyChanged(nameof(Cargo24));
+        set => OnPropertyChanged(nameof(Cargo24SeqNo));
     }
 
     // 원콜
-    public string Onecall
+    public string OnecallSeqNo
     {
         get => tbOrder.OnecallSeqNo;
-        set => OnPropertyChanged(nameof(Onecall));
+        set => OnPropertyChanged(nameof(OnecallSeqNo));
     }
 
     public string CallCompName
@@ -153,18 +153,18 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
         set => OnPropertyChanged(nameof(FeeNet));
     }
 
-    // 차량종류(CarType) - Flag 문자열
-    public string CarType
+    // 차량종류
+    public string MovilityFlag
     {
         get => tbOrder.MovilityFlag;
-        set => OnPropertyChanged(nameof(CarType));
+        set => OnPropertyChanged(nameof(MovilityFlag));
     }
 
-    // 차량톤수(CarWeight) - Flag 문자열
-    public string CarWeight
+    // 차량톤수
+    public string CarWeightFlag
     {
         get => tbOrder.CarWeightFlag;
-        set => OnPropertyChanged(nameof(CarWeight));
+        set => OnPropertyChanged(nameof(CarWeightFlag));
     }
 
     // 요금타입(FeeType)
@@ -174,32 +174,32 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
         set => OnPropertyChanged(nameof(FeeType));
     }
 
-    // 배송타입(DeliverType)
-    public string DeliverType
+    // 배송타입
+    public string DeliverFlag
     {
         get => tbOrder.DeliverFlag;
-        set => OnPropertyChanged(nameof(DeliverType));
+        set => OnPropertyChanged(nameof(DeliverFlag));
     }
 
     // 적요
-    public string Remarks
+    public string DeliverMemo
     {
         get => tbOrder.DeliverMemo;
-        set => OnPropertyChanged(nameof(Remarks));
+        set => OnPropertyChanged(nameof(DeliverMemo));
     }
 
     // 오더메모
-    public string OrderMemo
+    public string CallMemo
     {
         get => tbOrder.CallMemo;
-        set => OnPropertyChanged(nameof(OrderMemo));
+        set => OnPropertyChanged(nameof(CallMemo));
     }
 
     // 공유
-    public bool OrderShare
+    public bool Share
     {
         get => tbOrder.Share;
-        set => OnPropertyChanged(nameof(OrderShare));
+        set => OnPropertyChanged(nameof(Share));
     }
 
     // 세금게산서
