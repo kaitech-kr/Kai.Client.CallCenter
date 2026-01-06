@@ -400,10 +400,7 @@ public partial class Company_RegistPage : Page
         }
     }
 
-    /// <summary>
-    /// 거래처 목록 갱신 및 선택
-    /// </summary>
-    /// <param name="keyCode">선택할 거래처 KeyCode</param>
+    // 거래처 목록 갱신 및 선택
     private void RefreshCompanyListAndSelect(long keyCode)
     {
         VsCompany_RegistPage.LoadData_Comp(s_MainWnd, curListCompany);
@@ -448,10 +445,7 @@ public partial class Company_RegistPage : Page
         return result;
     }
 
-    /// <summary>
-    /// ViewModel 데이터를 UI에 표시
-    /// </summary>
-    /// <returns>거래처 KeyCode</returns>
+    // ViewModel 데이터를 UI에 표시 (거래처 KeyCode 반환)
     private long ClassToUI(VmCompany_RegistPage_Comp comp)
     {
         TBoxWrite_CompName.Text = comp.CompName;
@@ -470,9 +464,7 @@ public partial class Company_RegistPage : Page
         return comp.KeyCode;
     }
 
-    /// <summary>
-    /// UI 입력 필드 초기화
-    /// </summary>
+    // UI 입력 필드 초기화
     private void ClearUI()
     {
         TBoxWrite_CompName.Text = "";
@@ -489,9 +481,7 @@ public partial class Company_RegistPage : Page
         //CmbBoxWrite_TradeType.SelectedIndex = -1;
     }
 
-    /// <summary>
-    /// UI 입력값이 원본 데이터와 다른지 확인
-    /// </summary>
+    // UI 입력값이 원본 데이터와 다른지 확인
     private bool IsDataChanged(VmCompany_RegistPage_Comp comp)
     {
         if (TBoxWrite_CompName.Text != comp.CompName) return true;

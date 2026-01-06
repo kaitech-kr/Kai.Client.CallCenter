@@ -1714,12 +1714,7 @@ public class OfrWork_Common
     //        "tb 널 입니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByAvgBrightnessAsync_03", bmpOrg, s_sLogDir, false);
     //}
 
-    /// <summary>
-    /// Bitmap의 특정 영역에서 Dual Brightness로 이미지(CheckBox 등) 인식
-    /// </summary>
-    /// <param name="bmpOrg">원본 Bitmap</param>
-    /// <param name="rcRelSpare">인식할 상대 영역</param>
-    /// <returns>OfrResult_TbText - DB에서 찾은 결과 또는 분석 정보</returns>
+    // Bitmap의 특정 영역에서 Dual Brightness로 이미지(CheckBox 등) 인식
     public static async Task<OfrResult_TbText> OfrImage_DrawRelSpareRect_ByDualBrightnessAsync(Draw.Bitmap bmpOrg, Draw.Rectangle rcRelSpare)
     {
         // 1. 지정 영역에서 전경 영역 찾기 (최대 밝기 기반)
@@ -1807,11 +1802,7 @@ public class OfrWork_Common
     ////        "tb 널 입니다", "OfrWork_Common/OfrImage_DrawRelSpareRect_ByDualBrightnessAsync_03", bmpOrg, s_sLogDir, false);
     ////}
 
-    /// <summary>
-    /// Bitmap 전체에서 Dual Brightness로 이미지(CheckBox 등) 인식
-    /// </summary>
-    /// <param name="bmpOrg">원본 Bitmap (전체)</param>
-    /// <returns>OfrResult_TbText - DB에서 찾은 결과 또는 null</returns>
+    // Bitmap 전체에서 Dual Brightness로 이미지(CheckBox 등) 인식
     public static async Task<OfrResult_TbText> OfrImage_InSparedBitmapt_ByDualBrightnessAsync(Draw.Bitmap bmpOrg)
     {
         // 1. 전경 영역 찾기 (최대 밝기 기반)
@@ -2819,27 +2810,21 @@ public class OfrWork_Common
     //}
 
     #region ErrMsgResult Helper Functions
-    /// <summary>
-    /// 에러 메시지를 출력하고 StdResult_Error를 반환합니다.
-    /// </summary>
+    // 에러 메시지를 출력하고 StdResult_Error를 반환
     protected static StdResult_Error ErrMsgResult_Error(string sErr, string sPos)
     {
         Debug.WriteLine($"[ErrMsgResult_Error] {sPos}: {sErr}");
         return new StdResult_Error(sErr, sPos);
     }
 
-    /// <summary>
-    /// 에러 메시지를 출력하고 StdResult_NulBool을 반환합니다.
-    /// </summary>
+    // 에러 메시지를 출력하고 StdResult_NulBool을 반환
     protected static StdResult_NulBool ErrMsgResult_NulBool(string sErr, string sPos)
     {
         Debug.WriteLine($"[ErrMsgResult_NulBool] {sPos}: {sErr}");
         return new StdResult_NulBool(sErr, sPos);
     }
 
-    /// <summary>
-    /// 에러 메시지를 출력하고 OfrResult_TbText를 반환합니다.
-    /// </summary>
+    // 에러 메시지를 출력하고 OfrResult_TbText를 반환
     protected static OfrResult_TbText ErrMsgResult_TbText(OfrModel_BitmapAnalysis info, TbText tbText, string sErr, string sPos)
     {
         Debug.WriteLine($"[ErrMsgResult_TbText] {sPos}: {sErr}");
@@ -2848,17 +2833,7 @@ public class OfrWork_Common
     #endregion
 
     #region CheckBox 상태 변경
-    /// <summary>
-    /// CheckBox 클릭 및 상태 변경 (범용)
-    /// - 현재 상태 확인
-    /// - 원하는 상태가 아니면 클릭
-    /// - 상태 변경 확인 (재시도 포함)
-    /// </summary>
-    /// <param name="hWndTop">상위 Window Handle</param>
-    /// <param name="rcRelM">CheckBox 영역 (상대 좌표)</param>
-    /// <param name="bCheck">원하는 상태 (true=Checked, false=Unchecked)</param>
-    /// <param name="checkBoxName">CheckBox 이름 (에러 메시지용)</param>
-    /// <returns>성공 시 null, 실패 시 StdResult_Error</returns>
+    // CheckBox 클릭 및 상태 변경 (현재 상태 확인 → 클릭 → 변경 확인)
     public static async Task<StdResult_Error> SetCheckBox_StatusAsync(
         IntPtr hWndTop,
         Draw.Rectangle rcRelM,

@@ -2,6 +2,12 @@
 
 namespace Kai.Client.CallCenter.Classes;
 
+// ViewModel 기본 인터페이스
+public interface IViewModelBase
+{
+    bool IsChanged { get; }
+}
+
 public class CModel_ComboBox
 {
     public string sMyName { get; set; }

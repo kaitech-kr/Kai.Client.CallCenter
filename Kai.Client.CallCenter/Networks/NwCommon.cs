@@ -42,10 +42,7 @@ public class NwCommon
         return new StdResult_String(sAppPath);
     }
 
-    /// <summary>
-    /// 인성 앱용 고객명 검색 텍스트 생성
-    /// - "고객명/담당자명" 형식으로 반환
-    /// </summary>
+    // 인성 앱용 고객명 검색 텍스트 생성 ("고객명/담당자명" 형식)
     public static string GetInsungTextForSearch(string custName, string etcName)
     {
         if (string.IsNullOrEmpty(custName)) return custName;

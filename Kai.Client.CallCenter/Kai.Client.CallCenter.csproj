@@ -252,14 +252,17 @@
 		<!-- 폴더들 -->
 		<Content Include="..\MustCopy\Data\**\*" Link="Data\%(RecursiveDir)%(Filename)%(Extension)">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Visible>false</Visible>
 		</Content>
 
 		<Content Include="..\MustCopy\Python\**\*" Link="Python\%(RecursiveDir)%(Filename)%(Extension)">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Visible>false</Visible>
 		</Content>
 
 		<Content Include="..\MustCopy\usbmmidd_v2\**\*" Link="usbmmidd_v2\%(RecursiveDir)%(Filename)%(Extension)">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<Visible>false</Visible>
 		</Content>
 
 		<!-- DLL 및 EXE 파일들 -->
