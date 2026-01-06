@@ -1390,7 +1390,7 @@
                     </Button>
 
                     <!--대기 버튼-->
-                    <Button x:Name="BtnMod_Wait" 
+                    <Button x:Name="BtnMod_Wait" Click="BtnMod_Wait_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Wait001.png" Style="{StaticResource ImageSizeMid}" />
@@ -1399,7 +1399,7 @@
                     </Button>
 
                     <!--주문취소 버튼-->
-                    <Button x:Name="BtnMod_Cancel" 
+                    <Button x:Name="BtnMod_Cancel" Click="BtnMod_Cancel_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Cancel001.png" Style="{StaticResource ImageSizeMid}" />
@@ -1408,7 +1408,7 @@
                     </Button>
 
                     <!--접수상태 버튼-->
-                    <Button x:Name="BtnMod_Receipt"
+                    <Button x:Name="BtnMod_Receipt" Click="BtnMod_Receipt_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="30" Background="#5AD2FF" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Receipt001.png" Style="{StaticResource ImageSizeMid}" />

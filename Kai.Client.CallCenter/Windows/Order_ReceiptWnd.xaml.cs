@@ -25,8 +25,8 @@ public partial class Order_ReceiptWnd : Window
 {
     #region Variables
     //public VmOrder_StatusPage_Order m_VmOrder_StatusPage_Order = null;
-    private TbOrder tbOrderOrg = null;
-    private TbOrder tbOrderNew = null;
+    private TbOrder tbOrderOrg = null;  // 현재 주문 데이터 (UI와 바인딩)
+    private TbOrder tbOrderBK = null;   // 백업용 (로드 시 복사, 저장 시 비교용)
 
     private long CallCustCodeK = 0, CallCustCodeE = 0;
     private long StartCustCodeK = 0, StartCustCodeE = 0;
@@ -87,6 +87,7 @@ public partial class Order_ReceiptWnd : Window
 
         if (tbOrderOrg != null) // 업데이트 모드면 오더정보 로드
         {
+            tbOrderBK = NetUtil.DeepCopyFrom(tbOrderOrg); // 백업 (저장 시 비교용)
             TbOrderOrgToUiData();
             의뢰자정보Mode(tbOrderOrg.CallCustCodeK);
         }
@@ -176,21 +177,21 @@ public partial class Order_ReceiptWnd : Window
     // 대기
     private void BtnMod_Wait_Click(object sender, RoutedEventArgs e)
     {
-        TBlkOrderState.Text = "대기";
+        if (tbOrderOrg != null) tbOrderOrg.OrderState = "대기";
         GridHeaderInfo.Background = (Brush)Application.Current.Resources["AppBrushLightWait"];
     }
 
     // 주문취소
     private void BtnMod_Cancel_Click(object sender, RoutedEventArgs e)
     {
-        TBlkOrderState.Text = "취소";
+        if (tbOrderOrg != null) tbOrderOrg.OrderState = "취소";
         GridHeaderInfo.Background = (Brush)Application.Current.Resources["AppBrushLightCancel"];
     }
 
     // 접수상태
     private void BtnMod_Receipt_Click(object sender, RoutedEventArgs e)
     {
-        TBlkOrderState.Text = "접수";
+        if (tbOrderOrg != null) tbOrderOrg.OrderState = "접수";
         GridHeaderInfo.Background = (Brush)Application.Current.Resources["AppBrushLightReceipt"];
     }
 
@@ -516,7 +517,7 @@ public partial class Order_ReceiptWnd : Window
             DtPickerReserve.IsEnabled = true;
             TBoxReserveBreakMin.IsEnabled = true;
             // 예약모드로 변경
-            TBlkOrderState.Text = "예약";
+            if (tbOrderOrg != null) tbOrderOrg.OrderState = "예약";
             GridHeaderInfo.Background = (Brush)Application.Current.Resources["AppBrushLightReserve"];
         }
         else
@@ -526,7 +527,7 @@ public partial class Order_ReceiptWnd : Window
             DtPickerReserve.IsEnabled = false;
             TBoxReserveBreakMin.IsEnabled = false;
             // 접수모드로 변경
-            TBlkOrderState.Text = "접수";
+            if (tbOrderOrg != null) tbOrderOrg.OrderState = "접수";
             GridHeaderInfo.Background = (Brush)Application.Current.Resources["AppBrushLightReceipt"];
         }
     }
