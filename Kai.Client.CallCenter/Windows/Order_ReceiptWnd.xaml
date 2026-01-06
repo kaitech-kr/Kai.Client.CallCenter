@@ -277,7 +277,7 @@
                     <!--오더상태-->
                     <Border Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Style="{StaticResource BorderStyle_Blue}">
                         <TextBlock x:Name="TBlkOrderState"
-                                   Text="접수" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                   Text="{Binding OrderState, FallbackValue=접수}" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Border>
 
                     <!--오더번호-->

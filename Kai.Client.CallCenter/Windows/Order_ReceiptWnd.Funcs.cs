@@ -93,7 +93,14 @@ public partial class Order_ReceiptWnd : Window
         // 1. 필수입력 체크
         if (!CanSave()) return false;
 
-        // 2. 새 주문 객체 생성 및 데이터 설정
+        // 2. 예약 유효성 체크
+        if (!IsValidReserve())
+        {
+            ErrMsgBox("예약시간이 현재시간보다 이후여야 합니다.", "Order_ReceiptWnd/SaveOrderAsync");
+            return false;
+        }
+
+        // 3. 새 주문 객체 생성 및 데이터 설정
         MakeEmptyBasicNewTbOrder(orderState);
         UpdateNewTbOrderByUiData();
 
@@ -115,7 +122,14 @@ public partial class Order_ReceiptWnd : Window
         // 1. 필수 입력 체크
         if (!CanSave()) return false;
 
-        // 2. 원본 복사 및 UI 데이터 업데이트
+        // 2. 예약 유효성 체크
+        if (!IsValidReserve())
+        {
+            ErrMsgBox("예약시간이 현재시간보다 이후여야 합니다.", "Order_ReceiptWnd/UpdateOrderAsync");
+            return false;
+        }
+
+        // 3. 원본 복사 및 UI 데이터 업데이트
         tbOrderNew = NetUtil.DeepCopyFrom(tbOrderOrg);
         UpdateNewTbOrderByUiData(sStatus_OrderSave);
 
@@ -200,6 +214,7 @@ public partial class Order_ReceiptWnd : Window
         tbOrderNew.Reserve = ChkBoxReserve.IsChecked == true; // UiData
         tbOrderNew.DtReserve = DtPickerReserve.Value; // UiData
         tbOrderNew.ReserveBreakMinute = StdConvert.StringToInt(TBoxReserveBreakMin.Text); // UiData
+        Debug.WriteLine($"[저장] Reserve={tbOrderNew.Reserve}, DtReserve={tbOrderNew.DtReserve}, BreakMin={tbOrderNew.ReserveBreakMinute}");
         tbOrderNew.FeeBasic = StdConvert.StringWonFormatToInt(TBox_FeeBasic.Text); // UiData
         tbOrderNew.FeePlus = StdConvert.StringWonFormatToInt(TBox_FeePlus.Text); // UiData
         tbOrderNew.FeeMinus = StdConvert.StringWonFormatToInt(TBox_FeeMinus.Text); // UiData
@@ -552,7 +567,7 @@ public partial class Order_ReceiptWnd : Window
     // Header 정보 로드
     private void SetHeaderInfoToUI()
     {
-        TBlkOrderState.Text = tbOrderOrg.OrderState;
+        TBlkOrderState.DataContext = tbOrderOrg; // 바인딩 연결
         GridHeaderInfo.Background = tbOrderOrg.OrderState switch
         {
             "접수" => (Brush)Application.Current.Resources["AppBrushLightReceipt"],
@@ -570,11 +585,19 @@ public partial class Order_ReceiptWnd : Window
     // 예약 정보 로드
     private void SetReserveInfoToUI()
     {
-        ChkBoxReserve.IsChecked = tbOrderOrg.Reserve;
+        Debug.WriteLine($"[로드] Reserve={tbOrderOrg.Reserve}, DtReserve={tbOrderOrg.DtReserve}, BreakMin={tbOrderOrg.ReserveBreakMinute}");
+        ChkBoxReserve.DataContext = tbOrderOrg; // 바인딩 연결
         if (tbOrderOrg.Reserve)
         {
             DtPickerReserve.Value = tbOrderOrg.DtReserve;
             TBoxReserveBreakMin.Text = tbOrderOrg.ReserveBreakMinute.ToString();
+            DtPickerReserve.IsEnabled = true;
+            TBoxReserveBreakMin.IsEnabled = true;
+        }
+        else
+        {
+            DtPickerReserve.IsEnabled = false;
+            TBoxReserveBreakMin.IsEnabled = false;
         }
     }
 
