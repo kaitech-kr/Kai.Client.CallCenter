@@ -20,8 +20,7 @@
       "Bash(cat:*)",
       "Bash(cmd /c \"dir /a D:\\CodeWork\\WithVs2022\\Save\")",
       "Read(//d/CodeWork/WithVs2022/Save/KaiWork_Tmp/Kai.Client/Kai.Client.CallCenter/Backup/Networks/NwInsungs/**)",
-      "Read(//d/CodeWork/WithVs2022/Save/**)",
-      "Edit(//d/CodeWork/WithVs2022/KaiWork/**)"
+      "Read(//d/CodeWork/WithVs2022/Save/**)"
     ],
     "deny": [],
     "ask": [

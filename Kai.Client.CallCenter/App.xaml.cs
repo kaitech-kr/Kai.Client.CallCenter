@@ -1,14 +1,8 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Kai.Client.CallCenter.MVVM.FieldMaps;
-using Kai.Client.CallCenter.MVVM.ViewModels;
-using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
 
 namespace Kai.Client.CallCenter;
 public partial class App : Application
@@ -31,16 +25,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-#if DEBUG
-        // TbOrder ↔ ViewModel 매핑 검증
-        TbOrderFieldMap.ValidateAndLog(
-            typeof(TbOrder),
-            typeof(VmOrder_StatusPage_Order),
-            msg => Debug.WriteLine(msg)
-        );
-#endif
-
-        EventManager.RegisterClassHandler(typeof(TextBox), // TextBox.GotFocusEvent,
+        EventManager.RegisterClassHandler(typeof(TextBox),
             UIElement.GotFocusEvent,
             new RoutedEventHandler(TextBox_GotFocus));
     }

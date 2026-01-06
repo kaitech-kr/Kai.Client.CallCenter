@@ -813,6 +813,7 @@
                             <Border BorderBrush="Black" BorderThickness="{StaticResource Thickness_TR}" Background="White"
                                     Width="22" Height="{StaticResource LineHeight_Table}">
                                 <CheckBox x:Name="ChkBoxReserve" TabIndex="27" Click="ChkBoxReserve_Click"
+                                          IsChecked="{Binding Reserve, Mode=TwoWay}"
                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Border>
 
@@ -828,9 +829,11 @@
                                                      Watermark="날짜와 시간을 선택하세요"
                                                      VerticalContentAlignment="Center" />
                             </Border>
-                            <TextBox x:Name="TBoxReserveBreakMin" TabIndex="28"
+                            <TextBox x:Name="TBoxReserveBreakMin" TabIndex="28" Text="0" IsEnabled="False"
                                      Style="{StaticResource TextBoxStyle}" Width="46" BorderThickness="{StaticResource Thickness_TR}"
-                                     InputMethod.IsInputMethodEnabled="False" />
+                                     TextAlignment="Center"
+                                     InputMethod.IsInputMethodEnabled="False"
+                                     LostFocus="TBoxReserveBreakMin_LostFocus" />
 
                             <Border Style="{StaticResource BorderStyle_Black}" Background="White"
                                     Width="110" BorderThickness="{StaticResource Thickness_TR}">
@@ -847,11 +850,10 @@
                                 <StackPanel Orientation="Horizontal">
                                     <RadioButton x:Name="RadioBtn_선불" GroupName="FeeGroup" Content="선불" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True"/>
                                     <RadioButton x:Name="RadioBtn_착불" GroupName="FeeGroup" Content="착불" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                                    <RadioButton x:Name="RadioBtn_신용" GroupName="FeeGroup" Content="신용" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
                                     <RadioButton x:Name="RadioBtn_송금" GroupName="FeeGroup" Content="송금" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                                    <RadioButton x:Name="RadioBtn_수금" GroupName="FeeGroup" Content="수금" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
                                     <RadioButton x:Name="RadioBtn_카드" GroupName="FeeGroup" Content="카드" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
-                                </StackPanel>
+                                    <RadioButton x:Name="RadioBtn_신용" GroupName="FeeGroup" Content="신용(인수증)" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                    </StackPanel>
                             </Border>
                         </StackPanel>
 
@@ -863,8 +865,8 @@
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <RadioButton x:Name="RadioBtn_오토" GroupName="CarGroup" Content="오토" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True" Checked="RadioBtn_QuickType_Checked"/>
-                                    <RadioButton x:Name="RadioBtn_밴" GroupName="CarGroup" Content="밴" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_QuickType_Checked"/>
-                                    <RadioButton x:Name="RadioBtn_플렉" GroupName="CarGroup" Content="플렉스" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_QuickType_Checked"/>
+                                    <RadioButton x:Name="RadioBtn_플렉" GroupName="CarGroup" Content="플렉스" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_QuickType_Checked"/>                                    
+                                    <RadioButton x:Name="RadioBtn_밴" GroupName="CarGroup" Content="밴" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_QuickType_Checked"/>       
                                     <RadioButton x:Name="RadioBtn_다마" GroupName="CarGroup" Content="다마스" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_CargoType_Checked"/>
                                     <RadioButton x:Name="RadioBtn_라보" GroupName="CarGroup" Content="라보" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_CargoType_Checked"/>
                                     <RadioButton x:Name="RadioBtn_트럭" GroupName="CarGroup" Content="트럭" Margin="2,0,0,0" Style="{StaticResource RadioBtnStyle}" Checked="RadioBtn_CargoType_Checked"/>
@@ -879,11 +881,12 @@
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <CheckBox x:Name="ChkBox퀵_편도" Content="편도" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" IsChecked="True"/>
-                                    <CheckBox x:Name="ChkBox퀵_왕복" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox퀵_경유" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                    <CheckBox x:Name="ChkBox퀵_긴급" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
-                                </StackPanel>
+                                    <CheckBox x:Name="ChkBox_편도" Content="편도" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" IsChecked="True"/>
+                                    <CheckBox x:Name="ChkBox_왕복" Content="왕복" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_경유" Content="경유" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_긴급" Content="긴급" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    <CheckBox x:Name="ChkBox_혼적" Content="혼적(화물)" Margin="2,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
+                                    </StackPanel>
                             </Border>
                         </StackPanel>
 
@@ -909,7 +912,7 @@
                     <!--#endregion R-0 에약그룹-->
 
                     <!--#region R-1 화물정보그룹 -->
-                    <Grid x:Name="GridCargoInfo" Grid.Row="1" Margin="0,4,0,0" Visibility="Visible">
+                    <Grid x:Name="GridCargoInfo" Grid.Row="1" Margin="0,4,0,0" Visibility="Collapsed">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
                             <RowDefinition Height="{StaticResource RowHeight_01}"/>
@@ -956,15 +959,21 @@
                             <Border Style="{StaticResource BorderStyle_Black}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}" Width="65" Height="44">
                                 <TextBlock Text="메모" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
-                            <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="44">
-                            </Border>
-                        </StackPanel>
+                                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="44">
+                                    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+                                                  Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                        <TextBox x:Name="TBoxMemo_Cargo"
+                                                 TabIndex="18" TextWrapping="Wrap" AcceptsReturn="True" Style="{StaticResource TextBoxStyle_Empty}"
+                                                 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </StackPanel>
 
                     </Grid>
                     <!--#endregion R-1 화물정보그룹-->
 
                     <!--#region R-1 퀵정보그룹 -->
-                    <Grid x:Name="GridQuickInfo" Grid.Row="1" Margin="0,4,0,0" Visibility="Collapsed">
+                    <Grid x:Name="GridQuickInfo" Grid.Row="1" Margin="0,4,0,0" Visibility="Visible">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="110"/>
                         </Grid.RowDefinitions>
@@ -975,6 +984,13 @@
                                 <TextBlock Text="메모" Style="{StaticResource TextBlockStyle}"/>
                             </Border>
                             <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="White" Width="383" Height="110">
+                                <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+                                              Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <TextBox x:Name="TBoxMemo_Quick" TabIndex="19"
+                                             TextWrapping="Wrap" AcceptsReturn="True"
+                                             Style="{StaticResource TextBoxStyle_Empty}"
+                                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                </ScrollViewer>
                             </Border>
                         </StackPanel>
 
@@ -1185,7 +1201,7 @@
             <Border x:Name="ColumnRegist"  BorderThickness="0" Visibility="Visible">
                 <StackPanel>
                     <!--고객등록 버튼-->
-                    <Button x:Name="BtnReg_CustRegist"
+                    <Button x:Name="BtnReg_CustRegist" Click="BtnReg_CustRegist_Click"
                             Style="{StaticResource ButtonStyle_04}" Height="53" Background="#E6B36D" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\NewPaper001.png" Style="{StaticResource ImageSizeMid}"/>
@@ -1280,18 +1296,9 @@
                         </StackPanel>
                     </Button>
 
-                    <!--문의 버튼-->
-                    <Button x:Name="BtnMod_Ask" 
-                            Style="{StaticResource ButtonStyle_04}" Height="50" >
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="\Resources\Images\Question001.png" Style="{StaticResource ImageSizeMid}" />
-                            <TextBlock Text="    문의    " Style="{StaticResource TextBlockStyle}"/>
-                        </StackPanel>
-                    </Button>
-
                     <!--닫기 버튼-->
                     <Button x:Name="BtnReg_Close" Click="BtnCommon_Close_Click"
-                            Style="{StaticResource ButtonStyle_04}" Height="50" Margin="0,63,0,0" >
+                            Style="{StaticResource ButtonStyle_04}" Height="50" Margin="0,113,0,0" >
                         <StackPanel Orientation="Horizontal">
                             <Image Source="\Resources\Images\Close001.png" Style="{StaticResource ImageSizeMid}" />
                             <TextBlock Text="    닫기    " Style="{StaticResource TextBlockStyle}"/>
@@ -1447,11 +1454,11 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="키코드" Width="70" Binding="{Binding KeyCode}"/>
                     <DataGridTextColumn Header="상태" Width="50" Binding="{Binding OrderState}"/>
-                    <DataGridTextColumn Header="등록시간" Width="80" Binding="{Binding RegTime}"/>
+                    <DataGridTextColumn Header="등록시간" Width="80" Binding="{Binding DtRegist}"/>
                     <DataGridTextColumn Header="고객명" Width="80" Binding="{Binding CallCustName}"/>
                     <DataGridTextColumn Header="출발" Width="100" Binding="{Binding StartDongBasic}"/>
                     <DataGridTextColumn Header="도착" Width="100" Binding="{Binding DestDongBasic}"/>
-                    <DataGridTextColumn Header="요금" Width="70" Binding="{Binding sFeeTotal}"/>
+                    <DataGridTextColumn Header="요금" Width="70" Binding="{Binding FeeTotal}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

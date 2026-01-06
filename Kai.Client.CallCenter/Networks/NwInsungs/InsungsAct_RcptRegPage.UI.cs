@@ -62,16 +62,17 @@ public partial class InsungsAct_RcptRegPage
         };
     }
 
-    // 배송타입 문자열을 인덱스로 변환 (편도=0, 왕복=1, 경유=2, 긴급=3)
-    private int GetDeliverTypeIndex(string sDeliverType)
+    // 배송타입 비트플래그를 인덱스로 변환 (인성1은 단일선택이므로 우선순위: 긴급 > 경유 > 왕복 > 편도)
+    // 비트플래그: 편도=1, 왕복=2, 경유=4, 긴급=8, 혼적=16
+    private int GetDeliverTypeIndex(string sDeliverFlag)
     {
-        return sDeliverType switch
-        {
-            "왕복" => 1,
-            "경유" => 2,
-            "긴급" => 3,
-            _ => 0  // 편도 (또는 미지원 타입)
-        };
+        if (!int.TryParse(sDeliverFlag, out int flag))
+            return 0; // 파싱 실패 시 편도
+
+        if ((flag & 8) != 0) return 3;  // 긴급
+        if ((flag & 4) != 0) return 2;  // 경유
+        if ((flag & 2) != 0) return 1;  // 왕복
+        return 0;  // 편도 (또는 미선택)
     }
 
     // 차량톤수 문자열을 ComboBox 인덱스로 변환
@@ -2149,17 +2150,25 @@ public partial class InsungsAct_RcptRegPage
             }
 
             // 3. 요금종류 (RadioButton - OFR)
+            Debug.WriteLine($"[{m_Context.AppName}] 요금종류 처리 시작 - order.FeeType='{order.FeeType}'");
             StdResult_NulBool resultFeeType = await IsChecked요금종류Async(bmpWnd, wnd.우측상단_btns요금종류, order.FeeType);
+            Debug.WriteLine($"[{m_Context.AppName}] 요금종류 현재상태 - bResult={resultFeeType.bResult}, 일치여부={StdConvert.NullableBoolToBool(resultFeeType.bResult)}");
 
             if (resultFeeType.bResult == null)
                 return (changeCount, new StdResult_Error("요금종류 RadioButton 인식 실패", "Update우측상단영역Async_02"));
 
             if (!StdConvert.NullableBoolToBool(resultFeeType.bResult))
             {
+                Debug.WriteLine($"[{m_Context.AppName}] 요금종류 변경 필요 → SetGroupFeeTypeAsync 호출");
                 result = await SetGroupFeeTypeAsync(bmpWnd, wnd.우측상단_btns요금종류, order.FeeType, ctrl);
+                Debug.WriteLine($"[{m_Context.AppName}] 요금종류 변경 결과 - Result={result.Result}, sErr={result.sErr}");
                 if (result.Result != StdResult.Success)
                     return (changeCount, new StdResult_Error($"요금종류 설정 실패: {order.FeeType}", result.sPos));
                 changeCount++;
+            }
+            else
+            {
+                Debug.WriteLine($"[{m_Context.AppName}] 요금종류 이미 일치 - 변경 불필요");
             }
 
             // 4. 차량종류 (RadioButton - OFR, 트럭은 특별 처리)

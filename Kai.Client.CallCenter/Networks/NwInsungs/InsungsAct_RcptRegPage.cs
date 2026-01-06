@@ -225,12 +225,19 @@ public partial class InsungsAct_RcptRegPage
             m_RcptPage.CallCount_hWnd총계 = countHWnds[4];
             Debug.WriteLine($"[{m_Context.AppName}/RcptRegPage] CallCount 핸들 찾기 성공");
 
-            // 8. 오더 Datagrid 초기화
+            // 8. 오더 Datagrid 초기화 (재시도: 100ms × 10회 = 최대 1초)
             m_RcptPage.DG오더_hWnd = Std32Window.GetWndHandle_FromRelDrawPt(m_Main.TopWnd_hWnd, m_FileInfo.접수등록Page_DG오더_ptCenterRelT);
             if (m_RcptPage.DG오더_hWnd == IntPtr.Zero)
                 return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 찾기 실패", "InsungsAct_RcptRegPage/InitializeAsync_16");
 
-            m_RcptPage.DG오더_AbsRect = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
+            for (int i = 0; i < CommonVars.c_nRepeatVeryShort; i++)
+            {
+                m_RcptPage.DG오더_AbsRect = Std32Window.GetWindowRect_DrawAbs(m_RcptPage.DG오더_hWnd);
+                if (m_RcptPage.DG오더_AbsRect.Width == m_FileInfo.접수등록Page_DG오더_rcRelT.Width &&
+                    m_RcptPage.DG오더_AbsRect.Height == m_FileInfo.접수등록Page_DG오더_rcRelT.Height)
+                    break;
+                await Task.Delay(CommonVars.c_nWaitNormal);
+            }
             if (m_RcptPage.DG오더_AbsRect.Width != m_FileInfo.접수등록Page_DG오더_rcRelT.Width || m_RcptPage.DG오더_AbsRect.Height != m_FileInfo.접수등록Page_DG오더_rcRelT.Height)
                 return new StdResult_Error($"[{m_Context.AppName}/RcptRegPage] Datagrid 크기 불일치", "InsungsAct_RcptRegPage/InitializeAsync_17");
 

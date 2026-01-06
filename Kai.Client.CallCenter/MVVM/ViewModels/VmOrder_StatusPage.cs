@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 using Kai.Common.StdDll_Common;
 using Kai.Server.Main.KaiWork.DBs.Postgres.KaiDB.Models;
@@ -6,12 +6,13 @@ using Kai.Client.CallCenter.Classes;
 
 namespace Kai.Client.CallCenter.MVVM.ViewModels;
 #nullable disable
-public class VmOrder_StatusPage_Order : INotifyPropertyChanged
+public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
 {
     #region Variables
     public TbOrder tbOrder;
+    private TbOrder _backupedOrder;
     #endregion
-    
+
     #region Property Event
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged(string propertyName)
@@ -21,67 +22,447 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
     #endregion
 
     #region 생성자
-    public VmOrder_StatusPage_Order(TbOrder tb)//, int nTernNum)
+    // 수정용 생성자
+    public VmOrder_StatusPage_Order(TbOrder tb)
     {
         tbOrder = tb;
+        _backupedOrder = CloneTbOrder(tb);
+    }
+
+    // 등록용 생성자 (빈 TbOrder 생성)
+    public VmOrder_StatusPage_Order()
+    {
+        tbOrder = new TbOrder
+        {
+            KeyCode = 0,
+            MemberCode = 0,
+            CenterCode = 0,
+            UserCode = 0,
+            UserName = string.Empty,
+            DtRegist = DateTime.Now,
+            DtUpdateLast = DateTime.Now,
+            OrderState = string.Empty,
+            OrderStateOld = string.Empty,
+            CancelReason = string.Empty,
+            Share = false,
+            TaxBill = false,
+            CallCompCode = 0,
+            CallCompName = string.Empty,
+            CallCustFrom = string.Empty,
+            CallCustCodeE = 0,
+            CallCustCodeK = 0,
+            CallCustName = string.Empty,
+            CallTelNo = string.Empty,
+            CallTelNo2 = string.Empty,
+            CallDeptName = string.Empty,
+            CallChargeName = string.Empty,
+            CallDongBasic = string.Empty,
+            CallAddress = string.Empty,
+            CallDetailAddr = string.Empty,
+            CallRemarks = string.Empty,
+            CallMemo = string.Empty,
+            StartCustCodeE = 0,
+            StartCustCodeK = 0,
+            StartCustName = string.Empty,
+            StartTelNo = string.Empty,
+            StartTelNo2 = string.Empty,
+            StartDeptName = string.Empty,
+            StartChargeName = string.Empty,
+            StartDongBasic = string.Empty,
+            StartAddress = string.Empty,
+            StartDetailAddr = string.Empty,
+            StartSiDo = string.Empty,
+            StartGunGu = string.Empty,
+            StartDongRi = string.Empty,
+            StartLon = 0,
+            StartLat = 0,
+            DestCustCodeE = 0,
+            DestCustCodeK = 0,
+            DestCustName = string.Empty,
+            DestTelNo = string.Empty,
+            DestTelNo2 = string.Empty,
+            DestDeptName = string.Empty,
+            DestChargeName = string.Empty,
+            DestDongBasic = string.Empty,
+            DestAddress = string.Empty,
+            DestDetailAddr = string.Empty,
+            DestSiDo = string.Empty,
+            DestGunGu = string.Empty,
+            DestDongRi = string.Empty,
+            DestLon = 0,
+            DestLat = 0,
+            Reserve = false,
+            ReserveBreakMinute = 0,
+            FeeBasic = 0,
+            FeeTotal = 0,
+            FeeCommi = 0,
+            FeeDriver = 0,
+            FeePlus = 0,
+            FeeMinus = 0,
+            FeeConn = 0,
+            FeeType = string.Empty,
+            MovilityFlag = string.Empty,
+            DeliverFlag = string.Empty,
+            StartDateFlag = string.Empty,
+            StartDateDetail = string.Empty,
+            DestDateFlag = string.Empty,
+            DestDateDetail = string.Empty,
+            CarWeightFlag = string.Empty,
+            TruckDetailFlag = string.Empty,
+            StartLoadFlag = string.Empty,
+            DestUnloadFlag = string.Empty,
+            DeliverMemo = string.Empty,
+            DriverCode = 0,
+            DriverId = string.Empty,
+            DriverName = string.Empty,
+            DriverTelNo = string.Empty,
+            DriverMemberCode = 0,
+            DriverCenterId = string.Empty,
+            DriverCenterName = string.Empty,
+            DriverBusinessNo = string.Empty,
+            Insung1SeqNo = string.Empty,
+            Insung1State = string.Empty,
+            Insung2SeqNo = string.Empty,
+            Insung2State = string.Empty,
+            Cargo24SeqNo = string.Empty,
+            Cargo24State = string.Empty,
+            OnecallSeqNo = string.Empty,
+            OnecallState = string.Empty
+        };
+        _backupedOrder = CloneTbOrder(tbOrder);
     }
     #endregion
 
-    #region Properties
-    // Key
+    #region IViewModelBase 구현
+    public bool IsChanged
+    {
+        get
+        {
+            var o = _backupedOrder;
+            return tbOrder.KeyCode != o.KeyCode
+                || tbOrder.MemberCode != o.MemberCode
+                || tbOrder.CenterCode != o.CenterCode
+                || tbOrder.UserCode != o.UserCode
+                || tbOrder.UserName != o.UserName
+                || tbOrder.DtRegist != o.DtRegist
+                || tbOrder.DtUpdateLast != o.DtUpdateLast
+                || tbOrder.ReceiptTime != o.ReceiptTime
+                || tbOrder.AllocTime != o.AllocTime
+                || tbOrder.RunTime != o.RunTime
+                || tbOrder.FinishTime != o.FinishTime
+                || tbOrder.OrderState != o.OrderState
+                || tbOrder.OrderStateOld != o.OrderStateOld
+                || tbOrder.CancelReason != o.CancelReason
+                || tbOrder.Share != o.Share
+                || tbOrder.TaxBill != o.TaxBill
+                || tbOrder.CallCompCode != o.CallCompCode
+                || tbOrder.CallCompName != o.CallCompName
+                || tbOrder.CallCustFrom != o.CallCustFrom
+                || tbOrder.CallCustCodeE != o.CallCustCodeE
+                || tbOrder.CallCustCodeK != o.CallCustCodeK
+                || tbOrder.CallCustName != o.CallCustName
+                || tbOrder.CallTelNo != o.CallTelNo
+                || tbOrder.CallTelNo2 != o.CallTelNo2
+                || tbOrder.CallDeptName != o.CallDeptName
+                || tbOrder.CallChargeName != o.CallChargeName
+                || tbOrder.CallDongBasic != o.CallDongBasic
+                || tbOrder.CallAddress != o.CallAddress
+                || tbOrder.CallDetailAddr != o.CallDetailAddr
+                || tbOrder.CallRemarks != o.CallRemarks
+                || tbOrder.CallMemo != o.CallMemo
+                || tbOrder.StartCustCodeE != o.StartCustCodeE
+                || tbOrder.StartCustCodeK != o.StartCustCodeK
+                || tbOrder.StartCustName != o.StartCustName
+                || tbOrder.StartTelNo != o.StartTelNo
+                || tbOrder.StartTelNo2 != o.StartTelNo2
+                || tbOrder.StartDeptName != o.StartDeptName
+                || tbOrder.StartChargeName != o.StartChargeName
+                || tbOrder.StartDongBasic != o.StartDongBasic
+                || tbOrder.StartAddress != o.StartAddress
+                || tbOrder.StartDetailAddr != o.StartDetailAddr
+                || tbOrder.StartSiDo != o.StartSiDo
+                || tbOrder.StartGunGu != o.StartGunGu
+                || tbOrder.StartDongRi != o.StartDongRi
+                || tbOrder.StartLon != o.StartLon
+                || tbOrder.StartLat != o.StartLat
+                || tbOrder.StartSignImgUrl != o.StartSignImgUrl
+                || tbOrder.StartDtSign != o.StartDtSign
+                || tbOrder.DestCustCodeE != o.DestCustCodeE
+                || tbOrder.DestCustCodeK != o.DestCustCodeK
+                || tbOrder.DestCustName != o.DestCustName
+                || tbOrder.DestTelNo != o.DestTelNo
+                || tbOrder.DestTelNo2 != o.DestTelNo2
+                || tbOrder.DestDeptName != o.DestDeptName
+                || tbOrder.DestChargeName != o.DestChargeName
+                || tbOrder.DestDongBasic != o.DestDongBasic
+                || tbOrder.DestAddress != o.DestAddress
+                || tbOrder.DestDetailAddr != o.DestDetailAddr
+                || tbOrder.DestSiDo != o.DestSiDo
+                || tbOrder.DestGunGu != o.DestGunGu
+                || tbOrder.DestDongRi != o.DestDongRi
+                || tbOrder.DestLon != o.DestLon
+                || tbOrder.DestLat != o.DestLat
+                || tbOrder.DestSignImgUrl != o.DestSignImgUrl
+                || tbOrder.DestDtSign != o.DestDtSign
+                || tbOrder.Reserve != o.Reserve
+                || tbOrder.DtReserve != o.DtReserve
+                || tbOrder.ReserveBreakMinute != o.ReserveBreakMinute
+                || tbOrder.FeeBasic != o.FeeBasic
+                || tbOrder.FeeTotal != o.FeeTotal
+                || tbOrder.FeeCommi != o.FeeCommi
+                || tbOrder.FeeDriver != o.FeeDriver
+                || tbOrder.FeePlus != o.FeePlus
+                || tbOrder.FeeMinus != o.FeeMinus
+                || tbOrder.FeeConn != o.FeeConn
+                || tbOrder.FeeType != o.FeeType
+                || tbOrder.MovilityFlag != o.MovilityFlag
+                || tbOrder.DeliverFlag != o.DeliverFlag
+                || tbOrder.StartDateFlag != o.StartDateFlag
+                || tbOrder.StartDateDetail != o.StartDateDetail
+                || tbOrder.DestDateFlag != o.DestDateFlag
+                || tbOrder.DestDateDetail != o.DestDateDetail
+                || tbOrder.CarWeightFlag != o.CarWeightFlag
+                || tbOrder.TruckDetailFlag != o.TruckDetailFlag
+                || tbOrder.StartLoadFlag != o.StartLoadFlag
+                || tbOrder.DestUnloadFlag != o.DestUnloadFlag
+                || tbOrder.DeliverMemo != o.DeliverMemo
+                || tbOrder.DriverCode != o.DriverCode
+                || tbOrder.DriverId != o.DriverId
+                || tbOrder.DriverName != o.DriverName
+                || tbOrder.DriverTelNo != o.DriverTelNo
+                || tbOrder.DriverMemberCode != o.DriverMemberCode
+                || tbOrder.DriverCenterId != o.DriverCenterId
+                || tbOrder.DriverCenterName != o.DriverCenterName
+                || tbOrder.DriverBusinessNo != o.DriverBusinessNo
+                || tbOrder.Insung1SeqNo != o.Insung1SeqNo
+                || tbOrder.Insung1State != o.Insung1State
+                || tbOrder.Insung2SeqNo != o.Insung2SeqNo
+                || tbOrder.Insung2State != o.Insung2State
+                || tbOrder.Cargo24SeqNo != o.Cargo24SeqNo
+                || tbOrder.Cargo24State != o.Cargo24State
+                || tbOrder.OnecallSeqNo != o.OnecallSeqNo
+                || tbOrder.OnecallState != o.OnecallState;
+        }
+    }
+    #endregion
+
+    #region Private Methods
+    private TbOrder CloneTbOrder(TbOrder source)
+    {
+        return new TbOrder
+        {
+            KeyCode = source.KeyCode,
+            MemberCode = source.MemberCode,
+            CenterCode = source.CenterCode,
+            UserCode = source.UserCode,
+            UserName = source.UserName,
+            DtRegist = source.DtRegist,
+            DtUpdateLast = source.DtUpdateLast,
+            ReceiptTime = source.ReceiptTime,
+            AllocTime = source.AllocTime,
+            RunTime = source.RunTime,
+            FinishTime = source.FinishTime,
+            OrderState = source.OrderState,
+            OrderStateOld = source.OrderStateOld,
+            CancelReason = source.CancelReason,
+            Share = source.Share,
+            TaxBill = source.TaxBill,
+            CallCompCode = source.CallCompCode,
+            CallCompName = source.CallCompName,
+            CallCustFrom = source.CallCustFrom,
+            CallCustCodeE = source.CallCustCodeE,
+            CallCustCodeK = source.CallCustCodeK,
+            CallCustName = source.CallCustName,
+            CallTelNo = source.CallTelNo,
+            CallTelNo2 = source.CallTelNo2,
+            CallDeptName = source.CallDeptName,
+            CallChargeName = source.CallChargeName,
+            CallDongBasic = source.CallDongBasic,
+            CallAddress = source.CallAddress,
+            CallDetailAddr = source.CallDetailAddr,
+            CallRemarks = source.CallRemarks,
+            CallMemo = source.CallMemo,
+            StartCustCodeE = source.StartCustCodeE,
+            StartCustCodeK = source.StartCustCodeK,
+            StartCustName = source.StartCustName,
+            StartTelNo = source.StartTelNo,
+            StartTelNo2 = source.StartTelNo2,
+            StartDeptName = source.StartDeptName,
+            StartChargeName = source.StartChargeName,
+            StartDongBasic = source.StartDongBasic,
+            StartAddress = source.StartAddress,
+            StartDetailAddr = source.StartDetailAddr,
+            StartSiDo = source.StartSiDo,
+            StartGunGu = source.StartGunGu,
+            StartDongRi = source.StartDongRi,
+            StartLon = source.StartLon,
+            StartLat = source.StartLat,
+            StartSignImgUrl = source.StartSignImgUrl,
+            StartDtSign = source.StartDtSign,
+            DestCustCodeE = source.DestCustCodeE,
+            DestCustCodeK = source.DestCustCodeK,
+            DestCustName = source.DestCustName,
+            DestTelNo = source.DestTelNo,
+            DestTelNo2 = source.DestTelNo2,
+            DestDeptName = source.DestDeptName,
+            DestChargeName = source.DestChargeName,
+            DestDongBasic = source.DestDongBasic,
+            DestAddress = source.DestAddress,
+            DestDetailAddr = source.DestDetailAddr,
+            DestSiDo = source.DestSiDo,
+            DestGunGu = source.DestGunGu,
+            DestDongRi = source.DestDongRi,
+            DestLon = source.DestLon,
+            DestLat = source.DestLat,
+            DestSignImgUrl = source.DestSignImgUrl,
+            DestDtSign = source.DestDtSign,
+            Reserve = source.Reserve,
+            DtReserve = source.DtReserve,
+            ReserveBreakMinute = source.ReserveBreakMinute,
+            FeeBasic = source.FeeBasic,
+            FeeTotal = source.FeeTotal,
+            FeeCommi = source.FeeCommi,
+            FeeDriver = source.FeeDriver,
+            FeePlus = source.FeePlus,
+            FeeMinus = source.FeeMinus,
+            FeeConn = source.FeeConn,
+            FeeType = source.FeeType,
+            MovilityFlag = source.MovilityFlag,
+            DeliverFlag = source.DeliverFlag,
+            StartDateFlag = source.StartDateFlag,
+            StartDateDetail = source.StartDateDetail,
+            DestDateFlag = source.DestDateFlag,
+            DestDateDetail = source.DestDateDetail,
+            CarWeightFlag = source.CarWeightFlag,
+            TruckDetailFlag = source.TruckDetailFlag,
+            StartLoadFlag = source.StartLoadFlag,
+            DestUnloadFlag = source.DestUnloadFlag,
+            DeliverMemo = source.DeliverMemo,
+            DriverCode = source.DriverCode,
+            DriverId = source.DriverId,
+            DriverName = source.DriverName,
+            DriverTelNo = source.DriverTelNo,
+            DriverMemberCode = source.DriverMemberCode,
+            DriverCenterId = source.DriverCenterId,
+            DriverCenterName = source.DriverCenterName,
+            DriverBusinessNo = source.DriverBusinessNo,
+            Insung1SeqNo = source.Insung1SeqNo,
+            Insung1State = source.Insung1State,
+            Insung2SeqNo = source.Insung2SeqNo,
+            Insung2State = source.Insung2State,
+            Cargo24SeqNo = source.Cargo24SeqNo,
+            Cargo24State = source.Cargo24State,
+            OnecallSeqNo = source.OnecallSeqNo,
+            OnecallState = source.OnecallState
+        };
+    }
+    #endregion
+
+    #region Properties - 기본정보
     public long KeyCode
     {
         get => tbOrder.KeyCode;
         set => OnPropertyChanged(nameof(KeyCode));
     }
 
-    // 상태
+    public long MemberCode
+    {
+        get => tbOrder.MemberCode;
+        set => OnPropertyChanged(nameof(MemberCode));
+    }
+
+    public long CenterCode
+    {
+        get => tbOrder.CenterCode;
+        set => OnPropertyChanged(nameof(CenterCode));
+    }
+
+    public long UserCode
+    {
+        get => tbOrder.UserCode;
+        set => OnPropertyChanged(nameof(UserCode));
+    }
+
+    public string UserName
+    {
+        get => tbOrder.UserName;
+        set => OnPropertyChanged(nameof(UserName));
+    }
+
+    public string DtRegist
+    {
+        get => tbOrder.DtRegist.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEARSEC);
+        set => OnPropertyChanged(nameof(DtRegist));
+    }
+
+    public string DtUpdateLast
+    {
+        get => tbOrder.DtUpdateLast.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEARSEC);
+        set => OnPropertyChanged(nameof(DtUpdateLast));
+    }
+
     public string OrderState
     {
         get => tbOrder.OrderState;
         set => OnPropertyChanged(nameof(OrderState));
     }
 
-    // 생성시간
-    public string RegTime
+    public string OrderStateOld
     {
-        get => tbOrder.DtRegist.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEARSEC);
-        set => OnPropertyChanged(nameof(RegTime));
+        get => tbOrder.OrderStateOld;
+        set => OnPropertyChanged(nameof(OrderStateOld));
     }
 
-    // 의뢰자 이전소속
-    public string CallCustFrom
+    public string CancelReason
     {
-        get => tbOrder.CallCustFrom;
-        set => OnPropertyChanged(nameof(CallCustFrom));
+        get => tbOrder.CancelReason;
+        set => OnPropertyChanged(nameof(CancelReason));
     }
 
-    // 인성1
-    public string Insung1SeqNo
+    public bool Share
     {
-        get => tbOrder.Insung1SeqNo;
-        set => OnPropertyChanged(nameof(Insung1SeqNo));
+        get => tbOrder.Share;
+        set => OnPropertyChanged(nameof(Share));
     }
 
-    // 인성2
-    public string Insung2SeqNo
+    public bool TaxBill
     {
-        get => tbOrder.Insung2SeqNo;
-        set => OnPropertyChanged(nameof(Insung2SeqNo));
+        get => tbOrder.TaxBill;
+        set => OnPropertyChanged(nameof(TaxBill));
+    }
+    #endregion
+
+    #region Properties - 시간
+    public string ReceiptTime
+    {
+        get => tbOrder.ReceiptTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(ReceiptTime));
     }
 
-    // 화물24시
-    public string Cargo24SeqNo
+    public string AllocTime
     {
-        get => tbOrder.Cargo24SeqNo;
-        set => OnPropertyChanged(nameof(Cargo24SeqNo));
+        get => tbOrder.AllocTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(AllocTime));
     }
 
-    // 원콜
-    public string OnecallSeqNo
+    public string RunTime
     {
-        get => tbOrder.OnecallSeqNo;
-        set => OnPropertyChanged(nameof(OnecallSeqNo));
+        get => tbOrder.RunTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(RunTime));
+    }
+
+    public string FinishTime
+    {
+        get => tbOrder.FinishTime?.ToString(@"HH\:mm") ?? "00:00";
+        set => OnPropertyChanged(nameof(FinishTime));
+    }
+    #endregion
+
+    #region Properties - 의뢰자(Call)
+    public long CallCompCode
+    {
+        get => tbOrder.CallCompCode;
+        set => OnPropertyChanged(nameof(CallCompCode));
     }
 
     public string CallCompName
@@ -90,151 +471,535 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged
         set => OnPropertyChanged(nameof(CallCompName));
     }
 
-    // 고객명
+    public string CallCustFrom
+    {
+        get => tbOrder.CallCustFrom;
+        set => OnPropertyChanged(nameof(CallCustFrom));
+    }
+
+    public long CallCustCodeE
+    {
+        get => tbOrder.CallCustCodeE;
+        set => OnPropertyChanged(nameof(CallCustCodeE));
+    }
+
+    public long CallCustCodeK
+    {
+        get => tbOrder.CallCustCodeK;
+        set => OnPropertyChanged(nameof(CallCustCodeK));
+    }
+
     public string CallCustName
     {
         get => tbOrder.CallCustName;
         set => OnPropertyChanged(nameof(CallCustName));
     }
 
-    // 고객부서명
-    public string CallDeptName
-    {
-        get => tbOrder.CallDeptName;
-        set => OnPropertyChanged(nameof(CallDeptName));
-    }
-
-    // 고객담당
-    public string CallChargeName
-    {
-        get => tbOrder.CallChargeName;
-        set => OnPropertyChanged(nameof(CallChargeName));
-    }
-
-    // 고객전화번호
     public string CallTelNo
     {
         get => StdConvert.ToPhoneNumberFormat(tbOrder.CallTelNo);
         set => OnPropertyChanged(nameof(CallTelNo));
     }
 
-    // 출발동
+    public string CallTelNo2
+    {
+        get => StdConvert.ToPhoneNumberFormat(tbOrder.CallTelNo2);
+        set => OnPropertyChanged(nameof(CallTelNo2));
+    }
+
+    public string CallDeptName
+    {
+        get => tbOrder.CallDeptName;
+        set => OnPropertyChanged(nameof(CallDeptName));
+    }
+
+    public string CallChargeName
+    {
+        get => tbOrder.CallChargeName;
+        set => OnPropertyChanged(nameof(CallChargeName));
+    }
+
+    public string CallDongBasic
+    {
+        get => tbOrder.CallDongBasic;
+        set => OnPropertyChanged(nameof(CallDongBasic));
+    }
+
+    public string CallAddress
+    {
+        get => tbOrder.CallAddress;
+        set => OnPropertyChanged(nameof(CallAddress));
+    }
+
+    public string CallDetailAddr
+    {
+        get => tbOrder.CallDetailAddr;
+        set => OnPropertyChanged(nameof(CallDetailAddr));
+    }
+
+    public string CallRemarks
+    {
+        get => tbOrder.CallRemarks;
+        set => OnPropertyChanged(nameof(CallRemarks));
+    }
+
+    public string CallMemo
+    {
+        get => tbOrder.CallMemo;
+        set => OnPropertyChanged(nameof(CallMemo));
+    }
+    #endregion
+
+    #region Properties - 출발지(Start)
+    public long StartCustCodeE
+    {
+        get => tbOrder.StartCustCodeE;
+        set => OnPropertyChanged(nameof(StartCustCodeE));
+    }
+
+    public long StartCustCodeK
+    {
+        get => tbOrder.StartCustCodeK;
+        set => OnPropertyChanged(nameof(StartCustCodeK));
+    }
+
+    public string StartCustName
+    {
+        get => tbOrder.StartCustName;
+        set => OnPropertyChanged(nameof(StartCustName));
+    }
+
+    public string StartTelNo
+    {
+        get => StdConvert.ToPhoneNumberFormat(tbOrder.StartTelNo);
+        set => OnPropertyChanged(nameof(StartTelNo));
+    }
+
+    public string StartTelNo2
+    {
+        get => StdConvert.ToPhoneNumberFormat(tbOrder.StartTelNo2);
+        set => OnPropertyChanged(nameof(StartTelNo2));
+    }
+
+    public string StartDeptName
+    {
+        get => tbOrder.StartDeptName;
+        set => OnPropertyChanged(nameof(StartDeptName));
+    }
+
+    public string StartChargeName
+    {
+        get => tbOrder.StartChargeName;
+        set => OnPropertyChanged(nameof(StartChargeName));
+    }
+
     public string StartDongBasic
     {
         get => tbOrder.StartDongBasic;
         set => OnPropertyChanged(nameof(StartDongBasic));
     }
 
-    // 도착동
+    public string StartAddress
+    {
+        get => tbOrder.StartAddress;
+        set => OnPropertyChanged(nameof(StartAddress));
+    }
+
+    public string StartDetailAddr
+    {
+        get => tbOrder.StartDetailAddr;
+        set => OnPropertyChanged(nameof(StartDetailAddr));
+    }
+
+    public string StartSiDo
+    {
+        get => tbOrder.StartSiDo;
+        set => OnPropertyChanged(nameof(StartSiDo));
+    }
+
+    public string StartGunGu
+    {
+        get => tbOrder.StartGunGu;
+        set => OnPropertyChanged(nameof(StartGunGu));
+    }
+
+    public string StartDongRi
+    {
+        get => tbOrder.StartDongRi;
+        set => OnPropertyChanged(nameof(StartDongRi));
+    }
+
+    public int StartLon
+    {
+        get => tbOrder.StartLon;
+        set => OnPropertyChanged(nameof(StartLon));
+    }
+
+    public int StartLat
+    {
+        get => tbOrder.StartLat;
+        set => OnPropertyChanged(nameof(StartLat));
+    }
+
+    public string StartSignImgUrl
+    {
+        get => tbOrder.StartSignImgUrl;
+        set => OnPropertyChanged(nameof(StartSignImgUrl));
+    }
+
+    public DateTime? StartDtSign
+    {
+        get => tbOrder.StartDtSign;
+        set => OnPropertyChanged(nameof(StartDtSign));
+    }
+    #endregion
+
+    #region Properties - 도착지(Dest)
+    public long DestCustCodeE
+    {
+        get => tbOrder.DestCustCodeE;
+        set => OnPropertyChanged(nameof(DestCustCodeE));
+    }
+
+    public long DestCustCodeK
+    {
+        get => tbOrder.DestCustCodeK;
+        set => OnPropertyChanged(nameof(DestCustCodeK));
+    }
+
+    public string DestCustName
+    {
+        get => tbOrder.DestCustName;
+        set => OnPropertyChanged(nameof(DestCustName));
+    }
+
+    public string DestTelNo
+    {
+        get => StdConvert.ToPhoneNumberFormat(tbOrder.DestTelNo);
+        set => OnPropertyChanged(nameof(DestTelNo));
+    }
+
+    public string DestTelNo2
+    {
+        get => StdConvert.ToPhoneNumberFormat(tbOrder.DestTelNo2);
+        set => OnPropertyChanged(nameof(DestTelNo2));
+    }
+
+    public string DestDeptName
+    {
+        get => tbOrder.DestDeptName;
+        set => OnPropertyChanged(nameof(DestDeptName));
+    }
+
+    public string DestChargeName
+    {
+        get => tbOrder.DestChargeName;
+        set => OnPropertyChanged(nameof(DestChargeName));
+    }
+
     public string DestDongBasic
     {
         get => tbOrder.DestDongBasic;
         set => OnPropertyChanged(nameof(DestDongBasic));
     }
 
-    // 요금합계
-    public string sFeeTotal
+    public string DestAddress
+    {
+        get => tbOrder.DestAddress;
+        set => OnPropertyChanged(nameof(DestAddress));
+    }
+
+    public string DestDetailAddr
+    {
+        get => tbOrder.DestDetailAddr;
+        set => OnPropertyChanged(nameof(DestDetailAddr));
+    }
+
+    public string DestSiDo
+    {
+        get => tbOrder.DestSiDo;
+        set => OnPropertyChanged(nameof(DestSiDo));
+    }
+
+    public string DestGunGu
+    {
+        get => tbOrder.DestGunGu;
+        set => OnPropertyChanged(nameof(DestGunGu));
+    }
+
+    public string DestDongRi
+    {
+        get => tbOrder.DestDongRi;
+        set => OnPropertyChanged(nameof(DestDongRi));
+    }
+
+    public int DestLon
+    {
+        get => tbOrder.DestLon;
+        set => OnPropertyChanged(nameof(DestLon));
+    }
+
+    public int DestLat
+    {
+        get => tbOrder.DestLat;
+        set => OnPropertyChanged(nameof(DestLat));
+    }
+
+    public string DestSignImgUrl
+    {
+        get => tbOrder.DestSignImgUrl;
+        set => OnPropertyChanged(nameof(DestSignImgUrl));
+    }
+
+    public DateTime? DestDtSign
+    {
+        get => tbOrder.DestDtSign;
+        set => OnPropertyChanged(nameof(DestDtSign));
+    }
+    #endregion
+
+    #region Properties - 예약
+    public bool Reserve
+    {
+        get => tbOrder.Reserve;
+        set => OnPropertyChanged(nameof(Reserve));
+    }
+
+    public DateTime? DtReserve
+    {
+        get => tbOrder.DtReserve;
+        set => OnPropertyChanged(nameof(DtReserve));
+    }
+
+    public int ReserveBreakMinute
+    {
+        get => tbOrder.ReserveBreakMinute;
+        set => OnPropertyChanged(nameof(ReserveBreakMinute));
+    }
+    #endregion
+
+    #region Properties - 요금
+    public string FeeBasic
+    {
+        get => $"{tbOrder.FeeBasic:##,###}";
+        set => OnPropertyChanged(nameof(FeeBasic));
+    }
+
+    public string FeeTotal
     {
         get => $"{tbOrder.FeeTotal:##,###}";
-        set => OnPropertyChanged(nameof(sFeeTotal));
+        set => OnPropertyChanged(nameof(FeeTotal));
     }
-    
-    // 수수료 (FeeCommi)
+
     public string FeeCommi
     {
         get => $"{tbOrder.FeeCommi:##,###}";
         set => OnPropertyChanged(nameof(FeeCommi));
     }
-    
-    // 순운임 (FeeNet - 계산값)
-    public string FeeNet
+
+    public string FeeDriver
     {
-        get => $"{(tbOrder.FeeTotal - tbOrder.FeeCommi):##,###}";
-        set => OnPropertyChanged(nameof(FeeNet));
+        get => $"{tbOrder.FeeDriver:##,###}";
+        set => OnPropertyChanged(nameof(FeeDriver));
     }
 
-    // 차량종류
-    public string MovilityFlag
+    public string FeePlus
     {
-        get => tbOrder.MovilityFlag;
-        set => OnPropertyChanged(nameof(MovilityFlag));
+        get => $"{tbOrder.FeePlus:##,###}";
+        set => OnPropertyChanged(nameof(FeePlus));
     }
 
-    // 차량톤수
-    public string CarWeightFlag
+    public string FeeMinus
     {
-        get => tbOrder.CarWeightFlag;
-        set => OnPropertyChanged(nameof(CarWeightFlag));
+        get => $"{tbOrder.FeeMinus:##,###}";
+        set => OnPropertyChanged(nameof(FeeMinus));
     }
 
-    // 요금타입(FeeType)
+    public string FeeConn
+    {
+        get => $"{tbOrder.FeeConn:##,###}";
+        set => OnPropertyChanged(nameof(FeeConn));
+    }
+
     public string FeeType
     {
         get => tbOrder.FeeType == "선불" ? "" : tbOrder.FeeType;
         set => OnPropertyChanged(nameof(FeeType));
     }
 
-    // 배송타입
+    // 계산값
+    public string FeeNet
+    {
+        get => $"{(tbOrder.FeeTotal - tbOrder.FeeCommi):##,###}";
+        set => OnPropertyChanged(nameof(FeeNet));
+    }
+    #endregion
+
+    #region Properties - 배송 Flag
+    public string MovilityFlag
+    {
+        get => tbOrder.MovilityFlag;
+        set => OnPropertyChanged(nameof(MovilityFlag));
+    }
+
     public string DeliverFlag
     {
         get => tbOrder.DeliverFlag;
         set => OnPropertyChanged(nameof(DeliverFlag));
     }
 
-    // 적요
+    public string StartDateFlag
+    {
+        get => tbOrder.StartDateFlag;
+        set => OnPropertyChanged(nameof(StartDateFlag));
+    }
+
+    public string StartDateDetail
+    {
+        get => tbOrder.StartDateDetail;
+        set => OnPropertyChanged(nameof(StartDateDetail));
+    }
+
+    public string DestDateFlag
+    {
+        get => tbOrder.DestDateFlag;
+        set => OnPropertyChanged(nameof(DestDateFlag));
+    }
+
+    public string DestDateDetail
+    {
+        get => tbOrder.DestDateDetail;
+        set => OnPropertyChanged(nameof(DestDateDetail));
+    }
+
+    public string CarWeightFlag
+    {
+        get => tbOrder.CarWeightFlag;
+        set => OnPropertyChanged(nameof(CarWeightFlag));
+    }
+
+    public string TruckDetailFlag
+    {
+        get => tbOrder.TruckDetailFlag;
+        set => OnPropertyChanged(nameof(TruckDetailFlag));
+    }
+
+    public string StartLoadFlag
+    {
+        get => tbOrder.StartLoadFlag;
+        set => OnPropertyChanged(nameof(StartLoadFlag));
+    }
+
+    public string DestUnloadFlag
+    {
+        get => tbOrder.DestUnloadFlag;
+        set => OnPropertyChanged(nameof(DestUnloadFlag));
+    }
+
     public string DeliverMemo
     {
         get => tbOrder.DeliverMemo;
         set => OnPropertyChanged(nameof(DeliverMemo));
     }
+    #endregion
 
-    // 오더메모
-    public string CallMemo
+    #region Properties - 기사정보
+    public long DriverCode
     {
-        get => tbOrder.CallMemo;
-        set => OnPropertyChanged(nameof(CallMemo));
+        get => tbOrder.DriverCode;
+        set => OnPropertyChanged(nameof(DriverCode));
     }
 
-    // 공유
-    public bool Share
+    public string DriverId
     {
-        get => tbOrder.Share;
-        set => OnPropertyChanged(nameof(Share));
+        get => tbOrder.DriverId;
+        set => OnPropertyChanged(nameof(DriverId));
     }
 
-    // 세금게산서
-    public bool TaxBill
+    public string DriverName
     {
-        get => tbOrder.TaxBill;
-        set => OnPropertyChanged(nameof(TaxBill));
+        get => tbOrder.DriverName;
+        set => OnPropertyChanged(nameof(DriverName));
     }
 
-    // 접수시간
-    public string ReceiptTime
+    public string DriverTelNo
     {
-        get => tbOrder.ReceiptTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(ReceiptTime));
+        get => StdConvert.ToPhoneNumberFormat(tbOrder.DriverTelNo);
+        set => OnPropertyChanged(nameof(DriverTelNo));
     }
 
-    // 배차시간
-    public string AllocTime
+    public long DriverMemberCode
     {
-        get => tbOrder.AllocTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(AllocTime));
+        get => tbOrder.DriverMemberCode;
+        set => OnPropertyChanged(nameof(DriverMemberCode));
     }
 
-    // 운행시간
-    public string RunTime
+    public string DriverCenterId
     {
-        get => tbOrder.RunTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(RunTime));
+        get => tbOrder.DriverCenterId;
+        set => OnPropertyChanged(nameof(DriverCenterId));
     }
 
-    // 완료시간
-    public string FinishTime
+    public string DriverCenterName
     {
-        get => tbOrder.FinishTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(FinishTime));
+        get => tbOrder.DriverCenterName;
+        set => OnPropertyChanged(nameof(DriverCenterName));
+    }
+
+    public string DriverBusinessNo
+    {
+        get => tbOrder.DriverBusinessNo;
+        set => OnPropertyChanged(nameof(DriverBusinessNo));
+    }
+    #endregion
+
+    #region Properties - 외부연동
+    public string Insung1SeqNo
+    {
+        get => tbOrder.Insung1SeqNo;
+        set => OnPropertyChanged(nameof(Insung1SeqNo));
+    }
+
+    public string Insung1State
+    {
+        get => tbOrder.Insung1State;
+        set => OnPropertyChanged(nameof(Insung1State));
+    }
+
+    public string Insung2SeqNo
+    {
+        get => tbOrder.Insung2SeqNo;
+        set => OnPropertyChanged(nameof(Insung2SeqNo));
+    }
+
+    public string Insung2State
+    {
+        get => tbOrder.Insung2State;
+        set => OnPropertyChanged(nameof(Insung2State));
+    }
+
+    public string Cargo24SeqNo
+    {
+        get => tbOrder.Cargo24SeqNo;
+        set => OnPropertyChanged(nameof(Cargo24SeqNo));
+    }
+
+    public string Cargo24State
+    {
+        get => tbOrder.Cargo24State;
+        set => OnPropertyChanged(nameof(Cargo24State));
+    }
+
+    public string OnecallSeqNo
+    {
+        get => tbOrder.OnecallSeqNo;
+        set => OnPropertyChanged(nameof(OnecallSeqNo));
+    }
+
+    public string OnecallState
+    {
+        get => tbOrder.OnecallState;
+        set => OnPropertyChanged(nameof(OnecallState));
     }
     #endregion
 }

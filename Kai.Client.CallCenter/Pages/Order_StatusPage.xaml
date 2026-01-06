@@ -989,7 +989,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="상태" Binding="{Binding OrderState}" Width="50" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
-                <DataGridTextColumn Header="생성시간" Binding="{Binding RegTime}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
+                <DataGridTextColumn Header="생성시간" Binding="{Binding DtRegist}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
                 <DataGridTextColumn Header="접수시간" Binding="{Binding ReceiptTime}" Width="65" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
                 <DataGridTextColumn Header="오더번호" Binding="{Binding KeyCode}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
 
@@ -1006,7 +1006,7 @@
                 <DataGridTextColumn Header="전화번호" Binding="{Binding CallTelNo}" Width="120" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
                 <DataGridTextColumn Header="출발동" Binding="{Binding StartDongBasic}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
                 <DataGridTextColumn Header="도착동" Binding="{Binding DestDongBasic}" Width="100" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Center}"/>
-                <DataGridTextColumn Header="합계" Binding="{Binding sFeeTotal}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
+                <DataGridTextColumn Header="합계" Binding="{Binding FeeTotal}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
                 <DataGridTextColumn Header="기본" Binding="{Binding FeeBasic}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
                 <DataGridTextColumn Header="추가" Binding="{Binding FeePlus}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>
                 <DataGridTextColumn Header="할인" Binding="{Binding FeeMinus}" Width="60" ElementStyle="{StaticResource AppDataGridTextColumnStyle_Right}"/>

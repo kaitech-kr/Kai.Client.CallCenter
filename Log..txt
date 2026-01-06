@@ -1,55 +1,429 @@
+
+[SYSTEM] 로그 기록 시작: 2026-01-06 18:03:09
+[CommonFuncs] LoadExternalAppsConfig 실행
+[CommonFuncs] AutoAlloc 설정 로드: True
+[CommonFuncs] sUse 확인: 'True'
+[CommonFuncs] Insung01 설정 로드: Use=True, Id=동신MSI-S, AppPath=C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe -----------------------
+[CommonFuncs] Insung02 설정 로드: Use=True, Id=디에스MSI-S, AppPath=C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션\WooriNetWorkUpdater.exe -----------------------
+[CommonFuncs] Cargo24 설정 로드: Use=True, Id=10003, AppPath=C:\Cargo24\Cargo24.exe -----------------------
+[CommonFuncs] Onecall 설정 로드: Use=True, Id=3132-1005, AppPath=C:\Program Files\원콜(주선사)\OneCallShipper.exe -----------------------
+HubConnection 생성 중...
+HubConnection 타임아웃 설정: ServerTimeout=00:05:00, HandshakeTimeout=00:00:30
+연결 시도 시작...
+HubConn.StartAsync() 호출...
+SignalR 연결 성공
+***** SrReport_ConnectedAsync 시작: connectedID=rf5OVtRCrIoiTUndD5-2UQ *****
+***** HubConn 연결 상태 확인 완료: Connected *****
+***** 로그인 요청 시작: ID=동신MSI-S *****
+***** 로그인 요청 완료 *****
+***** 로그인 성공! 재시도 횟수 초기화 *****
+boolEventArgs=Kai.Common.StdDll_Common.StdDelegate+BoolEventArgs
+[MainWnd] 프로세스 실행 시도: Kai.Client.X86ComBroker.exe
+HubConnection 생성 중...
+연결 시도시작...
+HubConn.StartAsync() 호출...
+SignalR 연결 성공
+[MainWnd] SignalR ConnectAsync 호출 완료
+SrLocalClient/SrReport_Connected
+성공(인터넷전화 정보 가져오기): 1, 07052144970
+[MasterModeManager] 가상모니터 인식 성공 (재시도 1회)
+[MasterModeManager] m_WorkingMonitor 설정 완료: \\.\DISPLAY5, IsPrimary=False, IsVirtual=False, (1920x1080), 1920, 0
+[MasterModeManager] ExternalAppController 초기화 시작
+[ExternalAppController] 생성자 호출
+[ExternalAppController] InitializeAsync 시작
+[ExternalAppController] Insung01 인스턴스 생성 완료
+[ExternalAppController] 생성된 앱 개수: 1
+[ExternalAppController] INSUNG1 초기화 시퀀스 시작...
+[INSUNG1] InitializeAsync 시작: Id=동신MSI-S
+[INSUNG1] FileInfo 파일 로드 완료: D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\bin\Debug\net8.0-windows\Data\Insung01_FileInfo.txt
+[INSUNG1] 확인된 앱 경로: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe
+[INSUNG1/UpdaterWork] 업데이터 실행 시도: C:\Program Files (x86)\INSUNGDATA\인성퀵화물통합솔루션_KN\KoreaNetWorkUpdater.exe
+[INSUNG1/UpdaterWork] 프로세스 종료 대기 시작...
+[INSUNG1/UpdaterWork] 업데이터 정상 종료 확인
+[INSUNG1/SplashWork] 시작 (ID: 동신MSI-S)
+[INSUNG1/MainWnd] 초기화 시작
+[INSUNG1/MainWnd] 초기화 성공
+[INSUNG1/RcptRegPage] 초기화 시작
+[INSUNG1/UI] 신규버튼 확인 완료: hWnd=1F12BA (시도=1/10)
+[INSUNG1/UI] 조회버튼 확인 완료: hWnd=220E08 (시도=1/10)
+[INSUNG1/UI] 기사버튼 확인 완료: hWnd=B13CC (시도=1/10)
+[INSUNG1/RcptRegPage] CallCount 핸들 찾기 성공
+[INSUNG1/RcptRegPage] SetDG오더RectsAsync 시작
+[OfrService] GetMinBrightnessAtRow: targetRow=3, min=159
+[OfrService] GetBoolArray_FromColorBitmapRowFast: targetRow=3, Brightness=161, xStartIndex=2
+[*] ValidateDatagridState 검증 통과 (정상)
+[INSUNG1/RcptRegPage] 초기화 완료
+[INSUNG1] InitializeAsync 완료
+[ExternalAppController] INSUNG1 초기화 성공
+[ExternalAppController] SignalR 연결 끊김 이벤트 구독 완료
+[ExternalAppController] InitializeAsync 전체 완료
+[MasterModeManager] ExternalAppController 초기화 완료
+[MainWnd] Master 모드 초기화 완료
+[MainWnd] 새 페이지 생성 및 캐시 추가: Order_StatusPage (캐시 크기: 1/5)
+[ExternalAppController] 기존 주문 1개 로드 시작
+[분류] KeyCode=2, MovilityFlag=오토, CarWeightFlag=, 대상큐=INSUNG1,CARGO24,ONECALL
+[AutoAllocQueue] Enqueue: INSUNG1, KeyCode=2, StateFlag=Existed_WithSeqno, 큐크기=1
+  → INSUNG1 큐 추가: SeqNo=275879684, Flag=Existed_WithSeqno
+[AutoAllocQueue] Enqueue: CARGO24, KeyCode=2, StateFlag=Existed_NonSeqno, 큐크기=1
+  → CARGO24 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] Enqueue: ONECALL, KeyCode=2, StateFlag=Existed_NonSeqno, 큐크기=1
+  → ONECALL 큐 추가: SeqNo=, Flag=Existed_NonSeqno
+[AutoAllocQueue] 큐 상태:
+  인성1: 1개
+  인성2: 0개
+  화물24시: 1개
+  원콜: 1개
+  전체: 3개
+[ExternalAppController] 자동배차 시작
+[ExternalAppController] AutoAllocLoopAsync 시작
+
 -----------------[INSUNG1] AutoAllocAsync 시작 - Count=1--------------------------
 [INSUNG1] TopMost 설정 완료
-[AutoAllocQueue] Dequeue: KeyCode=3, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] Dequeue: KeyCode=2, RunStartTime=null, DriverPhone=null
 [AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
 [INSUNG1] 큐에서 가져온 주문 개수: 1
 [INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
-[INSUNG1] listCreated 개수: 1
-[INSUNG1]   [0] KeyCode=3, StateFlag=Existed_NonSeqno, SeqNo=, CarType=오토, CallCustFrom=INSUNG1, 출발=현북면
+[INSUNG1] listCreated 개수: 0
 [INSUNG1] ==========================================
 [INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
-[INSUNG1] listEtcGroup 개수: 0
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=Existed_WithSeqno, SeqNo=275879684, CarType=오토
 [INSUNG1] ==========================================
-[INSUNG1] 자동배차 할일 있음: lAllocCount=1, tot=1, listCreated=1, listEtcGroup=0
-[INSUNG1] Region 4: 신규 주문 처리 시작 (총 1건)
-[INSUNG1]   [1] 신규 주문 처리: KeyCode=3, 상태=대기
-[INSUNG1] OpenNewOrderPopupAsync - 신규버튼 클릭 시도 1/50
-[INSUNG1] 신규주문 팝업창 활성화 확인: 3118E
-[INSUNG1] 1. 의뢰자 정보 입력...
-[INSUNG1] 의뢰자 검색어: "[테스트도착지]/담당"
+[INSUNG1] 자동배차 할일 있음: lAllocCount=1, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 37건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 2페이지)
+[INSUNG1] 페이지 1/2: 유효 로우 28개
+[INSUNG1] 페이지 1, startIndex=0, remainder=9
+[INSUNG1] 페이지 1 -> 2 이동
+[INSUNG1] 페이지 2/2: 유효 로우 28개
+[INSUNG1] 페이지 2, startIndex=19, remainder=9
+[INSUNG1] 페이지 2, y=28, seqno=275879684, status=대기
+[INSUNG1] UpdateOrderWidelyAsync 시작
+  - wantState: '' (비어있으면 상태 버튼 안 누름)
+  - useRepeat: False (반복 횟수: 1)
+[INSUNG1] 1단계: 팝업 열기 시도 (시도 1/1)
+[INSUNG1] OpenEditPopupAsync - 팝업 열기 시도 (rowIndex=26)
+[INSUNG1] 더블클릭 실행 (시도 1/10)
+[INSUNG1] 팝업창 찾음: hWnd=1F129E
+[INSUNG1] 팝업 열기 성공
+[INSUNG1] 2단계: 의뢰자 영역 업데이트 (KeyCode: 2)
+[INSUNG1]   의뢰자 고객 검색 필요 (고객명 변경=False, 담당자명 변경=True)
+[INSUNG1] 의뢰자 검색어: "테스터(TESTER)/"
 [INSUNG1] 고객 검색 Enter 키 전송
-[INSUNG1] 고객검색창 발견: 310EA, 닫힘 대기 중...
-[INSUNG1] 고객검색창 자동 닫힘 → 단수 고객, 동명 재확인 중...
-[INSUNG1] 고객 검색 성공: 1개 (동명=현북면)
+[INSUNG1] 고객 검색 성공: 1개 (동명=이태원동)
 [INSUNG1] 의뢰자 검색 성공 (1개)
-[INSUNG1] 2. 출발지 정보 입력...
-[INSUNG1]   출발지 = 의뢰자: Enter로 자동 입력
-[INSUNG1] 3. 도착지 정보 입력...
-[INSUNG1]   도착지 = 의뢰자: Enter로 자동 입력
-[INSUNG1] 4-2. 공유 CheckBox 처리...
-[INSUNG1]   공유: False
-[INSUNG1] 4-3. 요금종류 RadioButton 처리...
-[INSUNG1]   요금종류: 편도
-[INSUNG1] 4-4. 차량종류 RadioButton 처리...
-[INSUNG1]   차량종류: 오토
-[INSUNG1] 4-5. 배송타입 RadioButton 처리...
-[INSUNG1]   배송타입: 
-[INSUNG1] 4-6. 계산서 CheckBox 처리...
-[INSUNG1]   계산서: False
-[INSUNG1] 4-7. 요금 그룹 입력...
-[INSUNG1] 4-8. 오더메모 입력...
-[INSUNG1] 입력 성공 → 대기저장 버튼 클릭 시도
-[INSUNG1] ClickNWaitWindowChangedAsync 시작: hWndClick=3308E6, hWndOrg=3118E
-[INSUNG1] 버튼 클릭 시도 1/50 - 클릭 전
-[INSUNG1] 버튼 클릭 완료 1/50
-[INSUNG1] 윈도우 닫힘 확인 (시도 1, 대기 200ms)
-'.NET TP Wait' (13024) 스레드가 종료되었습니다(코드: 0 (0x0)).
-[INSUNG1] ClickFirstRowAsync - 첫 로우 클릭 시도 1/3
-[INSUNG1] ClickFirstRowAsync - 첫 로우 선택 성공
-[INSUNG1] GetSeqnoAsync - Seqno 획득 성공: '275825734'
-[INSUNG1] 주문 등록 완료 - Seqno: 275825734
-[INSUNG1] Kai DB 업데이트 성공 - INSUNG1: 275825734
-[INSUNG1]   [1] 신규 주문 등록 성공: 3
-[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=3, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
-[INSUNG1] Region 4 완료
------------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=6346ms, Delay=0ms
+[INSUNG1]   의뢰자 고객 검색 완료
+[INSUNG1]   의뢰자 관련 필드 무조건 업데이트 (Kai DB 데이터로 교체)
+[INSUNG1]   의뢰자 영역 업데이트 완료 (변경: 1개)
+[INSUNG1] 의뢰자 영역 업데이트 완료 (변경: 1개)
+[INSUNG1] 2-2단계: 출발지 영역 업데이트 (KeyCode: 2)
+[INSUNG1]   출발지 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 출발지 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 2-3단계: 도착지 영역 업데이트 (KeyCode: 2)
+[INSUNG1]   도착지 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 도착지 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 2-4단계: 우측상단 섹션 업데이트 시작
+[INSUNG1] 요금종류 처리 시작 - order.FeeType='선불'
+[INSUNG1] 요금종류 현재상태 - bResult=True, 일치여부=True
+[INSUNG1] 요금종류 이미 일치 - 변경 불필요
+[INSUNG1]   우측상단 섹션 업데이트 완료 (변경: 0개)
+[INSUNG1] 우측상단 섹션 업데이트 완료 (변경: 0개)
+[INSUNG1] 2-5단계: 요금 영역 업데이트 시작
+[INSUNG1]   요금 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 요금 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 2-6단계: 오더메모 영역 업데이트 시작
+[INSUNG1]   오더메모 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 오더메모 영역 업데이트 완료 (변경: 0개)
+[INSUNG1] 전체 업데이트 완료 (총 변경: 1개, 상태버튼: 0)
+[INSUNG1] 3단계: 팝업 닫기 시도 (shouldSave: True)
+[INSUNG1] 변경내용이 있습니다 - 저장 버튼 클릭
+[INSUNG1] 저장 버튼 클릭 시도 1/10
+[INSUNG1] 윈도우 정상 닫힘 확인 (시도 1, 대기 850ms)
+[INSUNG1] 저장 성공 - 팝업 닫힘
+[INSUNG1] 팝업 닫기 성공 - 의뢰자+출발지+도착지+우측상단+요금+메모 영역 업데이트 완료
+[INSUNG1] 모든 영역 업데이트 완료 (변경: 1개, KeyCode: 2)
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=Existed_WithSeqno → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [1] 완료 - Elapsed=7241ms, Delay=0ms
+
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=2--------------------------
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=2, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=NotChanged, SeqNo=275879684, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=2, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 37건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 2페이지)
+[INSUNG1] VerifyAndAdjustPageAsync - 페이지 검증 실패 (시도 1/50, 예상=1, 실제=10)
+[INSUNG1] 페이지 1/2: 유효 로우 28개
+[INSUNG1] 페이지 1, startIndex=0, remainder=9
+[INSUNG1] 첫 로우 선택 안됨 → 클릭 후 재캡처
+[INSUNG1] 첫 로우 선택 후 재캡처 완료 (RGB 반전 OFR)
+[INSUNG1] 페이지 1 -> 2 이동
+[INSUNG1] 페이지 2/2: 유효 로우 28개
+[INSUNG1] 페이지 2, startIndex=19, remainder=9
+[INSUNG1] 페이지 2, y=28, seqno=275879684, status=대기
+[CheckIsOrderAsync_InsungOrderManage] KeyCode=2, Kai=대기, Insung=대기
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=NotChanged → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+[ExternalAppController] 자동배차 일시정지
+[CancelTokenControl] Pause 호출됨
+-----------[ExternalAppController] AutoAlloc [2] 완료 - Elapsed=1698ms, Delay=3302ms
+[Order_StatusPage] SendingSeq 불일치 감지 - Local=1, DB=1
+[ExternalAppController] 자동배차 재개
+[CancelTokenControl] Resume 호출됨
+
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=3--------------------------
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=2, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=NotChanged, SeqNo=275879684, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=3, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 37건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 2페이지)
+[INSUNG1] 페이지 1/2: 유효 로우 28개
+[INSUNG1] 페이지 1, startIndex=0, remainder=9
+[INSUNG1] 페이지 1 -> 2 이동
+=== Window_Closing 시작 (안전 모드 복구) ===
+[INSUNG1] 페이지 2/2: 유효 로우 28개
+[INSUNG1] 페이지 2, startIndex=19, remainder=9
+[INSUNG1] 페이지 2, y=28, seqno=275879684, status=대기
+[CheckIsOrderAsync_InsungOrderManage] KeyCode=2, Kai=대기, Insung=대기
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=NotChanged → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [3] 완료 - Elapsed=68257ms, Delay=0ms
+
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=4--------------------------
+SrGlobalClient 재접속 중지 플래그 설정
+SignalR OnClosedAsync called
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=2, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=NotChanged, SeqNo=275879684, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=4, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 37건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 2페이지)
+[INSUNG1] 페이지 1/2: 유효 로우 28개
+[INSUNG1] 페이지 1, startIndex=0, remainder=9
+[INSUNG1] 페이지 1 -> 2 이동
+[INSUNG1] 페이지 2/2: 유효 로우 28개
+[INSUNG1] 페이지 2, startIndex=19, remainder=9
+[INSUNG1] 페이지 2, y=28, seqno=275879684, status=대기
+[CheckIsOrderAsync_InsungOrderManage] KeyCode=2, Kai=대기, Insung=대기
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=NotChanged → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+SrLocalClient 재접속 중지 플래그 설정
+재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
+[MasterModeManager] Shutdown 시작
+[MasterModeManager] ExternalAppController 정리 중
+[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
+[CancelTokenControl] Cancel 호출됨
+[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] AutoAllocLoopAsync 취소됨
+[ExternalAppController] 자동배차 Task 정상 종료 확인
+[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
+[INSUNG1] Shutdown 시작
+[INSUNG1/Close] 종료 시퀀스 시작
+[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
+[INSUNG1/Close] 스플래시 윈도우 정리 전송
+[INSUNG1] Close 성공
+[INSUNG1] Shutdown 완료
+[ExternalAppController] 모든 리소스 정리 완료
+[MasterModeManager] VirtualMonitorWnd 닫기 실패 (무시): 다른 스레드가 이 개체를 소유하고 있어 호출 스레드가 해당 개체에 액세스할 수 없습니다.
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+ 키보드 전역 후킹 해제
+�적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [5] 완료 - Elapsed=949ms, Delay=4051ms
+
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=6--------------------------
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=2, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=NotChanged, SeqNo=275879684, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=6, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 37건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 2페이지)
+[INSUNG1] 페이지 1/2: 유효 로우 28개
+[INSUNG1] 페이지 1, startIndex=0, remainder=9
+[INSUNG1] 페이지 1 -> 2 이동
+[INSUNG1] 페이지 2/2: 유효 로우 28개
+[INSUNG1] 페이지 2, startIndex=19, remainder=9
+[INSUNG1] 페이지 2, y=28, seqno=275879684, status=대기
+[CheckIsOrderAsync_InsungOrderManage] KeyCode=2, Kai=대기, Insung=대기
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=NotChanged → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+[ExternalAppController] 자동배차 일시정지
+[CancelTokenControl] Pause 호출됨
+-----------[ExternalAppController] AutoAlloc [6] 완료 - Elapsed=967ms, Delay=4033ms
+[Order_StatusPage] SendingSeq 불일치 감지 - Local=1, DB=1
+[ExternalAppController] 자동배차 재개
+[CancelTokenControl] Resume 호출됨
+
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=7--------------------------
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=2, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=NotChanged, SeqNo=275879684, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=7, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 37건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 2페이지)
+[INSUNG1] 페이지 1/2: 유효 로우 28개
+[INSUNG1] 페이지 1, startIndex=0, remainder=9
+[INSUNG1] 페이지 1 -> 2 이동
+[INSUNG1] 페이지 2/2: 유효 로우 28개
+[INSUNG1] 페이지 2, startIndex=19, remainder=9
+[INSUNG1] 페이지 2, y=28, seqno=275879684, status=대기
+[CheckIsOrderAsync_InsungOrderManage] KeyCode=2, Kai=대기, Insung=대기
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=NotChanged → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+-----------[ExternalAppController] AutoAlloc [7] 완료 - Elapsed=42176ms, Delay=0ms
+
+-----------------[INSUNG1] AutoAllocAsync 시작 - Count=8--------------------------
+[INSUNG1] TopMost 설정 완료
+[AutoAllocQueue] Dequeue: KeyCode=2, RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] DequeueAllToList: INSUNG1, 1개 꺼냄
+[INSUNG1] 큐에서 가져온 주문 개수: 1
+[INSUNG1] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=NotChanged, SeqNo=275879684, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=8, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 37건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 2페이지)
+=== Window_Closing 시작 (안전 모드 복구) ===
+SrGlobalClient 재접속 중지 플래그 설정
+[INSUNG1] 페이지 1/2: 유효 로우 28개
+[INSUNG1] 페이지 1, startIndex=0, remainder=9
+SignalR OnClosedAsync called
+[INSUNG1] 페이지 1 -> 2 이동
+[INSUNG1] 페이지 2/2: 유효 로우 28개
+[INSUNG1] 페이지 2, startIndex=19, remainder=9
+[INSUNG1] 페이지 2, y=28, seqno=275879684, status=대기
+[CheckIsOrderAsync_InsungOrderManage] KeyCode=2, Kai=대기, Insung=대기
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=NotChanged → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+SrLocalClient 재접속 중지 플래그 설정
+재접속 중지 플래그가 설정됨, 이벤트 발생하지 않음
+[MasterModeManager] Shutdown 시작
+[MasterModeManager] ExternalAppController 정리 중
+[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
+[CancelTokenControl] Cancel 호출됨
+[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+[ExternalAppController] AutoAllocLoopAsync 취소됨
+[ExternalAppController] 자동배차 Task 정상 종료 확인
+[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
+[INSUNG1] Shutdown 시작
+[INSUNG1/Close] 종료 시퀀스 시작
+[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
+[INSUNG1/Close] 스플래시 윈도우 정리 전송
+[INSUNG1] Close 성공
+[INSUNG1] Shutdown 완료
+[ExternalAppController] 모든 리소스 정리 완료
+[MasterModeManager] VirtualMonitorWnd 닫기 실패 (무시): 다른 스레드가 이 개체를 소유하고 있어 호출 스레드가 해당 개체에 액세스할 수 없습니다.
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+체에 액세스할 수 없습니다.
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+] ===== listCreated (신규접수용) 상세 정보 =====
+[INSUNG1] listCreated 개수: 0
+[INSUNG1] ==========================================
+[INSUNG1] ===== listEtcGroup (기존주문관리용) 상세 정보 =====
+[INSUNG1] listEtcGroup 개수: 1
+[INSUNG1]   [0] KeyCode=2, StateFlag=NotChanged, SeqNo=275879684, CarType=오토
+[INSUNG1] ==========================================
+[INSUNG1] 자동배차 할일 있음: lAllocCount=6, tot=1, listCreated=0, listEtcGroup=1
+[INSUNG1] Region 5: 데이터 있음 (총계: 25건)
+[INSUNG1] Region 5: 페이지 산정 완료 (총 1페이지)
+[INSUNG1] 페이지 1/1: 유효 로우 25개
+[INSUNG1] 페이지 1, startIndex=0, remainder=25
+[INSUNG1] 페이지 1, y=25, seqno=275879684, status=대기
+[CheckIsOrderAsync_InsungOrderManage] KeyCode=2, Kai=대기, Insung=대기
+[INSUNG1] 처리 완료 (재적재): seqno=275879684, 기존 StateFlag=NotChanged → NotChanged로 재적재
+[INSUNG1] 재적재 전 foundItem 상태: RunStartTime=null, DriverPhone=null
+[AutoAllocQueue] ReEnqueue: INSUNG1, KeyCode=2, StateFlag=NotChanged, RunStartTime=null, DriverPhone=null, 큐크기=1
+[INSUNG1] Region 5 완료
+[MasterModeManager] Shutdown 시작
+[MasterModeManager] ExternalAppController 정리 중
+[ExternalAppController] Shutdown 시퀀스 시작 (안전 종료 대기 15초)
+[CancelTokenControl] Cancel 호출됨
+[ExternalAppController] 자동배차 취소(Cancel) 신호 전송 완료
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+[ExternalAppController] AutoAllocLoopAsync 취소됨
+[ExternalAppController] 자동배차 Task 정상 종료 확인
+[ExternalAppController] INSUNG1 종료 및 Dispose 시도...
+[INSUNG1] Shutdown 시작
+[INSUNG1/Close] 종료 시퀀스 시작
+[INSUNG1/Close] 메인 윈도우 종료 메시지 전송
+[INSUNG1/Close] 스플래시 윈도우 정리 전송
+[INSUNG1] Close 성공
+[INSUNG1] Shutdown 완료
+[ExternalAppController] 모든 리소스 정리 완료
+예외 발생: 'System.InvalidOperationException'(WindowsBase.dll)
+[MasterModeManager] VirtualMonitorWnd 닫기 실패 (무시): 다른 스레드가 이 개체를 소유하고 있어 호출 스레드가 해당 개체에 액세스할 수 없습니다.
+[MasterModeManager] Shutdown 완료
+=== 모든 정리 완료, 프로세스 종료 ===
+[MainWnd] 키보드 전역 후킹 해제
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.TimeoutException'(WindowsBase.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(System.Private.CoreLib.dll)
+예외 발생: 'System.Threading.Tasks.TaskCanceledException'(WindowsBase.dll)
+'[29520] Kai.Client.CallCenter.exe' 프로그램이 종료되었습니다(코드: 0 (0x0)).

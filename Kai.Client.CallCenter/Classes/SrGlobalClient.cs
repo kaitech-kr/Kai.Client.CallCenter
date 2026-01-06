@@ -863,8 +863,8 @@ public class SrGlobalClient : IDisposable, INotifyPropertyChanged
     {
         try
         {
-            return await HubConn.InvokeCoreAsync<PostgResult_AllWith>(StdConst_FuncName.SrResult.CallCenter
-                .CustMainWith_SelectRowAsync_CenterCode_KeyCode, new[] { (object)s_CenterCharge.CenterCode, (object)lKeyCode });
+            return await HubConn.InvokeCoreAsync<PostgResult_AllWith>(
+                "SrResult_CustMainWith_SelectRowAsync_CenterCode_KeyCode", new[] { (object)s_CenterCharge.CenterCode, (object)lKeyCode });
         }
         catch (Exception ex)
         {
