@@ -307,95 +307,95 @@ public class InsungsInfo_Mem
         }
     }
     // 접수등록 수정 팝업 윈도우 (주문 업데이트용)
-    //public class RcptWnd_Edit : RcptWnd_Common
-    //{
-    //    // TopWnd
-    //    public IntPtr TopWnd_hWnd;  // hWnd
+    public class RcptWnd_Edit : RcptWnd_Common
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd
     //
-    //    // 버튼들
-    //    public IntPtr Btn_hWnd닫기;
+        // 버튼들
+        public IntPtr Btn_hWnd닫기;
     //
-    //    public IntPtr Btn_hWnd고객수정;
-    //    public IntPtr Btn_hWnd배차;
-    //    public IntPtr Btn_hWnd처리완료;
-    //    public IntPtr Btn_hWnd대기;
-    //    public IntPtr Btn_hWnd주문취소;
-    //    public IntPtr Btn_hWnd접수상태;
-    //    public IntPtr Btn_hWnd저장;
+        public IntPtr Btn_hWnd고객수정;
+        public IntPtr Btn_hWnd배차;
+        public IntPtr Btn_hWnd처리완료;
+        public IntPtr Btn_hWnd대기;
+        public IntPtr Btn_hWnd주문취소;
+        public IntPtr Btn_hWnd접수상태;
+        public IntPtr Btn_hWnd저장;
     //
-    //    public RcptWnd_Edit(IntPtr hWnd, InsungsInfo_File fInfo)
-    //    {
-    //        TopWnd_hWnd = hWnd;
+        public RcptWnd_Edit(IntPtr hWnd, InsungsInfo_File fInfo)
+        {
+            TopWnd_hWnd = hWnd;
     //
-    //        // 버튼들
-    //        Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_수정버튼그룹_닫기_ptChkRelT);
+            // 버튼들
+            Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_수정버튼그룹_닫기_ptChkRelT);
     //
-    //        this.SetWndHandle(fInfo);
-    //    }
+            this.SetWndHandle(fInfo);
+        }
     //
-    //    public void SetWndHandle(InsungsInfo_File fInfo)
-    //    {
-    //        Btn_hWnd고객수정 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_고객수정_ptChkRelT);
-    //        Btn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_배차_ptChkRelT);
-    //        Btn_hWnd처리완료 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_처리완료_ptChkRelT);
-    //        Btn_hWnd대기 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_대기_ptChkRelT);
-    //        Btn_hWnd주문취소 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_주문취소_ptChkRelT);
-    //        Btn_hWnd접수상태 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_접수상태_ptChkRelT);
-    //        Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_저장_ptChkRelT);
-    //
-    //        base.SetWndHandles(TopWnd_hWnd, fInfo);
-    //    }
-    //}
-    //
+        public void SetWndHandle(InsungsInfo_File fInfo)
+        {
+            Btn_hWnd고객수정 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_고객수정_ptChkRelT);
+            Btn_hWnd배차 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_배차_ptChkRelT);
+            Btn_hWnd처리완료 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_처리완료_ptChkRelT);
+            Btn_hWnd대기 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_대기_ptChkRelT);
+            Btn_hWnd주문취소 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_주문취소_ptChkRelT);
+            Btn_hWnd접수상태 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_접수상태_ptChkRelT);
+            Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_수정버튼그룹_저장_ptChkRelT);
+
+            base.SetWndHandles(TopWnd_hWnd, fInfo);
+        }
+    }
+
     // 접수등록 완료 상태 팝업 (완료 상태일 때 버튼 레이아웃)
-    //public class RcptWnd_Completed
-    //{
-    //    public IntPtr TopWnd_hWnd;
-    //    public IntPtr Btn_hWnd주문취소;
-    //    public IntPtr Btn_hWnd저장;
-    //    public IntPtr Btn_hWnd닫기;
+    public class RcptWnd_Completed
+    {
+        public IntPtr TopWnd_hWnd;
+        public IntPtr Btn_hWnd주문취소;
+        public IntPtr Btn_hWnd저장;
+        public IntPtr Btn_hWnd닫기;
     //
-    //    public RcptWnd_Completed(IntPtr hWnd, InsungsInfo_File fInfo)
-    //    {
-    //        TopWnd_hWnd = hWnd;
-    //        Btn_hWnd주문취소 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_주문취소_ptChkRelT);
-    //        Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_저장_ptChkRelT);
-    //        Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_닫기_ptChkRelT);
-    //    }
-    //}
+        public RcptWnd_Completed(IntPtr hWnd, InsungsInfo_File fInfo)
+        {
+            TopWnd_hWnd = hWnd;
+            Btn_hWnd주문취소 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_주문취소_ptChkRelT);
+            Btn_hWnd저장 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_저장_ptChkRelT);
+            Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_완료상태_닫기_ptChkRelT);
+        }
+    }
     //
-    //public class CustRegWnd
-    //{
-    //    // TopWnd
-    //    public IntPtr TopWnd_hWnd;  // hWnd 
+    public class CustRegWnd
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd 
     //
-    //    public IntPtr hWndBtnClose;    // 버튼 - 닫기
+        public IntPtr hWndBtnClose;    // 버튼 - 닫기
     //
-    //    // Data
-    //    public long lKeyCode;  // Text
-    //    public string s동명;  // Text
+        // Data
+        public long lKeyCode;  // Text
+        public string s동명;  // Text
     //
-    //    public CustRegWnd(IntPtr hWnd, InsungsInfo_File fInfo)
-    //    {
-    //        TopWnd_hWnd = hWnd;
-    //        hWndBtnClose = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.고객등록Wnd_ptChkRel닫기버튼);
-    //    }
-    //}
+        public CustRegWnd(IntPtr hWnd, InsungsInfo_File fInfo)
+        {
+            TopWnd_hWnd = hWnd;
+            hWndBtnClose = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.고객등록Wnd_ptChkRel닫기버튼);
+        }
+    }
     //
-    //public class CustSearch
-    //{
-    //    // TopWnd
-    //    public IntPtr TopWnd_hWnd;  // hWnd 
+    public class CustSearch
+    {
+        // TopWnd
+        public IntPtr TopWnd_hWnd;  // hWnd 
     //
-    //    public IntPtr hWndBtnClose;    // 버튼 - 닫기
+        public IntPtr hWndBtnClose;    // 버튼 - 닫기
     //
-    //    // Data
-    //    public CustSearch(IntPtr hWnd, InsungsInfo_File fInfo)
-    //    {
-    //        TopWnd_hWnd = hWnd;
-    //        hWndBtnClose = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.고객등록Wnd_ptChkRel닫기버튼);
-    //    }
-    //}
+        // Data
+        public CustSearch(IntPtr hWnd, InsungsInfo_File fInfo)
+        {
+            TopWnd_hWnd = hWnd;
+            hWndBtnClose = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.고객등록Wnd_ptChkRel닫기버튼);
+        }
+    }
     #endregion Windows 끝
 
     #region Pages

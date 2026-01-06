@@ -1,4 +1,4 @@
-using Kai.Client.CallCenter.Classes;
+﻿using Kai.Client.CallCenter.Classes;
 using Kai.Client.CallCenter.Classes.Class_Master;
 using Kai.Client.CallCenter.MVVM.ViewModels;
 using Kai.Client.CallCenter.MVVM.ViewServices;
@@ -770,100 +770,100 @@ public partial class Order_StatusPage : Page
 
     #region From Insungs
     // 인성1 접수/배차 → 운행 처리 (40초 경과 시, DB 업데이트 및 타 앱 취소)
-    //public async Task<CommonResult_AutoAllocProcess> Insung01배차To운행Async(AutoAllocModel item, CancelTokenControl ctrl)
-    //{
-    //    try
-    //    {
-    //        Debug.WriteLine($" ----------------[Insung01배차To운행] 시작 - KeyCode={item.KeyCode}");
-    //        Debug.WriteLine($"  ===== 기사 정보 =====");
-    //        Debug.WriteLine($"    주문상태: '{item.NewOrder.OrderState}'");
-    //        Debug.WriteLine($"    기사번호: '{item.NewOrder.DriverId}'");
-    //        Debug.WriteLine($"    기사이름: '{item.NewOrder.DriverName}'");
-    //        Debug.WriteLine($"    기사소속: '{item.NewOrder.DriverCenterName}'");
-    //        Debug.WriteLine($"    기사전번(원본): '{item.DriverPhone}'");
-    //        Debug.WriteLine($"    기사전번(숫자): '{item.NewOrder.DriverTelNo}'");
+    public async Task<CommonResult_AutoAllocProcess> Insung01배차To운행Async(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine($" ----------------[Insung01배차To운행] 시작 - KeyCode={item.KeyCode}");
+            Debug.WriteLine($"  ===== 기사 정보 =====");
+            Debug.WriteLine($"    주문상태: '{item.NewOrder.OrderState}'");
+            Debug.WriteLine($"    기사번호: '{item.NewOrder.DriverId}'");
+            Debug.WriteLine($"    기사이름: '{item.NewOrder.DriverName}'");
+            Debug.WriteLine($"    기사소속: '{item.NewOrder.DriverCenterName}'");
+            Debug.WriteLine($"    기사전번(원본): '{item.DriverPhone}'");
+            Debug.WriteLine($"    기사전번(숫자): '{item.NewOrder.DriverTelNo}'");
 
-    //        // 1. Kai DB 업데이트 (접수 → 운행)
-    //        Debug.WriteLine($"  → [DB 업데이트] 시작: KeyCode={item.KeyCode}");
-    //        Debug.WriteLine($"      OrderState: '{item.NewOrder.OrderState}', DriverTelNo: '{item.NewOrder.DriverTelNo}'");
+            // 1. Kai DB 업데이트 (접수 → 운행)
+            Debug.WriteLine($"  → [DB 업데이트] 시작: KeyCode={item.KeyCode}");
+            Debug.WriteLine($"      OrderState: '{item.NewOrder.OrderState}', DriverTelNo: '{item.NewOrder.DriverTelNo}'");
 
-    //        //StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
-    //        StdResult_Int resultUpdate = new StdResult_Int(1);
+            //StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            StdResult_Int resultUpdate = new StdResult_Int(1);
 
-    //        if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
-    //        {
-    //            Debug.WriteLine($"  → [DB 업데이트 실패] nResult={resultUpdate.nResult}, Err={resultUpdate.sErr}, Pos={resultUpdate.sPos}");
-    //            return CommonResult_AutoAllocProcess.FailureAndRetry(
-    //                $"Kai DB 업데이트 실패: {resultUpdate.sErr}",
-    //                $"Insung01배차To운행_UpdateFail_{resultUpdate.sPos}");
-    //        }
+            if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
+            {
+                Debug.WriteLine($"  → [DB 업데이트 실패] nResult={resultUpdate.nResult}, Err={resultUpdate.sErr}, Pos={resultUpdate.sPos}");
+                return CommonResult_AutoAllocProcess.FailureAndRetry(
+                    $"Kai DB 업데이트 실패: {resultUpdate.sErr}",
+                    $"Insung01배차To운행_UpdateFail_{resultUpdate.sPos}");
+            }
 
-    //        Debug.WriteLine($"  → [DB 업데이트 성공] nResult={resultUpdate.nResult}");
+            Debug.WriteLine($"  → [DB 업데이트 성공] nResult={resultUpdate.nResult}");
 
-    //        // 2. 배차중인 다른 앱 선별
-    //        // TODO: item.NewOrder.Insung2, Cargo24, OneCall 필드 확인
-    //        Debug.WriteLine($"  → TODO: 배차중인 다른 앱 선별");
+            // 2. 배차중인 다른 앱 선별
+            // TODO: item.NewOrder.Insung2, Cargo24, OneCall 필드 확인
+            Debug.WriteLine($"  → TODO: 배차중인 다른 앱 선별");
 
-    //        // 3. 다른 앱 취소 처리
-    //        // TODO: 운행 상태 확인 및 취소 명령
-    //        Debug.WriteLine($"  → TODO: 다른 앱 취소 처리");
+            // 3. 다른 앱 취소 처리
+            // TODO: 운행 상태 확인 및 취소 명령
+            Debug.WriteLine($"  → TODO: 다른 앱 취소 처리");
 
-    //        // 4. NotChanged 상태로 재적재 (다음 루프에서 스킵, SignalR 이벤트 대기)
-    //        Debug.WriteLine($"  → [완료] NotChanged 상태로 재적재");
-    //        return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Debug.WriteLine($"[Insung01배차To운행] 예외: {ex.Message}");
-    //        return CommonResult_AutoAllocProcess.FailureAndRetry($"40초 처리 예외: {ex.Message}", "Insung01배차To운행_Exception");
-    //    }
-    //}
+            // 4. NotChanged 상태로 재적재 (다음 루프에서 스킵, SignalR 이벤트 대기)
+            Debug.WriteLine($"  → [완료] NotChanged 상태로 재적재");
+            return CommonResult_AutoAllocProcess.SuccessAndReEnqueue(item, PostgService_Common_OrderState.NotChanged);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[Insung01배차To운행] 예외: {ex.Message}");
+            return CommonResult_AutoAllocProcess.FailureAndRetry($"40초 처리 예외: {ex.Message}", "Insung01배차To운행_Exception");
+        }
+    }
 
     // 인성1 운행 → 완료 처리 (DB 업데이트, 타이머 리셋, 큐 제거)
-    //public async Task<CommonResult_AutoAllocProcess> Insung01운행To완료Async(AutoAllocModel item, CancelTokenControl ctrl)
-    //{
-    //    try
-    //    {
-    //        Debug.WriteLine($" ----------------[Insung01운행To완료] 시작 - KeyCode={item.KeyCode}");
-    //        Debug.WriteLine($"  현재 Kai 상태: '{item.NewOrder.OrderState}' → 완료");
+    public async Task<CommonResult_AutoAllocProcess> Insung01운행To완료Async(AutoAllocModel item, CancelTokenControl ctrl)
+    {
+        try
+        {
+            Debug.WriteLine($" ----------------[Insung01운행To완료] 시작 - KeyCode={item.KeyCode}");
+            Debug.WriteLine($"  현재 Kai 상태: '{item.NewOrder.OrderState}' → 완료");
 
-    //        // 1. Kai DB 업데이트 (운행 → 완료)
-    //        Debug.WriteLine($"  → [DB 업데이트] 시작: KeyCode={item.KeyCode}");
+            // 1. Kai DB 업데이트 (운행 → 완료)
+            Debug.WriteLine($"  → [DB 업데이트] 시작: KeyCode={item.KeyCode}");
 
-    //        string originalState = item.NewOrder.OrderState;
-    //        item.NewOrder.OrderState = "완료";
+            string originalState = item.NewOrder.OrderState;
+            item.NewOrder.OrderState = "완료";
 
-    //        //StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
-    //        StdResult_Int resultUpdate = new StdResult_Int(1);
+            //StdResult_Int resultUpdate = await CommonVars.s_SrGClient.SrResult_Order_UpdateRowAsync_Today_WithRequestId(item.NewOrder);
+            StdResult_Int resultUpdate = new StdResult_Int(1);
 
-    //        if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
-    //        {
-    //            Debug.WriteLine($"  → [DB 업데이트 실패] nResult={resultUpdate.nResult}, Err={resultUpdate.sErr}, Pos={resultUpdate.sPos}");
-    //            item.NewOrder.OrderState = originalState; // 원복
-    //            return CommonResult_AutoAllocProcess.FailureAndRetry(
-    //                $"Kai DB 업데이트 실패: {resultUpdate.sErr}",
-    //                $"Insung01운행To완료_UpdateFail_{resultUpdate.sPos}");
-    //        }
+            if (resultUpdate.nResult <= 0 || !string.IsNullOrEmpty(resultUpdate.sErr))
+            {
+                Debug.WriteLine($"  → [DB 업데이트 실패] nResult={resultUpdate.nResult}, Err={resultUpdate.sErr}, Pos={resultUpdate.sPos}");
+                item.NewOrder.OrderState = originalState; // 원복
+                return CommonResult_AutoAllocProcess.FailureAndRetry(
+                    $"Kai DB 업데이트 실패: {resultUpdate.sErr}",
+                    $"Insung01운행To완료_UpdateFail_{resultUpdate.sPos}");
+            }
 
-    //        Debug.WriteLine($"  → [DB 업데이트 성공] {originalState} → 완료");
+            Debug.WriteLine($"  → [DB 업데이트 성공] {originalState} → 완료");
 
-    //        // 2. 타이머 리셋 (혹시 남아있을 경우)
-    //        if (item.RunStartTime != null)
-    //        {
-    //            Debug.WriteLine($"  → 타이머 리셋");
-    //            item.RunStartTime = null;
-    //        }
+            // 2. 타이머 리셋 (혹시 남아있을 경우)
+            if (item.RunStartTime != null)
+            {
+                Debug.WriteLine($"  → 타이머 리셋");
+                item.RunStartTime = null;
+            }
 
-    //        // 3. 큐에서 제거 (완료 처리)
-    //        Debug.WriteLine($"  → [완료] 큐에서 제거 (완료 처리 성공: {originalState} → 완료)");
-    //        return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Debug.WriteLine($"[Insung01운행To완료] 예외: {ex.Message}");
-    //        return CommonResult_AutoAllocProcess.FailureAndRetry($"완료 처리 예외: {ex.Message}", "Insung01운행To완료_Exception");
-    //    }
-    //}
+            // 3. 큐에서 제거 (완료 처리)
+            Debug.WriteLine($"  → [완료] 큐에서 제거 (완료 처리 성공: {originalState} → 완료)");
+            return CommonResult_AutoAllocProcess.SuccessAndDestroy(item);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[Insung01운행To완료] 예외: {ex.Message}");
+            return CommonResult_AutoAllocProcess.FailureAndRetry($"완료 처리 예외: {ex.Message}", "Insung01운행To완료_Exception");
+        }
+    }
 
     ////public async Task<StdResult_Error> Insung01접수Or배차To운행Async(TbOrder tb, AutoAlloc kaiCpy, AutoAllocResult_Datagrid dgInfo, CancelTokenControl ctrl)
     ////{

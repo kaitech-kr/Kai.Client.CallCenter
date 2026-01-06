@@ -82,14 +82,14 @@ public class InsungsInfo_File
     public string 고객등록Wnd_TopWnd_sWndName { get; set; } = "고객관리";   // WndName
 
     // 닫기버튼
-    //public Draw.Point 고객등록Wnd_ptChkRel닫기버튼 { get; set; } = new Draw.Point(409, 58); // {X=409,Y=58}
+    public Draw.Point 고객등록Wnd_ptChkRel닫기버튼 { get; set; } = new Draw.Point(409, 58); // {X=409,Y=58}
 
     // 고객코드
-    //public Draw.Point 고객등록Wnd_rcChkRel오더번호 { get; set; } = new Draw.Point(120, 100); // Check Point
-    //public Draw.Rectangle 고객등록Wnd_rcChkRel고객코드 { get; set; } = new Draw.Rectangle(81, 93, 77, 15);
+    public Draw.Point 고객등록Wnd_rcChkRel오더번호 { get; set; } = new Draw.Point(120, 100); // Check Point
+    public Draw.Rectangle 고객등록Wnd_rcChkRel고객코드 { get; set; } = new Draw.Rectangle(81, 93, 77, 15);
 
     // 동명
-    //public Draw.Point 고객등록Wnd_ptChkRel동명 { get; set; } = new Draw.Point(127, 224); // Check Point {X=127,Y=224}
+    public Draw.Point 고객등록Wnd_ptChkRel동명 { get; set; } = new Draw.Point(127, 224); // Check Point {X=127,Y=224}
     #endregion
 
     #region 접수(오더)등록Page
@@ -145,8 +145,8 @@ public class InsungsInfo_File
     #region 접수(오더)등록Wnd
     // TopWnd
     public string 접수등록Wnd_TopWnd_sWndName_Reg { get; set; } = "오더접수(신규) ";   // New Regist WndName - Space조심
-    //public string 접수등록Wnd_TopWnd_sWndStartsWith { get; set; } = "[";   // Update WndName
-    //public string 접수등록Wnd_TopWnd_sWndContains { get; set; } = "--->";   // Update WndName
+    public string 접수등록Wnd_TopWnd_sWndStartsWith { get; set; } = "[";   // Update WndName
+    public string 접수등록Wnd_TopWnd_sWndContains { get; set; } = "--->";   // Update WndName
 
     // Header
     //public Draw.Point 접수등록Wnd_Header_오더번호_ptChkRelT { get; set; } = new Draw.Point(194, 86); // Check Point
@@ -303,19 +303,19 @@ public class InsungsInfo_File
     public Draw.Point 접수등록Wnd_신규버튼그룹_대기저장_ptChkRelT { get; set; } = new Draw.Point(889, 423); // Check Point {X=889,Y=423}
 
     // 버튼들 - 수정 그룹
-    //public Draw.Point 접수등록Wnd_수정버튼그룹_닫기_ptChkRelT { get; set; } = new Draw.Point(889, 679); // Check Point
-    //public Draw.Point 접수등록Wnd_신규버튼그룹_고객수정_ptChkRelT { get; set; } = new Draw.Point(889, 55); // Check Point
-    //public Draw.Point 접수등록Wnd_수정버튼그룹_배차_ptChkRelT { get; set; } = new Draw.Point(889, 278); // Check Point {X=889,Y=408}
-    //public Draw.Point 접수등록Wnd_수정버튼그룹_처리완료_ptChkRelT { get; set; } = new Draw.Point(889, 358); // Check Point {X=889,Y=408}
-    //public Draw.Point 접수등록Wnd_수정버튼그룹_대기_ptChkRelT { get; set; } = new Draw.Point(889, 403); // Check Point {X=889,Y=408}
-    //public Draw.Point 접수등록Wnd_수정버튼그룹_주문취소_ptChkRelT { get; set; } = new Draw.Point(889, 453); // Check Point {X=889,Y=408}
-    //public Draw.Point 접수등록Wnd_수정버튼그룹_접수상태_ptChkRelT { get; set; } = new Draw.Point(889, 508); // Check Point {X=889,Y=408}
-    //public Draw.Point 접수등록Wnd_수정버튼그룹_저장_ptChkRelT { get; set; } = new Draw.Point(889, 563); // Check Point {X=889,Y=476}
+    public Draw.Point 접수등록Wnd_수정버튼그룹_닫기_ptChkRelT { get; set; } = new Draw.Point(889, 679); // Check Point
+    public Draw.Point 접수등록Wnd_신규버튼그룹_고객수정_ptChkRelT { get; set; } = new Draw.Point(889, 55); // Check Point
+    public Draw.Point 접수등록Wnd_수정버튼그룹_배차_ptChkRelT { get; set; } = new Draw.Point(889, 278); // Check Point {X=889,Y=408}
+    public Draw.Point 접수등록Wnd_수정버튼그룹_처리완료_ptChkRelT { get; set; } = new Draw.Point(889, 358); // Check Point {X=889,Y=408}
+    public Draw.Point 접수등록Wnd_수정버튼그룹_대기_ptChkRelT { get; set; } = new Draw.Point(889, 403); // Check Point {X=889,Y=408}
+    public Draw.Point 접수등록Wnd_수정버튼그룹_주문취소_ptChkRelT { get; set; } = new Draw.Point(889, 453); // Check Point {X=889,Y=408}
+    public Draw.Point 접수등록Wnd_수정버튼그룹_접수상태_ptChkRelT { get; set; } = new Draw.Point(889, 508); // Check Point {X=889,Y=408}
+    public Draw.Point 접수등록Wnd_수정버튼그룹_저장_ptChkRelT { get; set; } = new Draw.Point(889, 563); // Check Point {X=889,Y=476}
 
     // 버튼들 - 완료 상태 팝업 (완료 상태일 때 버튼 레이아웃)
-    //public Draw.Point 접수등록Wnd_완료상태_닫기_ptChkRelT { get; set; } = new Draw.Point(889, 679); // TODO: 실제 좌표 확인 필요
-    //public Draw.Point 접수등록Wnd_완료상태_주문취소_ptChkRelT { get; set; } = new Draw.Point(889, 408); // 저장 위치를 취소로 사용
-    //public Draw.Point 접수등록Wnd_완료상태_저장_ptChkRelT { get; set; } = new Draw.Point(889, 476); // TODO: 실제 좌표 확인 필요
+    public Draw.Point 접수등록Wnd_완료상태_닫기_ptChkRelT { get; set; } = new Draw.Point(889, 679); // TODO: 실제 좌표 확인 필요
+    public Draw.Point 접수등록Wnd_완료상태_주문취소_ptChkRelT { get; set; } = new Draw.Point(889, 408); // 저장 위치를 취소로 사용
+    public Draw.Point 접수등록Wnd_완료상태_저장_ptChkRelT { get; set; } = new Draw.Point(889, 476); // TODO: 실제 좌표 확인 필요
 
     // 공용 콤보박스 내부 행 클릭 포인트
     public Draw.Point[] 접수등록Wnd_Common_ptComboBox = new Draw.Point[]
