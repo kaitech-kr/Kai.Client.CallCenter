@@ -884,6 +884,7 @@
                                         <RadioButton x:Name="RadioBtn_착불" GroupName="FeeGroup" Content="착불" Margin="6,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
                                         <RadioButton x:Name="RadioBtn_송금" GroupName="FeeGroup" Content="송금" Margin="6,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
                                         <RadioButton x:Name="RadioBtn_카드" GroupName="FeeGroup" Content="카드" Margin="6,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
+                                        <RadioButton x:Name="RadioBtn_마일" GroupName="FeeGroup" Content="마일" Margin="6,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
                                         <RadioButton x:Name="RadioBtn_신용" GroupName="FeeGroup" Content="신용(인수증)" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}"/>
                                     </StackPanel>
                                 </Border>
@@ -1251,6 +1252,7 @@
                                         <RadioButton x:Name="RadioBtn_소형" GroupName="DestTimeGroup" Content="소형" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
                                         <RadioButton x:Name="RadioBtn_중형" GroupName="DestTimeGroup" Content="중형" Margin="6,0,0,0" Style="{StaticResource RadioBtnStyle}" />
                                         <RadioButton x:Name="RadioBtn_대형" GroupName="DestTimeGroup" Content="대형" Margin="6,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_플렉제외" GroupName="DestTimeGroup" Content="플렉스제외" Margin="56,0,0,0" Style="{StaticResource RadioBtnStyle}" />
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
@@ -1262,7 +1264,11 @@
                                 </Border>
                                 <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBox x:Name="TBox_할증" Style="{StaticResource TextBoxStyle}" Width="370" Margin="4,0,0,0"/>
+                                        <CheckBox x:Name="ChkBox_야간" Content="야간" Margin="4,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" />
+                                        <CheckBox x:Name="ChkBox_조조" Content="조조" Margin="4,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" />
+                                        <CheckBox x:Name="ChkBox_휴일" Content="휴일" Margin="5,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" />
+                                        <CheckBox x:Name="ChkBox_대기" Content="대기" Margin="5,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}" />
+                                        <CheckBox x:Name="ChkBox_날씨" Content="날씨" Margin="5,0,0,0" Style="{StaticResource CheckBoxStyle_Basic}"/>
                                     </StackPanel>
                                 </Border>
                             </StackPanel>

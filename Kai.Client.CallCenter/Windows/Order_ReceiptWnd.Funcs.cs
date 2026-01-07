@@ -27,7 +27,7 @@ public partial class Order_ReceiptWnd : Window
     private bool CanSave()
     {
         // 의뢰자
-        if (tbOrderOrg.CallCustCodeK == 0) // 의뢰자 KeyCode
+        if (vmOrder.CallCustCodeK == 0) // 의뢰자 KeyCode
         {
             ErrMsgBox("등록된 의뢰자가 아닙니다.");
             return false;
@@ -78,7 +78,7 @@ public partial class Order_ReceiptWnd : Window
         }
 
         // 요금
-        if (StdConvert.StringWonFormatToInt(TBox_FeeTot.Text) == 0) // 요금
+        if (vmOrder.FeeTotal == 0)
         {
             ErrMsgBox("요금을 입력하세요.");
             return false;
@@ -105,7 +105,7 @@ public partial class Order_ReceiptWnd : Window
         UpdateNewTbOrderByUiData();
 
         // 3. 서버에 저장
-        StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(tbOrderOrg);
+        StdResult_Long result = await s_SrGClient.SrResult_Order_InsertRowAsync_Today(vmOrder.tbOrder);
         if (!string.IsNullOrEmpty(result.sErr))
         {
             ErrMsgBox($"{actionName} 실패: {result.sErr}", $"Order_ReceiptWnd/SaveOrderAsync_{orderState}");
@@ -129,7 +129,7 @@ public partial class Order_ReceiptWnd : Window
             return false;
         }
 
-        // 3. UI 데이터를 tbOrderOrg에 반영 (바인딩 안된 필드들)
+        // 3. UI 데이터를 vmOrder에 반영 (바인딩 안된 필드들)
         UpdateNewTbOrderByUiData(sStatus_OrderSave);
 
         // 4. 변경 여부 확인
@@ -139,10 +139,10 @@ public partial class Order_ReceiptWnd : Window
         }
 
         // 5. DtUpdateLast 정보 설정
-        tbOrderOrg.DtUpdateLast = DateTime.Now;
+        vmOrder.DtUpdateLast = DateTime.Now;
 
         // 6. 서버로 업데이트 전송
-        StdResult_Int result = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(tbOrderOrg);
+        StdResult_Int result = await s_SrGClient.SrResult_Order_UpdateRowAsync_Today(vmOrder.tbOrder);
         if (result.nResult < 0)
         {
             ErrMsgBox($"수정 저장 실패: {result.sErrNPos}", "Order_ReceiptWnd/UpdateOrderAsync");
@@ -155,55 +155,55 @@ public partial class Order_ReceiptWnd : Window
 
     private void UpdateNewTbOrderByUiData(string orderState = "")
     {
-        if (!string.IsNullOrEmpty(orderState)) tbOrderOrg.OrderState = orderState;
+        if (!string.IsNullOrEmpty(orderState)) vmOrder.OrderState = orderState;
 
-        // CodeK 필드들은 tbOrderOrg에 직접 저장되므로 복사 불필요
+        // CodeK 필드들은 vmOrder에 직접 저장되므로 복사 불필요
 
         // 예약 관련 (DtReserve, ReserveBreakMinute는 바인딩 안됨)
-        tbOrderOrg.DtReserve = DtPickerReserve.Value;
-        tbOrderOrg.ReserveBreakMinute = StdConvert.StringToInt(TBoxReserveBreakMin.Text);
-        Debug.WriteLine($"[저장] Reserve={tbOrderOrg.Reserve}, DtReserve={tbOrderOrg.DtReserve}, BreakMin={tbOrderOrg.ReserveBreakMinute}");
+        vmOrder.DtReserve = DtPickerReserve.Value;
+        vmOrder.ReserveBreakMinute = StdConvert.StringToInt(TBoxReserveBreakMin.Text);
+        Debug.WriteLine($"[저장] Reserve={vmOrder.Reserve}, DtReserve={vmOrder.DtReserve}, BreakMin={vmOrder.ReserveBreakMinute}");
 
         // 요금 관련 (바인딩 안된 필드)
-        tbOrderOrg.FeeCommi = StdConvert.StringWonFormatToInt(TBox_FeeCharge.Text);
-        tbOrderOrg.FeeDriver = StdConvert.StringWonFormatToInt(TBox_FeeDriver.Text);
-        tbOrderOrg.FeeType = GetFeeTypeFromUI();
-        tbOrderOrg.MovilityFlag = GetCarTypeFromUI();
-        tbOrderOrg.DeliverFlag = GetDeliverFlagFromUI();
+        vmOrder.FeeCommi = StdConvert.StringWonFormatToInt(TBox_FeeCharge.Text);
+        vmOrder.FeeDriver = StdConvert.StringWonFormatToInt(TBox_FeeDriver.Text);
+        vmOrder.FeeType = GetFeeTypeFromUI();
+        vmOrder.MovilityFlag = GetCarTypeFromUI();
+        vmOrder.DeliverFlag = GetDeliverFlagFromUI();
     }
 
-    // 신규 등록 시 기본값 설정 (tbOrderOrg는 이미 생성자에서 생성됨, UI 바인딩 유지)
+    // 신규 등록 시 기본값 설정 (vmOrder는 이미 생성자에서 생성됨, UI 바인딩 유지)
     private void SetBasicFieldsForNewOrder(string sOrderState)
     {
-        if (tbOrderOrg.CallCustCodeK <= 0) ErrMsgBox($"의뢰자코드가 0입니다.");
+        if (vmOrder.CallCustCodeK <= 0) ErrMsgBox($"의뢰자코드가 0입니다.");
 
         // 기본 필드 설정 (UI 바인딩 안된 필드들)
-        tbOrderOrg.KeyCode = 0;
-        tbOrderOrg.MemberCode = s_CenterCharge.MemberCode;
-        tbOrderOrg.CenterCode = s_CenterCharge.CenterCode;
-        tbOrderOrg.ReceiptTime = TimeOnly.FromDateTime(DateTime.Now);
-        tbOrderOrg.OrderState = sOrderState;
-        tbOrderOrg.OrderStateOld = "";
-        tbOrderOrg.UserCode = 0;
-        tbOrderOrg.UserName = "";
+        vmOrder.KeyCode = 0;
+        vmOrder.MemberCode = s_CenterCharge.MemberCode;
+        vmOrder.CenterCode = s_CenterCharge.CenterCode;
+        vmOrder.ReceiptTime = TimeOnly.FromDateTime(DateTime.Now);
+        vmOrder.OrderState = sOrderState;
+        vmOrder.OrderStateOld = "";
+        vmOrder.UserCode = 0;
+        vmOrder.UserName = "";
 
         // 인성 등 외부연동 필드 초기화
-        tbOrderOrg.Insung1SeqNo = "";
-        tbOrderOrg.Insung2SeqNo = "";
-        tbOrderOrg.Cargo24SeqNo = "";
-        tbOrderOrg.OnecallSeqNo = "";
-        tbOrderOrg.Share = false;
-        tbOrderOrg.TaxBill = false;
+        vmOrder.Insung1SeqNo = "";
+        vmOrder.Insung2SeqNo = "";
+        vmOrder.Cargo24SeqNo = "";
+        vmOrder.OnecallSeqNo = "";
+        vmOrder.Share = false;
+        vmOrder.TaxBill = false;
 
         // 기사 정보 초기화 (신규 등록 시 배차 전)
-        tbOrderOrg.DriverCode = 0;
-        tbOrderOrg.DriverId = "";
-        tbOrderOrg.DriverName = "";
-        tbOrderOrg.DriverTelNo = "";
-        tbOrderOrg.DriverMemberCode = 0;
-        tbOrderOrg.DriverCenterId = "";
-        tbOrderOrg.DriverCenterName = "";
-        tbOrderOrg.DriverBusinessNo = "";
+        vmOrder.DriverCode = 0;
+        vmOrder.DriverId = "";
+        vmOrder.DriverName = "";
+        vmOrder.DriverTelNo = "";
+        vmOrder.DriverMemberCode = 0;
+        vmOrder.DriverCenterId = "";
+        vmOrder.DriverCenterName = "";
+        vmOrder.DriverBusinessNo = "";
 
         // UI 바인딩된 필드들은 건드리지 않음 (이미 사용자가 입력한 값 유지)
     }
@@ -212,112 +212,8 @@ public partial class Order_ReceiptWnd : Window
     #region 변경 비교
     private bool IsChanged()
     {
-        if (tbOrderOrg == null || tbOrderBK == null) return true;
-
-        var o = tbOrderBK;
-        return tbOrderOrg.KeyCode != o.KeyCode
-            || tbOrderOrg.MemberCode != o.MemberCode
-            || tbOrderOrg.CenterCode != o.CenterCode
-            || tbOrderOrg.UserCode != o.UserCode
-            || tbOrderOrg.UserName != o.UserName
-            || tbOrderOrg.DtRegist != o.DtRegist
-            || tbOrderOrg.DtUpdateLast != o.DtUpdateLast
-            || tbOrderOrg.ReceiptTime != o.ReceiptTime
-            || tbOrderOrg.AllocTime != o.AllocTime
-            || tbOrderOrg.RunTime != o.RunTime
-            || tbOrderOrg.FinishTime != o.FinishTime
-            || tbOrderOrg.OrderState != o.OrderState
-            || tbOrderOrg.OrderStateOld != o.OrderStateOld
-            || tbOrderOrg.CancelReason != o.CancelReason
-            || tbOrderOrg.Share != o.Share
-            || tbOrderOrg.TaxBill != o.TaxBill
-            || tbOrderOrg.CallCompCode != o.CallCompCode
-            || tbOrderOrg.CallCompName != o.CallCompName
-            || tbOrderOrg.CallCustFrom != o.CallCustFrom
-            || tbOrderOrg.CallCustCodeE != o.CallCustCodeE
-            || tbOrderOrg.CallCustCodeK != o.CallCustCodeK
-            || tbOrderOrg.CallCustName != o.CallCustName
-            || tbOrderOrg.CallTelNo != o.CallTelNo
-            || tbOrderOrg.CallTelNo2 != o.CallTelNo2
-            || tbOrderOrg.CallDeptName != o.CallDeptName
-            || tbOrderOrg.CallChargeName != o.CallChargeName
-            || tbOrderOrg.CallDongBasic != o.CallDongBasic
-            || tbOrderOrg.CallAddress != o.CallAddress
-            || tbOrderOrg.CallDetailAddr != o.CallDetailAddr
-            || tbOrderOrg.CallRemarks != o.CallRemarks
-            || tbOrderOrg.CallMemo != o.CallMemo
-            || tbOrderOrg.StartCustCodeE != o.StartCustCodeE
-            || tbOrderOrg.StartCustCodeK != o.StartCustCodeK
-            || tbOrderOrg.StartCustName != o.StartCustName
-            || tbOrderOrg.StartTelNo != o.StartTelNo
-            || tbOrderOrg.StartTelNo2 != o.StartTelNo2
-            || tbOrderOrg.StartDeptName != o.StartDeptName
-            || tbOrderOrg.StartChargeName != o.StartChargeName
-            || tbOrderOrg.StartDongBasic != o.StartDongBasic
-            || tbOrderOrg.StartAddress != o.StartAddress
-            || tbOrderOrg.StartDetailAddr != o.StartDetailAddr
-            || tbOrderOrg.StartSiDo != o.StartSiDo
-            || tbOrderOrg.StartGunGu != o.StartGunGu
-            || tbOrderOrg.StartDongRi != o.StartDongRi
-            || tbOrderOrg.StartLon != o.StartLon
-            || tbOrderOrg.StartLat != o.StartLat
-            || tbOrderOrg.StartSignImgUrl != o.StartSignImgUrl
-            || tbOrderOrg.StartDtSign != o.StartDtSign
-            || tbOrderOrg.DestCustCodeE != o.DestCustCodeE
-            || tbOrderOrg.DestCustCodeK != o.DestCustCodeK
-            || tbOrderOrg.DestCustName != o.DestCustName
-            || tbOrderOrg.DestTelNo != o.DestTelNo
-            || tbOrderOrg.DestTelNo2 != o.DestTelNo2
-            || tbOrderOrg.DestDeptName != o.DestDeptName
-            || tbOrderOrg.DestChargeName != o.DestChargeName
-            || tbOrderOrg.DestDongBasic != o.DestDongBasic
-            || tbOrderOrg.DestAddress != o.DestAddress
-            || tbOrderOrg.DestDetailAddr != o.DestDetailAddr
-            || tbOrderOrg.DestSiDo != o.DestSiDo
-            || tbOrderOrg.DestGunGu != o.DestGunGu
-            || tbOrderOrg.DestDongRi != o.DestDongRi
-            || tbOrderOrg.DestLon != o.DestLon
-            || tbOrderOrg.DestLat != o.DestLat
-            || tbOrderOrg.DestSignImgUrl != o.DestSignImgUrl
-            || tbOrderOrg.DestDtSign != o.DestDtSign
-            || tbOrderOrg.Reserve != o.Reserve
-            || tbOrderOrg.DtReserve != o.DtReserve
-            || tbOrderOrg.ReserveBreakMinute != o.ReserveBreakMinute
-            || tbOrderOrg.FeeBasic != o.FeeBasic
-            || tbOrderOrg.FeeTotal != o.FeeTotal
-            || tbOrderOrg.FeeCommi != o.FeeCommi
-            || tbOrderOrg.FeeDriver != o.FeeDriver
-            || tbOrderOrg.FeePlus != o.FeePlus
-            || tbOrderOrg.FeeMinus != o.FeeMinus
-            || tbOrderOrg.FeeConn != o.FeeConn
-            || tbOrderOrg.FeeType != o.FeeType
-            || tbOrderOrg.MovilityFlag != o.MovilityFlag
-            || tbOrderOrg.DeliverFlag != o.DeliverFlag
-            || tbOrderOrg.StartDateFlag != o.StartDateFlag
-            || tbOrderOrg.StartDateDetail != o.StartDateDetail
-            || tbOrderOrg.DestDateFlag != o.DestDateFlag
-            || tbOrderOrg.DestDateDetail != o.DestDateDetail
-            || tbOrderOrg.CarWeightFlag != o.CarWeightFlag
-            || tbOrderOrg.TruckDetailFlag != o.TruckDetailFlag
-            || tbOrderOrg.StartLoadFlag != o.StartLoadFlag
-            || tbOrderOrg.DestUnloadFlag != o.DestUnloadFlag
-            || tbOrderOrg.DeliverMemo != o.DeliverMemo
-            || tbOrderOrg.DriverCode != o.DriverCode
-            || tbOrderOrg.DriverId != o.DriverId
-            || tbOrderOrg.DriverName != o.DriverName
-            || tbOrderOrg.DriverTelNo != o.DriverTelNo
-            || tbOrderOrg.DriverMemberCode != o.DriverMemberCode
-            || tbOrderOrg.DriverCenterId != o.DriverCenterId
-            || tbOrderOrg.DriverCenterName != o.DriverCenterName
-            || tbOrderOrg.DriverBusinessNo != o.DriverBusinessNo
-            || tbOrderOrg.Insung1SeqNo != o.Insung1SeqNo
-            || tbOrderOrg.Insung1State != o.Insung1State
-            || tbOrderOrg.Insung2SeqNo != o.Insung2SeqNo
-            || tbOrderOrg.Insung2State != o.Insung2State
-            || tbOrderOrg.Cargo24SeqNo != o.Cargo24SeqNo
-            || tbOrderOrg.Cargo24State != o.Cargo24State
-            || tbOrderOrg.OnecallSeqNo != o.OnecallSeqNo
-            || tbOrderOrg.OnecallState != o.OnecallState;
+        if (vmOrder == null) return true;
+        return vmOrder.IsChanged;
     }
     #endregion
 
@@ -430,17 +326,17 @@ public partial class Order_ReceiptWnd : Window
     private void 의뢰자CopyTo출발지()
     {
         // 의뢰자 데이터를 출발지로 복사
-        tbOrderOrg.StartCustCodeK = tbOrderOrg.CallCustCodeK;
-        tbOrderOrg.StartCustCodeE = tbOrderOrg.CallCustCodeE;
-        tbOrderOrg.StartCustName = tbOrderOrg.CallCustName;
-        tbOrderOrg.StartDongBasic = tbOrderOrg.CallDongBasic;
-        tbOrderOrg.StartTelNo = tbOrderOrg.CallTelNo;
-        tbOrderOrg.StartTelNo2 = tbOrderOrg.CallTelNo2;
-        tbOrderOrg.StartDeptName = tbOrderOrg.CallDeptName;
-        tbOrderOrg.StartChargeName = tbOrderOrg.CallChargeName;
-        tbOrderOrg.StartAddress = tbOrderOrg.CallAddress;
-        tbOrderOrg.StartDetailAddr = tbOrderOrg.CallDetailAddr;
-        Start_TBoxSearch.Text = tbOrderOrg.CallCustName;
+        vmOrder.StartCustCodeK = vmOrder.CallCustCodeK;
+        vmOrder.StartCustCodeE = vmOrder.CallCustCodeE;
+        vmOrder.StartCustName = vmOrder.CallCustName;
+        vmOrder.StartDongBasic = vmOrder.CallDongBasic;
+        vmOrder.StartTelNo = vmOrder.CallTelNo;
+        vmOrder.StartTelNo2 = vmOrder.CallTelNo2;
+        vmOrder.StartDeptName = vmOrder.CallDeptName;
+        vmOrder.StartChargeName = vmOrder.CallChargeName;
+        vmOrder.StartAddress = vmOrder.CallAddress;
+        vmOrder.StartDetailAddr = vmOrder.CallDetailAddr;
+        Start_TBoxSearch.Text = vmOrder.CallCustName;
     }
 
     private void TbAllTo도착지(TbAllWith tbAllWith)
@@ -454,17 +350,17 @@ public partial class Order_ReceiptWnd : Window
     private void 의뢰자CopyTo도착지()
     {
         // 의뢰자 데이터를 도착지로 복사
-        tbOrderOrg.DestCustCodeK = tbOrderOrg.CallCustCodeK;
-        tbOrderOrg.DestCustCodeE = tbOrderOrg.CallCustCodeE;
-        tbOrderOrg.DestCustName = tbOrderOrg.CallCustName;
-        tbOrderOrg.DestDongBasic = tbOrderOrg.CallDongBasic;
-        tbOrderOrg.DestTelNo = tbOrderOrg.CallTelNo;
-        tbOrderOrg.DestTelNo2 = tbOrderOrg.CallTelNo2;
-        tbOrderOrg.DestDeptName = tbOrderOrg.CallDeptName;
-        tbOrderOrg.DestChargeName = tbOrderOrg.CallChargeName;
-        tbOrderOrg.DestAddress = tbOrderOrg.CallAddress;
-        tbOrderOrg.DestDetailAddr = tbOrderOrg.CallDetailAddr;
-        Dest_TBoxSearch.Text = tbOrderOrg.CallCustName;
+        vmOrder.DestCustCodeK = vmOrder.CallCustCodeK;
+        vmOrder.DestCustCodeE = vmOrder.CallCustCodeE;
+        vmOrder.DestCustName = vmOrder.CallCustName;
+        vmOrder.DestDongBasic = vmOrder.CallDongBasic;
+        vmOrder.DestTelNo = vmOrder.CallTelNo;
+        vmOrder.DestTelNo2 = vmOrder.CallTelNo2;
+        vmOrder.DestDeptName = vmOrder.CallDeptName;
+        vmOrder.DestChargeName = vmOrder.CallChargeName;
+        vmOrder.DestAddress = vmOrder.CallAddress;
+        vmOrder.DestDetailAddr = vmOrder.CallDetailAddr;
+        Dest_TBoxSearch.Text = vmOrder.CallCustName;
     }
     #endregion
 
@@ -498,7 +394,7 @@ public partial class Order_ReceiptWnd : Window
     // DataContext 바인딩으로 대부분 자동 표시, 바인딩 안된 필드만 수동 설정
     private void TbOrderOrgToUiData()
     {
-        if (tbOrderOrg == null) return;
+        if (vmOrder == null) return;
 
         // 1. Header (KeyCode 표시)
         SetHeaderInfoToUI();
@@ -521,18 +417,18 @@ public partial class Order_ReceiptWnd : Window
     // Header 정보 로드
     private void SetHeaderInfoToUI()
     {
-        TBlkSeqNo.Text = tbOrderOrg.KeyCode.ToString();
+        TBlkSeqNo.Text = vmOrder.KeyCode.ToString();
     }
 
     // 예약 정보 로드
     private void SetReserveInfoToUI()
     {
-        Debug.WriteLine($"[로드] Reserve={tbOrderOrg.Reserve}, DtReserve={tbOrderOrg.DtReserve}, BreakMin={tbOrderOrg.ReserveBreakMinute}");
-        ChkBoxReserve.DataContext = tbOrderOrg; // 바인딩 연결
-        if (tbOrderOrg.Reserve)
+        Debug.WriteLine($"[로드] Reserve={vmOrder.Reserve}, DtReserve={vmOrder.DtReserve}, BreakMin={vmOrder.ReserveBreakMinute}");
+        ChkBoxReserve.DataContext = vmOrder; // 바인딩 연결
+        if (vmOrder.Reserve)
         {
-            DtPickerReserve.Value = tbOrderOrg.DtReserve;
-            TBoxReserveBreakMin.Text = tbOrderOrg.ReserveBreakMinute.ToString();
+            DtPickerReserve.Value = vmOrder.DtReserve;
+            TBoxReserveBreakMin.Text = vmOrder.ReserveBreakMinute.ToString();
             DtPickerReserve.IsEnabled = true;
             TBoxReserveBreakMin.IsEnabled = true;
         }
@@ -546,21 +442,21 @@ public partial class Order_ReceiptWnd : Window
     // 차량/배송 타입 정보 로드
     private void SetVehicleInfoToUI()
     {
-        SetFeeTypeToUI(tbOrderOrg.FeeType);
-        SetCarTypeToUI(tbOrderOrg.MovilityFlag);
-        SetDeliverFlagToUI(tbOrderOrg.DeliverFlag);
+        SetFeeTypeToUI(vmOrder.FeeType);
+        SetCarTypeToUI(vmOrder.MovilityFlag);
+        SetDeliverFlagToUI(vmOrder.DeliverFlag);
     }
 
     // 요금 정보 로드
     private void SetFeeInfoToUI()
     {
-        TBox_FeeBasic.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeBasic);
-        TBox_FeePlus.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeePlus);
-        TBox_FeeMinus.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeMinus);
-        TBox_FeeConn.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeConn);
-        TBox_FeeCharge.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeCommi);
-        TBox_FeeDriver.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeDriver);
-        TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(tbOrderOrg.FeeTotal);
+        TBox_FeeBasic.Text = StdConvert.IntToStringWonFormat(vmOrder.FeeBasic);
+        TBox_FeePlus.Text = StdConvert.IntToStringWonFormat(vmOrder.FeePlus);
+        TBox_FeeMinus.Text = StdConvert.IntToStringWonFormat(vmOrder.FeeMinus);
+        TBox_FeeConn.Text = StdConvert.IntToStringWonFormat(vmOrder.FeeConn);
+        TBox_FeeCharge.Text = StdConvert.IntToStringWonFormat(vmOrder.FeeCommi);
+        TBox_FeeDriver.Text = StdConvert.IntToStringWonFormat(vmOrder.FeeDriver);
+        TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(vmOrder.FeeTotal);
     }
 
 
@@ -573,212 +469,212 @@ public partial class Order_ReceiptWnd : Window
 
     //private void MakeCopiedNewTbOrder() // UI데이타 빼고 복사
     //{
-    //    if (tbOrderOrg == null)
+    //    if (vmOrder == null)
     //    {
     //        ErrMsgBox("복사할 테이블이 없읍니다.");
     //        return;
     //    }
 
-    //    tbOrderOrg = new TbOrder();
+    //    vmOrder = new TbOrder();
 
-    //    tbOrderOrg.KeyCode = tbOrderOrg.KeyCode;
-    //    tbOrderOrg.MemberCode = s_CenterCharge.MemberCode;
-    //    tbOrderOrg.CenterCode = s_CenterCharge.CenterCode;
-    //    tbOrderOrg.DtRegist = tbOrderOrg.DtRegist;
-    //    tbOrderOrg.OrderState = tbOrderOrg.OrderState;
-    //    tbOrderOrg.OrderStateOld = tbOrderOrg.OrderStateOld;
-    //    tbOrderOrg.OrderRemarks = tbOrderOrg.OrderRemarks; // UiData
-    //    tbOrderOrg.OrderMemo = tbOrderOrg.OrderMemo; // UiData
-    //    tbOrderOrg.OrderMemoExt = tbOrderOrg.OrderMemoExt; // UiData
-    //    tbOrderOrg.UserCode = tbOrderOrg.UserCode; // 필요 없을것 같음.
-    //    tbOrderOrg.UserName = tbOrderOrg.UserName; // 필요 없을것 같음.
-    //    tbOrderOrg.Updater = s_CenterCharge.Id;
-    //    tbOrderOrg.UpdateDate = DateTime.Now.ToString(StdConst_Var.DTFORMAT_EXCEPT_SEC);
+    //    vmOrder.KeyCode = vmOrder.KeyCode;
+    //    vmOrder.MemberCode = s_CenterCharge.MemberCode;
+    //    vmOrder.CenterCode = s_CenterCharge.CenterCode;
+    //    vmOrder.DtRegist = vmOrder.DtRegist;
+    //    vmOrder.OrderState = vmOrder.OrderState;
+    //    vmOrder.OrderStateOld = vmOrder.OrderStateOld;
+    //    vmOrder.OrderRemarks = vmOrder.OrderRemarks; // UiData
+    //    vmOrder.OrderMemo = vmOrder.OrderMemo; // UiData
+    //    vmOrder.OrderMemoExt = vmOrder.OrderMemoExt; // UiData
+    //    vmOrder.UserCode = vmOrder.UserCode; // 필요 없을것 같음.
+    //    vmOrder.UserName = vmOrder.UserName; // 필요 없을것 같음.
+    //    vmOrder.Updater = s_CenterCharge.Id;
+    //    vmOrder.UpdateDate = DateTime.Now.ToString(StdConst_Var.DTFORMAT_EXCEPT_SEC);
 
-    //    tbOrderOrg.CallCompCode = tbOrderOrg.CallCompCode;
-    //    tbOrderOrg.CallCompName = tbOrderOrg.CallCompName;
-    //    tbOrderOrg.CallCustFrom = tbOrderOrg.CallCustFrom;
-    //    tbOrderOrg.CallCustCodeE = tbOrderOrg.CallCustCodeE;
-    //    tbOrderOrg.CallCustCodeK = CallCustCodeK;
-    //    if (tbOrderOrg.CallCustCodeK <= 0) ErrMsgBox($"의뢰자코드가 0입니다.");
-    //    //tbOrderOrg.CallCustName = ; // UiData
-    //    //tbOrderOrg.CallTelNo = ; // UiData
-    //    //tbOrderOrg.CallTelNo2 = ; // UiData
-    //    //tbOrderOrg.CallDeptName = ; // UiData
-    //    //tbOrderOrg.CallChargeName = ; // UiData
-    //    //tbOrderOrg.CallDongBasic = ; // UiData
-    //    //tbOrderOrg.CallAddress = ; // UiData
-    //    //tbOrderOrg.CallDetailAddr = ; // UiData
-    //    //tbOrderOrg.CallRemarks = ; // UiData
-    //    tbOrderOrg.StartCustCodeE = 0;
-    //    tbOrderOrg.StartCustCodeK = StartCustCodeK;
-    //    //tbOrderOrg.StartCustName = ; // UiData
-    //    //tbOrderOrg.StartTelNo = ; // UiData
-    //    //tbOrderOrg.StartTelNo2 = ; // UiData
-    //    //tbOrderOrg.StartDeptName = ; // UiData
-    //    //tbOrderOrg.StartChargeName = ; // UiData
-    //    //tbOrderOrg.StartDongBasic = ; // UiData
-    //    //tbOrderOrg.StartAddress = ; // UiData
-    //    //tbOrderOrg.StartDetailAddr = ; // UiData
-    //    tbOrderOrg.StartSiDo = tbOrderOrg.StartSiDo; // UiData
-    //    tbOrderOrg.StartGunGu = tbOrderOrg.StartGunGu; // UiData
-    //    tbOrderOrg.StartDongRi = tbOrderOrg.StartDongRi; // UiData
-    //    tbOrderOrg.StartLon = tbOrderOrg.StartLon; // 연구과제
-    //    tbOrderOrg.StartLat = tbOrderOrg.StartLat; // 연구과제
-    //    tbOrderOrg.StartSignImg = tbOrderOrg.StartSignImg; // 연구과제
-    //    tbOrderOrg.StartDtSign = tbOrderOrg.StartDtSign; // 연구과제
-    //    tbOrderOrg.DestCustCodeE = 0;
-    //    tbOrderOrg.DestCustCodeK = DestCustCodeK;
-    //    //tbOrderOrg.DestCustName = ; // UiData
-    //    //tbOrderOrg.DestTelNo = ; // UiData
-    //    //tbOrderOrg.DestTelNo2 = ; // UiData
-    //    //tbOrderOrg.DestDeptName = ; // UiData
-    //    //tbOrderOrg.DestChargeName = ; // UiData
-    //    //tbOrderOrg.DestDongBasic = ; // UiData
-    //    //tbOrderOrg.DestAddress = ; // UiData
-    //    //tbOrderOrg.DestDetailAddr = ; // UiData
-    //    tbOrderOrg.DestSiDo = tbOrderOrg.DestSiDo; // UiData
-    //    tbOrderOrg.DestGunGu = tbOrderOrg.DestGunGu; // UiData
-    //    tbOrderOrg.DestDongRi = tbOrderOrg.DestDongRi; // UiData
-    //    tbOrderOrg.DestLon = tbOrderOrg.DestLon; // 연구과제
-    //    tbOrderOrg.DestLat = tbOrderOrg.DestLat; // 연구과제
-    //    tbOrderOrg.DestSignImg = tbOrderOrg.DestSignImg; // 연구과제
-    //    tbOrderOrg.DestDtSign = tbOrderOrg.DestDtSign; // 연구과제
-    //    tbOrderOrg.DtReserve = tbOrderOrg.DtReserve; // UiData
-    //    tbOrderOrg.ReserveBreakMinute = tbOrderOrg.ReserveBreakMinute; // UiData
-    //    tbOrderOrg.FeeBasic = tbOrderOrg.FeeBasic; // UiData
-    //    tbOrderOrg.FeePlus = tbOrderOrg.FeePlus; // UiData
-    //    tbOrderOrg.FeeMinus = tbOrderOrg.FeeMinus; // UiData
-    //    tbOrderOrg.FeeConn = tbOrderOrg.FeeConn; // UiData
-    //    tbOrderOrg.FeeDriver = tbOrderOrg.FeeDriver; // UiData
-    //    tbOrderOrg.FeeCharge = tbOrderOrg.FeeCharge; // UiData
-    //    tbOrderOrg.FeeTotal = tbOrderOrg.FeeTotal; // UiData
-    //    tbOrderOrg.FeeType = tbOrderOrg.FeeType; // UiData
-    //    tbOrderOrg.CarType = tbOrderOrg.CarType; // UiData
-    //    tbOrderOrg.CarWeight = tbOrderOrg.CarWeight; // UiData
-    //    tbOrderOrg.TruckDetail = tbOrderOrg.TruckDetail; // UiData
-    //    tbOrderOrg.DeliverType = tbOrderOrg.DeliverType; // UiData
-    //    tbOrderOrg.DriverCode = tbOrderOrg.DriverCode; // UiData
-    //    tbOrderOrg.DriverId = tbOrderOrg.DriverId; // UiData
-    //    tbOrderOrg.DriverName = tbOrderOrg.DriverName; // UiData
-    //    tbOrderOrg.DriverTelNo = tbOrderOrg.DriverTelNo; // UiData
-    //    tbOrderOrg.DriverMemberCode = tbOrderOrg.DriverMemberCode; // UiData
-    //    tbOrderOrg.DriverCenterId = tbOrderOrg.DriverCenterId; // UiData
-    //    tbOrderOrg.DriverCenterName = tbOrderOrg.DriverCenterName; // UiData
-    //    tbOrderOrg.DriverBusinessNo = tbOrderOrg.DriverBusinessNo; // UiData
-    //    tbOrderOrg.Insung1 = tbOrderOrg.Insung1;
-    //    tbOrderOrg.Insung2 = tbOrderOrg.Insung2;
-    //    tbOrderOrg.Cargo24 = tbOrderOrg.Cargo24;
-    //    tbOrderOrg.Onecall = tbOrderOrg.Onecall;
-    //    tbOrderOrg.Share = tbOrderOrg.Share;
-    //    tbOrderOrg.TaxBill = tbOrderOrg.TaxBill;
-    //    tbOrderOrg.ReceiptTime = tbOrderOrg.ReceiptTime;
-    //    tbOrderOrg.AllocTime = tbOrderOrg.AllocTime;
-    //    tbOrderOrg.RunTime = tbOrderOrg.RunTime;
-    //    tbOrderOrg.FinishTime = tbOrderOrg.FinishTime;
+    //    vmOrder.CallCompCode = vmOrder.CallCompCode;
+    //    vmOrder.CallCompName = vmOrder.CallCompName;
+    //    vmOrder.CallCustFrom = vmOrder.CallCustFrom;
+    //    vmOrder.CallCustCodeE = vmOrder.CallCustCodeE;
+    //    vmOrder.CallCustCodeK = CallCustCodeK;
+    //    if (vmOrder.CallCustCodeK <= 0) ErrMsgBox($"의뢰자코드가 0입니다.");
+    //    //vmOrder.CallCustName = ; // UiData
+    //    //vmOrder.CallTelNo = ; // UiData
+    //    //vmOrder.CallTelNo2 = ; // UiData
+    //    //vmOrder.CallDeptName = ; // UiData
+    //    //vmOrder.CallChargeName = ; // UiData
+    //    //vmOrder.CallDongBasic = ; // UiData
+    //    //vmOrder.CallAddress = ; // UiData
+    //    //vmOrder.CallDetailAddr = ; // UiData
+    //    //vmOrder.CallRemarks = ; // UiData
+    //    vmOrder.StartCustCodeE = 0;
+    //    vmOrder.StartCustCodeK = StartCustCodeK;
+    //    //vmOrder.StartCustName = ; // UiData
+    //    //vmOrder.StartTelNo = ; // UiData
+    //    //vmOrder.StartTelNo2 = ; // UiData
+    //    //vmOrder.StartDeptName = ; // UiData
+    //    //vmOrder.StartChargeName = ; // UiData
+    //    //vmOrder.StartDongBasic = ; // UiData
+    //    //vmOrder.StartAddress = ; // UiData
+    //    //vmOrder.StartDetailAddr = ; // UiData
+    //    vmOrder.StartSiDo = vmOrder.StartSiDo; // UiData
+    //    vmOrder.StartGunGu = vmOrder.StartGunGu; // UiData
+    //    vmOrder.StartDongRi = vmOrder.StartDongRi; // UiData
+    //    vmOrder.StartLon = vmOrder.StartLon; // 연구과제
+    //    vmOrder.StartLat = vmOrder.StartLat; // 연구과제
+    //    vmOrder.StartSignImg = vmOrder.StartSignImg; // 연구과제
+    //    vmOrder.StartDtSign = vmOrder.StartDtSign; // 연구과제
+    //    vmOrder.DestCustCodeE = 0;
+    //    vmOrder.DestCustCodeK = DestCustCodeK;
+    //    //vmOrder.DestCustName = ; // UiData
+    //    //vmOrder.DestTelNo = ; // UiData
+    //    //vmOrder.DestTelNo2 = ; // UiData
+    //    //vmOrder.DestDeptName = ; // UiData
+    //    //vmOrder.DestChargeName = ; // UiData
+    //    //vmOrder.DestDongBasic = ; // UiData
+    //    //vmOrder.DestAddress = ; // UiData
+    //    //vmOrder.DestDetailAddr = ; // UiData
+    //    vmOrder.DestSiDo = vmOrder.DestSiDo; // UiData
+    //    vmOrder.DestGunGu = vmOrder.DestGunGu; // UiData
+    //    vmOrder.DestDongRi = vmOrder.DestDongRi; // UiData
+    //    vmOrder.DestLon = vmOrder.DestLon; // 연구과제
+    //    vmOrder.DestLat = vmOrder.DestLat; // 연구과제
+    //    vmOrder.DestSignImg = vmOrder.DestSignImg; // 연구과제
+    //    vmOrder.DestDtSign = vmOrder.DestDtSign; // 연구과제
+    //    vmOrder.DtReserve = vmOrder.DtReserve; // UiData
+    //    vmOrder.ReserveBreakMinute = vmOrder.ReserveBreakMinute; // UiData
+    //    vmOrder.FeeBasic = vmOrder.FeeBasic; // UiData
+    //    vmOrder.FeePlus = vmOrder.FeePlus; // UiData
+    //    vmOrder.FeeMinus = vmOrder.FeeMinus; // UiData
+    //    vmOrder.FeeConn = vmOrder.FeeConn; // UiData
+    //    vmOrder.FeeDriver = vmOrder.FeeDriver; // UiData
+    //    vmOrder.FeeCharge = vmOrder.FeeCharge; // UiData
+    //    vmOrder.FeeTotal = vmOrder.FeeTotal; // UiData
+    //    vmOrder.FeeType = vmOrder.FeeType; // UiData
+    //    vmOrder.CarType = vmOrder.CarType; // UiData
+    //    vmOrder.CarWeight = vmOrder.CarWeight; // UiData
+    //    vmOrder.TruckDetail = vmOrder.TruckDetail; // UiData
+    //    vmOrder.DeliverType = vmOrder.DeliverType; // UiData
+    //    vmOrder.DriverCode = vmOrder.DriverCode; // UiData
+    //    vmOrder.DriverId = vmOrder.DriverId; // UiData
+    //    vmOrder.DriverName = vmOrder.DriverName; // UiData
+    //    vmOrder.DriverTelNo = vmOrder.DriverTelNo; // UiData
+    //    vmOrder.DriverMemberCode = vmOrder.DriverMemberCode; // UiData
+    //    vmOrder.DriverCenterId = vmOrder.DriverCenterId; // UiData
+    //    vmOrder.DriverCenterName = vmOrder.DriverCenterName; // UiData
+    //    vmOrder.DriverBusinessNo = vmOrder.DriverBusinessNo; // UiData
+    //    vmOrder.Insung1 = vmOrder.Insung1;
+    //    vmOrder.Insung2 = vmOrder.Insung2;
+    //    vmOrder.Cargo24 = vmOrder.Cargo24;
+    //    vmOrder.Onecall = vmOrder.Onecall;
+    //    vmOrder.Share = vmOrder.Share;
+    //    vmOrder.TaxBill = vmOrder.TaxBill;
+    //    vmOrder.ReceiptTime = vmOrder.ReceiptTime;
+    //    vmOrder.AllocTime = vmOrder.AllocTime;
+    //    vmOrder.RunTime = vmOrder.RunTime;
+    //    vmOrder.FinishTime = vmOrder.FinishTime;
     //}
 
     //private int WhereUpdatableChanged()
     //{
     //    // 변경되면 안되는 항목
-    //    if (tbOrderOrg.KeyCode != tbOrderOrg.KeyCode) return -1;
-    //    if (tbOrderOrg.MemberCode != tbOrderOrg.MemberCode) return -3;
-    //    if (tbOrderOrg.CenterCode != tbOrderOrg.CenterCode) return -4;
-    //    //if (tbOrderOrg.DtRegOrder != tbOrderOrg.DtRegOrder) return -5;
-    //    if (tbOrderOrg.OrderStateOld != tbOrderOrg.OrderStateOld) return -7;
+    //    if (vmOrder.KeyCode != vmOrder.KeyCode) return -1;
+    //    if (vmOrder.MemberCode != vmOrder.MemberCode) return -3;
+    //    if (vmOrder.CenterCode != vmOrder.CenterCode) return -4;
+    //    //if (vmOrder.DtRegOrder != vmOrder.DtRegOrder) return -5;
+    //    if (vmOrder.OrderStateOld != vmOrder.OrderStateOld) return -7;
 
     //    // 변경되면 인정되는 항목
-    //    if (tbOrderOrg.OrderRemarks != tbOrderOrg.OrderRemarks) return 1;
-    //    if (tbOrderOrg.OrderMemo != tbOrderOrg.OrderMemo) return 2;
-    //    if (tbOrderOrg.OrderMemoExt != tbOrderOrg.OrderMemoExt) return 3;
-    //    if (tbOrderOrg.UserCode != tbOrderOrg.UserCode) return 4;
-    //    if (tbOrderOrg.OrderState != tbOrderOrg.OrderState) return 5;
-    //    //if (tbOrderOrg.UserName != tbOrderOrg.UserName) return 5;
-    //    //if (tbOrderOrg.Updater != tbOrderOrg.Updater) return true; // UiData
-    //    //if (tbOrderOrg.UpdateDate != tbOrderOrg.UpdateDate) return true; // UiData
-    //    if (tbOrderOrg.CallCustCodeE != tbOrderOrg.CallCustCodeE) return 6;
-    //    if (tbOrderOrg.CallCustCodeK != tbOrderOrg.CallCustCodeK) return 7;
-    //    if (tbOrderOrg.CallCustName != tbOrderOrg.CallCustName) return 8;
-    //    //MsgBox($"{tbOrderOrg.CallTelNo}, {tbOrderOrg.CallTelNo}"); // Test
-    //    if (tbOrderOrg.CallTelNo != tbOrderOrg.CallTelNo) return 9;
-    //    if (tbOrderOrg.CallTelNo2 != tbOrderOrg.CallTelNo2) return 10;
-    //    if (tbOrderOrg.CallDeptName != tbOrderOrg.CallDeptName) return 11;
-    //    if (tbOrderOrg.CallChargeName != tbOrderOrg.CallChargeName) return 12;
-    //    if (tbOrderOrg.CallDongBasic != tbOrderOrg.CallDongBasic) return 13;
-    //    if (tbOrderOrg.CallAddress != tbOrderOrg.CallAddress) return 14;
-    //    if (tbOrderOrg.CallDetailAddr != tbOrderOrg.CallDetailAddr) return 15;
-    //    if (tbOrderOrg.CallRemarks != tbOrderOrg.CallRemarks) return 16;
-    //    if (tbOrderOrg.StartCustCodeE != tbOrderOrg.StartCustCodeE) return 17;
-    //    if (tbOrderOrg.StartCustCodeK != tbOrderOrg.StartCustCodeK) return 18;
-    //    if (tbOrderOrg.StartCustName != tbOrderOrg.StartCustName) return 19;
-    //    if (tbOrderOrg.StartTelNo != tbOrderOrg.StartTelNo) return 20;
-    //    if (tbOrderOrg.StartTelNo2 != tbOrderOrg.StartTelNo2) return 21;
-    //    if (tbOrderOrg.StartDeptName != tbOrderOrg.StartDeptName) return 22;
-    //    if (tbOrderOrg.StartChargeName != tbOrderOrg.StartChargeName) return 23;
-    //    if (tbOrderOrg.StartDongBasic != tbOrderOrg.StartDongBasic) return 24;
-    //    if (tbOrderOrg.StartAddress != tbOrderOrg.StartAddress) return 25;
-    //    if (tbOrderOrg.StartDetailAddr != tbOrderOrg.StartDetailAddr) return 26;
-    //    //MsgBox($"/{tbOrderOrg.StartSiDo}:{tbOrderOrg.StartSiDo.Length}/<->/{tbOrderOrg.StartSiDo}:{tbOrderOrg.StartSiDo.Length}/"); // Test
-    //    if (tbOrderOrg.StartSiDo != tbOrderOrg.StartSiDo) return 27;
-    //    if (tbOrderOrg.StartGunGu != tbOrderOrg.StartGunGu) return 28;
-    //    if (tbOrderOrg.StartDongRi != tbOrderOrg.StartDongRi) return 29;
-    //    if (tbOrderOrg.StartLon != tbOrderOrg.StartLon) return 30;
-    //    if (tbOrderOrg.StartLat != tbOrderOrg.StartLat) return 31;
-    //    if (tbOrderOrg.StartSignImg != tbOrderOrg.StartSignImg) return 32;
-    //    if (tbOrderOrg.StartDtSign != tbOrderOrg.StartDtSign) return 33;
-    //    if (tbOrderOrg.DestCustCodeE != tbOrderOrg.DestCustCodeE) return 34;
-    //    if (tbOrderOrg.DestCustCodeK != tbOrderOrg.DestCustCodeK) return 35;
-    //    if (tbOrderOrg.DestCustName != tbOrderOrg.DestCustName) return 36;
-    //    if (tbOrderOrg.DestTelNo != tbOrderOrg.DestTelNo) return 37;
-    //    if (tbOrderOrg.DestTelNo2 != tbOrderOrg.DestTelNo2) return 38;
-    //    if (tbOrderOrg.DestDeptName != tbOrderOrg.DestDeptName) return 39;
-    //    if (tbOrderOrg.DestChargeName != tbOrderOrg.DestChargeName) return 40;
-    //    if (tbOrderOrg.DestDongBasic != tbOrderOrg.DestDongBasic) return 41;
-    //    if (tbOrderOrg.DestAddress != tbOrderOrg.DestAddress) return 42;
-    //    if (tbOrderOrg.DestDetailAddr != tbOrderOrg.DestDetailAddr) return 43;
-    //    if (tbOrderOrg.DestSiDo != tbOrderOrg.DestSiDo) return 44;
-    //    if (tbOrderOrg.DestGunGu != tbOrderOrg.DestGunGu) return 45;
-    //    if (tbOrderOrg.DestDongRi != tbOrderOrg.DestDongRi) return 46;
-    //    if (tbOrderOrg.DestLon != tbOrderOrg.DestLon) return 47;
-    //    if (tbOrderOrg.DestLat != tbOrderOrg.DestLat) return 48;
-    //    if (tbOrderOrg.DestSignImg != tbOrderOrg.DestSignImg) return 49;
-    //    if (tbOrderOrg.DestDtSign != tbOrderOrg.DestDtSign) return 50;
-    //    if (tbOrderOrg.DtReserve != tbOrderOrg.DtReserve) return 51;
-    //    if (tbOrderOrg.ReserveBreakMinute != tbOrderOrg.ReserveBreakMinute) return 52;
-    //    if (tbOrderOrg.FeeBasic != tbOrderOrg.FeeBasic) return 53;
-    //    if (tbOrderOrg.FeePlus != tbOrderOrg.FeePlus) return 54;
-    //    if (tbOrderOrg.FeeMinus != tbOrderOrg.FeeMinus) return 55;
-    //    if (tbOrderOrg.FeeConn != tbOrderOrg.FeeConn) return 56;
-    //    if (tbOrderOrg.FeeDriver != tbOrderOrg.FeeDriver) return 57;
-    //    if (tbOrderOrg.FeeCharge != tbOrderOrg.FeeCharge) return 58;
-    //    if (tbOrderOrg.FeeTotal != tbOrderOrg.FeeTotal) return 59;
-    //    if (tbOrderOrg.FeeType != tbOrderOrg.FeeType) return 60;
-    //    if (tbOrderOrg.CarType != tbOrderOrg.CarType) return 61;
-    //    if (tbOrderOrg.CarWeight != tbOrderOrg.CarWeight) return 62;
-    //    if (tbOrderOrg.TruckDetail != tbOrderOrg.TruckDetail) return 63;
-    //    if (tbOrderOrg.DeliverType != tbOrderOrg.DeliverType) return 64;
-    //    if (tbOrderOrg.DriverCode != tbOrderOrg.DriverCode) return 65;
-    //    if (tbOrderOrg.DriverId != tbOrderOrg.DriverId) return 66;
-    //    if (tbOrderOrg.DriverName != tbOrderOrg.DriverName) return 67;
-    //    if (tbOrderOrg.DriverTelNo != tbOrderOrg.DriverTelNo) return 68;
-    //    if (tbOrderOrg.DriverMemberCode != tbOrderOrg.DriverMemberCode) return 69;
-    //    if (tbOrderOrg.DriverCenterId != tbOrderOrg.DriverCenterId) return 70;
-    //    if (tbOrderOrg.DriverCenterName != tbOrderOrg.DriverCenterName) return 71;
-    //    if (tbOrderOrg.DriverBusinessNo != tbOrderOrg.DriverBusinessNo) return 72;
-    //    if (tbOrderOrg.Insung1 != tbOrderOrg.Insung1) return 74;
-    //    if (tbOrderOrg.Insung2 != tbOrderOrg.Insung2) return 75;
-    //    if (tbOrderOrg.Cargo24 != tbOrderOrg.Cargo24) return 76;
-    //    if (tbOrderOrg.Onecall != tbOrderOrg.Onecall) return 77;
-    //    if (tbOrderOrg.Share != tbOrderOrg.Share) return 78;
-    //    if (tbOrderOrg.TaxBill != tbOrderOrg.TaxBill) return 79;
-    //    if (tbOrderOrg.ReceiptTime != tbOrderOrg.ReceiptTime) return 80;
-    //    if (tbOrderOrg.AllocTime != tbOrderOrg.AllocTime) return 81;
-    //    if (tbOrderOrg.RunTime != tbOrderOrg.RunTime) return 82;
-    //    if (tbOrderOrg.FinishTime != tbOrderOrg.FinishTime) return 83;
+    //    if (vmOrder.OrderRemarks != vmOrder.OrderRemarks) return 1;
+    //    if (vmOrder.OrderMemo != vmOrder.OrderMemo) return 2;
+    //    if (vmOrder.OrderMemoExt != vmOrder.OrderMemoExt) return 3;
+    //    if (vmOrder.UserCode != vmOrder.UserCode) return 4;
+    //    if (vmOrder.OrderState != vmOrder.OrderState) return 5;
+    //    //if (vmOrder.UserName != vmOrder.UserName) return 5;
+    //    //if (vmOrder.Updater != vmOrder.Updater) return true; // UiData
+    //    //if (vmOrder.UpdateDate != vmOrder.UpdateDate) return true; // UiData
+    //    if (vmOrder.CallCustCodeE != vmOrder.CallCustCodeE) return 6;
+    //    if (vmOrder.CallCustCodeK != vmOrder.CallCustCodeK) return 7;
+    //    if (vmOrder.CallCustName != vmOrder.CallCustName) return 8;
+    //    //MsgBox($"{vmOrder.CallTelNo}, {vmOrder.CallTelNo}"); // Test
+    //    if (vmOrder.CallTelNo != vmOrder.CallTelNo) return 9;
+    //    if (vmOrder.CallTelNo2 != vmOrder.CallTelNo2) return 10;
+    //    if (vmOrder.CallDeptName != vmOrder.CallDeptName) return 11;
+    //    if (vmOrder.CallChargeName != vmOrder.CallChargeName) return 12;
+    //    if (vmOrder.CallDongBasic != vmOrder.CallDongBasic) return 13;
+    //    if (vmOrder.CallAddress != vmOrder.CallAddress) return 14;
+    //    if (vmOrder.CallDetailAddr != vmOrder.CallDetailAddr) return 15;
+    //    if (vmOrder.CallRemarks != vmOrder.CallRemarks) return 16;
+    //    if (vmOrder.StartCustCodeE != vmOrder.StartCustCodeE) return 17;
+    //    if (vmOrder.StartCustCodeK != vmOrder.StartCustCodeK) return 18;
+    //    if (vmOrder.StartCustName != vmOrder.StartCustName) return 19;
+    //    if (vmOrder.StartTelNo != vmOrder.StartTelNo) return 20;
+    //    if (vmOrder.StartTelNo2 != vmOrder.StartTelNo2) return 21;
+    //    if (vmOrder.StartDeptName != vmOrder.StartDeptName) return 22;
+    //    if (vmOrder.StartChargeName != vmOrder.StartChargeName) return 23;
+    //    if (vmOrder.StartDongBasic != vmOrder.StartDongBasic) return 24;
+    //    if (vmOrder.StartAddress != vmOrder.StartAddress) return 25;
+    //    if (vmOrder.StartDetailAddr != vmOrder.StartDetailAddr) return 26;
+    //    //MsgBox($"/{vmOrder.StartSiDo}:{vmOrder.StartSiDo.Length}/<->/{vmOrder.StartSiDo}:{vmOrder.StartSiDo.Length}/"); // Test
+    //    if (vmOrder.StartSiDo != vmOrder.StartSiDo) return 27;
+    //    if (vmOrder.StartGunGu != vmOrder.StartGunGu) return 28;
+    //    if (vmOrder.StartDongRi != vmOrder.StartDongRi) return 29;
+    //    if (vmOrder.StartLon != vmOrder.StartLon) return 30;
+    //    if (vmOrder.StartLat != vmOrder.StartLat) return 31;
+    //    if (vmOrder.StartSignImg != vmOrder.StartSignImg) return 32;
+    //    if (vmOrder.StartDtSign != vmOrder.StartDtSign) return 33;
+    //    if (vmOrder.DestCustCodeE != vmOrder.DestCustCodeE) return 34;
+    //    if (vmOrder.DestCustCodeK != vmOrder.DestCustCodeK) return 35;
+    //    if (vmOrder.DestCustName != vmOrder.DestCustName) return 36;
+    //    if (vmOrder.DestTelNo != vmOrder.DestTelNo) return 37;
+    //    if (vmOrder.DestTelNo2 != vmOrder.DestTelNo2) return 38;
+    //    if (vmOrder.DestDeptName != vmOrder.DestDeptName) return 39;
+    //    if (vmOrder.DestChargeName != vmOrder.DestChargeName) return 40;
+    //    if (vmOrder.DestDongBasic != vmOrder.DestDongBasic) return 41;
+    //    if (vmOrder.DestAddress != vmOrder.DestAddress) return 42;
+    //    if (vmOrder.DestDetailAddr != vmOrder.DestDetailAddr) return 43;
+    //    if (vmOrder.DestSiDo != vmOrder.DestSiDo) return 44;
+    //    if (vmOrder.DestGunGu != vmOrder.DestGunGu) return 45;
+    //    if (vmOrder.DestDongRi != vmOrder.DestDongRi) return 46;
+    //    if (vmOrder.DestLon != vmOrder.DestLon) return 47;
+    //    if (vmOrder.DestLat != vmOrder.DestLat) return 48;
+    //    if (vmOrder.DestSignImg != vmOrder.DestSignImg) return 49;
+    //    if (vmOrder.DestDtSign != vmOrder.DestDtSign) return 50;
+    //    if (vmOrder.DtReserve != vmOrder.DtReserve) return 51;
+    //    if (vmOrder.ReserveBreakMinute != vmOrder.ReserveBreakMinute) return 52;
+    //    if (vmOrder.FeeBasic != vmOrder.FeeBasic) return 53;
+    //    if (vmOrder.FeePlus != vmOrder.FeePlus) return 54;
+    //    if (vmOrder.FeeMinus != vmOrder.FeeMinus) return 55;
+    //    if (vmOrder.FeeConn != vmOrder.FeeConn) return 56;
+    //    if (vmOrder.FeeDriver != vmOrder.FeeDriver) return 57;
+    //    if (vmOrder.FeeCharge != vmOrder.FeeCharge) return 58;
+    //    if (vmOrder.FeeTotal != vmOrder.FeeTotal) return 59;
+    //    if (vmOrder.FeeType != vmOrder.FeeType) return 60;
+    //    if (vmOrder.CarType != vmOrder.CarType) return 61;
+    //    if (vmOrder.CarWeight != vmOrder.CarWeight) return 62;
+    //    if (vmOrder.TruckDetail != vmOrder.TruckDetail) return 63;
+    //    if (vmOrder.DeliverType != vmOrder.DeliverType) return 64;
+    //    if (vmOrder.DriverCode != vmOrder.DriverCode) return 65;
+    //    if (vmOrder.DriverId != vmOrder.DriverId) return 66;
+    //    if (vmOrder.DriverName != vmOrder.DriverName) return 67;
+    //    if (vmOrder.DriverTelNo != vmOrder.DriverTelNo) return 68;
+    //    if (vmOrder.DriverMemberCode != vmOrder.DriverMemberCode) return 69;
+    //    if (vmOrder.DriverCenterId != vmOrder.DriverCenterId) return 70;
+    //    if (vmOrder.DriverCenterName != vmOrder.DriverCenterName) return 71;
+    //    if (vmOrder.DriverBusinessNo != vmOrder.DriverBusinessNo) return 72;
+    //    if (vmOrder.Insung1 != vmOrder.Insung1) return 74;
+    //    if (vmOrder.Insung2 != vmOrder.Insung2) return 75;
+    //    if (vmOrder.Cargo24 != vmOrder.Cargo24) return 76;
+    //    if (vmOrder.Onecall != vmOrder.Onecall) return 77;
+    //    if (vmOrder.Share != vmOrder.Share) return 78;
+    //    if (vmOrder.TaxBill != vmOrder.TaxBill) return 79;
+    //    if (vmOrder.ReceiptTime != vmOrder.ReceiptTime) return 80;
+    //    if (vmOrder.AllocTime != vmOrder.AllocTime) return 81;
+    //    if (vmOrder.RunTime != vmOrder.RunTime) return 82;
+    //    if (vmOrder.FinishTime != vmOrder.FinishTime) return 83;
 
-    //    if (tbOrderOrg.CallCustFrom != tbOrderOrg.CallCustFrom) return 84;
-    //    if (tbOrderOrg.CallCompCode != tbOrderOrg.CallCompCode) return 85;
-    //    if (tbOrderOrg.CallCompName != tbOrderOrg.CallCompName) return 86;
+    //    if (vmOrder.CallCustFrom != vmOrder.CallCustFrom) return 84;
+    //    if (vmOrder.CallCompCode != vmOrder.CallCompCode) return 85;
+    //    if (vmOrder.CallCompName != vmOrder.CallCompName) return 86;
 
     //    return 0;
     //}
@@ -792,16 +688,16 @@ public partial class Order_ReceiptWnd : Window
 
         SetLocationDataToUi(tbCustMain, "의뢰자");
 
-        // 의뢰자 전용 필드 설정 - tbOrderOrg 직접 사용
-        tbOrderOrg.CallCustFrom = tbCustMain.BeforeBelong;
-        tbOrderOrg.CallCompCode = tbCustMain.CompCode;
+        // 의뢰자 전용 필드 설정 - vmOrder 직접 사용
+        vmOrder.CallCustFrom = tbCustMain.BeforeBelong;
+        vmOrder.CallCompCode = tbCustMain.CompCode;
         if (tbCompany == null)
         {
-            tbOrderOrg.CallCompName = "";
+            vmOrder.CallCompName = "";
         }
         else
         {
-            tbOrderOrg.CallCompName = tbCompany.CompName;
+            vmOrder.CallCompName = tbCompany.CompName;
             SetFeeTypeToUI(tbCompany.TradeType);
         }
 
@@ -933,55 +829,55 @@ public partial class Order_ReceiptWnd : Window
     //    }
     //}
 
-    // LocationData → tbOrderOrg 설정 (공통 헬퍼) - TbCustMain 버전
+    // LocationData → vmOrder 설정 (공통 헬퍼) - TbCustMain 버전
     // DataContext 바인딩으로 UI 자동 업데이트
     private void SetLocationDataToUi(TbCustMain tbCustMain, string sWhere)
     {
         switch (sWhere)
         {
             case "의뢰자":
-                tbOrderOrg.CallCustCodeK = tbCustMain.KeyCode;
-                tbOrderOrg.CallCustCodeE = StdConvert.NullableLongToLong(tbCustMain.BeforeCustKey);
-                tbOrderOrg.CallCustName = tbCustMain.CustName;
-                tbOrderOrg.CallDongBasic = tbCustMain.DongBasic;
-                tbOrderOrg.CallTelNo = tbCustMain.TelNo1;
-                tbOrderOrg.CallTelNo2 = tbCustMain.TelNo2;
-                tbOrderOrg.CallDeptName = tbCustMain.DeptName;
-                tbOrderOrg.CallChargeName = tbCustMain.ChargeName;
-                tbOrderOrg.CallAddress = tbCustMain.DongAddr;
-                tbOrderOrg.CallDetailAddr = tbCustMain.DetailAddr;
-                tbOrderOrg.CallRemarks = tbCustMain.Remarks;
+                vmOrder.CallCustCodeK = tbCustMain.KeyCode;
+                vmOrder.CallCustCodeE = StdConvert.NullableLongToLong(tbCustMain.BeforeCustKey);
+                vmOrder.CallCustName = tbCustMain.CustName;
+                vmOrder.CallDongBasic = tbCustMain.DongBasic;
+                vmOrder.CallTelNo = tbCustMain.TelNo1;
+                vmOrder.CallTelNo2 = tbCustMain.TelNo2;
+                vmOrder.CallDeptName = tbCustMain.DeptName;
+                vmOrder.CallChargeName = tbCustMain.ChargeName;
+                vmOrder.CallAddress = tbCustMain.DongAddr;
+                vmOrder.CallDetailAddr = tbCustMain.DetailAddr;
+                vmOrder.CallRemarks = tbCustMain.Remarks;
                 break;
             case "출발지":
-                tbOrderOrg.StartCustCodeK = tbCustMain.KeyCode;
-                tbOrderOrg.StartCustCodeE = StdConvert.NullableLongToLong(tbCustMain.BeforeCustKey);
-                tbOrderOrg.StartCustName = tbCustMain.CustName;
-                tbOrderOrg.StartDongBasic = tbCustMain.DongBasic;
-                tbOrderOrg.StartTelNo = tbCustMain.TelNo1;
-                tbOrderOrg.StartTelNo2 = tbCustMain.TelNo2;
-                tbOrderOrg.StartDeptName = tbCustMain.DeptName;
-                tbOrderOrg.StartChargeName = tbCustMain.ChargeName;
-                tbOrderOrg.StartAddress = tbCustMain.DongAddr;
-                tbOrderOrg.StartDetailAddr = tbCustMain.DetailAddr;
+                vmOrder.StartCustCodeK = tbCustMain.KeyCode;
+                vmOrder.StartCustCodeE = StdConvert.NullableLongToLong(tbCustMain.BeforeCustKey);
+                vmOrder.StartCustName = tbCustMain.CustName;
+                vmOrder.StartDongBasic = tbCustMain.DongBasic;
+                vmOrder.StartTelNo = tbCustMain.TelNo1;
+                vmOrder.StartTelNo2 = tbCustMain.TelNo2;
+                vmOrder.StartDeptName = tbCustMain.DeptName;
+                vmOrder.StartChargeName = tbCustMain.ChargeName;
+                vmOrder.StartAddress = tbCustMain.DongAddr;
+                vmOrder.StartDetailAddr = tbCustMain.DetailAddr;
                 break;
             case "도착지":
-                tbOrderOrg.DestCustCodeK = tbCustMain.KeyCode;
-                tbOrderOrg.DestCustCodeE = StdConvert.NullableLongToLong(tbCustMain.BeforeCustKey);
-                tbOrderOrg.DestCustName = tbCustMain.CustName;
-                tbOrderOrg.DestDongBasic = tbCustMain.DongBasic;
-                tbOrderOrg.DestTelNo = tbCustMain.TelNo1;
-                tbOrderOrg.DestTelNo2 = tbCustMain.TelNo2;
-                tbOrderOrg.DestDeptName = tbCustMain.DeptName;
-                tbOrderOrg.DestChargeName = tbCustMain.ChargeName;
-                tbOrderOrg.DestAddress = tbCustMain.DongAddr;
-                tbOrderOrg.DestDetailAddr = tbCustMain.DetailAddr;
+                vmOrder.DestCustCodeK = tbCustMain.KeyCode;
+                vmOrder.DestCustCodeE = StdConvert.NullableLongToLong(tbCustMain.BeforeCustKey);
+                vmOrder.DestCustName = tbCustMain.CustName;
+                vmOrder.DestDongBasic = tbCustMain.DongBasic;
+                vmOrder.DestTelNo = tbCustMain.TelNo1;
+                vmOrder.DestTelNo2 = tbCustMain.TelNo2;
+                vmOrder.DestDeptName = tbCustMain.DeptName;
+                vmOrder.DestChargeName = tbCustMain.ChargeName;
+                vmOrder.DestAddress = tbCustMain.DongAddr;
+                vmOrder.DestDetailAddr = tbCustMain.DetailAddr;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(sWhere));
         }
     }
 
-    // TbOrder → UI 로드 (오버로드) - 로드 시 tbOrderOrg 데이터를 UI에 표시
+    // TbOrder → UI 로드 (오버로드) - 로드 시 vmOrder 데이터를 UI에 표시
     private void SetLocationDataToUi(TbOrder tb, string sWhere)
     {
         (TextBox tboxCustName, TextBox tboxDongBasic, TextBox tboxTelNo1, TextBox tboxTelNo2,
@@ -1028,7 +924,7 @@ public partial class Order_ReceiptWnd : Window
                 throw new ArgumentOutOfRangeException(nameof(sWhere));
         }
 
-        // UI에 표시만 (tbOrderOrg 값은 이미 로드됨)
+        // UI에 표시만 (vmOrder 값은 이미 로드됨)
         controls.tboxCustName.Text = custName;
         controls.tboxDongBasic.Text = dongBasic;
         controls.tboxTelNo1.Text = telNo1;

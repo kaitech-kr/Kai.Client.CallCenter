@@ -24,11 +24,7 @@ namespace Kai.Client.CallCenter.Windows;
 public partial class Order_ReceiptWnd : Window
 {
     #region Variables
-    //public VmOrder_StatusPage_Order m_VmOrder_StatusPage_Order = null;
-    private TbOrder tbOrderOrg = null;  // 현재 주문 데이터 (UI와 바인딩)
-    private TbOrder tbOrderBK = null;   // 백업용 (로드 시 복사, 저장 시 비교용)
-
-    // CodeK, CodeE 필드는 tbOrderOrg에서 직접 관리
+    private VmOrder_StatusPage_Order vmOrder = null;  // ViewModel (UI와 바인딩)
 
     public int FeeBasic = 0; // 기본요금
     public int FeePlus = 0; // 추가요금
@@ -51,19 +47,19 @@ public partial class Order_ReceiptWnd : Window
         // 모드에 따라 버튼그룹 보이기
         if (tbOrder == null) // 신규 등록 모드
         {
-            tbOrderOrg = new TbOrder(); // 빈 객체 생성 (CodeK 등 직접 저장용)
+            vmOrder = new VmOrder_StatusPage_Order(); // 빈 ViewModel 생성
             ColumnRegist.Visibility = Visibility.Visible;
             ColumnModify.Visibility = Visibility.Collapsed;
         }
         else // 수정 모드 - 고객정보도 같이 와야함
         {
-            tbOrderOrg = tbOrder;
+            vmOrder = new VmOrder_StatusPage_Order(tbOrder); // 기존 데이터로 ViewModel 생성
             ColumnRegist.Visibility = Visibility.Collapsed;
             ColumnModify.Visibility = Visibility.Visible;
         }
 
         // DataContext 설정 (XAML 바인딩용 - 전체 Window)
-        this.DataContext = tbOrderOrg;
+        this.DataContext = vmOrder;
     }
 
     public Order_ReceiptWnd(string sTelNo) // 전화에 의한 오더등록
@@ -73,12 +69,12 @@ public partial class Order_ReceiptWnd : Window
         TBoxHeader_Search.Text = sTelNo;
 
         // 신규 등록 모드
-        tbOrderOrg = new TbOrder(); // 빈 객체 생성 (CodeK 등 직접 저장용)
+        vmOrder = new VmOrder_StatusPage_Order(); // 빈 ViewModel 생성
         ColumnRegist.Visibility = Visibility.Visible;
         ColumnModify.Visibility = Visibility.Collapsed;
 
         // DataContext 설정 (XAML 바인딩용 - 전체 Window)
-        this.DataContext = tbOrderOrg;
+        this.DataContext = vmOrder;
 
         ChkBox_편도.IsChecked = true;
     }
@@ -87,11 +83,10 @@ public partial class Order_ReceiptWnd : Window
     {
         TBoxHeader_Search.Focus();
 
-        if (tbOrderOrg.KeyCode > 0) // 업데이트 모드면 오더정보 로드 (KeyCode가 있으면 기존 오더)
+        if (vmOrder.KeyCode > 0) // 업데이트 모드면 오더정보 로드 (KeyCode가 있으면 기존 오더)
         {
-            tbOrderBK = NetUtil.DeepCopyFrom(tbOrderOrg); // 백업 (저장 시 비교용)
             TbOrderOrgToUiData();
-            의뢰자정보Mode(tbOrderOrg.CallCustCodeK);
+            의뢰자정보Mode(vmOrder.CallCustCodeK);
         }
         else // 신규 등록 모드
         {
@@ -179,19 +174,19 @@ public partial class Order_ReceiptWnd : Window
     // 대기
     private void BtnMod_Wait_Click(object sender, RoutedEventArgs e)
     {
-        if (tbOrderOrg != null) tbOrderOrg.OrderState = "대기";
+        if (vmOrder != null) vmOrder.OrderState = "대기";
     }
 
     // 주문취소
     private void BtnMod_Cancel_Click(object sender, RoutedEventArgs e)
     {
-        if (tbOrderOrg != null) tbOrderOrg.OrderState = "취소";
+        if (vmOrder != null) vmOrder.OrderState = "취소";
     }
 
     // 접수상태
     private void BtnMod_Receipt_Click(object sender, RoutedEventArgs e)
     {
-        if (tbOrderOrg != null) tbOrderOrg.OrderState = "접수";
+        if (vmOrder != null) vmOrder.OrderState = "접수";
     }
 
     // 저장
@@ -216,9 +211,9 @@ public partial class Order_ReceiptWnd : Window
     // 고객수정 버튼
     private void BtnCommon_CustUpdate_Click(object sender, RoutedEventArgs e)
     {
-        if (tbOrderOrg.CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
+        if (vmOrder.CallCustCodeK == 0) return; // 의뢰자 정보가 없으면 리턴
 
-        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(tbOrderOrg.CallCustCodeK);
+        CustMain_RegEditWnd wnd = new CustMain_RegEditWnd(vmOrder.CallCustCodeK);
         bool result = (bool)SafeShowDialog.WithMainWindowToOwner(wnd, this);
         if (!result) return;
 
@@ -365,17 +360,17 @@ public partial class Order_ReceiptWnd : Window
     // 출발지 지우기
     private void Start_BtnErase_Click(object sender, RoutedEventArgs e)
     {
-        // tbOrderOrg에 직접 설정 (바인딩으로 UI 자동 업데이트)
-        tbOrderOrg.StartCustCodeE = 0;
-        tbOrderOrg.StartCustCodeK = 0;
-        tbOrderOrg.StartCustName = "";
-        tbOrderOrg.StartChargeName = "";
-        tbOrderOrg.StartDeptName = "";
-        tbOrderOrg.StartDongBasic = "";
-        tbOrderOrg.StartTelNo = "";
-        tbOrderOrg.StartTelNo2 = "";
-        tbOrderOrg.StartAddress = "";
-        tbOrderOrg.StartDetailAddr = "";
+        // vmOrder에 직접 설정 (바인딩으로 UI 자동 업데이트)
+        vmOrder.StartCustCodeE = 0;
+        vmOrder.StartCustCodeK = 0;
+        vmOrder.StartCustName = "";
+        vmOrder.StartChargeName = "";
+        vmOrder.StartDeptName = "";
+        vmOrder.StartDongBasic = "";
+        vmOrder.StartTelNo = "";
+        vmOrder.StartTelNo2 = "";
+        vmOrder.StartAddress = "";
+        vmOrder.StartDetailAddr = "";
     }
 
     // 출발지 거래처등록
@@ -388,40 +383,40 @@ public partial class Order_ReceiptWnd : Window
     private void StartDest_BtnSwap_Click(object sender, RoutedEventArgs e)
     {
         // 출발지 보관
-        long startCustCodeK = tbOrderOrg.StartCustCodeK;
-        long startCustCodeE = tbOrderOrg.StartCustCodeE;
-        string startCustName = tbOrderOrg.StartCustName;
-        string startChargeName = tbOrderOrg.StartChargeName;
-        string startDeptName = tbOrderOrg.StartDeptName;
-        string startDongBasic = tbOrderOrg.StartDongBasic;
-        string startTelNo = tbOrderOrg.StartTelNo;
-        string startTelNo2 = tbOrderOrg.StartTelNo2;
-        string startAddress = tbOrderOrg.StartAddress;
-        string startDetailAddr = tbOrderOrg.StartDetailAddr;
+        long startCustCodeK = vmOrder.StartCustCodeK;
+        long startCustCodeE = vmOrder.StartCustCodeE;
+        string startCustName = vmOrder.StartCustName;
+        string startChargeName = vmOrder.StartChargeName;
+        string startDeptName = vmOrder.StartDeptName;
+        string startDongBasic = vmOrder.StartDongBasic;
+        string startTelNo = vmOrder.StartTelNo;
+        string startTelNo2 = vmOrder.StartTelNo2;
+        string startAddress = vmOrder.StartAddress;
+        string startDetailAddr = vmOrder.StartDetailAddr;
 
         // 도착지 → 출발지
-        tbOrderOrg.StartCustCodeK = tbOrderOrg.DestCustCodeK;
-        tbOrderOrg.StartCustCodeE = tbOrderOrg.DestCustCodeE;
-        tbOrderOrg.StartCustName = tbOrderOrg.DestCustName;
-        tbOrderOrg.StartChargeName = tbOrderOrg.DestChargeName;
-        tbOrderOrg.StartDeptName = tbOrderOrg.DestDeptName;
-        tbOrderOrg.StartDongBasic = tbOrderOrg.DestDongBasic;
-        tbOrderOrg.StartTelNo = tbOrderOrg.DestTelNo;
-        tbOrderOrg.StartTelNo2 = tbOrderOrg.DestTelNo2;
-        tbOrderOrg.StartAddress = tbOrderOrg.DestAddress;
-        tbOrderOrg.StartDetailAddr = tbOrderOrg.DestDetailAddr;
+        vmOrder.StartCustCodeK = vmOrder.DestCustCodeK;
+        vmOrder.StartCustCodeE = vmOrder.DestCustCodeE;
+        vmOrder.StartCustName = vmOrder.DestCustName;
+        vmOrder.StartChargeName = vmOrder.DestChargeName;
+        vmOrder.StartDeptName = vmOrder.DestDeptName;
+        vmOrder.StartDongBasic = vmOrder.DestDongBasic;
+        vmOrder.StartTelNo = vmOrder.DestTelNo;
+        vmOrder.StartTelNo2 = vmOrder.DestTelNo2;
+        vmOrder.StartAddress = vmOrder.DestAddress;
+        vmOrder.StartDetailAddr = vmOrder.DestDetailAddr;
 
         // 보관 → 도착지
-        tbOrderOrg.DestCustCodeK = startCustCodeK;
-        tbOrderOrg.DestCustCodeE = startCustCodeE;
-        tbOrderOrg.DestCustName = startCustName;
-        tbOrderOrg.DestChargeName = startChargeName;
-        tbOrderOrg.DestDeptName = startDeptName;
-        tbOrderOrg.DestDongBasic = startDongBasic;
-        tbOrderOrg.DestTelNo = startTelNo;
-        tbOrderOrg.DestTelNo2 = startTelNo2;
-        tbOrderOrg.DestAddress = startAddress;
-        tbOrderOrg.DestDetailAddr = startDetailAddr;
+        vmOrder.DestCustCodeK = startCustCodeK;
+        vmOrder.DestCustCodeE = startCustCodeE;
+        vmOrder.DestCustName = startCustName;
+        vmOrder.DestChargeName = startChargeName;
+        vmOrder.DestDeptName = startDeptName;
+        vmOrder.DestDongBasic = startDongBasic;
+        vmOrder.DestTelNo = startTelNo;
+        vmOrder.DestTelNo2 = startTelNo2;
+        vmOrder.DestAddress = startAddress;
+        vmOrder.DestDetailAddr = startDetailAddr;
     }
     #endregion
 
@@ -472,17 +467,17 @@ public partial class Order_ReceiptWnd : Window
     // 도착지지우기
     private void Dest_BtnErase_Click(object sender, RoutedEventArgs e)
     {
-        // tbOrderOrg에 직접 설정 (바인딩으로 UI 자동 업데이트)
-        tbOrderOrg.DestCustCodeK = 0;
-        tbOrderOrg.DestCustCodeE = 0;
-        tbOrderOrg.DestCustName = "";
-        tbOrderOrg.DestChargeName = "";
-        tbOrderOrg.DestDeptName = "";
-        tbOrderOrg.DestDongBasic = "";
-        tbOrderOrg.DestTelNo = "";
-        tbOrderOrg.DestTelNo2 = "";
-        tbOrderOrg.DestAddress = "";
-        tbOrderOrg.DestDetailAddr = "";
+        // vmOrder에 직접 설정 (바인딩으로 UI 자동 업데이트)
+        vmOrder.DestCustCodeK = 0;
+        vmOrder.DestCustCodeE = 0;
+        vmOrder.DestCustName = "";
+        vmOrder.DestChargeName = "";
+        vmOrder.DestDeptName = "";
+        vmOrder.DestDongBasic = "";
+        vmOrder.DestTelNo = "";
+        vmOrder.DestTelNo2 = "";
+        vmOrder.DestAddress = "";
+        vmOrder.DestDetailAddr = "";
     }
 
     // 도착지 거래처등록
@@ -512,7 +507,7 @@ public partial class Order_ReceiptWnd : Window
             DtPickerReserve.IsEnabled = true;
             TBoxReserveBreakMin.IsEnabled = true;
             // 예약모드로 변경
-            if (tbOrderOrg != null) tbOrderOrg.OrderState = "예약";
+            if (vmOrder != null) vmOrder.OrderState = "예약";
         }
         else
         {
@@ -521,7 +516,7 @@ public partial class Order_ReceiptWnd : Window
             DtPickerReserve.IsEnabled = false;
             TBoxReserveBreakMin.IsEnabled = false;
             // 접수모드로 변경
-            if (tbOrderOrg != null) tbOrderOrg.OrderState = "접수";
+            if (vmOrder != null) vmOrder.OrderState = "접수";
         }
     }
 
@@ -649,7 +644,7 @@ public partial class Order_ReceiptWnd : Window
         if (e.Key == Key.Enter)
         {
             // 신규 등록 모드
-            if (tbOrderOrg == null) Keyboard.Focus(BtnReg_SaveReceipt); // 접수저장 버튼으로 이동
+            if (vmOrder.KeyCode == 0) Keyboard.Focus(BtnReg_SaveReceipt); // 접수저장 버튼으로 이동
             else Keyboard.Focus(BtnMod_Save); // 저장 버튼으로 이동
 
             e.Handled = true; // 이벤트가 더 이상 상위/하위로 전달되지 않음
@@ -713,6 +708,8 @@ public partial class Order_ReceiptWnd : Window
 
         int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
+        vmOrder.FeeBasic = FeeBasic;
+        vmOrder.FeeTotal = FeeTot;
         TBox_FeeBasic.Text = StdConvert.IntToStringWonFormat(FeeBasic);
         TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(FeeTot);
     }
@@ -725,6 +722,8 @@ public partial class Order_ReceiptWnd : Window
 
         int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
+        vmOrder.FeePlus = FeePlus;
+        vmOrder.FeeTotal = FeeTot;
         TBox_FeePlus.Text = StdConvert.IntToStringWonFormat(FeePlus);
         TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(FeeTot);
     }
@@ -737,6 +736,8 @@ public partial class Order_ReceiptWnd : Window
 
         int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
+        vmOrder.FeeMinus = FeeMinus;
+        vmOrder.FeeTotal = FeeTot;
         TBox_FeeMinus.Text = StdConvert.IntToStringWonFormat(FeeMinus);
         TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(FeeTot);
     }
@@ -749,6 +750,8 @@ public partial class Order_ReceiptWnd : Window
 
         int FeeTot = FeeBasic + FeePlus - FeeMinus + FeeConn;
 
+        vmOrder.FeeConn = FeeConn;
+        vmOrder.FeeTotal = FeeTot;
         TBox_FeeConn.Text = StdConvert.IntToStringWonFormat(FeeConn);
         TBox_FeeTot.Text = StdConvert.IntToStringWonFormat(FeeTot);
     }

@@ -362,99 +362,99 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public long KeyCode
     {
         get => tbOrder.KeyCode;
-        set => OnPropertyChanged(nameof(KeyCode));
+        set { tbOrder.KeyCode = value; OnPropertyChanged(nameof(KeyCode)); }
     }
 
     public long MemberCode
     {
         get => tbOrder.MemberCode;
-        set => OnPropertyChanged(nameof(MemberCode));
+        set { tbOrder.MemberCode = value; OnPropertyChanged(nameof(MemberCode)); }
     }
 
     public long CenterCode
     {
         get => tbOrder.CenterCode;
-        set => OnPropertyChanged(nameof(CenterCode));
+        set { tbOrder.CenterCode = value; OnPropertyChanged(nameof(CenterCode)); }
     }
 
     public long UserCode
     {
         get => tbOrder.UserCode;
-        set => OnPropertyChanged(nameof(UserCode));
+        set { tbOrder.UserCode = value; OnPropertyChanged(nameof(UserCode)); }
     }
 
     public string UserName
     {
         get => tbOrder.UserName;
-        set => OnPropertyChanged(nameof(UserName));
+        set { tbOrder.UserName = value; OnPropertyChanged(nameof(UserName)); }
     }
 
-    public string DtRegist
+    public DateTime DtRegist
     {
-        get => tbOrder.DtRegist.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEARSEC);
-        set => OnPropertyChanged(nameof(DtRegist));
+        get => tbOrder.DtRegist;
+        set { tbOrder.DtRegist = value; OnPropertyChanged(nameof(DtRegist)); }
     }
 
-    public string DtUpdateLast
+    public DateTime DtUpdateLast
     {
-        get => tbOrder.DtUpdateLast.ToString(StdConst_Var.DTFORMAT_EXCEPT_YEARSEC);
-        set => OnPropertyChanged(nameof(DtUpdateLast));
+        get => tbOrder.DtUpdateLast;
+        set { tbOrder.DtUpdateLast = value; OnPropertyChanged(nameof(DtUpdateLast)); }
     }
 
     public string OrderState
     {
         get => tbOrder.OrderState;
-        set => OnPropertyChanged(nameof(OrderState));
+        set { tbOrder.OrderState = value; OnPropertyChanged(nameof(OrderState)); }
     }
 
     public string OrderStateOld
     {
         get => tbOrder.OrderStateOld;
-        set => OnPropertyChanged(nameof(OrderStateOld));
+        set { tbOrder.OrderStateOld = value; OnPropertyChanged(nameof(OrderStateOld)); }
     }
 
     public string CancelReason
     {
         get => tbOrder.CancelReason;
-        set => OnPropertyChanged(nameof(CancelReason));
+        set { tbOrder.CancelReason = value; OnPropertyChanged(nameof(CancelReason)); }
     }
 
     public bool Share
     {
         get => tbOrder.Share;
-        set => OnPropertyChanged(nameof(Share));
+        set { tbOrder.Share = value; OnPropertyChanged(nameof(Share)); }
     }
 
     public bool TaxBill
     {
         get => tbOrder.TaxBill;
-        set => OnPropertyChanged(nameof(TaxBill));
+        set { tbOrder.TaxBill = value; OnPropertyChanged(nameof(TaxBill)); }
     }
     #endregion
 
     #region Properties - 시간
-    public string ReceiptTime
+    public TimeOnly? ReceiptTime
     {
-        get => tbOrder.ReceiptTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(ReceiptTime));
+        get => tbOrder.ReceiptTime;
+        set { tbOrder.ReceiptTime = value; OnPropertyChanged(nameof(ReceiptTime)); }
     }
 
-    public string AllocTime
+    public TimeOnly? AllocTime
     {
-        get => tbOrder.AllocTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(AllocTime));
+        get => tbOrder.AllocTime;
+        set { tbOrder.AllocTime = value; OnPropertyChanged(nameof(AllocTime)); }
     }
 
-    public string RunTime
+    public TimeOnly? RunTime
     {
-        get => tbOrder.RunTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(RunTime));
+        get => tbOrder.RunTime;
+        set { tbOrder.RunTime = value; OnPropertyChanged(nameof(RunTime)); }
     }
 
-    public string FinishTime
+    public TimeOnly? FinishTime
     {
-        get => tbOrder.FinishTime?.ToString(@"HH\:mm") ?? "00:00";
-        set => OnPropertyChanged(nameof(FinishTime));
+        get => tbOrder.FinishTime;
+        set { tbOrder.FinishTime = value; OnPropertyChanged(nameof(FinishTime)); }
     }
     #endregion
 
@@ -462,91 +462,91 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public long CallCompCode
     {
         get => tbOrder.CallCompCode;
-        set => OnPropertyChanged(nameof(CallCompCode));
+        set { tbOrder.CallCompCode = value; OnPropertyChanged(nameof(CallCompCode)); }
     }
 
     public string CallCompName
     {
         get => tbOrder.CallCompName;
-        set => OnPropertyChanged(nameof(CallCompName));
+        set { tbOrder.CallCompName = value; OnPropertyChanged(nameof(CallCompName)); }
     }
 
     public string CallCustFrom
     {
         get => tbOrder.CallCustFrom;
-        set => OnPropertyChanged(nameof(CallCustFrom));
+        set { tbOrder.CallCustFrom = value; OnPropertyChanged(nameof(CallCustFrom)); }
     }
 
     public long CallCustCodeE
     {
         get => tbOrder.CallCustCodeE;
-        set => OnPropertyChanged(nameof(CallCustCodeE));
+        set { tbOrder.CallCustCodeE = value; OnPropertyChanged(nameof(CallCustCodeE)); }
     }
 
     public long CallCustCodeK
     {
         get => tbOrder.CallCustCodeK;
-        set => OnPropertyChanged(nameof(CallCustCodeK));
+        set { tbOrder.CallCustCodeK = value; OnPropertyChanged(nameof(CallCustCodeK)); }
     }
 
     public string CallCustName
     {
         get => tbOrder.CallCustName;
-        set => OnPropertyChanged(nameof(CallCustName));
+        set { tbOrder.CallCustName = value; OnPropertyChanged(nameof(CallCustName)); }
     }
 
     public string CallTelNo
     {
-        get => StdConvert.ToPhoneNumberFormat(tbOrder.CallTelNo);
-        set => OnPropertyChanged(nameof(CallTelNo));
+        get => tbOrder.CallTelNo;
+        set { tbOrder.CallTelNo = value; OnPropertyChanged(nameof(CallTelNo)); }
     }
 
     public string CallTelNo2
     {
-        get => StdConvert.ToPhoneNumberFormat(tbOrder.CallTelNo2);
-        set => OnPropertyChanged(nameof(CallTelNo2));
+        get => tbOrder.CallTelNo2;
+        set { tbOrder.CallTelNo2 = value; OnPropertyChanged(nameof(CallTelNo2)); }
     }
 
     public string CallDeptName
     {
         get => tbOrder.CallDeptName;
-        set => OnPropertyChanged(nameof(CallDeptName));
+        set { tbOrder.CallDeptName = value; OnPropertyChanged(nameof(CallDeptName)); }
     }
 
     public string CallChargeName
     {
         get => tbOrder.CallChargeName;
-        set => OnPropertyChanged(nameof(CallChargeName));
+        set { tbOrder.CallChargeName = value; OnPropertyChanged(nameof(CallChargeName)); }
     }
 
     public string CallDongBasic
     {
         get => tbOrder.CallDongBasic;
-        set => OnPropertyChanged(nameof(CallDongBasic));
+        set { tbOrder.CallDongBasic = value; OnPropertyChanged(nameof(CallDongBasic)); }
     }
 
     public string CallAddress
     {
         get => tbOrder.CallAddress;
-        set => OnPropertyChanged(nameof(CallAddress));
+        set { tbOrder.CallAddress = value; OnPropertyChanged(nameof(CallAddress)); }
     }
 
     public string CallDetailAddr
     {
         get => tbOrder.CallDetailAddr;
-        set => OnPropertyChanged(nameof(CallDetailAddr));
+        set { tbOrder.CallDetailAddr = value; OnPropertyChanged(nameof(CallDetailAddr)); }
     }
 
     public string CallRemarks
     {
         get => tbOrder.CallRemarks;
-        set => OnPropertyChanged(nameof(CallRemarks));
+        set { tbOrder.CallRemarks = value; OnPropertyChanged(nameof(CallRemarks)); }
     }
 
     public string CallMemo
     {
         get => tbOrder.CallMemo;
-        set => OnPropertyChanged(nameof(CallMemo));
+        set { tbOrder.CallMemo = value; OnPropertyChanged(nameof(CallMemo)); }
     }
     #endregion
 
@@ -554,103 +554,103 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public long StartCustCodeE
     {
         get => tbOrder.StartCustCodeE;
-        set => OnPropertyChanged(nameof(StartCustCodeE));
+        set { tbOrder.StartCustCodeE = value; OnPropertyChanged(nameof(StartCustCodeE)); }
     }
 
     public long StartCustCodeK
     {
         get => tbOrder.StartCustCodeK;
-        set => OnPropertyChanged(nameof(StartCustCodeK));
+        set { tbOrder.StartCustCodeK = value; OnPropertyChanged(nameof(StartCustCodeK)); }
     }
 
     public string StartCustName
     {
         get => tbOrder.StartCustName;
-        set => OnPropertyChanged(nameof(StartCustName));
+        set { tbOrder.StartCustName = value; OnPropertyChanged(nameof(StartCustName)); }
     }
 
     public string StartTelNo
     {
-        get => StdConvert.ToPhoneNumberFormat(tbOrder.StartTelNo);
-        set => OnPropertyChanged(nameof(StartTelNo));
+        get => tbOrder.StartTelNo;
+        set { tbOrder.StartTelNo = value; OnPropertyChanged(nameof(StartTelNo)); }
     }
 
     public string StartTelNo2
     {
-        get => StdConvert.ToPhoneNumberFormat(tbOrder.StartTelNo2);
-        set => OnPropertyChanged(nameof(StartTelNo2));
+        get => tbOrder.StartTelNo2;
+        set { tbOrder.StartTelNo2 = value; OnPropertyChanged(nameof(StartTelNo2)); }
     }
 
     public string StartDeptName
     {
         get => tbOrder.StartDeptName;
-        set => OnPropertyChanged(nameof(StartDeptName));
+        set { tbOrder.StartDeptName = value; OnPropertyChanged(nameof(StartDeptName)); }
     }
 
     public string StartChargeName
     {
         get => tbOrder.StartChargeName;
-        set => OnPropertyChanged(nameof(StartChargeName));
+        set { tbOrder.StartChargeName = value; OnPropertyChanged(nameof(StartChargeName)); }
     }
 
     public string StartDongBasic
     {
         get => tbOrder.StartDongBasic;
-        set => OnPropertyChanged(nameof(StartDongBasic));
+        set { tbOrder.StartDongBasic = value; OnPropertyChanged(nameof(StartDongBasic)); }
     }
 
     public string StartAddress
     {
         get => tbOrder.StartAddress;
-        set => OnPropertyChanged(nameof(StartAddress));
+        set { tbOrder.StartAddress = value; OnPropertyChanged(nameof(StartAddress)); }
     }
 
     public string StartDetailAddr
     {
         get => tbOrder.StartDetailAddr;
-        set => OnPropertyChanged(nameof(StartDetailAddr));
+        set { tbOrder.StartDetailAddr = value; OnPropertyChanged(nameof(StartDetailAddr)); }
     }
 
     public string StartSiDo
     {
         get => tbOrder.StartSiDo;
-        set => OnPropertyChanged(nameof(StartSiDo));
+        set { tbOrder.StartSiDo = value; OnPropertyChanged(nameof(StartSiDo)); }
     }
 
     public string StartGunGu
     {
         get => tbOrder.StartGunGu;
-        set => OnPropertyChanged(nameof(StartGunGu));
+        set { tbOrder.StartGunGu = value; OnPropertyChanged(nameof(StartGunGu)); }
     }
 
     public string StartDongRi
     {
         get => tbOrder.StartDongRi;
-        set => OnPropertyChanged(nameof(StartDongRi));
+        set { tbOrder.StartDongRi = value; OnPropertyChanged(nameof(StartDongRi)); }
     }
 
     public int StartLon
     {
         get => tbOrder.StartLon;
-        set => OnPropertyChanged(nameof(StartLon));
+        set { tbOrder.StartLon = value; OnPropertyChanged(nameof(StartLon)); }
     }
 
     public int StartLat
     {
         get => tbOrder.StartLat;
-        set => OnPropertyChanged(nameof(StartLat));
+        set { tbOrder.StartLat = value; OnPropertyChanged(nameof(StartLat)); }
     }
 
     public string StartSignImgUrl
     {
         get => tbOrder.StartSignImgUrl;
-        set => OnPropertyChanged(nameof(StartSignImgUrl));
+        set { tbOrder.StartSignImgUrl = value; OnPropertyChanged(nameof(StartSignImgUrl)); }
     }
 
     public DateTime? StartDtSign
     {
         get => tbOrder.StartDtSign;
-        set => OnPropertyChanged(nameof(StartDtSign));
+        set { tbOrder.StartDtSign = value; OnPropertyChanged(nameof(StartDtSign)); }
     }
     #endregion
 
@@ -658,103 +658,103 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public long DestCustCodeE
     {
         get => tbOrder.DestCustCodeE;
-        set => OnPropertyChanged(nameof(DestCustCodeE));
+        set { tbOrder.DestCustCodeE = value; OnPropertyChanged(nameof(DestCustCodeE)); }
     }
 
     public long DestCustCodeK
     {
         get => tbOrder.DestCustCodeK;
-        set => OnPropertyChanged(nameof(DestCustCodeK));
+        set { tbOrder.DestCustCodeK = value; OnPropertyChanged(nameof(DestCustCodeK)); }
     }
 
     public string DestCustName
     {
         get => tbOrder.DestCustName;
-        set => OnPropertyChanged(nameof(DestCustName));
+        set { tbOrder.DestCustName = value; OnPropertyChanged(nameof(DestCustName)); }
     }
 
     public string DestTelNo
     {
-        get => StdConvert.ToPhoneNumberFormat(tbOrder.DestTelNo);
-        set => OnPropertyChanged(nameof(DestTelNo));
+        get => tbOrder.DestTelNo;
+        set { tbOrder.DestTelNo = value; OnPropertyChanged(nameof(DestTelNo)); }
     }
 
     public string DestTelNo2
     {
-        get => StdConvert.ToPhoneNumberFormat(tbOrder.DestTelNo2);
-        set => OnPropertyChanged(nameof(DestTelNo2));
+        get => tbOrder.DestTelNo2;
+        set { tbOrder.DestTelNo2 = value; OnPropertyChanged(nameof(DestTelNo2)); }
     }
 
     public string DestDeptName
     {
         get => tbOrder.DestDeptName;
-        set => OnPropertyChanged(nameof(DestDeptName));
+        set { tbOrder.DestDeptName = value; OnPropertyChanged(nameof(DestDeptName)); }
     }
 
     public string DestChargeName
     {
         get => tbOrder.DestChargeName;
-        set => OnPropertyChanged(nameof(DestChargeName));
+        set { tbOrder.DestChargeName = value; OnPropertyChanged(nameof(DestChargeName)); }
     }
 
     public string DestDongBasic
     {
         get => tbOrder.DestDongBasic;
-        set => OnPropertyChanged(nameof(DestDongBasic));
+        set { tbOrder.DestDongBasic = value; OnPropertyChanged(nameof(DestDongBasic)); }
     }
 
     public string DestAddress
     {
         get => tbOrder.DestAddress;
-        set => OnPropertyChanged(nameof(DestAddress));
+        set { tbOrder.DestAddress = value; OnPropertyChanged(nameof(DestAddress)); }
     }
 
     public string DestDetailAddr
     {
         get => tbOrder.DestDetailAddr;
-        set => OnPropertyChanged(nameof(DestDetailAddr));
+        set { tbOrder.DestDetailAddr = value; OnPropertyChanged(nameof(DestDetailAddr)); }
     }
 
     public string DestSiDo
     {
         get => tbOrder.DestSiDo;
-        set => OnPropertyChanged(nameof(DestSiDo));
+        set { tbOrder.DestSiDo = value; OnPropertyChanged(nameof(DestSiDo)); }
     }
 
     public string DestGunGu
     {
         get => tbOrder.DestGunGu;
-        set => OnPropertyChanged(nameof(DestGunGu));
+        set { tbOrder.DestGunGu = value; OnPropertyChanged(nameof(DestGunGu)); }
     }
 
     public string DestDongRi
     {
         get => tbOrder.DestDongRi;
-        set => OnPropertyChanged(nameof(DestDongRi));
+        set { tbOrder.DestDongRi = value; OnPropertyChanged(nameof(DestDongRi)); }
     }
 
     public int DestLon
     {
         get => tbOrder.DestLon;
-        set => OnPropertyChanged(nameof(DestLon));
+        set { tbOrder.DestLon = value; OnPropertyChanged(nameof(DestLon)); }
     }
 
     public int DestLat
     {
         get => tbOrder.DestLat;
-        set => OnPropertyChanged(nameof(DestLat));
+        set { tbOrder.DestLat = value; OnPropertyChanged(nameof(DestLat)); }
     }
 
     public string DestSignImgUrl
     {
         get => tbOrder.DestSignImgUrl;
-        set => OnPropertyChanged(nameof(DestSignImgUrl));
+        set { tbOrder.DestSignImgUrl = value; OnPropertyChanged(nameof(DestSignImgUrl)); }
     }
 
     public DateTime? DestDtSign
     {
         get => tbOrder.DestDtSign;
-        set => OnPropertyChanged(nameof(DestDtSign));
+        set { tbOrder.DestDtSign = value; OnPropertyChanged(nameof(DestDtSign)); }
     }
     #endregion
 
@@ -762,76 +762,69 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public bool Reserve
     {
         get => tbOrder.Reserve;
-        set => OnPropertyChanged(nameof(Reserve));
+        set { tbOrder.Reserve = value; OnPropertyChanged(nameof(Reserve)); }
     }
 
     public DateTime? DtReserve
     {
         get => tbOrder.DtReserve;
-        set => OnPropertyChanged(nameof(DtReserve));
+        set { tbOrder.DtReserve = value; OnPropertyChanged(nameof(DtReserve)); }
     }
 
     public int ReserveBreakMinute
     {
         get => tbOrder.ReserveBreakMinute;
-        set => OnPropertyChanged(nameof(ReserveBreakMinute));
+        set { tbOrder.ReserveBreakMinute = value; OnPropertyChanged(nameof(ReserveBreakMinute)); }
     }
     #endregion
 
     #region Properties - 요금
-    public string FeeBasic
+    public int FeeBasic
     {
-        get => $"{tbOrder.FeeBasic:##,###}";
-        set => OnPropertyChanged(nameof(FeeBasic));
+        get => tbOrder.FeeBasic;
+        set { tbOrder.FeeBasic = value; OnPropertyChanged(nameof(FeeBasic)); }
     }
 
-    public string FeeTotal
+    public int FeeTotal
     {
-        get => $"{tbOrder.FeeTotal:##,###}";
-        set => OnPropertyChanged(nameof(FeeTotal));
+        get => tbOrder.FeeTotal;
+        set { tbOrder.FeeTotal = value; OnPropertyChanged(nameof(FeeTotal)); }
     }
 
-    public string FeeCommi
+    public int FeeCommi
     {
-        get => $"{tbOrder.FeeCommi:##,###}";
-        set => OnPropertyChanged(nameof(FeeCommi));
+        get => tbOrder.FeeCommi;
+        set { tbOrder.FeeCommi = value; OnPropertyChanged(nameof(FeeCommi)); }
     }
 
-    public string FeeDriver
+    public int FeeDriver
     {
-        get => $"{tbOrder.FeeDriver:##,###}";
-        set => OnPropertyChanged(nameof(FeeDriver));
+        get => tbOrder.FeeDriver;
+        set { tbOrder.FeeDriver = value; OnPropertyChanged(nameof(FeeDriver)); }
     }
 
-    public string FeePlus
+    public int FeePlus
     {
-        get => $"{tbOrder.FeePlus:##,###}";
-        set => OnPropertyChanged(nameof(FeePlus));
+        get => tbOrder.FeePlus;
+        set { tbOrder.FeePlus = value; OnPropertyChanged(nameof(FeePlus)); }
     }
 
-    public string FeeMinus
+    public int FeeMinus
     {
-        get => $"{tbOrder.FeeMinus:##,###}";
-        set => OnPropertyChanged(nameof(FeeMinus));
+        get => tbOrder.FeeMinus;
+        set { tbOrder.FeeMinus = value; OnPropertyChanged(nameof(FeeMinus)); }
     }
 
-    public string FeeConn
+    public int FeeConn
     {
-        get => $"{tbOrder.FeeConn:##,###}";
-        set => OnPropertyChanged(nameof(FeeConn));
+        get => tbOrder.FeeConn;
+        set { tbOrder.FeeConn = value; OnPropertyChanged(nameof(FeeConn)); }
     }
 
     public string FeeType
     {
-        get => tbOrder.FeeType == "선불" ? "" : tbOrder.FeeType;
-        set => OnPropertyChanged(nameof(FeeType));
-    }
-
-    // 계산값
-    public string FeeNet
-    {
-        get => $"{(tbOrder.FeeTotal - tbOrder.FeeCommi):##,###}";
-        set => OnPropertyChanged(nameof(FeeNet));
+        get => tbOrder.FeeType;
+        set { tbOrder.FeeType = value; OnPropertyChanged(nameof(FeeType)); }
     }
     #endregion
 
@@ -839,67 +832,67 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public string MovilityFlag
     {
         get => tbOrder.MovilityFlag;
-        set => OnPropertyChanged(nameof(MovilityFlag));
+        set { tbOrder.MovilityFlag = value; OnPropertyChanged(nameof(MovilityFlag)); }
     }
 
     public string DeliverFlag
     {
         get => tbOrder.DeliverFlag;
-        set => OnPropertyChanged(nameof(DeliverFlag));
+        set { tbOrder.DeliverFlag = value; OnPropertyChanged(nameof(DeliverFlag)); }
     }
 
     public string StartDateFlag
     {
         get => tbOrder.StartDateFlag;
-        set => OnPropertyChanged(nameof(StartDateFlag));
+        set { tbOrder.StartDateFlag = value; OnPropertyChanged(nameof(StartDateFlag)); }
     }
 
     public string StartDateDetail
     {
         get => tbOrder.StartDateDetail;
-        set => OnPropertyChanged(nameof(StartDateDetail));
+        set { tbOrder.StartDateDetail = value; OnPropertyChanged(nameof(StartDateDetail)); }
     }
 
     public string DestDateFlag
     {
         get => tbOrder.DestDateFlag;
-        set => OnPropertyChanged(nameof(DestDateFlag));
+        set { tbOrder.DestDateFlag = value; OnPropertyChanged(nameof(DestDateFlag)); }
     }
 
     public string DestDateDetail
     {
         get => tbOrder.DestDateDetail;
-        set => OnPropertyChanged(nameof(DestDateDetail));
+        set { tbOrder.DestDateDetail = value; OnPropertyChanged(nameof(DestDateDetail)); }
     }
 
     public string CarWeightFlag
     {
         get => tbOrder.CarWeightFlag;
-        set => OnPropertyChanged(nameof(CarWeightFlag));
+        set { tbOrder.CarWeightFlag = value; OnPropertyChanged(nameof(CarWeightFlag)); }
     }
 
     public string TruckDetailFlag
     {
         get => tbOrder.TruckDetailFlag;
-        set => OnPropertyChanged(nameof(TruckDetailFlag));
+        set { tbOrder.TruckDetailFlag = value; OnPropertyChanged(nameof(TruckDetailFlag)); }
     }
 
     public string StartLoadFlag
     {
         get => tbOrder.StartLoadFlag;
-        set => OnPropertyChanged(nameof(StartLoadFlag));
+        set { tbOrder.StartLoadFlag = value; OnPropertyChanged(nameof(StartLoadFlag)); }
     }
 
     public string DestUnloadFlag
     {
         get => tbOrder.DestUnloadFlag;
-        set => OnPropertyChanged(nameof(DestUnloadFlag));
+        set { tbOrder.DestUnloadFlag = value; OnPropertyChanged(nameof(DestUnloadFlag)); }
     }
 
     public string DeliverMemo
     {
         get => tbOrder.DeliverMemo;
-        set => OnPropertyChanged(nameof(DeliverMemo));
+        set { tbOrder.DeliverMemo = value; OnPropertyChanged(nameof(DeliverMemo)); }
     }
     #endregion
 
@@ -907,49 +900,49 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public long DriverCode
     {
         get => tbOrder.DriverCode;
-        set => OnPropertyChanged(nameof(DriverCode));
+        set { tbOrder.DriverCode = value; OnPropertyChanged(nameof(DriverCode)); }
     }
 
     public string DriverId
     {
         get => tbOrder.DriverId;
-        set => OnPropertyChanged(nameof(DriverId));
+        set { tbOrder.DriverId = value; OnPropertyChanged(nameof(DriverId)); }
     }
 
     public string DriverName
     {
         get => tbOrder.DriverName;
-        set => OnPropertyChanged(nameof(DriverName));
+        set { tbOrder.DriverName = value; OnPropertyChanged(nameof(DriverName)); }
     }
 
     public string DriverTelNo
     {
-        get => StdConvert.ToPhoneNumberFormat(tbOrder.DriverTelNo);
-        set => OnPropertyChanged(nameof(DriverTelNo));
+        get => tbOrder.DriverTelNo;
+        set { tbOrder.DriverTelNo = value; OnPropertyChanged(nameof(DriverTelNo)); }
     }
 
     public long DriverMemberCode
     {
         get => tbOrder.DriverMemberCode;
-        set => OnPropertyChanged(nameof(DriverMemberCode));
+        set { tbOrder.DriverMemberCode = value; OnPropertyChanged(nameof(DriverMemberCode)); }
     }
 
     public string DriverCenterId
     {
         get => tbOrder.DriverCenterId;
-        set => OnPropertyChanged(nameof(DriverCenterId));
+        set { tbOrder.DriverCenterId = value; OnPropertyChanged(nameof(DriverCenterId)); }
     }
 
     public string DriverCenterName
     {
         get => tbOrder.DriverCenterName;
-        set => OnPropertyChanged(nameof(DriverCenterName));
+        set { tbOrder.DriverCenterName = value; OnPropertyChanged(nameof(DriverCenterName)); }
     }
 
     public string DriverBusinessNo
     {
         get => tbOrder.DriverBusinessNo;
-        set => OnPropertyChanged(nameof(DriverBusinessNo));
+        set { tbOrder.DriverBusinessNo = value; OnPropertyChanged(nameof(DriverBusinessNo)); }
     }
     #endregion
 
@@ -957,49 +950,49 @@ public class VmOrder_StatusPage_Order : INotifyPropertyChanged, IViewModelBase
     public string Insung1SeqNo
     {
         get => tbOrder.Insung1SeqNo;
-        set => OnPropertyChanged(nameof(Insung1SeqNo));
+        set { tbOrder.Insung1SeqNo = value; OnPropertyChanged(nameof(Insung1SeqNo)); }
     }
 
     public string Insung1State
     {
         get => tbOrder.Insung1State;
-        set => OnPropertyChanged(nameof(Insung1State));
+        set { tbOrder.Insung1State = value; OnPropertyChanged(nameof(Insung1State)); }
     }
 
     public string Insung2SeqNo
     {
         get => tbOrder.Insung2SeqNo;
-        set => OnPropertyChanged(nameof(Insung2SeqNo));
+        set { tbOrder.Insung2SeqNo = value; OnPropertyChanged(nameof(Insung2SeqNo)); }
     }
 
     public string Insung2State
     {
         get => tbOrder.Insung2State;
-        set => OnPropertyChanged(nameof(Insung2State));
+        set { tbOrder.Insung2State = value; OnPropertyChanged(nameof(Insung2State)); }
     }
 
     public string Cargo24SeqNo
     {
         get => tbOrder.Cargo24SeqNo;
-        set => OnPropertyChanged(nameof(Cargo24SeqNo));
+        set { tbOrder.Cargo24SeqNo = value; OnPropertyChanged(nameof(Cargo24SeqNo)); }
     }
 
     public string Cargo24State
     {
         get => tbOrder.Cargo24State;
-        set => OnPropertyChanged(nameof(Cargo24State));
+        set { tbOrder.Cargo24State = value; OnPropertyChanged(nameof(Cargo24State)); }
     }
 
     public string OnecallSeqNo
     {
         get => tbOrder.OnecallSeqNo;
-        set => OnPropertyChanged(nameof(OnecallSeqNo));
+        set { tbOrder.OnecallSeqNo = value; OnPropertyChanged(nameof(OnecallSeqNo)); }
     }
 
     public string OnecallState
     {
         get => tbOrder.OnecallState;
-        set => OnPropertyChanged(nameof(OnecallState));
+        set { tbOrder.OnecallState = value; OnPropertyChanged(nameof(OnecallState)); }
     }
     #endregion
 }
