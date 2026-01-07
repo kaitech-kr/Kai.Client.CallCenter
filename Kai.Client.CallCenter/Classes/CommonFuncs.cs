@@ -193,24 +193,24 @@ public class CommonFuncs : CommonVars
 
     #region WPF Controls
     // ComboBox에서 선택된 항목의 텍스트 가져오기
-    //public static string GetSelectedComboBoxContent(ComboBox comboBox)
-    //{
-    //    return Application.Current.Dispatcher.Invoke(() =>
-    //    {
-    //        if (comboBox == null)
-    //        {
-    //            Debug.WriteLine("[CommonFuncs] GetSelectedComboBoxContent: comboBox가 null입니다");
-    //            return "";
-    //        }
+    public static string GetSelectedComboBoxContent(ComboBox comboBox)
+    {
+        return Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (comboBox == null)
+            {
+                Debug.WriteLine("[CommonFuncs] GetSelectedComboBoxContent: comboBox가 null입니다");
+                return "";
+            }
 
-    //        if (comboBox.SelectedItem is ComboBoxItem selectedItem)
-    //        {
-    //            return selectedItem.Content?.ToString() ?? "";
-    //        }
+            if (comboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                return selectedItem.Content?.ToString() ?? "";
+            }
 
-    //        return "";
-    //    });
-    //}
+            return "";
+        });
+    }
 
     // ComboBox에서 특정 텍스트를 가진 항목의 인덱스 찾기
     public static int GetComboBoxItemIndex(ComboBox comboBox, string targetValue)

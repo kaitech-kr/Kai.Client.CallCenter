@@ -92,8 +92,7 @@ public partial class ImageToCheckState : Window // 고대역폭의 저장이 필
     #region Buttons
     private async void BtnExex_Click(object sender, RoutedEventArgs e)
     {
-        //string sSave = GetSelectedComboBoxContent(CmbBoxSave);
-        string sSave = "";
+        string sSave = GetSelectedComboBoxContent(CmbBoxSave);
 
         MessageBoxResult result = MessageBox.Show($"[{sSave}]로 저장합니다.", "확인", MessageBoxButton.OKCancel, MessageBoxImage.Information);
         if (result != MessageBoxResult.OK) return;
