@@ -1116,13 +1116,64 @@
                                     <TextBlock Text="톤수" Style="{StaticResource TextBlockStyle}"/>
                                 </Border>
                                 <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TR}" Background="White" Width="159" Height="{StaticResource LineHeight_Table}">
-                                    <ComboBox x:Name="ChkBoxTon" Style="{StaticResource ComboBoxStyle_Basic}"/>
+                                    <ComboBox x:Name="ChkBoxTon" Style="{StaticResource ComboBoxStyle_Basic}">
+                                        <ComboBoxItem Content="미지정"/>
+                                        <ComboBoxItem Content="1t"/>
+                                        <ComboBoxItem Content="1.4t"/>
+                                        <ComboBoxItem Content="2.5t"/>
+                                        <ComboBoxItem Content="3.5t"/>
+                                        <ComboBoxItem Content="5t"/>
+                                        <ComboBoxItem Content="8t"/>
+                                        <ComboBoxItem Content="9.5t"/>
+                                        <ComboBoxItem Content="11t"/>
+                                        <ComboBoxItem Content="14t"/>
+                                        <ComboBoxItem Content="15t"/>
+                                        <ComboBoxItem Content="18t"/>
+                                        <ComboBoxItem Content="22t"/>
+                                        <ComboBoxItem Content="25t"/>
+                                    </ComboBox>
                                 </Border>
                                 <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_TR}">
                                     <TextBlock Text="차종" Style="{StaticResource TextBlockStyle}"/>
                                 </Border>
                                 <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TR}" Background="White" Width="159" Height="{StaticResource LineHeight_Table}">
-                                    <ComboBox x:Name="ChkBox차종" Style="{StaticResource ComboBoxStyle_Basic}"/>
+                                    <ComboBox x:Name="ChkBox차종" Style="{StaticResource ComboBoxStyle_Basic}">
+                                        <ComboBoxItem Content="미지정"/>
+                                        <ComboBoxItem Content="카고/윙"/>
+                                        <ComboBoxItem Content="카고"/>
+                                        <!--<ComboBoxItem Content="플러스카고"/>-->
+                                        <!--<ComboBoxItem Content="축카고"/>-->
+                                        <!--<ComboBoxItem Content="플축카고"/>-->
+                                        <ComboBoxItem Content="리프트카고"/>
+                                        <!--<ComboBoxItem Content="플러스리"/>-->
+                                        <!--<ComboBoxItem Content="플축리"/>-->
+                                        <ComboBoxItem Content="윙바디"/>
+                                        <ComboBoxItem Content="플러스윙"/>
+                                        <!--<ComboBoxItem Content="윙축"/>-->
+                                        <!--<ComboBoxItem Content="플축윙"/>-->
+                                        <ComboBoxItem Content="리프트윙"/>
+                                        <!--<ComboBoxItem Content="플러스윙리"/>-->
+                                        <!--<ComboBoxItem Content="플축윙리"/>-->
+                                        <ComboBoxItem Content="탑"/>
+                                        <ComboBoxItem Content="리프트탑"/>
+                                        <ComboBoxItem Content="호루"/>
+                                        <ComboBoxItem Content="리프트호루"/>
+                                        <!--<ComboBoxItem Content="자바라"/>-->
+                                        <!--<ComboBoxItem Content="리프트자바라"/>-->
+                                        <ComboBoxItem Content="냉동탑"/>
+                                        <ComboBoxItem Content="냉장탑"/>
+                                        <!--<ComboBoxItem Content="냉동윙"/>-->
+                                        <ComboBoxItem Content="냉장윙"/>
+                                        <!--<ComboBoxItem Content="냉동탑리"/>-->
+                                        <!--<ComboBoxItem Content="냉장탑리"/>-->
+                                        <ComboBoxItem Content="냉동플축윙"/>
+                                        <ComboBoxItem Content="냉장플축윙"/>
+                                        <ComboBoxItem Content="냉동플축윙리"/>
+                                        <ComboBoxItem Content="냉장플축윙리"/>
+                                        <ComboBoxItem Content="평카"/>
+                                        <ComboBoxItem Content="초장축"/>
+                                        <ComboBoxItem Content="무진동"/>
+                                    </ComboBox>
                                 </Border>
                             </StackPanel>
 
@@ -1132,6 +1183,14 @@
                                     <TextBlock Text="상차" Style="{StaticResource TextBlockStyle}"/>
                                 </Border>
                                 <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_TRB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <RadioButton x:Name="RadioBtn_상차_없음" GroupName="Car상차Group" Content="없음" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True" />
+                                        <RadioButton x:Name="RadioBtn_상차_수작업" GroupName="Car상차Group" Content="수작업" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_상차_수해줌" GroupName="Car상차Group" Content="수해줌" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_상차_지게차" GroupName="Car상차Group" Content="지게차" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_상차_크레인" GroupName="Car상차Group" Content="크레인" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_상차_호이스트" GroupName="Car상차Group" Content="호이스트" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                    </StackPanel>
                                 </Border>
                             </StackPanel>
 
@@ -1141,6 +1200,14 @@
                                     <TextBlock Text="하차" Style="{StaticResource TextBlockStyle}"/>
                                 </Border>
                                 <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <RadioButton x:Name="RadioBtn_하차_없음" GroupName="Car하차Group" Content="없음" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" IsChecked="True" />
+                                        <RadioButton x:Name="RadioBtn_하차_수작업" GroupName="Car하차Group" Content="수작업" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_하차_수해줌" GroupName="Car하차Group" Content="수해줌" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_하차_지게차" GroupName="Car하차Group" Content="지게차" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_하차_크레인" GroupName="Car하차Group" Content="크레인" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                        <RadioButton x:Name="RadioBtn_하차_호이스트" GroupName="Car하차Group" Content="호이스트" Margin="4,0,0,0" Style="{StaticResource RadioBtnStyle}" />
+                                    </StackPanel>
                                 </Border>
                             </StackPanel>
 
@@ -1170,7 +1237,8 @@
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="{StaticResource RowHeight_01}"/>
-                                <RowDefinition Height="88"/>
+                                <RowDefinition Height="{StaticResource RowHeight_01}"/>
+                                <RowDefinition Height="66"/>
                             </Grid.RowDefinitions>
 
                             <!--퀵정보 Row 0 - 플렉스-->
@@ -1187,13 +1255,25 @@
                                 </Border>
                             </StackPanel>
 
-                            <!--퀵정보 Row 1 - 메모-->
+                            <!--퀵정보 Row 1 - 할증-->
                             <StackPanel Grid.Row="1" Orientation="Horizontal" Grid.ColumnSpan="2">
-                                <Border Style="{StaticResource BorderStyle_Black}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}" Width="65" Height="88">
+                                <Border Style="{StaticResource BorderStyle_Black_NormalHeight_Width03}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}">
+                                    <TextBlock Text="할증" Style="{StaticResource TextBlockStyle}"/>
+                                </Border>
+                                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="{StaticResource LineHeight_Table}">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBox x:Name="TBox_할증" Style="{StaticResource TextBoxStyle}" Width="370" Margin="4,0,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                            <!--퀵정보 Row 2 - 메모-->
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2">
+                                <Border Style="{StaticResource BorderStyle_Black}" Background="{StaticResource BackgroundBrush_Right01}" BorderThickness="{StaticResource Thickness_LRB}" Width="65" Height="66">
                                     <TextBlock Text="메모" Style="{StaticResource TextBlockStyle}"/>
                                 </Border>
 
-                                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="88">
+                                <Border Style="{StaticResource BorderStyle_Black}" BorderThickness="{StaticResource Thickness_RB}" Background="White" Width="383" Height="66">
                                     <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
                                               Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                         <TextBox x:Name="TBoxMemo_Quick" TabIndex="19"
