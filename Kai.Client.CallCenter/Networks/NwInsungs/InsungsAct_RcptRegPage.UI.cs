@@ -1257,7 +1257,7 @@ public partial class InsungsAct_RcptRegPage
                         return new StdResult_Status(StdResult.Skip, $"이미 {m_Context.AppName} 번호가 등록되어 있습니다");
                     }
 
-                    if (false) //s_SrGClient == null || !s_SrGClient.m_bLoginSignalR
+                    if (s_SrGClient == null || !s_SrGClient.m_bLoginSignalR)
                     {
                         Debug.WriteLine($"[{m_Context.AppName}] SignalR 연결 안됨");
                         return new StdResult_Status(StdResult.Fail, "서버 연결이 끊어졌습니다");

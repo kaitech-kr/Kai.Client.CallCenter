@@ -32,7 +32,7 @@ public class CommonFuncs : CommonVars
         try
         {
             // 로그 파일 경로 설정 및 디렉토리 생성
-            string logFilePath = @"D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Log..txt";
+            string logFilePath = @"D:\CodeWork\WithVs2026\KaiWork\Kai.Client\Kai.Client.CallCenter\Log.txt";
             string logDir = Path.GetDirectoryName(logFilePath);
             if (!Directory.Exists(logDir)) Directory.CreateDirectory(logDir);
 

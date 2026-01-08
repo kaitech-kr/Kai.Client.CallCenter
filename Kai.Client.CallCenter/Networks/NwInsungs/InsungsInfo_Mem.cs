@@ -297,7 +297,7 @@ public class InsungsInfo_Mem
             Btn_hWnd닫기 = Std32Window.GetWndHandle_FromRelDrawPt(hWnd, fInfo.접수등록Wnd_신규버튼그룹_닫기_ptChkRelT);
         }
 
-        public new void SetWndHandles(InsungsInfo_File fInfo)
+        public void SetWndHandles(InsungsInfo_File fInfo)
         {
             Btn_hWnd고객등록 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_고객등록_ptChkRelT);
             Btn_hWnd접수저장 = Std32Window.GetWndHandle_FromRelDrawPt(TopWnd_hWnd, fInfo.접수등록Wnd_신규버튼그룹_접수저장_ptChkRelT);

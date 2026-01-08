@@ -81,10 +81,10 @@ public partial class MainWnd : Window
 
         InitializeComponent();
 
-        #region 폴더, 파일 체크 
-        if (!File.Exists("Kai.Common.CppDll_Common.dll"))
+        #region 폴더, 파일 체크
+        if (!File.Exists(CtrlCppFuncs.c_sHookDllPath))
         {
-            ErrMsgBox($"현재 디렉토리({s_sCurDir})에서 Kai.Common.CppDll_Common.dll를 찾을 수 없습니다.", "MainWnd/MainWnd_01");
+            ErrMsgBox($"C++ DLL을 찾을 수 없습니다: {CtrlCppFuncs.c_sHookDllPath}", "MainWnd/MainWnd_01");
             Application.Current.Shutdown();
             return;
         }
@@ -141,7 +141,7 @@ public partial class MainWnd : Window
             Directory.CreateDirectory(s_sLogDir);
         }
 
-        if (File.Exists(@"D:\CodeWork\WithVs2022\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Resources\Sounds\Alim.wav") == false)
+        if (File.Exists(@"D:\CodeWork\WithVs2026\KaiWork\Kai.Client\Kai.Client.CallCenter\Kai.Client.CallCenter\Resources\Sounds\Alim.wav") == false)
         {
             ErrMsgBox("Alarm.wav를 찾을 수 없습니다.", "MainWnd/MainWnd_05_1");
             Application.Current.Shutdown();
